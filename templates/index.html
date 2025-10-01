@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Acceleration EXEC - Smart Retail Group HR Managers v1.9</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}?v=1.2" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <header class="header-brand">
+            <div class="container-fluid">
+                <div class="row align-items-center py-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="brand-logo-container">
+                                <i class="fas fa-brain brand-logo-icon" style="font-size: 2.5rem; color: var(--fdj-blue-primary);"></i>
+                            </div>
+                            <div>
+                                <h1 class="brand-title mb-0">AI Acceleration EXEC</h1>
+                                <p class="brand-subtitle mb-0">Smart Retail Group - HR Managers Edition v1.9</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="d-flex justify-content-end align-items-center">
+                            <div class="score-display-container">
+                                <div class="score-item total-score me-3">
+                                    <i class="fas fa-star me-2"></i>
+                                    Score Total: <span id="total-score">0</span>/15
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Login Section -->
+            <div id="login-section" class="login-container">
+                <div class="login-card">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-brain mb-3" style="font-size: 3rem; color: var(--fdj-blue-primary);"></i>
+                        <h2 class="mb-2" style="color: var(--fdj-blue-primary); font-weight: 700;">AI Acceleration EXEC</h2>
+                        <p class="text-muted mb-4">Smart Retail Group - HR Managers Edition v1.9</p>
+                    </div>
+                    
+                    <!-- Alert Messages -->
+                    <div id="login-alert" class="alert alert-dismissible fade" role="alert" style="display: none;">
+                        <span id="login-alert-message"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    
+                    <form id="login-form" novalidate>
+                        <div class="mb-4">
+                        <label for="username" class="form-label">
+                            <i class="fas fa-user me-2"></i>Username
+                        </label>
+                        <input type="text" class="form-control" id="username" placeholder="Enter your username" required minlength="2" maxlength="50">
+                        <div class="invalid-feedback" id="username-error"></div>
+                        <div class="form-text">Minimum 2 characters, maximum 50 characters</div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            <input type="password" class="form-control" id="password" placeholder="Enter your password" required minlength="6">
+                            <div class="invalid-feedback" id="password-error"></div>
+                            <div class="form-text">Minimum 6 characters</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" id="login-submit-btn">
+                            <span id="login-btn-text">
+                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                            </span>
+                            <span id="login-btn-loading" style="display: none;">
+                                <i class="fas fa-spinner fa-spin me-2"></i>Signing in...
+                            </span>
+                        </button>
+                    </form>
+                    
+                    <!-- Login Info -->
+                    <div class="mt-4 text-center">
+                        <button type="button" class="btn btn-link btn-sm" id="show-register-form">
+                            <i class="fas fa-user-plus me-1"></i>Create Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Register Section -->
+            <div id="register-section" class="login-container" style="display: none;">
+                <div class="login-card">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-plus mb-3" style="font-size: 3rem; color: var(--fdj-blue-primary);"></i>
+                    <h2 class="mb-2" style="color: var(--fdj-blue-primary); font-weight: 700;">Create Account</h2>
+                    <p class="text-muted mb-4">Smart Retail Group - HR Managers Edition v1.8</p>
+                    </div>
+                    
+                    <!-- Alert Messages -->
+                    <div id="register-alert" class="alert alert-dismissible fade" role="alert" style="display: none;">
+                        <span id="register-alert-message"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    
+                    <form id="register-form" novalidate>
+                        <div class="mb-4">
+                            <label for="reg-username" class="form-label">
+                                <i class="fas fa-user me-2"></i>Username
+                            </label>
+                            <input type="text" class="form-control" id="reg-username" placeholder="Choose a username" required minlength="2" maxlength="50">
+                            <div class="invalid-feedback" id="reg-username-error"></div>
+                            <div class="form-text">Minimum 2 characters, maximum 50 characters</div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="reg-email" class="form-label">
+                                <i class="fas fa-envelope me-2"></i>Email Address
+                            </label>
+                            <input type="email" class="form-control" id="reg-email" placeholder="Enter your email address" required>
+                            <div class="invalid-feedback" id="reg-email-error"></div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="reg-password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            <input type="password" class="form-control" id="reg-password" placeholder="Choose a password" required minlength="6">
+                            <div class="invalid-feedback" id="reg-password-error"></div>
+                            <div class="form-text">Minimum 6 characters</div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="reg-confirm-password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Confirm Password
+                            </label>
+                            <input type="password" class="form-control" id="reg-confirm-password" placeholder="Confirm your password" required minlength="6">
+                            <div class="invalid-feedback" id="reg-confirm-password-error"></div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100" id="register-submit-btn">
+                            <span id="register-btn-text">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </span>
+                            <span id="register-btn-loading" style="display: none;">
+                                <i class="fas fa-spinner fa-spin me-2"></i>Creating account...
+                            </span>
+                        </button>
+                    </form>
+                    
+                    <!-- Register Info -->
+                    <div class="mt-4 text-center">
+                        <button type="button" class="btn btn-link btn-sm" id="show-login-form">
+                            <i class="fas fa-sign-in-alt me-1"></i>Back to Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Introduction -->
+            <div id="video-intro-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-video me-2"></i>Introduction Vidéo</h3>
+                </div>
+                <div class="card-body">
+                    <div class="video-container mb-4">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <video 
+                                id="intro-video"
+                                class="embed-responsive-item" 
+                                controls
+                                autoplay
+                                playsinline
+                                style="width: 100%; height: 100%; border-radius: 15px;">
+                                <source src="{{ url_for('static', filename='videos/presentation_serious_game_web.mp4') }}" type="video/mp4">
+                                Votre navigateur ne supporte pas la lecture vidéo.
+                            </video>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="skip-video-btn" class="btn btn-outline-primary me-3">
+                            <i class="fas fa-forward me-2"></i>Skip Video
+                        </button>
+                        <button id="start-game-btn" class="btn btn-primary btn-lg" style="display: none;">
+                            <i class="fas fa-play me-2"></i>Start Game
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Introduction -->
+            <div id="game-intro" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-rocket me-2"></i>Introduction au Jeu</h3>
+                </div>
+                <div class="card-body">
+                    <div id="intro-text" class="mb-4"></div>
+                    <div class="text-center">
+                        <button id="next-to-harnessing-btn" class="btn btn-primary btn-lg">
+                            <i class="fas fa-play me-2"></i>Start Game
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase1 Video Section -->
+            <div id="phase1-video-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-video me-2"></i>Phase 1 - Embedding GenAI in your AI transformation program</h3>
+                </div>
+                <div class="card-body">
+                    <div class="video-container mb-4">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <video 
+                                id="phase1-video"
+                                class="embed-responsive-item" 
+                                controls
+                                autoplay
+                                playsinline
+                                style="width: 100%; height: 100%; border-radius: 15px;">
+                                <source src="{{ url_for('static', filename='videos/phase_1_web.mp4') }}" type="video/mp4">
+                                Votre navigateur ne supporte pas la lecture vidéo.
+                            </video>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="continue-after-phase1-video-btn" class="btn btn-primary btn-lg">
+                            <i class="fas fa-forward me-2"></i>Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase2 Video Section -->
+            <div id="phase2-video-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-video me-2"></i>Phase 2 - HR Portfolio Selection</h3>
+                </div>
+                <div class="card-body">
+                    <div class="video-container mb-4">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <video 
+                                id="phase2-video"
+                                class="embed-responsive-item" 
+                                controls
+                                autoplay
+                                playsinline
+                                style="width: 100%; height: 100%; border-radius: 15px;">
+                                <source src="{{ url_for('static', filename='videos/phase_2_web.mp4') }}" type="video/mp4">
+                                Votre navigateur ne supporte pas la lecture vidéo.
+                            </video>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="continue-after-phase2-video-btn" class="btn btn-primary btn-lg">
+                            <i class="fas fa-forward me-2"></i>Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase3 Video Section -->
+            <div id="phase3-video-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-video me-2"></i>Phase 3 - Launching your priority HR and GenAI pilots</h3>
+                </div>
+                <div class="card-body">
+                    <div class="video-container mb-4">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <video 
+                                id="phase3-video"
+                                class="embed-responsive-item" 
+                                controls
+                                autoplay
+                                playsinline
+                                style="width: 100%; height: 100%; border-radius: 15px;">
+                                <source src="{{ url_for('static', filename='videos/phase_3_web.mp4') }}" type="video/mp4">
+                                Votre navigateur ne supporte pas la lecture vidéo.
+                            </video>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="continue-after-phase3-video-btn" class="btn btn-primary btn-lg">
+                            <i class="fas fa-forward me-2"></i>Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase4 Video Section -->
+            <div id="phase4-video-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-video me-2"></i>Phase 4 - Scaling your AI and GenAI solutions</h3>
+                </div>
+                <div class="card-body">
+                    <div class="video-container mb-4">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <video 
+                                id="phase4-video"
+                                class="embed-responsive-item" 
+                                controls
+                                autoplay
+                                playsinline
+                                style="width: 100%; height: 100%; border-radius: 15px;">
+                                <source src="{{ url_for('static', filename='videos/phase_4_web.mp4') }}" type="video/mp4">
+                                Votre navigateur ne supporte pas la lecture vidéo.
+                            </video>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="continue-after-phase4-video-btn" class="btn btn-primary btn-lg">
+                            <i class="fas fa-forward me-2"></i>Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase5-1 Video Section -->
+            <div id="phase5-1-video-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-video me-2"></i>Phase 5 - Final Decision</h3>
+                </div>
+                <div class="card-body">
+                    <div class="video-container mb-4">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <video 
+                                id="phase5-1-video"
+                                class="embed-responsive-item" 
+                                controls
+                                autoplay
+                                playsinline
+                                style="width: 100%; height: 100%; border-radius: 15px;">
+                                <source src="{{ url_for('static', filename='videos/phase_5_1_web.mp4') }}" type="video/mp4">
+                                Votre navigateur ne supporte pas la lecture vidéo.
+                            </video>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="call-after-phase5-1-video-btn" class="btn btn-success btn-lg">
+                            <i class="fas fa-phone me-2"></i>Call
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase5-2 Video Section -->
+            <div id="phase5-2-video-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-video me-2"></i>Phase 5 - Final Decision</h3>
+                </div>
+                <div class="card-body">
+                    <div class="video-container mb-4">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <video 
+                                id="phase5-2-video"
+                                class="embed-responsive-item" 
+                                controls
+                                autoplay
+                                playsinline
+                                style="width: 100%; height: 100%; border-radius: 15px;">
+                                <source src="{{ url_for('static', filename='videos/phase_5_2_web.mp4') }}" type="video/mp4">
+                                Votre navigateur ne supporte pas la lecture vidéo.
+                            </video>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="continue-after-phase5-2-video-btn" class="btn btn-primary btn-lg">
+                            <i class="fas fa-forward me-2"></i>Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recap Video Section -->
+            <div id="recap-video-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-video me-2"></i>Game Recap</h3>
+                </div>
+                <div class="card-body">
+                    <div class="video-container mb-4">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <video 
+                                id="recap-video"
+                                class="embed-responsive-item" 
+                                controls
+                                autoplay
+                                playsinline
+                                style="width: 100%; height: 100%; border-radius: 15px;">
+                                <source src="{{ url_for('static', filename='videos/recap_web.mp4') }}" type="video/mp4">
+                                Votre navigateur ne supporte pas la lecture vidéo.
+                            </video>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="finish-game-btn" class="btn btn-success btn-lg">
+                            <i class="fas fa-check-circle me-2"></i>Finish Game
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Harnessing Video Section -->
+            <div id="harnessing-video-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-video me-2"></i>Introduction</h3>
+                </div>
+                <div class="card-body">
+                    <div class="video-container mb-4">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <video 
+                                id="harnessing-video"
+                                class="embed-responsive-item" 
+                                controls
+                                autoplay
+                                playsinline
+                                style="width: 100%; height: 100%; border-radius: 15px;">
+                                <source src="{{ url_for('static', filename='videos/introduction_web.mp4') }}" type="video/mp4">
+                                Votre navigateur ne supporte pas la lecture vidéo.
+                            </video>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="skip-harnessing-btn" class="btn btn-outline-primary me-3">
+                            <i class="fas fa-forward me-2"></i>Continue
+                        </button>
+                        <button id="start-game-after-harnessing-btn" class="btn btn-primary" style="display: none;">
+                            <i class="fas fa-play me-2"></i>Start Game
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Phase 1: Character Selection -->
+            <div id="phase1-section" class="phase-section card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-users me-2"></i>Phase 1 - Embedding GenAI in your HR transformation</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-info-circle me-3 mt-1" style="color: #0dcaf0; font-size: 1.2rem;"></i>
+                            <div>
+                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
+                                <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
+                                    You have heard three different approaches on how to move forward. It's time to determine which one is best.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="lead mb-4">Choose your initial approach for GenAI transformation:</p>
+                    
+                    
+                    <div id="phase1-choices" class="row"></div>
+                </div>
+            </div>
+
+            <!-- Phase 2: Portfolio Selection -->
+            <div id="phase2-section" class="phase-section card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-chart-line me-2"></i>Phase 2 - Revisiting your HR and AI portfolio</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-info-circle me-3 mt-1" style="color: #0dcaf0; font-size: 1.2rem;"></i>
+                            <div>
+                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
+                                <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
+                                    Among the five generative AI and AI solutions highlighted on the matrix, which three will you select and launch first?
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="lead mb-4">Select 3 AI/GenAI solutions from the 5 available:</p>
+                    <div id="phase2-choices" class="row"></div>
+                    <div class="mt-4 text-center">
+                        <span id="phase2-selected-count" class="badge me-3">0/3 selected</span>
+                        <button id="phase2-confirm-btn" class="btn btn-primary" disabled onclick="gameController.confirmPhase2Choices()">
+                            <i class="fas fa-check me-2"></i>Confirm Selection
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 3: Enabler Selection -->
+            <div id="phase3-section" class="phase-section card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-cogs me-2"></i>Phase 3 - Launching your priority HR and GenAI pilots</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-info-circle me-3 mt-1" style="color: #0dcaf0; font-size: 1.2rem;"></i>
+                            <div>
+                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
+                                <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
+                                    Select the most impactful and timely facilitator in each line to accelerate value creation from your AI and GenAI pilots: People & Processes, Platform & Partnerships, Policies & Practices.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="lead mb-4">Select 1 enabler per category:</p>
+                    <div id="phase3-choices"></div>
+                    <div class="mt-4 text-center">
+                        <button id="phase3-confirm-btn" class="btn btn-primary" disabled>
+                            <i class="fas fa-check me-2"></i>Confirm Selection
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 4: Budget Selection -->
+            <div id="phase4-section" class="phase-section card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-coins me-2"></i>Phase 4 - Scaling your priority HR and GenAI solutions</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-info-circle me-3 mt-1" style="color: #0dcaf0; font-size: 1.2rem;"></i>
+                            <div>
+                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
+                                <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
+                                    Select the most impactful and timely facilitators within your 30-point budget that will allow you to successfully scale your AI and GenAI solutions to continue accelerating value delivery. Don't forget you need to balance between different categories.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="lead mb-4">Select enablers to reach exactly 30 points:</p>
+                    <div id="phase4-choices" class="row"></div>
+                    <div class="mt-4 text-center">
+                        <span id="phase4-budget-display" class="badge me-3">0/30 points</span>
+                        <button id="phase4-confirm-btn" class="btn btn-primary" disabled onclick="gameController.confirmPhase4Choices()">
+                            <i class="fas fa-check me-2"></i>Confirm Selection
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 5: Final Selection -->
+            <div id="phase5-section" class="phase-section card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-flag-checkered me-2"></i>Phase 5 - Deploying AI and GenAI across the organization</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-info-circle me-3 mt-1" style="color: #0dcaf0; font-size: 1.2rem;"></i>
+                            <div>
+                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
+                                <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
+                                    Select the option that will maximize your chances of bringing the most new scaled solutions to market. Consider what you need most at this stage of transformation to scale effectively.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="lead mb-4">Choose your final approach:</p>
+                    <div id="phase5-choices" class="row"></div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div id="results-section" class="card mb-4" style="display: none;">
+                <div class="card-header">
+                    <h3><i class="fas fa-trophy me-2"></i>Résultats</h3>
+                </div>
+                <div class="card-body text-center">
+                    <div id="results-content"></div>
+                    <button id="play-again-btn" class="btn btn-primary btn-lg mt-4">
+                        <i class="fas fa-redo me-2"></i>Rejouer
+                    </button>
+                </div>
+            </div>
+
+            <!-- Score Display -->
+            <div class="card mb-4" style="display: none;" id="score-display-card">
+                <div class="card-header">
+                    <h5><i class="fas fa-star me-2"></i>Score Actuel</h5>
+                </div>
+                <div class="card-body">
+                    <div id="score-display" class="text-center">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="score-item">
+                                    <strong>Phase1</strong><br>
+                                    <span id="phase1-score" class="score-value">-</span>/3
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="score-item">
+                                    <strong>Phase2</strong><br>
+                                    <span id="phase2-score" class="score-value">-</span>/3
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="score-item">
+                                    <strong>Phase3</strong><br>
+                                    <span id="phase3-score" class="score-value">-</span>/3
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="score-item">
+                                    <strong>Phase4</strong><br>
+                                    <span id="phase4-score" class="score-value">-</span>/3
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="score-item">
+                                    <strong>Phase5</strong><br>
+                                    <span id="phase5-score" class="score-value">-</span>/3
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="score-item total-score">
+                                    <strong>TOTAL</strong><br>
+                                    <span id="total-score" class="score-value">0</span>/15
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="card mb-4" style="display: none;" id="progress-card">
+                <div class="card-body">
+                    <h5><i class="fas fa-tasks me-2"></i>Progress</h5>
+                    <div class="progress">
+                        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <div id="progress-text" class="mt-3 text-center">Ready to start</div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(30, 58, 138, 0.3);">
+                <div class="modal-body text-center py-5">
+                    <div class="spinner-border text-primary mb-4" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                    <h5 class="mb-3" style="color: var(--fdj-blue-primary);">Chargement...</h5>
+                    <p class="text-muted mb-4">Préparation de votre expérience de jeu</p>
+                    <button type="button" class="btn btn-outline-secondary" onclick="gameController.forceCloseModal()">
+                        <i class="fas fa-times me-2"></i>Fermer si bloqué
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score Screen Modal -->
+    <div class="modal fade" id="scoreModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="score-screen-content">
+                        <div class="score-header">
+                            <div class="moment-score-label">MOMENT SCORE</div>
+                            <div class="moment-title" id="current-mot-title">Embedding GenAI in your AI transformation program</div>
+                        </div>
+                        
+                        <div class="score-display-large">
+                            <h1 class="score-title">Your score</h1>
+                            
+                            <div class="score-stars" id="score-stars-container">
+                                <!-- Stars will be populated here -->
+                            </div>
+                            
+                            <div class="score-message">
+                                <p id="score-description">Congratulations! By going with Christelle, you earned three out of three stars for this moment. These stars will be a quick visual cue of your overall success throughout the rest of the game.</p>
+                            </div>
+                        
+                        <div class="progress-summary">
+                            <h4>Score Progress</h4>
+                            <div class="mot-squares">
+                                <div class="mot-square" id="phase1-square">1</div>
+                                <div class="mot-square" id="phase2-square">2</div>
+                                <div class="mot-square" id="phase3-square">3</div>
+                                <div class="mot-square" id="phase4-square">4</div>
+                                <div class="mot-square" id="phase5-square">5</div>
+                            </div>
+                            <div class="total-badge" id="total-badge">Total: 0/15</div>
+                        </div>
+                        
+                        <button id="next-button" class="btn">
+                            NEXT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="{{ url_for('static', filename='js/game.js') }}?v=1.8-phase-complete"></script>
+</body>
+</html>

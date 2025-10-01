@@ -1,0 +1,176 @@
+[
+  {
+    "mot1_choice": "elena",
+    "mot2_choices": [
+      "hr_automation",
+      "sentiment_analysis",
+      "virtual_hr_assistant"
+    ],
+    "mot3_choices": {
+      "people_processes": "hr_ai_training",
+      "platform_partnerships": "system_integration",
+      "policies_practices": "ai_ethics_charter"
+    },
+    "mot4_choices": [
+      "tech_stack_data_pipelines",
+      "change_management",
+      "internal_mobility",
+      "ceo_video_series"
+    ],
+    "mot5_choice": "capability_building",
+    "total_score": 10,
+    "stars": 2,
+    "mot_scores": {
+      "mot1": 3,
+      "mot2": 2,
+      "mot3": 1,
+      "mot4": 2,
+      "mot5": 2
+    }
+  },
+  {
+    "mot1_choice": "james",
+    "mot2_choices": [
+      "intelligent_recruitment",
+      "sentiment_analysis",
+      "hr_automation"
+    ],
+    "mot3_choices": {
+      "people_processes": "hr_ai_training",
+      "platform_partnerships": "system_integration",
+      "policies_practices": "ai_ethics_charter"
+    },
+    "mot4_choices": [
+      "tech_stack_data_pipelines",
+      "change_management",
+      "ceo_video_series",
+      "internal_mobility"
+    ],
+    "mot5_choice": "capability_building",
+    "total_score": 9,
+    "stars": 1,
+    "mot_scores": {
+      "mot1": 2,
+      "mot2": 2,
+      "mot3": 1,
+      "mot4": 2,
+      "mot5": 2
+    }
+  },
+  {
+    "mot1_choice": "elena",
+    "mot2_choices": [
+      "virtual_hr_assistant",
+      "hr_automation",
+      "sentiment_analysis"
+    ],
+    "mot3_choices": {
+      "policies_practices": "performance_metrics",
+      "platform_partnerships": "cloud_infrastructure",
+      "people_processes": "hr_ai_training"
+    },
+    "mot4_choices": [
+      "tech_stack_data_pipelines",
+      "change_management",
+      "internal_mobility",
+      "ceo_video_series"
+    ],
+    "mot5_choice": "capability_building",
+    "total_score": 11,
+    "stars": 2,
+    "mot_scores": {
+      "mot1": 3,
+      "mot2": 2,
+      "mot3": 2,
+      "mot4": 2,
+      "mot5": 2
+    }
+  },
+  {
+    "mot1_choice": "james",
+    "mot2_choices": [
+      "intelligent_recruitment",
+      "virtual_hr_assistant",
+      "hr_automation"
+    ],
+    "mot3_choices": {
+      "people_processes": "hr_ai_training",
+      "platform_partnerships": "system_integration",
+      "policies_practices": "ai_ethics_charter"
+    },
+    "mot4_choices": [
+      "tech_stack_data_pipelines",
+      "change_management",
+      "internal_mobility",
+      "ceo_video_series"
+    ],
+    "mot5_choice": "capability_building",
+    "total_score": 9,
+    "stars": 1,
+    "mot_scores": {
+      "mot1": 2,
+      "mot2": 2,
+      "mot3": 1,
+      "mot4": 2,
+      "mot5": 2
+    }
+  },
+  {
+    "mot1_choice": "james",
+    "mot2_choices": [
+      "hr_automation",
+      "virtual_hr_assistant",
+      "sentiment_analysis"
+    ],
+    "mot3_choices": {
+      "people_processes": "hr_ai_training",
+      "platform_partnerships": "system_integration",
+      "policies_practices": "ai_ethics_charter"
+    },
+    "mot4_choices": [
+      "tech_stack_data_pipelines",
+      "change_management",
+      "internal_mobility",
+      "ceo_video_series"
+    ],
+    "mot5_choice": "capability_building",
+    "total_score": 9,
+    "stars": 1,
+    "mot_scores": {
+      "mot1": 2,
+      "mot2": 2,
+      "mot3": 1,
+      "mot4": 2,
+      "mot5": 2
+    }
+  },
+  {
+    "mot1_choice": "james",
+    "mot2_choices": [
+      "intelligent_recruitment",
+      "hr_automation",
+      "sentiment_analysis"
+    ],
+    "mot3_choices": {
+      "people_processes": "hr_role_redefinition",
+      "platform_partnerships": "system_integration",
+      "policies_practices": "ai_ethics_charter"
+    },
+    "mot4_choices": [
+      "tech_stack_data_pipelines",
+      "internal_mobility",
+      "change_management",
+      "business_sponsors"
+    ],
+    "mot5_choice": "capability_building",
+    "total_score": 9,
+    "stars": 1,
+    "mot_scores": {
+      "mot1": 2,
+      "mot2": 2,
+      "mot3": 1,
+      "mot4": 2,
+      "mot5": 2
+    }
+  }
+]
