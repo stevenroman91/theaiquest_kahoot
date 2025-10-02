@@ -695,7 +695,7 @@ class GameController {
         this.updateProgress(30, 'Phase 1 - Embedding GenAI');
         
         // Initialize Phase1 video
-        this.initializePhase1Video();
+        initializePhase1Video();
     }
 
     showPhase2Video() {
@@ -711,7 +711,7 @@ class GameController {
         this.updateProgress(50, 'Phase 2 - HR Portfolio Selection');
         
         // Initialize Phase2 video
-        this.initializePhase2Video();
+        initializePhase2Video();
     }
 
     showPhase3Video() {
@@ -727,7 +727,7 @@ class GameController {
         this.updateProgress(70, 'Phase 3 - Launching your priority HR and GenAI pilots');
         
         // Initialize Phase3 video
-        this.initializePhase3Video();
+        initializePhase3Video();
     }
 
     showPhase4Video() {
@@ -743,7 +743,7 @@ class GameController {
         this.updateProgress(90, 'Phase 4 - Scaling your AI and GenAI solutions');
         
         // Initialize Phase4 video
-        this.initializePhase4Video();
+        initializePhase4Video();
     }
 
     showPhase5_1Video() {
@@ -759,7 +759,7 @@ class GameController {
         this.updateProgress(95, 'Phase 5 - Final Decision');
         
         // Initialize Phase5-1 video
-        this.initializePhase5_1Video();
+        initializePhase5_1Video();
     }
 
     showPhase5_2Video() {
@@ -774,7 +774,7 @@ class GameController {
         this.updateProgress(98, 'Phase 5 - Final Decision');
         
         // Initialize Phase5-2 video
-        this.initializePhase5_2Video();
+        initializePhase5_2Video();
     }
 
     showRecapVideo() {
@@ -821,6 +821,9 @@ class GameController {
     }
 
     startMOT1Game() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide MOT1 video section completely
         document.getElementById('phase1-video-section').style.display = 'none';
         
@@ -830,6 +833,9 @@ class GameController {
     }
 
     startPhase2Game() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide Phase2 video section completely
         document.getElementById('phase2-video-section').style.display = 'none';
         
@@ -838,6 +844,9 @@ class GameController {
     }
 
     startPhase3Game() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide Phase3 video section completely
         document.getElementById('phase3-video-section').style.display = 'none';
         
@@ -846,6 +855,9 @@ class GameController {
     }
 
     startPhase4Game() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide Phase4 video section completely
         document.getElementById('phase4-video-section').style.display = 'none';
         
@@ -854,6 +866,9 @@ class GameController {
     }
 
     startPhase5Game() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide Phase5-2 video section completely
         document.getElementById('phase5-2-video-section').style.display = 'none';
         
