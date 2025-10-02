@@ -574,13 +574,21 @@ class GameController {
     }
 
     showSection(sectionId) {
+        console.log('=== showSection called with:', sectionId, '===');
         // Hide all sections
         document.querySelectorAll('[id$="-section"]').forEach(section => {
             section.style.display = 'none';
         });
         
         // Show target section
-        document.getElementById(sectionId).style.display = 'block';
+        const targetSection = document.getElementById(sectionId);
+        console.log('Target section element:', targetSection);
+        if (targetSection) {
+            targetSection.style.display = 'block';
+            console.log('Section', sectionId, 'should now be visible');
+        } else {
+            console.error('Section', sectionId, 'not found!');
+        }
     }
 
     updateProgress(percentage, text) {
@@ -855,6 +863,7 @@ class GameController {
     }
 
     startPhase4Game() {
+        console.log('=== startPhase4Game called ===');
         // Arrêter toutes les vidéos en cours
         this.stopAllVideos();
         
@@ -862,6 +871,7 @@ class GameController {
         document.getElementById('phase4-video-section').style.display = 'none';
         
         // Go directly to Phase4 game
+        console.log('Calling loadMOT4Choices...');
         this.loadMOT4Choices();
     }
 
@@ -1284,59 +1294,110 @@ class GameController {
         const container = document.getElementById('phase3-choices');
         container.innerHTML = '';
 
+        // Define category metadata
+        const categoryMetadata = {
+            'people_processes': {
+                title: 'People & Processes',
+                icon: 'fas fa-users',
+                class: 'people-processes'
+            },
+            'platform_partnerships': {
+                title: 'Platform & Partnerships',
+                icon: 'fas fa-handshake',
+                class: 'platform-partnerships'
+            },
+            'policies_practices': {
+                title: 'Policies & Practices',
+                icon: 'fas fa-shield-alt',
+                class: 'policies-practices'
+            }
+        };
+
+        // Create matrix structure
         Object.entries(choices).forEach(([category, categoryChoices]) => {
             const categoryDiv = document.createElement('div');
-            categoryDiv.className = 'mb-4';
+            categoryDiv.className = 'matrix-category';
+            
+            const metadata = categoryMetadata[category] || { title: category, icon: 'fas fa-cog', class: '' };
+            
             categoryDiv.innerHTML = `
-                <h5>${category}</h5>
-                <div class="row">
-                    ${categoryChoices.map(choice => `
-                        <div class="col-md-6 mb-3">
-                            <div class="card choice-card" data-choice-id="${choice.id}" data-category="${category}">
-                                <div class="card-body">
-                                    <h6 class="card-title">${choice.title}</h6>
-                                    <p class="card-text">${choice.description}</p>
-                                    <div class="text-center">
-                                        <button class="btn btn-outline-primary btn-sm" onclick="gameController.selectMOT3Choice('${choice.id}', '${category}')">
-                                            Select
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
+                <div class="category-header ${metadata.class}">
+                    <i class="${metadata.icon} me-2"></i>${metadata.title}
                 </div>
+                ${categoryChoices.map(choice => `
+                    <div class="matrix-choice" data-choice-id="${choice.id}" data-category="${category}" onclick="gameController.selectMOT3Choice('${choice.id}', '${category}')">
+                        <div class="choice-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="choice-title">${choice.title}</div>
+                        <div class="choice-description">${choice.description}</div>
+                    </div>
+                `).join('')}
             `;
             container.appendChild(categoryDiv);
         });
+
+        // Initialize progress tracking
+        this.initializePhase3Progress();
+    }
+
+    initializePhase3Progress() {
+        // Reset progress
+        this.updatePhase3Progress(0);
+    }
+
+    updatePhase3Progress(selectedCount) {
+        const progressText = document.getElementById('phase3-progress-text');
+        const confirmBtn = document.getElementById('phase3-confirm-btn');
+        
+        progressText.textContent = `${selectedCount}/3 selected`;
+        
+        // Update progress steps
+        for (let i = 1; i <= 3; i++) {
+            const step = document.querySelector(`.progress-step[data-step="${i}"]`);
+            if (i <= selectedCount) {
+                step.classList.add('completed');
+            } else {
+                step.classList.remove('completed');
+            }
+        }
+        
+        // Enable/disable confirm button
+        if (selectedCount === 3) {
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('btn-secondary');
+            confirmBtn.classList.add('btn-primary');
+        } else {
+            confirmBtn.disabled = true;
+            confirmBtn.classList.remove('btn-primary');
+            confirmBtn.classList.add('btn-secondary');
+        }
     }
 
     async selectMOT3Choice(choiceId, category) {
         console.log('MOT3 choice selected:', choiceId, 'for category:', category);
-        this.selectedChoices.mot3[category] = choiceId;
-        console.log('MOT3 selected choices:', this.selectedChoices.mot3);
-        this.updateMOT3UI();
         
-        // Check if all categories are selected
-        const allCategories = ['people_processes', 'platform_partnerships', 'policies_practices'];
-        const selectedCategories = Object.keys(this.selectedChoices.mot3);
-        console.log('All categories:', allCategories);
-        console.log('Selected categories:', selectedCategories);
-        
-        // Enable/disable confirm button
-        const confirmBtn = document.getElementById('phase3-confirm-btn');
-        if (confirmBtn) {
-            if (allCategories.every(cat => selectedCategories.includes(cat))) {
-                confirmBtn.disabled = false;
-                confirmBtn.classList.remove('btn-secondary');
-                confirmBtn.classList.add('btn-primary');
-                console.log('MOT3 confirm button enabled');
-            } else {
-                confirmBtn.disabled = true;
-                confirmBtn.classList.remove('btn-primary');
-                confirmBtn.classList.add('btn-secondary');
+        // Remove previous selection from this category
+        const previousChoice = this.selectedChoices.mot3[category];
+        if (previousChoice) {
+            const previousElement = document.querySelector(`[data-choice-id="${previousChoice}"][data-category="${category}"]`);
+            if (previousElement) {
+                previousElement.classList.remove('selected');
             }
         }
+        
+        // Add new selection
+        this.selectedChoices.mot3[category] = choiceId;
+        const selectedElement = document.querySelector(`[data-choice-id="${choiceId}"][data-category="${category}"]`);
+        if (selectedElement) {
+            selectedElement.classList.add('selected');
+        }
+        
+        console.log('MOT3 selected choices:', this.selectedChoices.mot3);
+        
+        // Update progress
+        const selectedCount = Object.keys(this.selectedChoices.mot3).length;
+        this.updatePhase3Progress(selectedCount);
     }
 
     updateMOT3UI() {
@@ -1394,19 +1455,29 @@ class GameController {
     }
 
     async loadMOT4Choices() {
+        console.log('=== loadMOT4Choices called ===');
         // Reset budget for MOT4
         this.budget = 0;
         this.selectedChoices.mot4 = [];
         
         try {
+            console.log('Fetching Phase 4 choices...');
             const response = await fetch('/api/phase4/choices');
             const data = await response.json();
+            console.log('Phase 4 API response:', data);
 
             if (data.success) {
+                console.log('Phase 4 choices loaded successfully:', data.choices);
                 this.renderMOT4Choices(data.choices);
+                console.log('About to show phase4-section...');
                 this.showSection('phase4-section');
+                console.log('Phase 4 section should now be visible');
+            } else {
+                console.error('Phase 4 API failed:', data.message);
+                this.showAlert('Erreur lors du chargement des choix Phase 4: ' + data.message, 'danger');
             }
         } catch (error) {
+            console.error('Phase 4 loading error:', error);
             this.showAlert('Erreur lors du chargement des choix', 'danger');
         }
     }
@@ -1415,25 +1486,93 @@ class GameController {
         const container = document.getElementById('phase4-choices');
         container.innerHTML = '';
 
+        // Define category colors and icons
+        const categoryStyles = {
+            'platform_partnerships': {
+                color: '#8b5cf6', // Purple
+                icon: 'fas fa-handshake'
+            },
+            'policies_practices': {
+                color: '#06b6d4', // Blue
+                icon: 'fas fa-shield-alt'
+            },
+            'people_processes': {
+                color: '#f59e0b', // Yellow
+                icon: 'fas fa-users'
+            }
+        };
+
+        // Create 3x3 matrix directly (no grouping by category)
         choices.forEach(choice => {
-            const card = document.createElement('div');
-            card.className = 'col-md-4 mb-3';
-            card.innerHTML = `
-                <div class="card choice-card" data-choice-id="${choice.id}" data-cost="${choice.cost}">
-                    <div class="card-body">
-                        <h5 class="card-title">${choice.title}</h5>
-                        <p class="card-text">${choice.description}</p>
-                        <div class="text-center">
-                            <span class="badge bg-info mb-2">${choice.cost} points</span><br>
-                            <button class="btn btn-outline-primary btn-sm" onclick="gameController.selectMOT4Choice('${choice.id}', ${choice.cost})">
-                                Select
-                            </button>
-                        </div>
-                    </div>
+            const choiceDiv = document.createElement('div');
+            choiceDiv.className = 'matrix-choice';
+            choiceDiv.dataset.choiceId = choice.id;
+            choiceDiv.dataset.cost = choice.cost;
+            choiceDiv.onclick = () => gameController.selectMOT4Choice(choice.id, choice.cost);
+            
+            const style = categoryStyles[choice.category] || { color: '#6b7280', icon: 'fas fa-cog' };
+            
+            choiceDiv.innerHTML = `
+                <div class="choice-icon" style="color: ${style.color};">
+                    <i class="${style.icon}"></i>
                 </div>
+                <div class="choice-title">${choice.title}</div>
+                <div class="choice-description">${choice.description}</div>
+                <div class="choice-cost">${choice.cost}</div>
             `;
-            container.appendChild(card);
+            container.appendChild(choiceDiv);
         });
+
+        // Initialize budget tracking
+        this.initializePhase4Budget();
+    }
+
+    initializePhase4Budget() {
+        // Reset budget
+        this.budget = 0;
+        this.updatePhase4Budget();
+    }
+
+    updatePhase4Budget() {
+        const budgetDisplay = document.getElementById('phase4-budget-display');
+        const budgetFill = document.getElementById('budget-fill');
+        const statusBadge = document.getElementById('budget-status');
+        const confirmBtn = document.getElementById('phase4-confirm-btn');
+        
+        // Update budget display
+        budgetDisplay.textContent = `${this.budget}/30 points`;
+        
+        // Update budget bar fill
+        const fillPercentage = (this.budget / 30) * 100;
+        budgetFill.style.height = `${fillPercentage}%`;
+        
+        // Update status badge
+        statusBadge.className = 'badge';
+        
+        if (this.budget === 0) {
+            statusBadge.classList.add('badge-secondary');
+            statusBadge.textContent = 'Select enablers';
+        } else if (this.budget < 30) {
+            statusBadge.classList.add('badge-warning');
+            statusBadge.textContent = `${30 - this.budget} points needed`;
+        } else if (this.budget === 30) {
+            statusBadge.classList.add('badge-success');
+            statusBadge.textContent = 'Perfect budget!';
+        } else {
+            statusBadge.classList.add('badge-danger');
+            statusBadge.textContent = `${this.budget - 30} points over`;
+        }
+        
+        // Enable/disable confirm button
+        if (this.budget === 30) {
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('btn-secondary');
+            confirmBtn.classList.add('btn-primary');
+        } else {
+            confirmBtn.disabled = true;
+            confirmBtn.classList.remove('btn-primary');
+            confirmBtn.classList.add('btn-secondary');
+        }
     }
 
     async selectMOT4Choice(choiceId, cost) {
@@ -1460,22 +1599,18 @@ class GameController {
             console.log('Selected, new budget:', this.budget);
         }
 
-        this.updateMOT4UI();
-        
-        // Enable/disable confirm button
-        const confirmBtn = document.getElementById('phase4-confirm-btn');
-        if (confirmBtn) {
-            if (this.budget === this.maxBudget) {
-                confirmBtn.disabled = false;
-                confirmBtn.classList.remove('btn-secondary');
-                confirmBtn.classList.add('btn-primary');
-                console.log('MOT4 confirm button enabled');
+        // Update visual selection state
+        const choiceElement = document.querySelector(`[data-choice-id="${choiceId}"]`);
+        if (choiceElement) {
+            if (this.selectedChoices.mot4.includes(choiceId)) {
+                choiceElement.classList.add('selected');
             } else {
-                confirmBtn.disabled = true;
-                confirmBtn.classList.remove('btn-primary');
-                confirmBtn.classList.add('btn-secondary');
+                choiceElement.classList.remove('selected');
             }
         }
+
+        // Update budget display and UI
+        this.updatePhase4Budget();
         
         // Note: No auto-confirmation for MOT4, user must click confirm button
     }
@@ -2011,9 +2146,9 @@ class GameController {
                 this.showPhase3Video();
                 break;
             case 3:
-                console.log('Showing Phase4 video...');
+                console.log('Starting Phase4 game...');
                 this.currentPhaseNumber = 4;
-                this.showPhase4Video();
+                this.startPhase4Game();
                 break;
             case 4:
                 console.log('Showing Phase5-1 video...');

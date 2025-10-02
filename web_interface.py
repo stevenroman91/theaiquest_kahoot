@@ -445,13 +445,28 @@ def api_phase4_choices():
     game = get_game()
     choices = game.get_mot4_choices()
     
+    # Define category for each choice
+    choice_categories = {
+        'apis_internal_vendor': 'platform_partnerships',
+        'tech_stack_pipelines': 'platform_partnerships',
+        'internal_mobility': 'people_processes',
+        'responsible_ai_lead': 'policies_practices',
+        'risk_mitigation': 'policies_practices',
+        'data_collection_strategy': 'platform_partnerships',
+        'business_sponsors': 'people_processes',
+        'ceo_video_series': 'people_processes',
+        'change_management': 'people_processes'
+    }
+    
     return jsonify({
         'success': True,
         'choices': [
             {
                 'id': choice.id,
                 'title': choice.title,
-                'cost': choice.cost
+                'description': choice.description,
+                'cost': choice.cost,
+                'category': choice_categories.get(choice.id, 'people_processes')
             }
             for choice in choices
         ]
