@@ -272,13 +272,24 @@ def api_phase2_choices():
     game = get_game()
     choices = game.get_mot2_choices()
     
+    # Define feasibility and impact for each choice
+    choice_metadata = {
+        'hr_automation': {'feasibility': 'High', 'impact': 'High'},
+        'virtual_hr_assistant': {'feasibility': 'High', 'impact': 'Medium'},
+        'sentiment_analysis': {'feasibility': 'High', 'impact': 'High'},
+        'intelligent_recruitment': {'feasibility': 'High', 'impact': 'High'},
+        'predictive_analytics': {'feasibility': 'Medium', 'impact': 'High'}
+    }
+    
     return jsonify({
         'success': True,
         'choices': [
             {
                 'id': choice.id,
                 'title': choice.title,
-                'description': choice.description
+                'description': choice.description,
+                'feasibility': choice_metadata.get(choice.id, {}).get('feasibility', 'High'),
+                'impact': choice_metadata.get(choice.id, {}).get('impact', 'High')
             }
             for choice in choices
         ]

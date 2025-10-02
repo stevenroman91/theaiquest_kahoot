@@ -457,7 +457,7 @@
                 </div>
             </div>
 
-            <!-- Phase 2: Portfolio Selection -->
+            <!-- Phase 2: Portfolio Selection with Drag & Drop -->
             <div id="phase2-section" class="phase-section card mb-4" style="display: none;">
                 <div class="card-header">
                     <h3><i class="fas fa-chart-line me-2"></i>Phase 2 - Revisiting your HR and AI portfolio</h3>
@@ -475,8 +475,35 @@
                         </div>
                     </div>
                     
-                    <p class="lead mb-4">Select 3 AI/GenAI solutions from the 5 available:</p>
-                    <div id="phase2-choices" class="row"></div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5 class="mb-3"><i class="fas fa-arrow-up me-2 text-success"></i>Top 3 Priorities (Drag & Drop)</h5>
+                            <div id="phase2-priorities" class="priorities-container mb-4">
+                                <div class="priority-slot" data-slot="1">
+                                    <div class="priority-placeholder">
+                                        <i class="fas fa-plus-circle me-2"></i>Priority 1
+                                    </div>
+                                </div>
+                                <div class="priority-slot" data-slot="2">
+                                    <div class="priority-placeholder">
+                                        <i class="fas fa-plus-circle me-2"></i>Priority 2
+                                    </div>
+                                </div>
+                                <div class="priority-slot" data-slot="3">
+                                    <div class="priority-placeholder">
+                                        <i class="fas fa-plus-circle me-2"></i>Priority 3
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h5 class="mb-3"><i class="fas fa-list me-2 text-info"></i>Available Solutions</h5>
+                            <div id="phase2-choices" class="available-solutions">
+                                <!-- Les cartes de solutions seront générées ici -->
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="mt-4 text-center">
                         <span id="phase2-selected-count" class="badge me-3">0/3 selected</span>
                         <button id="phase2-confirm-btn" class="btn btn-primary" disabled onclick="gameController.confirmPhase2Choices()">

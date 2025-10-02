@@ -4,15 +4,15 @@ class GameController {
     constructor() {
         this.currentState = 'login';
         this.selectedChoices = {
-            mot1: null,
-            mot2: [],
-            mot3: {},
-            mot4: [],
-            mot5: null
+            phase1: null,
+            phase2: [],
+            phase3: {},
+            phase4: [],
+            phase5: null
         };
         this.budget = 0;
         this.maxBudget = 30;
-        this.currentPhaseNumber = 1;
+        this.currentPhaseNumber = 1; // Initialize current phase number
         
         this.initializeEventListeners();
     }
@@ -84,8 +84,8 @@ class GameController {
                 modal.hide();
             }
             
-            // Get current scores and show global score recap
-            this.getCurrentScoresAndShowRecap(phaseNumber);
+            // Proceed directly to next phase
+            this.proceedToActualNextPhase(phaseNumber);
         });
 
         // Skip video button
@@ -102,63 +102,15 @@ class GameController {
         const nextToHarnessingBtn = document.getElementById('next-to-harnessing-btn');
         if (nextToHarnessingBtn) {
             nextToHarnessingBtn.addEventListener('click', () => {
-                this.showMOT1Video();
+                this.showPhase1Video();
             });
         }
 
         // Continue after Phase1 video button
-        const continueAfterMOT1VideoBtn = document.getElementById('continue-after-phase1-video-btn');
-        if (continueAfterMOT1VideoBtn) {
-            continueAfterMOT1VideoBtn.addEventListener('click', () => {
-                this.startMOT1Game();
-            });
-        }
-
-        // Continue after Phase2 video button
-        const continueAfterPhase2VideoBtn = document.getElementById('continue-after-phase2-video-btn');
-        if (continueAfterPhase2VideoBtn) {
-            continueAfterPhase2VideoBtn.addEventListener('click', () => {
-                this.startPhase2Game();
-            });
-        }
-
-        // Continue after Phase3 video button
-        const continueAfterPhase3VideoBtn = document.getElementById('continue-after-phase3-video-btn');
-        if (continueAfterPhase3VideoBtn) {
-            continueAfterPhase3VideoBtn.addEventListener('click', () => {
-                this.startPhase3Game();
-            });
-        }
-
-        // Continue after Phase4 video button
-        const continueAfterPhase4VideoBtn = document.getElementById('continue-after-phase4-video-btn');
-        if (continueAfterPhase4VideoBtn) {
-            continueAfterPhase4VideoBtn.addEventListener('click', () => {
-                this.startPhase4Game();
-            });
-        }
-
-        // Call after Phase5-1 video button
-        const callAfterPhase5_1VideoBtn = document.getElementById('call-after-phase5-1-video-btn');
-        if (callAfterPhase5_1VideoBtn) {
-            callAfterPhase5_1VideoBtn.addEventListener('click', () => {
-                this.showPhase5_2Video();
-            });
-        }
-
-        // Continue after Phase5-2 video button
-        const continueAfterPhase5_2VideoBtn = document.getElementById('continue-after-phase5-2-video-btn');
-        if (continueAfterPhase5_2VideoBtn) {
-            continueAfterPhase5_2VideoBtn.addEventListener('click', () => {
-                this.startPhase5Game();
-            });
-        }
-
-        // Finish game button
-        const finishGameBtn = document.getElementById('finish-game-btn');
-        if (finishGameBtn) {
-            finishGameBtn.addEventListener('click', () => {
-                this.finishGame();
+        const continueAfterPhase1VideoBtn = document.getElementById('continue-after-phase1-video-btn');
+        if (continueAfterPhase1VideoBtn) {
+            continueAfterPhase1VideoBtn.addEventListener('click', () => {
+                this.startPhase1Game();
             });
         }
 
@@ -174,39 +126,41 @@ class GameController {
         const startGameAfterHarnessingBtn = document.getElementById('start-game-after-harnessing-btn');
         if (startGameAfterHarnessingBtn) {
             startGameAfterHarnessingBtn.addEventListener('click', () => {
-                this.showMOT1Video();
+                this.showPhase1Video();
             });
         }
 
-        // Phase 2 confirm button
-        const mot2ConfirmBtn = document.getElementById('phase2-confirm-btn');
-        if (mot2ConfirmBtn) {
-            mot2ConfirmBtn.addEventListener('click', () => {
-                console.log('Phase 2 confirm button clicked!');
+        // Phase2 confirm button
+        const phase2ConfirmBtn = document.getElementById('phase2-confirm-btn');
+        if (phase2ConfirmBtn) {
+            phase2ConfirmBtn.addEventListener('click', () => {
+                console.log('Phase2 confirm button clicked!');
                 this.confirmPhase2Choices();
             });
         }
 
-        // Phase 3 confirm button
+        // Phase3 confirm button
         const phase3ConfirmBtn = document.getElementById('phase3-confirm-btn');
-        console.log('Phase 3 confirm button found:', phase3ConfirmBtn);
+        console.log('Phase3 confirm button found:', phase3ConfirmBtn);
         if (phase3ConfirmBtn) {
             phase3ConfirmBtn.addEventListener('click', () => {
-                console.log('Phase 3 confirm button clicked!');
-                this.confirmMOT3Choices();
-            });
-        }
-
-        // Phase 4 confirm button
-        const phase4ConfirmBtn = document.getElementById('phase4-confirm-btn');
-        console.log('Phase 4 confirm button found:', phase4ConfirmBtn);
-        if (phase4ConfirmBtn) {
-            phase4ConfirmBtn.addEventListener('click', () => {
-                console.log('=== Phase 4 CONFIRM BUTTON CLICKED ===');
-                this.confirmMOT4Choices();
+                console.log('Phase3 confirm button clicked!');
+                this.confirmPhase3Choices();
             });
         } else {
-            console.log('Phase 4 confirm button NOT FOUND!');
+            console.log('Phase3 confirm button NOT FOUND!');
+        }
+
+        // Phase4 confirm button
+        const phase4ConfirmBtn = document.getElementById('phase4-confirm-btn');
+        console.log('Phase4 confirm button found:', phase4ConfirmBtn);
+        if (phase4ConfirmBtn) {
+            phase4ConfirmBtn.addEventListener('click', () => {
+                console.log('=== Phase4 CONFIRM BUTTON CLICKED ===');
+                this.confirmPhase4Choices();
+            });
+        } else {
+            console.log('Phase4 confirm button NOT FOUND!');
         }
 
     }
@@ -262,9 +216,6 @@ class GameController {
         const usernameError = document.getElementById('reg-username-error');
         const value = usernameField.value.trim();
         
-        // Clear previous validation states
-        usernameField.classList.remove('is-invalid', 'is-valid');
-        
         if (!value) {
             usernameField.classList.add('is-invalid');
             usernameError.textContent = 'Username is required';
@@ -278,8 +229,8 @@ class GameController {
             usernameError.textContent = 'Username cannot exceed 50 characters';
             return false;
         } else {
+            usernameField.classList.remove('is-invalid');
             usernameField.classList.add('is-valid');
-            usernameError.textContent = '';
             return true;
         }
     }
@@ -290,9 +241,6 @@ class GameController {
         const value = emailField.value.trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         
-        // Clear previous validation states
-        emailField.classList.remove('is-invalid', 'is-valid');
-        
         if (!value) {
             emailField.classList.add('is-invalid');
             emailError.textContent = 'Email address is required';
@@ -302,8 +250,8 @@ class GameController {
             emailError.textContent = 'Invalid email address';
             return false;
         } else {
+            emailField.classList.remove('is-invalid');
             emailField.classList.add('is-valid');
-            emailError.textContent = '';
             return true;
         }
     }
@@ -312,9 +260,6 @@ class GameController {
         const passwordField = document.getElementById('reg-password');
         const passwordError = document.getElementById('reg-password-error');
         const value = passwordField.value;
-        
-        // Clear previous validation states
-        passwordField.classList.remove('is-invalid', 'is-valid');
         
         if (!value) {
             passwordField.classList.add('is-invalid');
@@ -325,8 +270,8 @@ class GameController {
             passwordError.textContent = 'Password must contain at least 6 characters';
             return false;
         } else {
+            passwordField.classList.remove('is-invalid');
             passwordField.classList.add('is-valid');
-            passwordError.textContent = '';
             return true;
         }
     }
@@ -337,9 +282,6 @@ class GameController {
         const confirmError = document.getElementById('reg-confirm-password-error');
         const value = confirmField.value;
         
-        // Clear previous validation states
-        confirmField.classList.remove('is-invalid', 'is-valid');
-        
         if (!value) {
             confirmField.classList.add('is-invalid');
             confirmError.textContent = 'Password confirmation is required';
@@ -349,8 +291,8 @@ class GameController {
             confirmError.textContent = 'Passwords do not match';
             return false;
         } else {
+            confirmField.classList.remove('is-invalid');
             confirmField.classList.add('is-valid');
-            confirmError.textContent = '';
             return true;
         }
     }
@@ -499,7 +441,7 @@ class GameController {
                     document.getElementById('progress-card').style.display = 'block';
                     this.updateProgress(10, 'Introduction Video');
                     
-                    // Initialize intro video
+                    // Initialize intro video with sound
                     initializeIntroVideo();
                     
                     // Reset button states
@@ -574,13 +516,22 @@ class GameController {
     }
 
     showSection(sectionId) {
+        console.log('showSection called with:', sectionId);
+        
         // Hide all sections
         document.querySelectorAll('[id$="-section"]').forEach(section => {
             section.style.display = 'none';
         });
         
         // Show target section
-        document.getElementById(sectionId).style.display = 'block';
+        const targetSection = document.getElementById(sectionId);
+        console.log('Target section found:', targetSection);
+        if (targetSection) {
+            targetSection.style.display = 'block';
+            console.log('Section', sectionId, 'should now be visible');
+        } else {
+            console.error('Section not found:', sectionId);
+        }
     }
 
     updateProgress(percentage, text) {
@@ -618,45 +569,13 @@ class GameController {
         }, 5000);
     }
 
-    stopAllVideos() {
-        // Liste de tous les IDs de vidéos possibles
-        const videoIds = [
-            'presentation-video',
-            'intro-video', 
-            'harnessing-video',
-            'phase1-video',
-            'phase2-video',
-            'phase3-video',
-            'phase4-video',
-            'phase5-1-video',
-            'phase5-2-video',
-            'recap-video',
-            'recap-video-results'
-        ];
-        
-        // Arrêter toutes les vidéos
-        videoIds.forEach(videoId => {
-            const videoElement = document.getElementById(videoId);
-            if (videoElement) {
-                videoElement.pause();
-                videoElement.currentTime = 0;
-                console.log(`Stopped video: ${videoId}`);
-            }
-        });
-        
-        // Arrêter aussi toutes les vidéos dans la page (au cas où)
-        const allVideos = document.querySelectorAll('video');
-        allVideos.forEach(video => {
-            video.pause();
-            video.currentTime = 0;
-        });
-        
-        console.log('All videos stopped');
-    }
-
     skipVideo() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
+        // Arrêter la vidéo actuelle avant de passer à la suivante
+        const currentVideo = document.getElementById('intro-video');
+        if (currentVideo) {
+            currentVideo.pause();
+            currentVideo.currentTime = 0;
+        }
         
         // Passer directement à la vidéo intro (intro.mp4)
         this.showSection('harnessing-video-section');
@@ -683,10 +602,7 @@ class GameController {
         document.getElementById('start-game-after-harnessing-btn').style.display = 'none';
     }
 
-    showMOT1Video() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
+    showPhase1Video() {
         // Hide harnessing video section completely
         document.getElementById('harnessing-video-section').style.display = 'none';
         
@@ -696,101 +612,6 @@ class GameController {
         
         // Initialize Phase1 video
         initializePhase1Video();
-    }
-
-    showPhase2Video() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
-        // Hide all other sections
-        document.getElementById('phase1-video-section').style.display = 'none';
-        document.getElementById('phase1-section').style.display = 'none';
-        
-        // Show Phase2 video
-        this.showSection('phase2-video-section');
-        this.updateProgress(50, 'Phase 2 - HR Portfolio Selection');
-        
-        // Initialize Phase2 video
-        initializePhase2Video();
-    }
-
-    showPhase3Video() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
-        // Hide all other sections
-        document.getElementById('phase2-video-section').style.display = 'none';
-        document.getElementById('phase2-section').style.display = 'none';
-        
-        // Show Phase3 video
-        this.showSection('phase3-video-section');
-        this.updateProgress(70, 'Phase 3 - Launching your priority HR and GenAI pilots');
-        
-        // Initialize Phase3 video
-        initializePhase3Video();
-    }
-
-    showPhase4Video() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
-        // Hide all other sections
-        document.getElementById('phase3-video-section').style.display = 'none';
-        document.getElementById('phase3-section').style.display = 'none';
-        
-        // Show Phase4 video
-        this.showSection('phase4-video-section');
-        this.updateProgress(90, 'Phase 4 - Scaling your AI and GenAI solutions');
-        
-        // Initialize Phase4 video
-        initializePhase4Video();
-    }
-
-    showPhase5_1Video() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
-        // Hide all other sections
-        document.getElementById('phase4-video-section').style.display = 'none';
-        document.getElementById('phase4-section').style.display = 'none';
-        
-        // Show Phase5-1 video
-        this.showSection('phase5-1-video-section');
-        this.updateProgress(95, 'Phase 5 - Final Decision');
-        
-        // Initialize Phase5-1 video
-        initializePhase5_1Video();
-    }
-
-    showPhase5_2Video() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
-        // Hide all other sections
-        document.getElementById('phase5-1-video-section').style.display = 'none';
-        
-        // Show Phase5-2 video
-        this.showSection('phase5-2-video-section');
-        this.updateProgress(98, 'Phase 5 - Final Decision');
-        
-        // Initialize Phase5-2 video
-        initializePhase5_2Video();
-    }
-
-    showRecapVideo() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
-        // Hide all other sections
-        document.getElementById('phase5-2-video-section').style.display = 'none';
-        document.getElementById('phase5-section').style.display = 'none';
-        
-        // Show Recap video
-        this.showSection('recap-video-section');
-        this.updateProgress(100, 'Game Recap');
-        
-        // Initialize Recap video
-        this.initializeRecapVideo();
     }
 
     showHarnessingVideo() {
@@ -810,84 +631,30 @@ class GameController {
     }
 
     skipHarnessingVideo() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
+        // Arrêter la vidéo harnessing avant de passer à la suivante
+        const harnessingVideo = document.getElementById('harnessing-video');
+        if (harnessingVideo) {
+            harnessingVideo.pause();
+            harnessingVideo.currentTime = 0;
+        }
         
         // Hide harnessing video section completely
         document.getElementById('harnessing-video-section').style.display = 'none';
         
-        // Go to MOT1 video
-        this.showMOT1Video();
+        // Go to Phase1 video
+        this.showPhase1Video();
     }
 
-    startMOT1Game() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
-        // Hide MOT1 video section completely
+    startPhase1Game() {
+        // Hide Phase1 video section completely
         document.getElementById('phase1-video-section').style.display = 'none';
         
-        // Go directly to MOT1 game
-        this.loadMOT1Choices();
+        // Go directly to Phase1 game
+        this.loadPhase1Choices();
         this.updateProgress(50, 'Game Start');
     }
 
-    startPhase2Game() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
-        // Hide Phase2 video section completely
-        document.getElementById('phase2-video-section').style.display = 'none';
-        
-        // Go directly to Phase2 game
-        this.loadMOT2Choices();
-    }
-
-    startPhase3Game() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
-        // Hide Phase3 video section completely
-        document.getElementById('phase3-video-section').style.display = 'none';
-        
-        // Go directly to Phase3 game
-        this.loadMOT3Choices();
-    }
-
-    startPhase4Game() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
-        // Hide Phase4 video section completely
-        document.getElementById('phase4-video-section').style.display = 'none';
-        
-        // Go directly to Phase4 game
-        this.loadMOT4Choices();
-    }
-
-    startPhase5Game() {
-        // Arrêter toutes les vidéos en cours
-        this.stopAllVideos();
-        
-        // Hide Phase5-2 video section completely
-        document.getElementById('phase5-2-video-section').style.display = 'none';
-        
-        // Go directly to Phase5 game
-        this.loadMOT5Choices();
-    }
-
-    finishGame() {
-        // Hide recap video section completely
-        document.getElementById('recap-video-section').style.display = 'none';
-        
-        // Show completion message
-        this.showAlert('Félicitations ! Vous avez terminé le jeu !', 'success');
-        
-        // Reset game state if needed
-        this.currentPhaseNumber = 1;
-    }
-
-    async loadMOT1Choices() {
+    async loadPhase1Choices() {
         try {
             const response = await fetch('/api/phase1/choices', {
                 credentials: 'include'
@@ -895,7 +662,7 @@ class GameController {
             const data = await response.json();
 
             if (data.success) {
-                this.renderMOT1Choices(data.choices);
+                this.renderPhase1Choices(data.choices);
                 this.showSection('phase1-section');
             }
         } catch (error) {
@@ -903,7 +670,7 @@ class GameController {
         }
     }
 
-    renderMOT1Choices(choices) {
+    renderPhase1Choices(choices) {
         const container = document.getElementById('phase1-choices');
         container.innerHTML = '';
 
@@ -928,7 +695,7 @@ class GameController {
     }
 
     async selectPhase1Choice(choiceId) {
-        console.log('Phase 1 choice selected:', choiceId);
+        console.log('Phase1 choice selected:', choiceId);
         this.showLoading(true);
 
         try {
@@ -942,225 +709,173 @@ class GameController {
             });
 
             const data = await response.json();
-            console.log('Phase 1 API response:', data);
+            console.log('MOT1 API response:', data);
 
             if (data.success) {
-                this.selectedChoices.mot1 = choiceId;
+                this.selectedChoices.phase1 = choiceId;
                 console.log('Full API response:', data);
+                console.log('Score data:', data.score);
                 
                 // Try different possible data structures
-                let scoreData, mot1Score;
+                let scoreData, phase1Score;
                 if (data.score_info) {
                     scoreData = data.score_info;
-                    mot1Score = data.score_info.scores.mot1;
+                    phase1Score = data.score_info.scores.mot1;
                 } else if (data.score) {
                     scoreData = data.score;
-                    mot1Score = data.score.scores.mot1;
+                    phase1Score = data.score.scores.mot1;
                 } else {
                     console.error('No score data found in response');
                     this.showAlert('Erreur: données de score manquantes', 'danger');
                     return;
                 }
                 
+                console.log('Score data extracted:', scoreData);
+                console.log('Phase1 score:', phase1Score);
+                
                 this.updateScoreDisplay(scoreData);
-                this.showScoreScreen(1, mot1Score, scoreData);
-                this.updateProgress(40, `Phase 1 completed - Score: ${mot1Score}/3`);
+                this.showScoreScreen(1, phase1Score, scoreData);
+                this.updateProgress(40, `Phase 1 completed - Score: ${phase1Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
         } catch (error) {
-            console.error('Phase 1 selection error:', error);
+            console.error('MOT1 selection error:', error);
             this.showAlert('Erreur lors de la sélection', 'danger');
         } finally {
             this.showLoading(false);
         }
     }
 
-    async loadMOT2Choices() {
+    async loadPhase2Choices() {
+        console.log('Loading Phase2 choices...');
         try {
             const response = await fetch('/api/phase2/choices', {
                 credentials: 'include'
             });
             const data = await response.json();
+            console.log('Phase2 API response:', data);
 
             if (data.success) {
-                this.renderMOT2Choices(data.choices);
+                console.log('Phase2 choices loaded successfully, rendering...');
+                this.renderPhase2Choices(data.choices);
+                console.log('Showing phase2-section...');
                 this.showSection('phase2-section');
+                console.log('Phase2 section should now be visible');
+            } else {
+                console.error('Phase2 API failed:', data.message);
+                this.showAlert('Erreur lors du chargement des choix Phase2: ' + data.message, 'danger');
             }
         } catch (error) {
-            this.showAlert('Erreur lors du chargement des choix', 'danger');
+            console.error('Phase2 loading error:', error);
+            this.showAlert('Erreur de connexion lors du chargement des choix Phase2', 'danger');
+        }
+    async loadPhase3Choices() {
+        console.log('Loading Phase3 choices...');
+        try {
+            const response = await fetch('/api/phase3/choices', {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            console.log('Phase3 API response:', data);
+
+            if (data.success) {
+                console.log('Phase3 choices loaded successfully, rendering...');
+                this.renderPhase3Choices(data.choices);
+                console.log('Showing phase3-section...');
+                this.showSection('phase3-section');
+                console.log('Phase3 section should now be visible');
+            } else {
+                console.error('Phase3 API failed:', data.message);
+                this.showAlert('Erreur lors du chargement des choix Phase3: ' + data.message, 'danger');
+            }
+        } catch (error) {
+            console.error('Phase3 loading error:', error);
+            this.showAlert('Erreur de connexion lors du chargement des choix Phase3', 'danger');
         }
     }
 
-    renderMOT2Choices(choices) {
+    async loadPhase4Choices() {
+        console.log('Loading Phase4 choices...');
+        try {
+            const response = await fetch('/api/phase4/choices', {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            console.log('Phase4 API response:', data);
+
+            if (data.success) {
+                console.log('Phase4 choices loaded successfully, rendering...');
+                this.renderPhase4Choices(data.choices);
+                console.log('Showing phase4-section...');
+                this.showSection('phase4-section');
+                console.log('Phase4 section should now be visible');
+            } else {
+                console.error('Phase4 API failed:', data.message);
+                this.showAlert('Erreur lors du chargement des choix Phase4: ' + data.message, 'danger');
+            }
+        } catch (error) {
+            console.error('Phase4 loading error:', error);
+            this.showAlert('Erreur de connexion lors du chargement des choix Phase4', 'danger');
+        }
+    }
+
+    async loadPhase5Choices() {
+        console.log('Loading Phase5 choices...');
+        try {
+            const response = await fetch('/api/phase5/choices', {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            console.log('Phase5 API response:', data);
+
+            if (data.success) {
+                console.log('Phase5 choices loaded successfully, rendering...');
+                this.renderPhase5Choices(data.choices);
+                console.log('Showing phase5-section...');
+                this.showSection('phase5-section');
+                console.log('Phase5 section should now be visible');
+            } else {
+                console.error('Phase5 API failed:', data.message);
+                this.showAlert('Erreur lors du chargement des choix Phase5: ' + data.message, 'danger');
+            }
+        } catch (error) {
+            console.error('Phase5 loading error:', error);
+            this.showAlert('Erreur de connexion lors du chargement des choix Phase5', 'danger');
+        }
+    }
+
+    renderPhase2Choices(choices) {
         const container = document.getElementById('phase2-choices');
         container.innerHTML = '';
 
         choices.forEach(choice => {
             const card = document.createElement('div');
-            card.className = 'solution-card';
-            card.draggable = true;
-            card.dataset.choiceId = choice.id;
+            card.className = 'col-md-4 mb-3';
             card.innerHTML = `
-                <div class="solution-options">
-                    <i class="fas fa-ellipsis-v"></i>
-                </div>
-                <div class="solution-title">${choice.title}</div>
-                <div class="solution-description">${choice.description}</div>
-                <div class="solution-badges">
-                    <span class="badge-feasibility">F: ${choice.feasibility || 'High'}</span>
-                    <span class="badge-impact">I: ${choice.impact || 'High'}</span>
+                <div class="card choice-card" data-choice-id="${choice.id}">
+                    <div class="card-body">
+                        <h5 class="card-title">${choice.title}</h5>
+                        <p class="card-text">${choice.description}</p>
+                        <div class="text-center">
+                            <button class="btn btn-outline-primary btn-sm" onclick="gameController.selectMOT2Choice('${choice.id}')">
+                                Select
+                            </button>
+                        </div>
+                    </div>
                 </div>
             `;
-            
-            // Add drag event listeners
-            card.addEventListener('dragstart', this.handleDragStart.bind(this));
-            card.addEventListener('dragend', this.handleDragEnd.bind(this));
-            
             container.appendChild(card);
         });
-
-        // Initialize priority slots
-        this.initializePrioritySlots();
-    }
-
-    initializePrioritySlots() {
-        const slots = document.querySelectorAll('.priority-slot');
-        slots.forEach(slot => {
-            slot.addEventListener('dragover', this.handleDragOver.bind(this));
-            slot.addEventListener('drop', this.handleDrop.bind(this));
-            slot.addEventListener('dragenter', this.handleDragEnter.bind(this));
-            slot.addEventListener('dragleave', this.handleDragLeave.bind(this));
-        });
-    }
-
-    handleDragStart(e) {
-        e.dataTransfer.setData('text/plain', e.target.dataset.choiceId);
-        e.target.classList.add('dragging');
-        this.draggedElement = e.target;
-    }
-
-    handleDragEnd(e) {
-        e.target.classList.remove('dragging');
-        this.draggedElement = null;
-        
-        // Remove drag-over class from all slots
-        document.querySelectorAll('.priority-slot').forEach(slot => {
-            slot.classList.remove('drag-over');
-        });
-    }
-
-    handleDragOver(e) {
-        e.preventDefault();
-    }
-
-    handleDragEnter(e) {
-        e.preventDefault();
-        e.target.closest('.priority-slot').classList.add('drag-over');
-    }
-
-    handleDragLeave(e) {
-        e.target.closest('.priority-slot').classList.remove('drag-over');
-    }
-
-    handleDrop(e) {
-        e.preventDefault();
-        const slot = e.target.closest('.priority-slot');
-        const choiceId = e.dataTransfer.getData('text/plain');
-        
-        slot.classList.remove('drag-over');
-        
-        // Check if slot is already occupied
-        if (slot.querySelector('.priority-item')) {
-            this.showAlert('This priority slot is already occupied. Please remove the existing item first.', 'warning');
-            return;
-        }
-
-        // Find the solution card
-        const solutionCard = document.querySelector(`[data-choice-id="${choiceId}"]`);
-        if (!solutionCard) return;
-
-        // Create priority item
-        const priorityItem = document.createElement('div');
-        priorityItem.className = 'priority-item';
-        priorityItem.dataset.choiceId = choiceId;
-        priorityItem.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="fw-bold">${solutionCard.querySelector('.solution-title').textContent}</div>
-                    <div class="text-muted small">${solutionCard.querySelector('.solution-description').textContent}</div>
-                </div>
-                <button class="btn btn-sm btn-outline-danger" onclick="gameController.removeFromPriority('${choiceId}')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-
-        // Add to slot
-        slot.innerHTML = '';
-        slot.appendChild(priorityItem);
-        slot.classList.add('occupied');
-
-        // Mark solution as used
-        solutionCard.classList.add('used');
-        solutionCard.draggable = false;
-
-        // Update counter
-        this.updatePhase2Counter();
-    }
-
-    removeFromPriority(choiceId) {
-        // Find the priority item
-        const priorityItem = document.querySelector(`.priority-item[data-choice-id="${choiceId}"]`);
-        if (!priorityItem) return;
-
-        const slot = priorityItem.closest('.priority-slot');
-        
-        // Restore placeholder
-        const slotNumber = slot.dataset.slot;
-        slot.innerHTML = `
-            <div class="priority-placeholder">
-                <i class="fas fa-plus-circle me-2"></i>Priority ${slotNumber}
-            </div>
-        `;
-        slot.classList.remove('occupied');
-
-        // Restore solution card
-        const solutionCard = document.querySelector(`[data-choice-id="${choiceId}"]`);
-        if (solutionCard) {
-            solutionCard.classList.remove('used');
-            solutionCard.draggable = true;
-        }
-
-        // Update counter
-        this.updatePhase2Counter();
-    }
-
-    updatePhase2Counter() {
-        const selectedCount = document.querySelectorAll('.priority-item').length;
-        const counter = document.getElementById('phase2-selected-count');
-        const confirmBtn = document.getElementById('phase2-confirm-btn');
-        
-        counter.textContent = `${selectedCount}/3 selected`;
-        
-        if (selectedCount === 3) {
-            confirmBtn.disabled = false;
-            confirmBtn.classList.remove('btn-secondary');
-            confirmBtn.classList.add('btn-primary');
-        } else {
-            confirmBtn.disabled = true;
-            confirmBtn.classList.remove('btn-primary');
-            confirmBtn.classList.add('btn-secondary');
-        }
     }
 
     async selectMOT2Choice(choiceId) {
-        if (this.selectedChoices.mot2.includes(choiceId)) {
+        if (this.selectedChoices.phase2.includes(choiceId)) {
             // Deselect
-            this.selectedChoices.mot2 = this.selectedChoices.mot2.filter(id => id !== choiceId);
-        } else if (this.selectedChoices.mot2.length < 3) {
+            this.selectedChoices.phase2 = this.selectedChoices.phase2.filter(id => id !== choiceId);
+        } else if (this.selectedChoices.phase2.length < 3) {
             // Select
-            this.selectedChoices.mot2.push(choiceId);
+            this.selectedChoices.phase2.push(choiceId);
         } else {
             this.showAlert('Vous ne pouvez sélectionner que 3 solutions maximum', 'warning');
             return;
@@ -1169,8 +884,8 @@ class GameController {
         this.updateMOT2UI();
         
         // Show confirm button when 3 choices are made
-        console.log('MOT2 selected choices:', this.selectedChoices.mot2.length);
-        if (this.selectedChoices.mot2.length === 3) {
+        console.log('MOT2 selected choices:', this.selectedChoices.phase2.length);
+        if (this.selectedChoices.phase2.length === 3) {
             const confirmBtn = document.getElementById('phase2-confirm-btn');
             console.log('Confirm button found:', confirmBtn);
             if (confirmBtn) {
@@ -1195,7 +910,7 @@ class GameController {
             const choiceId = card.getAttribute('data-choice-id');
             const button = card.querySelector('button');
             
-            if (this.selectedChoices.mot2.includes(choiceId)) {
+            if (this.selectedChoices.phase2.includes(choiceId)) {
                 card.classList.add('selected');
                 button.textContent = 'Désélectionner';
                 button.classList.remove('btn-outline-primary');
@@ -1211,21 +926,12 @@ class GameController {
         // Update counter
         const counter = document.getElementById('phase2-selected-count');
         if (counter) {
-            counter.textContent = `${this.selectedChoices.mot2.length}/3 selected`;
+            counter.textContent = `${this.selectedChoices.phase2.length}/3 selected`;
         }
 
     }
 
-    async confirmPhase2Choices() {
-        // Get selected choices from priority slots
-        const priorityItems = document.querySelectorAll('.priority-item');
-        const selectedChoices = Array.from(priorityItems).map(item => item.dataset.choiceId);
-        
-        if (selectedChoices.length !== 3) {
-            this.showAlert('Please select exactly 3 solutions by dragging them to the priority slots.', 'warning');
-            return;
-        }
-
+    async confirmMOT2Choices() {
         this.showLoading(true);
 
         try {
@@ -1235,16 +941,16 @@ class GameController {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({ solution_ids: selectedChoices })
+                body: JSON.stringify({ solution_ids: this.selectedChoices.phase2 })
             });
 
             const data = await response.json();
 
             if (data.success) {
-                const mot2Score = data.score.scores.mot2;
+                const phase2Score = data.score.scores.phase2;
                 this.updateScoreDisplay(data.score);
-                this.showScoreScreen(2, mot2Score, data.score);
-                this.updateProgress(60, `Phase 2 completed - Score: ${mot2Score}/3`);
+                this.showScoreScreen(2, phase2Score, data.score);
+                this.updateProgress(60, `Phase 2 completed - Score: ${phase2Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -1258,24 +964,24 @@ class GameController {
 
     async loadMOT3Choices() {
         try {
-            console.log('Loading Phase 3 choices...');
+            console.log('Loading MOT3 choices...');
             const response = await fetch('/api/phase3/choices', {
                 credentials: 'include'
             });
             const data = await response.json();
-            console.log('Phase 3 API response:', data);
+            console.log('MOT3 API response:', data);
 
             if (data.success) {
-                console.log('Phase 3 choices data:', data.choices);
+                console.log('MOT3 choices data:', data.choices);
                 this.renderMOT3Choices(data.choices);
                 this.showSection('phase3-section');
-                console.log('Phase 3 section shown');
+                console.log('MOT3 section shown');
             } else {
-                console.error('Phase 3 API failed:', data.message);
-                this.showAlert('Erreur lors du chargement des choix Phase 3: ' + data.message, 'danger');
+                console.error('MOT3 API failed:', data.message);
+                this.showAlert('Erreur lors du chargement des choix MOT3: ' + data.message, 'danger');
             }
         } catch (error) {
-            console.error('Phase 3 loading error:', error);
+            console.error('MOT3 loading error:', error);
             this.showAlert('Erreur lors du chargement des choix', 'danger');
         }
     }
@@ -1313,13 +1019,13 @@ class GameController {
 
     async selectMOT3Choice(choiceId, category) {
         console.log('MOT3 choice selected:', choiceId, 'for category:', category);
-        this.selectedChoices.mot3[category] = choiceId;
-        console.log('MOT3 selected choices:', this.selectedChoices.mot3);
+        this.selectedChoices.phase3[category] = choiceId;
+        console.log('MOT3 selected choices:', this.selectedChoices.phase3);
         this.updateMOT3UI();
         
         // Check if all categories are selected
-        const allCategories = ['people_processes', 'platform_partnerships', 'policies_practices'];
-        const selectedCategories = Object.keys(this.selectedChoices.mot3);
+        const allCategories = ['people', 'strategy', 'tech'];
+        const selectedCategories = Object.keys(this.selectedChoices.phase3);
         console.log('All categories:', allCategories);
         console.log('Selected categories:', selectedCategories);
         
@@ -1346,7 +1052,7 @@ class GameController {
             const category = card.getAttribute('data-category');
             const button = card.querySelector('button');
             
-            if (this.selectedChoices.mot3[category] === choiceId) {
+            if (this.selectedChoices.phase3[category] === choiceId) {
                 card.classList.add('selected');
                 button.textContent = 'Sélectionné';
                 button.classList.remove('btn-outline-primary');
@@ -1372,16 +1078,16 @@ class GameController {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({ choices: this.selectedChoices.mot3 })
+                body: JSON.stringify({ choices: this.selectedChoices.phase3 })
             });
 
             const data = await response.json();
 
             if (data.success) {
-                const mot3Score = data.score.scores.mot3;
+                const phase3Score = data.score.scores.phase3;
                 this.updateScoreDisplay(data.score);
-                this.showScoreScreen(3, mot3Score, data.score);
-                this.updateProgress(80, `Phase 3 completed - Score: ${mot3Score}/3`);
+                this.showScoreScreen(3, phase3Score, data.score);
+                this.updateProgress(80, `Phase 3 completed - Score: ${phase3Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -1396,7 +1102,7 @@ class GameController {
     async loadMOT4Choices() {
         // Reset budget for MOT4
         this.budget = 0;
-        this.selectedChoices.mot4 = [];
+        this.selectedChoices.phase4 = [];
         
         try {
             const response = await fetch('/api/phase4/choices');
@@ -1440,11 +1146,11 @@ class GameController {
         console.log('=== MOT4 CHOICE CLICKED ===');
         console.log('MOT4 choice selected:', choiceId, 'cost:', cost);
         console.log('Current budget:', this.budget, 'max:', this.maxBudget);
-        console.log('Current choices:', this.selectedChoices.mot4);
+        console.log('Current choices:', this.selectedChoices.phase4);
         
-        if (this.selectedChoices.mot4.includes(choiceId)) {
+        if (this.selectedChoices.phase4.includes(choiceId)) {
             // Deselect
-            this.selectedChoices.mot4 = this.selectedChoices.mot4.filter(id => id !== choiceId);
+            this.selectedChoices.phase4 = this.selectedChoices.phase4.filter(id => id !== choiceId);
             this.budget -= cost;
             console.log('Deselected, new budget:', this.budget);
         } else {
@@ -1455,7 +1161,7 @@ class GameController {
             }
             
             // Select
-            this.selectedChoices.mot4.push(choiceId);
+            this.selectedChoices.phase4.push(choiceId);
             this.budget += cost;
             console.log('Selected, new budget:', this.budget);
         }
@@ -1487,7 +1193,7 @@ class GameController {
             const cost = parseInt(card.getAttribute('data-cost'));
             const button = card.querySelector('button');
             
-            if (this.selectedChoices.mot4.includes(choiceId)) {
+            if (this.selectedChoices.phase4.includes(choiceId)) {
                 card.classList.add('selected');
                 button.textContent = 'Désélectionner';
                 button.classList.remove('btn-outline-primary');
@@ -1519,7 +1225,7 @@ class GameController {
 
     async confirmMOT4Choices() {
         console.log('=== MOT4 CONFIRM CALLED ===');
-        console.log('MOT4 confirm called with choices:', this.selectedChoices.mot4);
+        console.log('MOT4 confirm called with choices:', this.selectedChoices.phase4);
         console.log('MOT4 budget:', this.budget);
         console.log('Full selectedChoices object:', this.selectedChoices);
         this.showLoading(true);
@@ -1530,16 +1236,16 @@ class GameController {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ enabler_ids: this.selectedChoices.mot4 })
+                body: JSON.stringify({ enabler_ids: this.selectedChoices.phase4 })
             });
 
             const data = await response.json();
 
             if (data.success) {
-                const mot4Score = data.score.scores.mot4;
+                const phase4Score = data.score.scores.phase4;
                 this.updateScoreDisplay(data.score);
-                this.showScoreScreen(4, mot4Score, data.score);
-                this.updateProgress(90, `Phase 4 completed - Score: ${mot4Score}/3`);
+                this.showScoreScreen(4, phase4Score, data.score);
+                this.updateProgress(90, `Phase 4 completed - Score: ${phase4Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -1590,8 +1296,8 @@ class GameController {
     }
 
     async selectMOT5Choice(choiceId) {
-        if (this.selectedChoices.mot5) {
-            this.showAlert('Vous avez déjà fait votre choix pour Phase 5', 'warning');
+        if (this.selectedChoices.phase5) {
+            this.showAlert('Vous avez déjà fait votre choix pour MOT5', 'warning');
             return;
         }
 
@@ -1609,9 +1315,9 @@ class GameController {
             const data = await response.json();
 
             if (data.success) {
-                this.selectedChoices.mot5 = choiceId;
+                this.selectedChoices.phase5 = choiceId;
                 
-                // Disable all Phase 5 buttons
+                // Disable all MOT5 buttons
                 document.querySelectorAll('#phase5-choices .choice-card').forEach(card => {
                     const button = card.querySelector('button');
                     button.disabled = true;
@@ -1630,7 +1336,7 @@ class GameController {
                 this.showAlert(data.message, 'danger');
             }
         } catch (error) {
-            console.error('Phase 5 selection error:', error);
+            console.error('MOT5 selection error:', error);
             this.showAlert('Erreur lors de la sélection', 'danger');
         } finally {
             this.showLoading(false);
@@ -1653,9 +1359,9 @@ class GameController {
         }
     }
 
-    showScoreScreen(motNumber, score, scoreData) {
+    showScoreScreen(phaseNumber, score, scoreData) {
         // Store current Phase number for Next button
-        this.currentPhaseNumber = motNumber;
+        this.currentPhaseNumber = phaseNumber;
         
         // Version 1.4: Hide score display card and total score in header
         document.getElementById('score-display-card').style.display = 'none';
@@ -1664,8 +1370,8 @@ class GameController {
         // Update score display
         this.updateScoreDisplay(scoreData);
         
-        // Set MOT title
-        const motTitles = {
+        // Set Phase title
+        const phaseTitles = {
             1: 'Embedding GenAI in your AI transformation program',
             2: 'Building the right foundation',
             3: 'Scaling across the organization',
@@ -1673,7 +1379,7 @@ class GameController {
             5: 'Accelerating the transformation'
         };
         
-        document.getElementById('current-mot-title').textContent = motTitles[motNumber];
+        document.getElementById('current-mot-title').textContent = phaseTitles[phaseNumber];
         
         // Generate stars
         const starsContainer = document.getElementById('score-stars-container');
@@ -1704,9 +1410,9 @@ class GameController {
                'Consider optimizing your acceleration approach.'
         };
         
-        document.getElementById('score-description').textContent = descriptions[motNumber];
+        document.getElementById('score-description').textContent = descriptions[phaseNumber];
         
-        // Update MOT squares
+        // Update Phase squares
         this.updatePhaseSquares(scoreData);
         
         // Update total badge
@@ -1716,24 +1422,35 @@ class GameController {
         const modal = new bootstrap.Modal(document.getElementById('scoreModal'));
         modal.show();
         
+        // Version 1.4: Auto-proceed to next phase after 3 seconds
+        setTimeout(() => {
+            console.log('Auto-proceeding to next phase after timeout');
+            const modalInstance = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+            this.proceedToActualNextPhase(phaseNumber);
+        }, 3000);
+        
         // Version 1.4: Keep the original behavior - user clicks NEXT button
         // The global score recap will be shown after the user clicks NEXT
     }
 
     updatePhaseSquares(scoreData) {
-        // Update each phase square based on the score data
-        for (let phaseNum = 1; phaseNum <= 5; phaseNum++) {
-            const phaseKey = `mot${phaseNum}`;
-            const score = scoreData.scores[phaseKey] || 0;
-            const square = document.getElementById(`phase${phaseNum}-square`);
-            
+        console.log('Updating phase squares with score data:', scoreData);
+        Object.entries(scoreData.scores).forEach(([mot, score]) => {
+            // Convert mot1 to phase1, mot2 to phase2, etc.
+            const phaseId = mot.replace('mot', 'phase');
+            const square = document.getElementById(`${phaseId}-square`);
+            console.log(`Looking for square: ${phaseId}-square, found:`, square);
             if (square) {
                 square.classList.remove('completed');
                 if (score > 0) {
                     square.classList.add('completed');
+                    console.log(`Added completed class to ${phaseId}-square for score:`, score);
                 }
             }
-        }
+        });
     }
 
     updateTotalBadge(scoreData) {
@@ -1744,49 +1461,28 @@ class GameController {
     }
 
     // Version 1.4: New function to show global score recap
-    async getCurrentScoresAndShowRecap(phaseNumber) {
-        try {
-            const response = await fetch('/api/current_score', {
-                method: 'GET',
-                credentials: 'include'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                
-                // Special case: After Phase 5, show final results with Recap video
-                if (phaseNumber === 5) {
-                    console.log('Phase 5 completed - showing final results with Recap video');
-                    this.showFinalResults(data.score);
-                } else {
-                    this.showGlobalScoreRecap(phaseNumber, data.score);
-                }
-            } else {
-                console.error('Failed to get current scores');
-                this.showAlert('Erreur lors de la récupération des scores', 'danger');
-            }
-        } catch (error) {
-            console.error('Error getting current scores:', error);
-            this.showAlert('Erreur lors de la récupération des scores', 'danger');
-        }
-    }
-
     showGlobalScoreRecap(phaseNumber, scoreData) {
+        console.log('showGlobalScoreRecap called with phaseNumber:', phaseNumber, 'scoreData:', scoreData);
+        
         // Create global score recap modal if it doesn't exist
         if (!document.getElementById('globalScoreRecapModal')) {
+            console.log('Creating global score recap modal...');
             this.createGlobalScoreRecapModal();
         }
         
         // Update the content
+        console.log('Updating global score recap content...');
         this.updateGlobalScoreRecapContent(phaseNumber, scoreData);
         
         // Show the modal
+        console.log('Showing global score recap modal...');
         const modal = new bootstrap.Modal(document.getElementById('globalScoreRecapModal'));
         modal.show();
         
         // Version 1.4: No auto-close - user must click continue button
         // Store current Phase number for continue button
         this.currentPhaseNumber = phaseNumber;
+        console.log('Stored currentPhaseNumber:', this.currentPhaseNumber);
     }
 
     createGlobalScoreRecapModal() {
@@ -1798,8 +1494,8 @@ class GameController {
                             <div class="text-center" style="max-width: 1200px; width: 90%;">
                                 <!-- Global Score Display - Smaller -->
                                 <div class="global-score-display mb-4">
-                                    <div class="global-score-badge" style="background: linear-gradient(135deg, #ffffff, #f8fafc); color: #1e40af; padding: 2rem; border-radius: 15px; box-shadow: 0 0 20px rgba(30, 64, 175, 0.3); border: 2px solid #60a5fa; min-height: 200px; display: flex; flex-direction: column; justify-content: center;">
-                                        <h1 class="display-1 mb-2" id="global-score-total" style="font-weight: 800; font-size: 60pt; line-height: 1; overflow: visible;">0</h1>
+                                    <div class="global-score-badge" style="background: linear-gradient(135deg, #ffffff, #f8fafc); color: #1e40af; padding: 2rem; border-radius: 15px; box-shadow: 0 0 20px rgba(30, 64, 175, 0.3); border: 2px solid #60a5fa;">
+                                        <h1 class="display-1 mb-2" id="global-score-total" style="font-weight: 800; font-size: 80pt;">0</h1>
                                         <p class="lead mb-0" style="font-size: 20pt; text-transform: uppercase;">Score Global</p>
                                     </div>
                                 </div>
@@ -1845,26 +1541,23 @@ class GameController {
         
         // Add event listener for continue button
         document.getElementById('global-continue-btn').addEventListener('click', () => {
+            console.log('Global continue button clicked');
+            console.log('Current phase number:', this.currentPhaseNumber);
+            
             const modal = bootstrap.Modal.getInstance(document.getElementById('globalScoreRecapModal'));
+            console.log('Modal instance:', modal);
             modal.hide();
-            this.proceedToActualNextMOT(this.currentPhaseNumber);
+            
+            console.log('Calling proceedToActualNextPhase with:', this.currentPhaseNumber);
+            this.proceedToActualNextPhase(this.currentPhaseNumber);
         });
     }
 
     updateGlobalScoreRecapContent(phaseNumber, scoreData) {
-        console.log('=== updateGlobalScoreRecapContent called ===');
-        console.log('phaseNumber:', phaseNumber);
-        console.log('scoreData:', scoreData);
+        console.log('Updating global score recap with phaseNumber:', phaseNumber, 'scoreData:', scoreData);
         
         // Update global score total
-        const totalElement = document.getElementById('global-score-total');
-        console.log('global-score-total element:', totalElement);
-        if (totalElement) {
-            totalElement.textContent = scoreData.total;
-            console.log('Updated global score total to:', scoreData.total);
-        } else {
-            console.error('global-score-total element not found!');
-        }
+        document.getElementById('global-score-total').textContent = scoreData.total;
         
         // Update progress bar
         const progressPercentage = (scoreData.total / 15) * 100;
@@ -1875,6 +1568,7 @@ class GameController {
         const breakdownContainer = document.getElementById('global-score-breakdown');
         breakdownContainer.innerHTML = '';
         
+        console.log('Score entries:', Object.entries(scoreData.scores));
         Object.entries(scoreData.scores).forEach(([mot, score]) => {
             const phaseNum = mot.replace('mot', '');
             const phaseTitles = {
@@ -1885,8 +1579,10 @@ class GameController {
                 5: 'Accelerating Transformation'
             };
             
+            console.log(`Processing ${mot} -> Phase ${phaseNum} with score:`, score);
+            
             const col = document.createElement('div');
-            col.className = 'col-md-6 col-lg-3 mb-3';
+            col.className = 'col-md-6 col-lg-4 mb-3';
             col.innerHTML = `
                 <div style="background: rgba(255, 255, 255, 0.15); padding: 1.5rem; border-radius: 12px; border-left: 3px solid #60a5fa; margin-bottom: 0.8rem; backdrop-filter: blur(10px);">
                     <div style="color: #ffffff; font-size: 18pt; font-weight: bold; text-transform: uppercase;">Phase ${phaseNum}: ${score}/3</div>
@@ -1896,15 +1592,15 @@ class GameController {
             breakdownContainer.appendChild(col);
         });
         
-        // Update Phase status squares with original game style
+        // Update MOT status squares with original game style
         const squaresContainer = document.getElementById('global-mot-squares');
         squaresContainer.innerHTML = '';
         
         for (let i = 1; i <= 5; i++) {
-            const phaseKey = `mot${i}`;
-            const score = scoreData.scores[phaseKey] || 0;
+            const motKey = `mot${i}`;
+            const score = scoreData.scores[motKey] || 0;
             const isCompleted = score > 0;
-            const isCurrent = i === phaseNumber;
+            const isCurrent = i === motNumber;
             
             const square = document.createElement('div');
             square.style.cssText = `
@@ -1948,7 +1644,7 @@ class GameController {
         
         // Get scores from DOM elements
         for (let i = 1; i <= 5; i++) {
-            const scoreElement = document.getElementById(`phase${i}-score`);
+            const scoreElement = document.getElementById(`mot${i}-score`);
             if (scoreElement) {
                 const score = parseInt(scoreElement.textContent) || 0;
                 scores[`mot${i}`] = score;
@@ -1964,9 +1660,9 @@ class GameController {
         };
     }
     
-    proceedToNextMOT(currentMOT) {
-        console.log('=== proceedToNextMOT called ===');
-        console.log('Current MOT:', currentMOT);
+    proceedToNextPhase(currentPhase) {
+        console.log('=== proceedToNextPhase called ===');
+        console.log('Current Phase:', currentPhase);
         console.log('this.currentPhaseNumber:', this.currentPhaseNumber);
         
         // Hide modal
@@ -1989,77 +1685,55 @@ class GameController {
         // Get score data from the current score display elements
         const currentScore = this.getCurrentScoreData();
         console.log('Current score data:', currentScore);
-        console.log('About to show global score recap for MOT:', currentMOT);
-        this.showGlobalScoreRecap(currentMOT, currentScore);
+        console.log('About to show global score recap for Phase:', currentPhase);
+        this.showGlobalScoreRecap(currentPhase, currentScore);
     }
 
-    proceedToActualNextMOT(currentMOT) {
-        console.log('=== proceedToActualNextMOT called ===');
-        console.log('Actually proceeding to next MOT from:', currentMOT);
+    proceedToActualNextPhase(currentPhase) {
+        console.log('=== proceedToActualNextPhase called ===');
+        console.log('Actually proceeding to next Phase from:', currentPhase);
         console.log('Current selectedChoices:', this.selectedChoices);
-        console.log('Current phase number:', this.currentPhaseNumber);
         
-        switch(currentMOT) {
+        switch(currentPhase) {
             case 1:
-                console.log('Showing Phase2 video...');
-                this.currentPhaseNumber = 2;
-                this.showPhase2Video();
+                console.log('Loading Phase2...');
+                this.loadPhase2Choices();
                 break;
             case 2:
-                console.log('Showing Phase3 video...');
-                this.currentPhaseNumber = 3;
-                this.showPhase3Video();
+                console.log('Loading Phase3...');
+                this.loadPhase3Choices();
                 break;
             case 3:
-                console.log('Showing Phase4 video...');
-                this.currentPhaseNumber = 4;
-                this.showPhase4Video();
+                console.log('Loading Phase4...');
+                this.loadPhase4Choices();
                 break;
             case 4:
-                console.log('Showing Phase5-1 video...');
-                this.currentPhaseNumber = 5;
-                this.showPhase5_1Video();
+                console.log('Loading Phase5...');
+                this.loadPhase5Choices();
                 break;
             case 5:
-                console.log('Showing Recap video...');
-                this.showRecapVideo();
+                console.log('Game finished, showing results...');
+                this.showResults();
                 break;
             default:
-                console.error('Unknown phase number:', currentMOT);
+                console.error('Unknown phase number:', currentPhase);
         }
         
-        console.log('=== proceedToActualNextMOT completed ===');
+        console.log('=== proceedToActualNextPhase completed ===');
     }
 
     loadNextSection() {
-        if (!this.selectedChoices.mot1) {
-            this.loadMOT1Choices();
-        } else if (this.selectedChoices.mot2.length === 0) {
-            this.loadMOT2Choices();
-        } else if (Object.keys(this.selectedChoices.mot3).length === 0) {
+        if (!this.selectedChoices.phase1) {
+            this.loadPhase1Choices();
+        } else if (this.selectedChoices.phase2.length === 0) {
+            this.loadPhase2Choices();
+        } else if (Object.keys(this.selectedChoices.phase3).length === 0) {
             this.loadMOT3Choices();
-        } else if (this.selectedChoices.mot4.length === 0) {
+        } else if (this.selectedChoices.phase4.length === 0) {
             this.loadMOT4Choices();
-        } else if (!this.selectedChoices.mot5) {
+        } else if (!this.selectedChoices.phase5) {
             this.loadMOT5Choices();
         }
-    }
-
-    showFinalResults(scoreData) {
-        // Format the score data for the results screen
-        const results = {
-            total: scoreData.total,
-            stars: this.calculateStars(scoreData.total),
-            scores: scoreData.scores
-        };
-        
-        this.showResults(results);
-    }
-
-    calculateStars(totalScore) {
-        if (totalScore >= 15) return 3;
-        if (totalScore >= 10) return 2;
-        return 1;
     }
 
     showResults(results) {
@@ -2067,26 +1741,6 @@ class GameController {
         container.innerHTML = `
             <div class="text-center">
                 <h2 class="mb-4">🎉 Félicitations !</h2>
-                
-                <!-- Recap Video Section -->
-                <div class="mb-4">
-                    <h4 class="mb-3"><i class="fas fa-video me-2"></i>Game Recap</h4>
-                    <div class="video-container mb-4">
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <video 
-                                id="recap-video-results"
-                                class="embed-responsive-item" 
-                                controls
-                                autoplay
-                                playsinline
-                                style="width: 100%; height: 100%; border-radius: 15px;">
-                                <source src="/static/videos/recap_web.mp4" type="video/mp4">
-                                Votre navigateur ne supporte pas la lecture vidéo.
-                            </video>
-                        </div>
-                    </div>
-                </div>
-                
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <h4>Score Final</h4>
@@ -2098,11 +1752,11 @@ class GameController {
                     <div class="col-md-6">
                         <h4>Detail by Phase</h4>
                         <div class="text-start">
-                            <div class="mb-2">Embedding GenAI in your AI transformation program: <span class="score-badge">${results.scores.mot1}/3</span></div>
-                            <div class="mb-2">Building the right foundation: <span class="score-badge">${results.scores.mot2}/3</span></div>
-                            <div class="mb-2">Scaling across the organization: <span class="score-badge">${results.scores.mot3}/3</span></div>
-                            <div class="mb-2">Ensuring sustainable success: <span class="score-badge">${results.scores.mot4}/3</span></div>
-                            <div class="mb-2">Accelerating the transformation: <span class="score-badge">${results.scores.mot5}/3</span></div>
+                            <div class="mb-2">Embedding GenAI in your AI transformation program: <span class="score-badge">${results.scores.phase1}/3</span></div>
+                            <div class="mb-2">Building the right foundation: <span class="score-badge">${results.scores.phase2}/3</span></div>
+                            <div class="mb-2">Scaling across the organization: <span class="score-badge">${results.scores.phase3}/3</span></div>
+                            <div class="mb-2">Ensuring sustainable success: <span class="score-badge">${results.scores.phase4}/3</span></div>
+                            <div class="mb-2">Accelerating the transformation: <span class="score-badge">${results.scores.phase5}/3</span></div>
                         </div>
                     </div>
                 </div>
@@ -2114,11 +1768,6 @@ class GameController {
         `;
         
         this.showSection('results-section');
-        
-        // Initialize Recap video after the content is loaded
-        setTimeout(() => {
-            this.initializeRecapVideoResults();
-        }, 100);
     }
 
     getPerformanceMessage(stars) {
@@ -2137,11 +1786,11 @@ class GameController {
     resetGame() {
         this.currentState = 'login';
         this.selectedChoices = {
-            mot1: null,
-            mot2: [],
-            mot3: {},
-            mot4: [],
-            mot5: null
+            phase1: null,
+            phase2: [],
+            phase3: {},
+            phase4: [],
+            phase5: null
         };
         this.budget = 0;
         
@@ -2175,195 +1824,74 @@ class GameController {
     }
 }
 
-// YouTube API Integration
-let player;
-
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('intro-video', {
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-        }
-    });
-}
-
-function onPlayerReady(event) {
-    console.log('YouTube player ready');
-}
-
-function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.ENDED) {
-        document.getElementById('skip-video-btn').style.display = 'none';
-        document.getElementById('start-game-btn').style.display = 'inline-block';
-    }
-}
 
 // Harnessing Video Management
 let harnessingVideoElement;
 
 function initializeHarnessingVideo() {
-    harnessingVideoElement = document.getElementById('harnessing-video');
+    const harnessingVideoElement = document.getElementById('harnessing-video');
     if (harnessingVideoElement) {
-        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
-        if (window.gameController) {
-            window.gameController.stopAllVideos();
-        }
-        
         // Quand la vidéo se termine, afficher le bouton "Démarrer le Jeu"
         harnessingVideoElement.addEventListener('ended', function() {
             document.getElementById('skip-harnessing-btn').style.display = 'none';
             document.getElementById('start-game-after-harnessing-btn').style.display = 'inline-block';
         });
         
-        // Démarrer la vidéo automatiquement
-        harnessingVideoElement.play().catch(function(error) {
-            console.log('Harnessing video autoplay failed:', error);
-            // Si l'autoplay échoue, afficher le bouton play
-            document.getElementById('start-game-after-harnessing-btn').style.display = 'inline-block';
+        // Utiliser la fonction générique pour l'autoplay avec son
+        initializeVideoWithSound('harnessing-video');
+    }
+}
+
+// Fonction générique pour initialiser les vidéos avec autoplay et son
+function initializeVideoWithSound(videoId) {
+    const videoElement = document.getElementById(videoId);
+    if (videoElement) {
+        // Essayer de démarrer la vidéo avec son
+        videoElement.play().catch(function(error) {
+            console.log(`${videoId} autoplay failed:`, error);
+            // Si l'autoplay échoue, essayer sans son puis permettre l'activation du son
+            videoElement.muted = true;
+            videoElement.play().then(() => {
+                console.log(`${videoId} started muted, user can unmute`);
+            }).catch(function(error2) {
+                console.log(`${videoId} autoplay completely failed:`, error2);
+            });
+        });
+        
+        // Ajouter un gestionnaire pour permettre l'activation du son
+        videoElement.addEventListener('click', function() {
+            if (videoElement.muted) {
+                videoElement.muted = false;
+                console.log(`${videoId} unmuted by user interaction`);
+            }
+        });
+        
+        // Ajouter un gestionnaire pour les interactions utilisateur
+        videoElement.addEventListener('play', function() {
+            if (videoElement.muted) {
+                console.log(`${videoId} playing muted - user can click to unmute`);
+            }
         });
     }
+}
+
+// Phase1 Video Management
+function initializePhase1Video() {
+    initializeVideoWithSound('phase1-video');
 }
 
 // Intro Video Management
 function initializeIntroVideo() {
     const introVideoElement = document.getElementById('intro-video');
     if (introVideoElement) {
-        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
-        if (window.gameController) {
-            window.gameController.stopAllVideos();
-        }
-        
-        // Démarrer la vidéo automatiquement
-        introVideoElement.play().catch(function(error) {
-            console.log('Intro video autoplay failed:', error);
-        });
-        
-        // Ajouter un événement pour montrer le bouton "Start Game" quand la vidéo se termine
+        // Quand la vidéo se termine, afficher le bouton "Start Game"
         introVideoElement.addEventListener('ended', function() {
-            const startGameBtn = document.getElementById('start-game-btn');
-            if (startGameBtn) {
-                startGameBtn.style.display = 'inline-block';
-            }
+            document.getElementById('skip-video-btn').style.display = 'none';
+            document.getElementById('start-game-btn').style.display = 'inline-block';
         });
-    }
-}
-function initializePhase1Video() {
-    const mot1VideoElement = document.getElementById('phase1-video');
-    if (mot1VideoElement) {
-        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
-        if (window.gameController) {
-            window.gameController.stopAllVideos();
-        }
         
-        // Démarrer la vidéo automatiquement
-        mot1VideoElement.play().catch(function(error) {
-            console.log('MOT1 video autoplay failed:', error);
-        });
-    }
-}
-
-function initializePhase2Video() {
-    const phase2VideoElement = document.getElementById('phase2-video');
-    if (phase2VideoElement) {
-        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
-        if (window.gameController) {
-            window.gameController.stopAllVideos();
-        }
-        
-        // Démarrer la vidéo automatiquement
-        phase2VideoElement.play().catch(function(error) {
-            console.log('Phase2 video autoplay failed:', error);
-        });
-    }
-}
-
-function initializePhase3Video() {
-    const phase3VideoElement = document.getElementById('phase3-video');
-    if (phase3VideoElement) {
-        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
-        if (window.gameController) {
-            window.gameController.stopAllVideos();
-        }
-        
-        // Démarrer la vidéo automatiquement
-        phase3VideoElement.play().catch(function(error) {
-            console.log('Phase3 video autoplay failed:', error);
-        });
-    }
-}
-
-function initializePhase4Video() {
-    const phase4VideoElement = document.getElementById('phase4-video');
-    if (phase4VideoElement) {
-        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
-        if (window.gameController) {
-            window.gameController.stopAllVideos();
-        }
-        
-        // Démarrer la vidéo automatiquement
-        phase4VideoElement.play().catch(function(error) {
-            console.log('Phase4 video autoplay failed:', error);
-        });
-    }
-}
-
-function initializePhase5_1Video() {
-    const phase5_1VideoElement = document.getElementById('phase5-1-video');
-    if (phase5_1VideoElement) {
-        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
-        if (window.gameController) {
-            window.gameController.stopAllVideos();
-        }
-        
-        // Démarrer la vidéo automatiquement
-        phase5_1VideoElement.play().catch(function(error) {
-            console.log('Phase5-1 video autoplay failed:', error);
-        });
-    }
-}
-
-function initializePhase5_2Video() {
-    const phase5_2VideoElement = document.getElementById('phase5-2-video');
-    if (phase5_2VideoElement) {
-        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
-        if (window.gameController) {
-            window.gameController.stopAllVideos();
-        }
-        
-        // Démarrer la vidéo automatiquement
-        phase5_2VideoElement.play().catch(function(error) {
-            console.log('Phase5-2 video autoplay failed:', error);
-        });
-    }
-}
-
-function initializeRecapVideo() {
-    const recapVideoElement = document.getElementById('recap-video');
-    if (recapVideoElement) {
-        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
-        if (window.gameController) {
-            window.gameController.stopAllVideos();
-        }
-        
-        // Démarrer la vidéo automatiquement
-        recapVideoElement.play().catch(function(error) {
-            console.log('Recap video autoplay failed:', error);
-        });
-    }
-}
-
-function initializeRecapVideoResults() {
-    const recapVideoElement = document.getElementById('recap-video-results');
-    if (recapVideoElement) {
-        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
-        if (window.gameController) {
-            window.gameController.stopAllVideos();
-        }
-        
-        // Démarrer la vidéo automatiquement
-        recapVideoElement.play().catch(function(error) {
-            console.log('Recap video results autoplay failed:', error);
-        });
+        // Utiliser la fonction générique pour l'autoplay avec son
+        initializeVideoWithSound('intro-video');
     }
 }
 
