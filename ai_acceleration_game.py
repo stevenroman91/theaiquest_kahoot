@@ -70,19 +70,19 @@ class AIAccelerationGame:
                 "elena": Choice(
                     id="elena",
                     title="Elena - Strategic Approach",
-                    description="Map the transformative potential of GenAI on our HR functions and its impact on our teams",
+                    description="Map the transformative potential of GenAI on our HR functions and its impact on our teams. Structured vision, priority identification, leadership engagement, clear prioritized plan.",
                     category="strategy"
                 ),
                 "james": Choice(
                     id="james", 
                     title="James - Technical Approach",
-                    description="Partnership with a GenAI platform to secure technical foundations",
+                    description="Partnership with a GenAI platform to secure technical foundations. Solid infrastructure, technical support, exclusive conditions.",
                     category="tech"
                 ),
                 "amira": Choice(
                     id="amira",
                     title="Amira - Operational Approach", 
-                    description="Democratize GenAI and ask HR managers to develop their own tools",
+                    description="Democratize GenAI and ask HR managers to develop their own tools. Rapid deployment, bottom-up innovation, low initial cost.",
                     category="operational"
                 )
             },
@@ -239,17 +239,17 @@ class AIAccelerationGame:
                 "genai_for_all": Choice(
                     id="genai_for_all",
                     title="GenAI for all",
-                    description="GenAI initiative as a service, Corporate communication of HR AI ethics policies"
+                    description="GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development."
                 ),
                 "capability_building": Choice(
                     id="capability_building", 
                     title="Continuous capability building",
-                    description="Definition of long-term HR AI ethics roadmap, Value-based AI governance, Preferred supplier panel, creation of HR AI training Academy"
+                    description="Definition of long-term HR AI ethics roadmap, Value-based AI governance, Preferred supplier panel, creation of HR AI training Academy. Solid structure, clear governance, training. But less focus on people, more technical approach."
                 ),
                 "people_speed": Choice(
                     id="people_speed",
                     title="Full speed on people",
-                    description="New GenAI HR Hub, Preferred supplier panel, Investment in recruiting top AI talents and retaining analytics expertise, Creation of HR AI training Academy"
+                    description="New GenAI HR Hub, Preferred supplier panel, Investment in recruiting top AI talents and retaining analytics expertise, Creation of HR AI training Academy. Focus on skills, talent recruitment, continuous training. But higher initial investment."
                 )
             }
         }

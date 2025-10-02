@@ -178,6 +178,15 @@ class GameController {
             });
         }
 
+        // Phase 1 confirm button
+        const phase1ConfirmBtn = document.getElementById('phase1-confirm-btn');
+        if (phase1ConfirmBtn) {
+            phase1ConfirmBtn.addEventListener('click', () => {
+                console.log('Phase 1 confirm button clicked!');
+                this.confirmPhase1Choice();
+            });
+        }
+
         // Phase 2 confirm button
         const mot2ConfirmBtn = document.getElementById('phase2-confirm-btn');
         if (mot2ConfirmBtn) {
@@ -207,6 +216,15 @@ class GameController {
             });
         } else {
             console.log('Phase 4 confirm button NOT FOUND!');
+        }
+
+        // Phase 5 confirm button
+        const phase5ConfirmBtn = document.getElementById('phase5-confirm-btn');
+        if (phase5ConfirmBtn) {
+            phase5ConfirmBtn.addEventListener('click', () => {
+                console.log('Phase 5 confirm button clicked!');
+                this.confirmPhase5Choice();
+            });
         }
 
     }
@@ -917,28 +935,127 @@ class GameController {
         const container = document.getElementById('phase1-choices');
         container.innerHTML = '';
 
-        choices.forEach(choice => {
-            const card = document.createElement('div');
-            card.className = 'col-md-4 mb-3';
-            card.innerHTML = `
-                <div class="card choice-card" data-choice-id="${choice.id}">
-                    <div class="card-body">
-                        <h5 class="card-title">${choice.title}</h5>
-                        <p class="card-text">${choice.description}</p>
-                        <div class="text-center">
-                            <button class="btn btn-outline-primary btn-sm" onclick="gameController.selectPhase1Choice('${choice.id}')">
-                                Select
-                            </button>
+        // Define choice details based on the scripts
+        const choiceDetails = {
+            'elena': {
+                options: [
+                    { icon: 'fas fa-brain', label: 'Strategic vision mapping', class: 'strategy' },
+                    { icon: 'fas fa-search', label: 'HR function diagnostic', class: 'diagnostic' }
+                ],
+                description: 'Transformation must be anchored in a solid strategy. We need to identify the HR areas where generative AI and AI have the most transformative potential to improve employee experience and HR productivity. I would also like to understand what\'s feasible now, estimate associated costs and get an idea of the overall impact of generative AI on our HR teams.'
+            },
+            'james': {
+                options: [
+                    { icon: 'fas fa-handshake', label: 'GenAI platform partnership', class: 'partnership' },
+                    { icon: 'fas fa-cogs', label: 'Technical foundation setup', class: 'technical' }
+                ],
+                description: 'We don\'t have the technological infrastructure to support generative AI. First, we need to build solid technical foundations. I suggest we select a generative AI platform to manage our future needs. HRTech Pro has the best capabilities on the market today.'
+            },
+            'amira': {
+                options: [
+                    { icon: 'fas fa-rocket', label: 'Rapid deployment', class: 'deployment' },
+                    { icon: 'fas fa-users', label: 'Bottom-up innovation', class: 'innovation' }
+                ],
+                description: 'We don\'t have time to waste in this competitiveness race, generative AI is so powerful that we should go all out. I suggest we ask our HR managers to experiment with generative AI and develop their own HR tools.'
+            }
+        };
+
+        choices.forEach((choice, index) => {
+            const accordionItem = document.createElement('div');
+            accordionItem.className = 'accordion-choice';
+            accordionItem.dataset.choiceId = choice.id;
+            
+            const details = choiceDetails[choice.id] || { options: [], description: choice.description };
+            
+            accordionItem.innerHTML = `
+                <div class="accordion-header" onclick="gameController.toggleAccordion('${choice.id}')">
+                    <h4 class="accordion-title">${choice.title}</h4>
+                    <i class="fas fa-chevron-down accordion-arrow"></i>
+                        </div>
+                <div class="accordion-content">
+                    <div class="accordion-details">
+                        <div class="choice-options">
+                            ${details.options.map(option => `
+                                <div class="choice-option">
+                                    <div class="option-icon ${option.class}">
+                                        <i class="${option.icon}"></i>
+                                    </div>
+                                    <div class="option-label">${option.label}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="choice-description">
+                            "${details.description}"
                         </div>
                     </div>
                 </div>
             `;
-            container.appendChild(card);
+            
+            container.appendChild(accordionItem);
         });
+
+        // Initialize accordion functionality
+        this.initializeAccordion();
+    }
+
+    initializeAccordion() {
+        // Add click handlers for selection
+        document.querySelectorAll('.accordion-choice').forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (!e.target.closest('.accordion-header')) {
+                    this.selectPhase1Choice(item.dataset.choiceId);
+                }
+            });
+        });
+    }
+
+    toggleAccordion(choiceId) {
+        const accordionItem = document.querySelector(`[data-choice-id="${choiceId}"]`);
+        const isExpanded = accordionItem.classList.contains('expanded');
+        
+        // Close all accordions
+        document.querySelectorAll('.accordion-choice').forEach(item => {
+            item.classList.remove('expanded');
+        });
+        
+        // Open clicked accordion if it wasn't expanded
+        if (!isExpanded) {
+            accordionItem.classList.add('expanded');
+        }
     }
 
     async selectPhase1Choice(choiceId) {
         console.log('Phase 1 choice selected:', choiceId);
+        
+        // Update visual selection
+        document.querySelectorAll('.accordion-choice').forEach(item => {
+            item.classList.remove('selected');
+        });
+        
+        const selectedItem = document.querySelector(`[data-choice-id="${choiceId}"]`);
+        if (selectedItem) {
+            selectedItem.classList.add('selected');
+        }
+        
+        // Enable confirm button
+        const confirmBtn = document.getElementById('phase1-confirm-btn');
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('btn-secondary');
+            confirmBtn.classList.add('btn-primary');
+        }
+        
+        // Store selection
+        this.selectedChoices.mot1 = choiceId;
+    }
+
+    async confirmPhase1Choice() {
+        if (!this.selectedChoices.mot1) {
+            this.showAlert('Please select an approach first', 'warning');
+            return;
+        }
+        
+        console.log('Phase 1 choice confirmed:', this.selectedChoices.mot1);
         this.showLoading(true);
 
         try {
@@ -948,24 +1065,23 @@ class GameController {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({ character_id: choiceId })
+                body: JSON.stringify({ character_id: this.selectedChoices.mot1 })
             });
 
             const data = await response.json();
             console.log('Phase 1 API response:', data);
 
             if (data.success) {
-                this.selectedChoices.mot1 = choiceId;
                 console.log('Full API response:', data);
                 
                 // Try different possible data structures
                 let scoreData, mot1Score;
-                if (data.score_info) {
-                    scoreData = data.score_info;
-                    mot1Score = data.score_info.scores.mot1;
-                } else if (data.score) {
+                if (data.score) {
                     scoreData = data.score;
                     mot1Score = data.score.scores.mot1;
+                } else if (data.score_info) {
+                    scoreData = data.score_info;
+                    mot1Score = data.score_info.scores.mot1;
                 } else {
                     console.error('No score data found in response');
                     this.showAlert('Erreur: données de score manquantes', 'danger');
@@ -1014,7 +1130,7 @@ class GameController {
             card.innerHTML = `
                 <div class="solution-options">
                     <i class="fas fa-ellipsis-v"></i>
-                </div>
+                        </div>
                 <div class="solution-title">${choice.title}</div>
                 <div class="solution-description">${choice.description}</div>
                 <div class="solution-badges">
@@ -1324,15 +1440,15 @@ class GameController {
                 <div class="category-header ${metadata.class}">
                     <i class="${metadata.icon} me-2"></i>${metadata.title}
                 </div>
-                ${categoryChoices.map(choice => `
+                    ${categoryChoices.map(choice => `
                     <div class="matrix-choice" data-choice-id="${choice.id}" data-category="${category}" onclick="gameController.selectMOT3Choice('${choice.id}', '${category}')">
                         <div class="choice-icon">
                             <i class="fas fa-cog"></i>
-                        </div>
+                                    </div>
                         <div class="choice-title">${choice.title}</div>
                         <div class="choice-description">${choice.description}</div>
-                    </div>
-                `).join('')}
+                        </div>
+                    `).join('')}
             `;
             container.appendChild(categoryDiv);
         });
@@ -1364,15 +1480,15 @@ class GameController {
         
         // Enable/disable confirm button
         if (selectedCount === 3) {
-            confirmBtn.disabled = false;
-            confirmBtn.classList.remove('btn-secondary');
-            confirmBtn.classList.add('btn-primary');
-        } else {
-            confirmBtn.disabled = true;
-            confirmBtn.classList.remove('btn-primary');
-            confirmBtn.classList.add('btn-secondary');
+                confirmBtn.disabled = false;
+                confirmBtn.classList.remove('btn-secondary');
+                confirmBtn.classList.add('btn-primary');
+            } else {
+                confirmBtn.disabled = true;
+                confirmBtn.classList.remove('btn-primary');
+                confirmBtn.classList.add('btn-secondary');
+            }
         }
-    }
 
     async selectMOT3Choice(choiceId, category) {
         console.log('MOT3 choice selected:', choiceId, 'for category:', category);
@@ -1515,7 +1631,7 @@ class GameController {
             choiceDiv.innerHTML = `
                 <div class="choice-icon" style="color: ${style.color};">
                     <i class="${style.icon}"></i>
-                </div>
+                        </div>
                 <div class="choice-title">${choice.title}</div>
                 <div class="choice-description">${choice.description}</div>
                 <div class="choice-cost">${choice.cost}</div>
@@ -1704,32 +1820,113 @@ class GameController {
         const container = document.getElementById('phase5-choices');
         container.innerHTML = '';
 
-        choices.forEach(choice => {
-            const card = document.createElement('div');
-            card.className = 'col-md-4 mb-3';
-            card.innerHTML = `
-                <div class="card choice-card" data-choice-id="${choice.id}">
-                    <div class="card-body">
-                        <h5 class="card-title">${choice.title}</h5>
-                        <p class="card-text">${choice.description}</p>
-                        <div class="text-center">
-                            <button class="btn btn-outline-primary btn-sm" onclick="gameController.selectMOT5Choice('${choice.id}')">
-                                Select
-                            </button>
+        // Define choice details based on the scripts
+        const choiceDetails = {
+            'genai_for_all': {
+                options: [
+                    { icon: 'fas fa-rocket', label: 'Rapid deployment', class: 'deployment' },
+                    { icon: 'fas fa-bullhorn', label: 'Clear communication', class: 'communication' }
+                ],
+                description: 'GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development.'
+            },
+            'capability_building': {
+                options: [
+                    { icon: 'fas fa-cogs', label: 'Solid structure', class: 'structure' },
+                    { icon: 'fas fa-shield-alt', label: 'Clear governance', class: 'governance' },
+                    { icon: 'fas fa-graduation-cap', label: 'Training focus', class: 'training' }
+                ],
+                description: 'Definition of long-term HR AI ethics roadmap, Value-based AI governance, Preferred supplier panel, creation of HR AI training Academy. Solid structure, clear governance, training. But less focus on people, more technical approach.'
+            },
+            'people_speed': {
+                options: [
+                    { icon: 'fas fa-users', label: 'Focus on skills', class: 'skills' },
+                    { icon: 'fas fa-user-plus', label: 'Talent recruitment', class: 'recruitment' },
+                    { icon: 'fas fa-sync', label: 'Continuous training', class: 'training' }
+                ],
+                description: 'New GenAI HR Hub, Preferred supplier panel, Investment in recruiting top AI talents and retaining analytics expertise, Creation of HR AI training Academy. Focus on skills, talent recruitment, continuous training. But higher initial investment.'
+            }
+        };
+
+        choices.forEach((choice, index) => {
+            const accordionItem = document.createElement('div');
+            accordionItem.className = 'accordion-choice';
+            accordionItem.dataset.choiceId = choice.id;
+            
+            const details = choiceDetails[choice.id] || { options: [], description: choice.description };
+            
+            accordionItem.innerHTML = `
+                <div class="accordion-header" onclick="gameController.toggleAccordion('${choice.id}')">
+                    <h4 class="accordion-title">${choice.title}</h4>
+                    <i class="fas fa-chevron-down accordion-arrow"></i>
+                        </div>
+                <div class="accordion-content">
+                    <div class="accordion-details">
+                        <div class="choice-options">
+                            ${details.options.map(option => `
+                                <div class="choice-option">
+                                    <div class="option-icon ${option.class}">
+                                        <i class="${option.icon}"></i>
+                                    </div>
+                                    <div class="option-label">${option.label}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="choice-description">
+                            ${details.description}
                         </div>
                     </div>
                 </div>
             `;
-            container.appendChild(card);
+            container.appendChild(accordionItem);
+        });
+
+        // Initialize accordion functionality for Phase 5
+        this.initializePhase5Accordion();
+    }
+
+    initializePhase5Accordion() {
+        // Add click handlers for selection
+        document.querySelectorAll('.accordion-choice').forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (!e.target.closest('.accordion-header')) {
+                    this.selectMOT5Choice(item.dataset.choiceId);
+                }
+            });
         });
     }
 
     async selectMOT5Choice(choiceId) {
-        if (this.selectedChoices.mot5) {
-            this.showAlert('Vous avez déjà fait votre choix pour Phase 5', 'warning');
+        console.log('Phase 5 choice selected:', choiceId);
+        
+        // Update visual selection
+        document.querySelectorAll('.accordion-choice').forEach(item => {
+            item.classList.remove('selected');
+        });
+        
+        const selectedItem = document.querySelector(`[data-choice-id="${choiceId}"]`);
+        if (selectedItem) {
+            selectedItem.classList.add('selected');
+        }
+        
+        // Enable confirm button
+        const confirmBtn = document.getElementById('phase5-confirm-btn');
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('btn-secondary');
+            confirmBtn.classList.add('btn-primary');
+        }
+        
+        // Store selection
+        this.selectedChoices.mot5 = choiceId;
+    }
+
+    async confirmPhase5Choice() {
+        if (!this.selectedChoices.mot5) {
+            this.showAlert('Please select an approach first', 'warning');
             return;
         }
 
+        console.log('Phase 5 choice confirmed:', this.selectedChoices.mot5);
         this.showLoading(true);
 
         try {
@@ -1738,29 +1935,19 @@ class GameController {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ choice_id: choiceId })
+                credentials: 'include',
+                body: JSON.stringify({ choice_id: this.selectedChoices.mot5 })
             });
 
             const data = await response.json();
+            console.log('Phase 5 API response:', data);
 
             if (data.success) {
-                this.selectedChoices.mot5 = choiceId;
+                console.log('Full API response:', data);
                 
-                // Disable all Phase 5 buttons
-                document.querySelectorAll('#phase5-choices .choice-card').forEach(card => {
-                    const button = card.querySelector('button');
-                    button.disabled = true;
-                    if (card.getAttribute('data-choice-id') === choiceId) {
-                        card.classList.add('selected');
-                        button.textContent = 'Sélectionné';
-                        button.classList.remove('btn-outline-primary');
-                        button.classList.add('btn-success');
-                    }
-                });
-
-                // Show final results
+                // Phase 5 goes directly to final results
                 this.showResults(data.results);
-                this.updateProgress(100, 'Jeu terminé !');
+                this.updateProgress(100, 'Game completed!');
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -1894,7 +2081,7 @@ class GameController {
                     console.log('Phase 5 completed - showing final results with Recap video');
                     this.showFinalResults(data.score);
                 } else {
-                    this.showGlobalScoreRecap(phaseNumber, data.score);
+                this.showGlobalScoreRecap(phaseNumber, data.score);
                 }
             } else {
                 console.error('Failed to get current scores');
@@ -2270,6 +2457,9 @@ class GameController {
     }
 
     resetGame() {
+        // Stop all videos first
+        this.stopAllVideos();
+        
         this.currentState = 'login';
         this.selectedChoices = {
             mot1: null,
@@ -2288,7 +2478,7 @@ class GameController {
         // Reset form
         document.getElementById('username').value = '';
         
-        this.updateProgress(0, 'Prêt à recommencer');
+        this.updateProgress(0, 'Ready to start again');
     }
 
     showLoading(show) {
