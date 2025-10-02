@@ -618,7 +618,46 @@ class GameController {
         }, 5000);
     }
 
+    stopAllVideos() {
+        // Liste de tous les IDs de vidéos possibles
+        const videoIds = [
+            'presentation-video',
+            'intro-video', 
+            'harnessing-video',
+            'phase1-video',
+            'phase2-video',
+            'phase3-video',
+            'phase4-video',
+            'phase5-1-video',
+            'phase5-2-video',
+            'recap-video',
+            'recap-video-results'
+        ];
+        
+        // Arrêter toutes les vidéos
+        videoIds.forEach(videoId => {
+            const videoElement = document.getElementById(videoId);
+            if (videoElement) {
+                videoElement.pause();
+                videoElement.currentTime = 0;
+                console.log(`Stopped video: ${videoId}`);
+            }
+        });
+        
+        // Arrêter aussi toutes les vidéos dans la page (au cas où)
+        const allVideos = document.querySelectorAll('video');
+        allVideos.forEach(video => {
+            video.pause();
+            video.currentTime = 0;
+        });
+        
+        console.log('All videos stopped');
+    }
+
     skipVideo() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Passer directement à la vidéo intro (intro.mp4)
         this.showSection('harnessing-video-section');
         this.updateProgress(20, 'Introduction');
@@ -645,6 +684,9 @@ class GameController {
     }
 
     showMOT1Video() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide harnessing video section completely
         document.getElementById('harnessing-video-section').style.display = 'none';
         
@@ -657,6 +699,9 @@ class GameController {
     }
 
     showPhase2Video() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide all other sections
         document.getElementById('phase1-video-section').style.display = 'none';
         document.getElementById('phase1-section').style.display = 'none';
@@ -670,6 +715,9 @@ class GameController {
     }
 
     showPhase3Video() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide all other sections
         document.getElementById('phase2-video-section').style.display = 'none';
         document.getElementById('phase2-section').style.display = 'none';
@@ -683,6 +731,9 @@ class GameController {
     }
 
     showPhase4Video() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide all other sections
         document.getElementById('phase3-video-section').style.display = 'none';
         document.getElementById('phase3-section').style.display = 'none';
@@ -696,6 +747,9 @@ class GameController {
     }
 
     showPhase5_1Video() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide all other sections
         document.getElementById('phase4-video-section').style.display = 'none';
         document.getElementById('phase4-section').style.display = 'none';
@@ -709,6 +763,9 @@ class GameController {
     }
 
     showPhase5_2Video() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide all other sections
         document.getElementById('phase5-1-video-section').style.display = 'none';
         
@@ -721,6 +778,9 @@ class GameController {
     }
 
     showRecapVideo() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide all other sections
         document.getElementById('phase5-2-video-section').style.display = 'none';
         document.getElementById('phase5-section').style.display = 'none';
@@ -750,6 +810,9 @@ class GameController {
     }
 
     skipHarnessingVideo() {
+        // Arrêter toutes les vidéos en cours
+        this.stopAllVideos();
+        
         // Hide harnessing video section completely
         document.getElementById('harnessing-video-section').style.display = 'none';
         
@@ -1979,6 +2042,11 @@ let harnessingVideoElement;
 function initializeHarnessingVideo() {
     harnessingVideoElement = document.getElementById('harnessing-video');
     if (harnessingVideoElement) {
+        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
+        if (window.gameController) {
+            window.gameController.stopAllVideos();
+        }
+        
         // Quand la vidéo se termine, afficher le bouton "Démarrer le Jeu"
         harnessingVideoElement.addEventListener('ended', function() {
             document.getElementById('skip-harnessing-btn').style.display = 'none';
@@ -1998,6 +2066,11 @@ function initializeHarnessingVideo() {
 function initializeIntroVideo() {
     const introVideoElement = document.getElementById('intro-video');
     if (introVideoElement) {
+        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
+        if (window.gameController) {
+            window.gameController.stopAllVideos();
+        }
+        
         // Démarrer la vidéo automatiquement
         introVideoElement.play().catch(function(error) {
             console.log('Intro video autoplay failed:', error);
@@ -2015,6 +2088,11 @@ function initializeIntroVideo() {
 function initializePhase1Video() {
     const mot1VideoElement = document.getElementById('phase1-video');
     if (mot1VideoElement) {
+        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
+        if (window.gameController) {
+            window.gameController.stopAllVideos();
+        }
+        
         // Démarrer la vidéo automatiquement
         mot1VideoElement.play().catch(function(error) {
             console.log('MOT1 video autoplay failed:', error);
@@ -2025,6 +2103,11 @@ function initializePhase1Video() {
 function initializePhase2Video() {
     const phase2VideoElement = document.getElementById('phase2-video');
     if (phase2VideoElement) {
+        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
+        if (window.gameController) {
+            window.gameController.stopAllVideos();
+        }
+        
         // Démarrer la vidéo automatiquement
         phase2VideoElement.play().catch(function(error) {
             console.log('Phase2 video autoplay failed:', error);
@@ -2035,6 +2118,11 @@ function initializePhase2Video() {
 function initializePhase3Video() {
     const phase3VideoElement = document.getElementById('phase3-video');
     if (phase3VideoElement) {
+        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
+        if (window.gameController) {
+            window.gameController.stopAllVideos();
+        }
+        
         // Démarrer la vidéo automatiquement
         phase3VideoElement.play().catch(function(error) {
             console.log('Phase3 video autoplay failed:', error);
@@ -2045,6 +2133,11 @@ function initializePhase3Video() {
 function initializePhase4Video() {
     const phase4VideoElement = document.getElementById('phase4-video');
     if (phase4VideoElement) {
+        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
+        if (window.gameController) {
+            window.gameController.stopAllVideos();
+        }
+        
         // Démarrer la vidéo automatiquement
         phase4VideoElement.play().catch(function(error) {
             console.log('Phase4 video autoplay failed:', error);
@@ -2055,6 +2148,11 @@ function initializePhase4Video() {
 function initializePhase5_1Video() {
     const phase5_1VideoElement = document.getElementById('phase5-1-video');
     if (phase5_1VideoElement) {
+        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
+        if (window.gameController) {
+            window.gameController.stopAllVideos();
+        }
+        
         // Démarrer la vidéo automatiquement
         phase5_1VideoElement.play().catch(function(error) {
             console.log('Phase5-1 video autoplay failed:', error);
@@ -2065,6 +2163,11 @@ function initializePhase5_1Video() {
 function initializePhase5_2Video() {
     const phase5_2VideoElement = document.getElementById('phase5-2-video');
     if (phase5_2VideoElement) {
+        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
+        if (window.gameController) {
+            window.gameController.stopAllVideos();
+        }
+        
         // Démarrer la vidéo automatiquement
         phase5_2VideoElement.play().catch(function(error) {
             console.log('Phase5-2 video autoplay failed:', error);
@@ -2075,6 +2178,11 @@ function initializePhase5_2Video() {
 function initializeRecapVideo() {
     const recapVideoElement = document.getElementById('recap-video');
     if (recapVideoElement) {
+        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
+        if (window.gameController) {
+            window.gameController.stopAllVideos();
+        }
+        
         // Démarrer la vidéo automatiquement
         recapVideoElement.play().catch(function(error) {
             console.log('Recap video autoplay failed:', error);
@@ -2085,6 +2193,11 @@ function initializeRecapVideo() {
 function initializeRecapVideoResults() {
     const recapVideoElement = document.getElementById('recap-video-results');
     if (recapVideoElement) {
+        // Arrêter toutes les autres vidéos avant de démarrer celle-ci
+        if (window.gameController) {
+            window.gameController.stopAllVideos();
+        }
+        
         // Démarrer la vidéo automatiquement
         recapVideoElement.play().catch(function(error) {
             console.log('Recap video results autoplay failed:', error);
