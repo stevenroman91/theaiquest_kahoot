@@ -1160,17 +1160,17 @@ class GameController {
         `;
 
         // Define all 9 solutions with their exact positions based on mathematical coordinates
-        // Conversion: X_pixel = 300 + (X_math × 37.5), Y_pixel = 225 - (Y_math × 45)
+        // Conversion for 500x350 matrix: X_pixel = 250 + (X_math × 31.25), Y_pixel = 175 - (Y_math × 35)
         const solutions = [
-            { id: 1, x: 375, y: 270, grayed: false },   // (2, -1) → Bottom-right quadrant
-            { id: 2, x: 225, y: 180, grayed: false },   // (-2, 1) → Top-left quadrant
-            { id: 3, x: 450, y: 112, grayed: false },   // (4, 2.5) → Top-right quadrant, ONLY ONE
-            { id: 4, x: 263, y: 135, grayed: false },   // (-1, 2) → Top-left quadrant
-            { id: 5, x: 338, y: 315, grayed: false },   // (1, -2) → Bottom-right quadrant
-            { id: 6, x: 188, y: 360, grayed: true },    // (-3, -3) → Top-left quadrant
-            { id: 7, x: 150, y: 293, grayed: true },    // (-4, -1.5) → Bottom-left quadrant, ONLY ONE
-            { id: 8, x: 506, y: 383, grayed: true },    // (5.5, -3.5) → Bottom-right quadrant
-            { id: 9, x: 56, y: 45, grayed: true }        // (-6.5, 4) → Top-left quadrant
+            { id: 1, x: 312, y: 210, grayed: false },   // (2, -1) → Bottom-right quadrant
+            { id: 2, x: 188, y: 140, grayed: false },   // (-2, 1) → Top-left quadrant
+            { id: 3, x: 375, y: 87, grayed: false },    // (4, 2.5) → Top-right quadrant, ONLY ONE
+            { id: 4, x: 219, y: 105, grayed: false },   // (-1, 2) → Top-left quadrant
+            { id: 5, x: 281, y: 245, grayed: false },   // (1, -2) → Bottom-right quadrant
+            { id: 6, x: 156, y: 280, grayed: true },    // (-3, -3) → Top-left quadrant
+            { id: 7, x: 125, y: 228, grayed: true },     // (-4, -1.5) → Bottom-left quadrant, ONLY ONE
+            { id: 8, x: 422, y: 298, grayed: true },    // (5.5, -3.5) → Bottom-right quadrant
+            { id: 9, x: 47, y: 35, grayed: true }        // (-6.5, 4) → Top-left quadrant
         ];
 
         // Create solution markers
