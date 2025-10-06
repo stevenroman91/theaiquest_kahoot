@@ -1,134 +1,126 @@
-# AI Acceleration EXEC - Smart Retail Group HR Managers Edition
+# AI Acceleration EXEC - Smart Retail Group HR Managers
 
-## 🎮 Description
+A serious game designed for HR managers to learn AI transformation strategies through interactive scenarios.
 
-Jeu sérieux interactif pour la transformation GenAI dans les RH. Les joueurs naviguent à travers 5 phases de transformation, prennent des décisions stratégiques et reçoivent des scores basés sur leurs choix.
+## 🚀 Quick Start
 
-## 🚀 Déploiement Rapide
+### Prerequisites
+- Python 3.8+
+- Modern web browser
 
-### Option 1 : Railway.app (Recommandé)
-
-1. **Fork ce repository** sur GitHub
-2. **Aller sur [railway.app](https://railway.app)**
-3. **Se connecter avec GitHub**
-4. **Créer un nouveau projet**
-5. **Sélectionner "Deploy from GitHub repo"**
-6. **Choisir votre repository**
-7. **Railway déploie automatiquement !**
-
-**URL publique** : `https://votre-projet.railway.app`
-
-### Option 2 : Render.com
-
-1. **Fork ce repository** sur GitHub
-2. **Aller sur [render.com](https://render.com)**
-3. **Créer un "Web Service"**
-4. **Connecter GitHub et sélectionner le repository**
-5. **Configuration automatique Flask**
-
-**URL publique** : `https://votre-projet.onrender.com`
-
-## 📋 Fonctionnalités
-
-- ✅ **5 Phases interactives** avec vidéos intégrées
-- ✅ **Système de scoring** basé sur les choix stratégiques
-- ✅ **Vidéos automatiques** avec son
-- ✅ **Interface responsive** Bootstrap
-- ✅ **Authentification utilisateur** avec base de données
-- ✅ **Écran de résultats** avec vidéo Recap intégrée
-- ✅ **Système de progression** visuel
-
-## 🎯 Phases du jeu
-
-1. **Phase 1** : Embedding GenAI in your HR transformation
-2. **Phase 2** : Revisiting your HR and AI portfolio  
-3. **Phase 3** : Launching your priority HR and GenAI pilots
-4. **Phase 4** : Scaling your AI and GenAI solutions
-5. **Phase 5** : Deploying AI and GenAI across the organization
-
-## 🛠️ Installation locale
-
+### Installation
 ```bash
-# Cloner le repository
-git clone https://github.com/votre-username/ai-acceleration-exec.git
-cd ai-acceleration-exec
+# Clone the repository
+git clone <repository-url>
+cd serious-game
 
-# Installer les dépendances
+# Install dependencies
 pip install -r requirements.txt
 
-# Lancer le serveur
-python3 web_interface.py
+# Start the game
+python web_interface.py
 ```
 
-**URL locale** : `http://localhost:5001`
+### Access
+Open your browser and navigate to `http://localhost:5000`
 
-## 👥 Utilisateurs par défaut
+## 🎮 Game Overview
 
-- **admin** / `FDJ2024!Admin` (Administrateur)
-- **manager** / `FDJ2024!Manager` (Manager)
-- **user1** / `FDJ2024!User1` (Utilisateur)
+The game consists of 5 phases where players make strategic decisions about AI implementation:
 
-## 📁 Structure du projet
+1. **Phase 1**: Choose AI transformation approach
+2. **Phase 2**: Prioritize AI solutions using Impact/Feasibility matrix
+3. **Phase 3**: Select facilitators for each category
+4. **Phase 4**: Choose scaling enablers within budget (max 30 points)
+5. **Phase 5**: Select deployment strategy
 
+## 🏗️ Architecture
+
+### Backend
+- **Flask** web framework
+- **SQLite** database for user management
+- **RESTful API** for game interactions
+
+### Frontend
+- **Vanilla JavaScript** with modern ES6+ features
+- **Bootstrap 5** for responsive UI
+- **HTML5 Video** for interactive content
+
+### Key Files
+- `web_interface.py` - Main Flask application
+- `ai_acceleration_game.py` - Game logic and data
+- `user_manager.py` - User authentication
+- `static/js/game.js` - Frontend game controller
+- `static/css/style.css` - Styling
+- `templates/index.html` - Main template
+
+## 🎯 Features
+
+- **User Authentication**: Registration and login system
+- **Interactive Videos**: Auto-playing educational content
+- **Drag & Drop**: Phase 2 matrix prioritization
+- **Budget Management**: Phase 4 point allocation system
+- **Progress Tracking**: Real-time score and progress display
+- **Responsive Design**: Works on desktop and mobile
+
+## 🔧 Development
+
+### Local Development
+```bash
+# Start development server
+python web_interface.py
+
+# The game will be available at http://localhost:5000
 ```
-├── web_interface.py          # Serveur Flask principal
-├── ai_acceleration_game.py   # Logique du jeu
-├── user_manager.py           # Gestion des utilisateurs
-├── templates/
-│   └── index.html           # Interface utilisateur
-├── static/
-│   ├── css/style.css        # Styles
-│   ├── js/game.js           # Logique frontend
-│   └── videos/              # Vidéos du jeu
-├── requirements.txt         # Dépendances Python
-├── Procfile                 # Configuration Railway
-└── README.md               # Ce fichier
-```
 
-## 🌐 Configuration pour le déploiement
+### Code Structure
+- Clean, modular JavaScript with ES6+ classes
+- Separation of concerns between frontend and backend
+- Comprehensive error handling and validation
+- Senior-level code practices and documentation
 
-Le projet est configuré pour fonctionner automatiquement sur :
-- **Railway.app** : Déploiement en 1 clic
-- **Render.com** : Configuration automatique Flask
-- **Heroku** : Compatible avec Procfile
-- **VPS** : Fonctionne avec gunicorn
+## 📱 Deployment
 
-## 📊 Spécifications techniques
+The application is ready for deployment on platforms like:
+- Railway
+- Render
+- Heroku
+- VPS with nginx
 
-- **Framework** : Flask 2.3.3
-- **Base de données** : SQLite (inclus)
-- **Frontend** : Bootstrap 5 + JavaScript vanilla
-- **Vidéos** : MP4 H.264 optimisé pour le web
-- **Port** : Configuré automatiquement (Railway/Render)
+See `Procfile` for deployment configuration.
 
-## 🔧 Variables d'environnement
+## 🎨 Customization
 
-- `PORT` : Port du serveur (automatique sur Railway/Render)
-- `FLASK_ENV` : `production` en production (automatique)
+### Adding New Phases
+1. Add phase data to `ai_acceleration_game.py`
+2. Create corresponding API routes
+3. Add frontend handling in `game.js`
+4. Update HTML template
 
-## 📈 Monitoring
+### Styling
+Modify `static/css/style.css` to customize the visual appearance.
 
-- **Logs** : Disponibles sur Railway/Render
-- **Métriques** : Monitoring intégré
-- **Redémarrage** : Automatique en cas de problème
+## 📊 Scoring System
 
-## 🎯 Avantages du déploiement cloud
+Each phase awards 0-3 stars based on decision quality:
+- **3 stars**: Optimal choices
+- **2 stars**: Good choices
+- **1 star**: Acceptable choices
+- **0 stars**: Poor choices
 
-- ✅ **Accessible 24/7** depuis n'importe où
-- ✅ **URL publique** permanente
-- ✅ **Pas de maintenance** serveur
-- ✅ **Mise à jour** automatique via GitHub
-- ✅ **Monitoring** intégré
-- ✅ **Sauvegarde** automatique
+Total possible score: 15 points (3 per phase)
 
-## 🚀 Prochaines étapes
+## 🔒 Security
 
-1. **Déployer** sur Railway ou Render
-2. **Partager l'URL** avec les utilisateurs
-3. **Monitorer** les performances
-4. **Itérer** basé sur les retours utilisateurs
+- User passwords are hashed using secure methods
+- Session management for user authentication
+- Input validation on both frontend and backend
+- CSRF protection for forms
 
----
+## 📝 License
 
-**Développé pour Smart Retail Group HR Managers**  
-**Version v1.9 - Phase 1 Context Enhanced**
+This project is proprietary software developed for Smart Retail Group.
+
+## 🤝 Support
+
+For technical support or questions, contact the development team.

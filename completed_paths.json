@@ -1,6 +1,6 @@
 [
   {
-    "mot1_choice": "elena",
+    "mot1_choice": "amira",
     "mot2_choices": [
       "intelligent_recruitment",
       "virtual_hr_assistant",
@@ -8,23 +8,46 @@
     ],
     "mot3_choices": {
       "people_processes": "hr_ai_training",
-      "platform_partnerships": "tech_partnerships",
-      "policies_practices": "performance_metrics"
+      "platform_partnerships": "system_integration",
+      "policies_practices": "ai_ethics_charter"
     },
     "mot4_choices": [
-      "apis_hr_systems",
-      "tech_stack_data_pipelines",
-      "change_management",
-      "ceo_video_series"
+      "data_collection_strategy"
+    ],
+    "mot5_choice": "people_speed",
+    "total_score": 8,
+    "stars": 1,
+    "mot_scores": {
+      "mot1": 1,
+      "mot2": 2,
+      "mot3": 1,
+      "mot4": 1,
+      "mot5": 3
+    }
+  },
+  {
+    "mot1_choice": "james",
+    "mot2_choices": [
+      "training_optimization",
+      "virtual_hr_assistant",
+      "hr_automation"
+    ],
+    "mot3_choices": {
+      "policies_practices": "ai_ethics_charter",
+      "platform_partnerships": "system_integration",
+      "people_processes": "hr_ai_training"
+    },
+    "mot4_choices": [
+      "data_collection_strategy"
     ],
     "mot5_choice": "capability_building",
-    "total_score": 12,
-    "stars": 2,
+    "total_score": 7,
+    "stars": 1,
     "mot_scores": {
-      "mot1": 3,
-      "mot2": 2,
-      "mot3": 3,
-      "mot4": 2,
+      "mot1": 2,
+      "mot2": 1,
+      "mot3": 1,
+      "mot4": 1,
       "mot5": 2
     }
   }

@@ -1940,7 +1940,7 @@ class GameController {
             const details = choiceDetails[choice.id] || { options: [], description: choice.description };
             
             accordionItem.innerHTML = `
-                <div class="accordion-header" onclick="gameController.toggleAccordion('${choice.id}')">
+                <div class="accordion-header" onclick="gameController.togglePhase5Accordion('${choice.id}')">
                     <h4 class="accordion-title">${choice.title}</h4>
                     <i class="fas fa-chevron-down accordion-arrow"></i>
                         </div>
@@ -1970,14 +1970,25 @@ class GameController {
     }
 
     initializePhase5Accordion() {
-        // Add click handlers for selection
+        // Phase 5 accordion uses the same system as Phase 1
+        // No additional initialization needed - togglePhase5Accordion handles everything
+    }
+
+    togglePhase5Accordion(choiceId) {
+        const accordionItem = document.querySelector(`[data-choice-id="${choiceId}"]`);
+        const isExpanded = accordionItem.classList.contains('expanded');
+        
+        // Close all accordions
         document.querySelectorAll('.accordion-choice').forEach(item => {
-            item.addEventListener('click', (e) => {
-                if (!e.target.closest('.accordion-header')) {
-                    this.selectMOT5Choice(item.dataset.choiceId);
-                }
-            });
+            item.classList.remove('expanded');
         });
+        
+        // Open clicked accordion if it wasn't expanded
+        if (!isExpanded) {
+            accordionItem.classList.add('expanded');
+            // Pré-sélectionner automatiquement cette option
+            this.selectMOT5Choice(choiceId);
+        }
     }
 
     async selectMOT5Choice(choiceId) {
@@ -2487,7 +2498,7 @@ class GameController {
                                 autoplay
                                 playsinline
                                 style="width: 100%; height: 100%; border-radius: 8px;">
-                                <source src="/static/videos/recap_web.mp4" type="video/mp4">
+                                <source src="/static/videos/recap.mp4" type="video/mp4">
                                 Votre navigateur ne supporte pas la lecture vidéo.
                             </video>
                         </div>
