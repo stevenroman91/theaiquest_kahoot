@@ -333,18 +333,48 @@ class AIAccelerationGame:
         return list(self.game_data["mot2_hr_solutions"].values())
     
     def make_mot2_choices(self, solution_ids: List[str]) -> bool:
-        """Effectue les choix MOT2 (3 solutions parmi 5)"""
+        """Effectue les choix MOT2 avec scoring basé sur les positions 1, 3 et 4"""
         if len(solution_ids) != 3:
             return False
-            
-        valid_solutions = [sid for sid in solution_ids if sid in self.game_data["mot2_hr_solutions"]]
-        if len(valid_solutions) == 3:
-            self.current_path.mot2_choices = valid_solutions
-            self.current_state = GameState.MOT3
-            mot2_score = self.calculate_mot_score(2)
-            logger.info(f"MOT2 choices made: {valid_solutions} - Score: {mot2_score}/3")
-            return True
-        return False
+        
+        # Mapping des choix vers leurs positions dans la matrice
+        choice_to_matrix_position = {
+            'intelligent_recruitment': 1,    # Position 1
+            'virtual_hr_assistant': 2,        # Position 2  
+            'training_optimization': 3,      # Position 3
+            'sentiment_analysis': 4,         # Position 4
+            'hr_automation': 5               # Position 5
+        }
+        
+        # Vérifier combien de bonnes positions sont sélectionnées
+        selected_positions = []
+        for solution_id in solution_ids:
+            if solution_id in choice_to_matrix_position:
+                selected_positions.append(choice_to_matrix_position[solution_id])
+        
+        # Les bonnes réponses sont les positions 1, 3 et 4
+        correct_positions = {1, 3, 4}
+        correct_count = len(set(selected_positions) & correct_positions)
+        
+        # Toujours permettre la progression, mais avec un score basé sur les bonnes réponses
+        self.current_path.mot2_choices = solution_ids
+        self.current_state = GameState.MOT3
+        
+        # Calculer le score basé sur le nombre de bonnes positions
+        if correct_count == 3:
+            mot2_score = 3  # 3 étoiles
+            logger.info(f"MOT2 perfect choices: {solution_ids} (positions 1,3,4) - Score: 3/3")
+        elif correct_count == 2:
+            mot2_score = 2  # 2 étoiles
+            logger.info(f"MOT2 good choices: {solution_ids} (2/3 correct positions) - Score: 2/3")
+        elif correct_count == 1:
+            mot2_score = 1  # 1 étoile
+            logger.info(f"MOT2 partial choices: {solution_ids} (1/3 correct positions) - Score: 1/3")
+        else:
+            mot2_score = 0  # 0 étoile
+            logger.info(f"MOT2 incorrect choices: {solution_ids} (0/3 correct positions) - Score: 0/3")
+        
+        return True
     
     def get_mot3_choices(self) -> Dict[str, List[Choice]]:
         """Retourne les choix disponibles pour MOT3 par catégorie"""
@@ -416,17 +446,31 @@ class AIAccelerationGame:
             return mot1_scores.get(self.current_path.mot1_choice, 0)
         
         elif mot_number == 2:
-            # MOT2: Solutions optimales = intelligent_recruitment, virtual_hr_assistant, sentiment_analysis
-            optimal_solutions = {"intelligent_recruitment", "virtual_hr_assistant", "sentiment_analysis"}
-            selected_solutions = set(self.current_path.mot2_choices)
-            matches = len(optimal_solutions.intersection(selected_solutions))
+            # MOT2: Positions optimales = 1, 3, 4 (intelligent_recruitment, training_optimization, sentiment_analysis)
+            choice_to_matrix_position = {
+                'intelligent_recruitment': 1,    # Position 1
+                'virtual_hr_assistant': 2,        # Position 2  
+                'training_optimization': 3,      # Position 3
+                'sentiment_analysis': 4,         # Position 4
+                'hr_automation': 5               # Position 5
+            }
+            
+            correct_positions = {1, 3, 4}
+            selected_positions = []
+            for solution_id in self.current_path.mot2_choices:
+                if solution_id in choice_to_matrix_position:
+                    selected_positions.append(choice_to_matrix_position[solution_id])
+            
+            matches = len(set(selected_positions) & correct_positions)
             
             if matches >= 3:
                 return 3
             elif matches == 2:
                 return 2
-            else:
+            elif matches == 1:
                 return 1
+            else:
+                return 0
         
         elif mot_number == 3:
             # MOT3: HR Team Training + Technology Partnerships + Performance Metrics = 3/3
@@ -593,8 +637,8 @@ def main():
         for i, choice in enumerate(choices, 1):
             print(f"{i}. {choice.title}")
         
-        # Simulation d'un choix
-        game.make_mot2_choices(["solution_1", "solution_3", "solution_4"])
+        # Simulation d'un choix (positions 1, 3, 4)
+        game.make_mot2_choices(["intelligent_recruitment", "training_optimization", "sentiment_analysis"])
         print(f"\n✅ Choix MOT2: {game.current_path.mot2_choices}")
         
         # Continuer avec les autres MOTs...
