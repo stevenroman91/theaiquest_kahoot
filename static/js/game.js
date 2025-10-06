@@ -1159,17 +1159,18 @@ class GameController {
             </div>
         `;
 
-        // Define all 9 solutions with their exact positions based on the reference image
+        // Define all 9 solutions with their exact positions based on mathematical coordinates
+        // Conversion: X_pixel = 300 + (X_math × 37.5), Y_pixel = 225 - (Y_math × 45)
         const solutions = [
-            { id: 1, x: 70, y: 65, grayed: false },   // Bottom-right quadrant, closer to 5
-            { id: 2, x: 40, y: 45, grayed: false },   // Top-left quadrant, closer to 5
-            { id: 3, x: 80, y: 25, grayed: false },   // Top-right quadrant, high impact, high feasibility
-            { id: 4, x: 65, y: 40, grayed: false },   // Top-right quadrant, closer to 1
-            { id: 5, x: 45, y: 70, grayed: false },   // Bottom-left quadrant, closer to 2
-            { id: 6, x: 25, y: 30, grayed: true },    // Top-left quadrant, high impact, low feasibility (grayed)
-            { id: 7, x: 30, y: 75, grayed: true },    // Bottom-left quadrant, low impact, low feasibility (grayed)
-            { id: 8, x: 85, y: 70, grayed: true },    // Bottom-right quadrant, low impact, high feasibility (grayed)
-            { id: 9, x: 20, y: 20, grayed: true }     // Top-left quadrant, high impact, low feasibility (grayed)
+            { id: 1, x: 375, y: 270, grayed: false },   // (2, -1) → Bottom-right quadrant
+            { id: 2, x: 225, y: 180, grayed: false },   // (-2, 1) → Top-left quadrant
+            { id: 3, x: 450, y: 112, grayed: false },   // (4, 2.5) → Top-right quadrant, ONLY ONE
+            { id: 4, x: 263, y: 135, grayed: false },   // (-1, 2) → Top-left quadrant
+            { id: 5, x: 338, y: 315, grayed: false },   // (1, -2) → Bottom-right quadrant
+            { id: 6, x: 188, y: 360, grayed: true },    // (-3, -3) → Top-left quadrant
+            { id: 7, x: 150, y: 293, grayed: true },    // (-4, -1.5) → Bottom-left quadrant, ONLY ONE
+            { id: 8, x: 506, y: 383, grayed: true },    // (5.5, -3.5) → Bottom-right quadrant
+            { id: 9, x: 56, y: 45, grayed: true }        // (-6.5, 4) → Top-left quadrant
         ];
 
         // Create solution markers
@@ -1178,8 +1179,8 @@ class GameController {
             marker.className = `solution-marker ${solution.grayed ? 'grayed' : ''}`;
             marker.dataset.solutionId = solution.id;
             marker.textContent = solution.id;
-            marker.style.left = `${solution.x}%`;
-            marker.style.top = `${solution.y}%`;
+            marker.style.left = `${solution.x}px`;
+            marker.style.top = `${solution.y}px`;
             marker.style.transform = 'translate(-50%, -50%)';
             
             matrixContainer.appendChild(marker);
@@ -1187,6 +1188,17 @@ class GameController {
     }
 
     createSolutionCard(choice) {
+        // Mapping des choix vers leurs positions dans la matrice (seulement 1-5 disponibles)
+        const choiceToMatrixPosition = {
+            'intelligent_recruitment': 1,    // Position 1
+            'virtual_hr_assistant': 2,        // Position 2  
+            'training_optimization': 3,      // Position 3
+            'sentiment_analysis': 4,         // Position 4
+            'hr_automation': 5               // Position 5
+        };
+        
+        const matrixPosition = choiceToMatrixPosition[choice.id] || '?';
+        
             const card = document.createElement('div');
         card.className = 'solution-card';
         card.draggable = true;
@@ -1198,8 +1210,7 @@ class GameController {
             <div class="solution-title">${choice.title}</div>
             <div class="solution-description">${choice.description}</div>
             <div class="solution-badges">
-                <span class="badge-feasibility">F: ${choice.feasibility || 'High'}</span>
-                <span class="badge-impact">I: ${choice.impact || 'High'}</span>
+                <span class="badge-matrix-position">Position: ${matrixPosition}</span>
                 </div>
             `;
         

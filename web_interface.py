@@ -272,14 +272,8 @@ def api_phase2_choices():
     game = get_game()
     choices = game.get_mot2_choices()
     
-    # Define feasibility and impact for each choice
-    choice_metadata = {
-        'hr_automation': {'feasibility': 'High', 'impact': 'High'},
-        'virtual_hr_assistant': {'feasibility': 'High', 'impact': 'Medium'},
-        'sentiment_analysis': {'feasibility': 'High', 'impact': 'High'},
-        'intelligent_recruitment': {'feasibility': 'High', 'impact': 'High'},
-        'predictive_analytics': {'feasibility': 'Medium', 'impact': 'High'}
-    }
+    # Ne prendre que les 5 premières solutions (positions 1-5 dans la matrice)
+    available_choices = choices[:5]
     
     return jsonify({
         'success': True,
@@ -287,11 +281,9 @@ def api_phase2_choices():
             {
                 'id': choice.id,
                 'title': choice.title,
-                'description': choice.description,
-                'feasibility': choice_metadata.get(choice.id, {}).get('feasibility', 'High'),
-                'impact': choice_metadata.get(choice.id, {}).get('impact', 'High')
+                'description': choice.description
             }
-            for choice in choices
+            for choice in available_choices
         ]
     })
 
