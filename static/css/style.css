@@ -105,9 +105,210 @@ body.modal-open {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.available-solutions {
-    max-height: 400px;
-    overflow-y: auto;
+.available-solutions-full {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    max-height: none;
+    overflow-y: visible;
+}
+
+.available-solutions-full .solution-card:nth-child(n+4) {
+    grid-column: span 1;
+}
+
+.available-solutions-full .solution-card:nth-child(4) {
+    grid-column: 1;
+}
+
+.available-solutions-full .solution-card:nth-child(5) {
+    grid-column: 2;
+}
+
+/* Impact/Feasibility Matrix Styles */
+.matrix-section {
+    margin-bottom: 2rem;
+}
+
+.impact-feasibility-matrix {
+    position: relative;
+    width: 600px;
+    height: 450px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    border-radius: 15px;
+    border: 2px solid rgba(59, 130, 246, 0.3);
+    overflow: visible;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin: 0 auto 120px auto;
+    margin-left: 100px;
+}
+
+.matrix-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.matrix-quadrant {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+.matrix-quadrant.high-impact-low-feasibility {
+    background: rgba(147, 51, 234, 0.15);
+    border-top-left-radius: 15px;
+}
+
+.matrix-quadrant.high-impact-high-feasibility {
+    background: rgba(34, 197, 94, 0.15);
+    border-top-right-radius: 15px;
+}
+
+.matrix-quadrant.low-impact-low-feasibility {
+    background: rgba(107, 114, 128, 0.15);
+    border-bottom-left-radius: 15px;
+}
+
+.matrix-quadrant.low-impact-high-feasibility {
+    background: rgba(59, 130, 246, 0.15);
+    border-bottom-right-radius: 15px;
+}
+
+.matrix-axes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.axis-y {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateX(-50%);
+}
+
+.axis-x {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-50%);
+}
+
+.axis-label {
+    position: absolute;
+    color: #1e3a8a;
+    font-weight: 800;
+    font-size: 1.1rem;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+    letter-spacing: 1px;
+}
+
+.axis-label.impact-label {
+    top: 45%;
+    left: -80px;
+    transform: translateY(-50%);
+    transform-origin: center;
+}
+
+.axis-label.feasibility-label {
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    transform-origin: center;
+}
+
+.axis-arrow {
+    position: absolute;
+    color: white;
+    font-size: 1.5rem;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+}
+
+.axis-arrow.impact-arrow {
+    top: 50%;
+    left: -60px;
+    transform: translateY(-50%);
+}
+
+.axis-arrow.feasibility-arrow {
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.axis-description {
+    position: absolute;
+    color: #1e3a8a;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    max-width: 140px;
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+.axis-description.impact-desc {
+    top: 45%;
+    left: -111px;
+    transform: translateY(calc(-50% + 60px));
+    text-align: center;
+    white-space: nowrap;
+    width: 90px;
+}
+
+.axis-description.feasibility-desc {
+    bottom: -50px;
+    left: calc(50% - 120px);
+    transform: translateX(-50%);
+    text-align: center;
+    white-space: nowrap;
+    width: 300px;
+    font-size: 0.8rem;
+}
+
+.solution-marker {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    border: 2px solid white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+    z-index: 10;
+}
+
+.solution-marker:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.solution-marker.grayed {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    border-color: #9ca3af;
+    opacity: 0.7;
+    box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
 }
 
 .solution-card {

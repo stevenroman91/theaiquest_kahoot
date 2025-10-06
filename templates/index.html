@@ -474,7 +474,7 @@
                             <div>
                                 <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
                                 <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
-                                    Among the five generative AI and AI solutions highlighted on the matrix, which three will you select and launch first?
+                                    Among the six generative AI and AI solutions highlighted on the matrix, which three will you select and launch first?
                                 </p>
                             </div>
                         </div>
@@ -482,6 +482,15 @@
                     
                     <div class="row">
                         <div class="col-md-8">
+                            <!-- Impact/Feasibility Matrix -->
+                            <div class="matrix-section mb-4">
+                                <h5 class="mb-3"><i class="fas fa-chart-line me-2 text-primary"></i>Impact vs Feasibility Matrix</h5>
+                                <div id="impact-feasibility-matrix" class="impact-feasibility-matrix">
+                                    <!-- Matrix will be generated here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <h5 class="mb-3"><i class="fas fa-arrow-up me-2 text-success"></i>Top 3 Priorities (Drag & Drop)</h5>
                             <div id="phase2-priorities" class="priorities-container mb-4">
                                 <div class="priority-slot" data-slot="1">
@@ -501,9 +510,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                    </div>
+                    
+                    <!-- Available Solutions - Full Width -->
+                    <div class="row">
+                        <div class="col-12">
                             <h5 class="mb-3"><i class="fas fa-list me-2 text-info"></i>Available Solutions</h5>
-                            <div id="phase2-choices" class="available-solutions">
+                            <div id="phase2-choices" class="available-solutions-full">
                                 <!-- Les cartes de solutions seront générées ici -->
                             </div>
                         </div>

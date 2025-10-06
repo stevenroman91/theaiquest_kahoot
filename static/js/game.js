@@ -1119,35 +1119,95 @@ class GameController {
     }
 
     renderMOT2Choices(choices) {
+        // First, render the Impact/Feasibility matrix
+        this.renderImpactFeasibilityMatrix();
+        
         const container = document.getElementById('phase2-choices');
         container.innerHTML = '';
 
+        // Create all solution cards in a grid layout
         choices.forEach(choice => {
-            const card = document.createElement('div');
-            card.className = 'solution-card';
-            card.draggable = true;
-            card.dataset.choiceId = choice.id;
-            card.innerHTML = `
-                <div class="solution-options">
-                    <i class="fas fa-ellipsis-v"></i>
-                        </div>
-                <div class="solution-title">${choice.title}</div>
-                <div class="solution-description">${choice.description}</div>
-                <div class="solution-badges">
-                    <span class="badge-feasibility">F: ${choice.feasibility || 'High'}</span>
-                    <span class="badge-impact">I: ${choice.impact || 'High'}</span>
-                </div>
-            `;
-            
-            // Add drag event listeners
-            card.addEventListener('dragstart', this.handleDragStart.bind(this));
-            card.addEventListener('dragend', this.handleDragEnd.bind(this));
-            
+            const card = this.createSolutionCard(choice);
             container.appendChild(card);
         });
 
         // Initialize priority slots
         this.initializePrioritySlots();
+    }
+
+    renderImpactFeasibilityMatrix() {
+        const matrixContainer = document.getElementById('impact-feasibility-matrix');
+        
+        // Create matrix structure
+        matrixContainer.innerHTML = `
+            <div class="matrix-grid">
+                <div class="matrix-quadrant high-impact-low-feasibility"></div>
+                <div class="matrix-quadrant high-impact-high-feasibility"></div>
+                <div class="matrix-quadrant low-impact-low-feasibility"></div>
+                <div class="matrix-quadrant low-impact-high-feasibility"></div>
+            </div>
+            
+            <div class="matrix-axes">
+                <div class="axis-y"></div>
+                <div class="axis-x"></div>
+                <div class="axis-label impact-label">IMPACT</div>
+                <div class="axis-label feasibility-label">FEASIBILITY</div>
+                <div class="axis-arrow impact-arrow">↑</div>
+                <div class="axis-arrow feasibility-arrow">→</div>
+                <div class="axis-description impact-desc">ROI potential<br>Asset builds<br>Competitive edge</div>
+                <div class="axis-description feasibility-desc">Data readiness, Technical complexity, Cost, Business engagement, Regulation...</div>
+            </div>
+        `;
+
+        // Define all 9 solutions with their exact positions based on the reference image
+        const solutions = [
+            { id: 1, x: 70, y: 65, grayed: false },   // Bottom-right quadrant, closer to 5
+            { id: 2, x: 40, y: 45, grayed: false },   // Top-left quadrant, closer to 5
+            { id: 3, x: 80, y: 25, grayed: false },   // Top-right quadrant, high impact, high feasibility
+            { id: 4, x: 65, y: 40, grayed: false },   // Top-right quadrant, closer to 1
+            { id: 5, x: 45, y: 70, grayed: false },   // Bottom-left quadrant, closer to 2
+            { id: 6, x: 25, y: 30, grayed: true },    // Top-left quadrant, high impact, low feasibility (grayed)
+            { id: 7, x: 30, y: 75, grayed: true },    // Bottom-left quadrant, low impact, low feasibility (grayed)
+            { id: 8, x: 85, y: 70, grayed: true },    // Bottom-right quadrant, low impact, high feasibility (grayed)
+            { id: 9, x: 20, y: 20, grayed: true }     // Top-left quadrant, high impact, low feasibility (grayed)
+        ];
+
+        // Create solution markers
+        solutions.forEach(solution => {
+            const marker = document.createElement('div');
+            marker.className = `solution-marker ${solution.grayed ? 'grayed' : ''}`;
+            marker.dataset.solutionId = solution.id;
+            marker.textContent = solution.id;
+            marker.style.left = `${solution.x}%`;
+            marker.style.top = `${solution.y}%`;
+            marker.style.transform = 'translate(-50%, -50%)';
+            
+            matrixContainer.appendChild(marker);
+        });
+    }
+
+    createSolutionCard(choice) {
+            const card = document.createElement('div');
+        card.className = 'solution-card';
+        card.draggable = true;
+        card.dataset.choiceId = choice.id;
+            card.innerHTML = `
+            <div class="solution-options">
+                <i class="fas fa-ellipsis-v"></i>
+                        </div>
+            <div class="solution-title">${choice.title}</div>
+            <div class="solution-description">${choice.description}</div>
+            <div class="solution-badges">
+                <span class="badge-feasibility">F: ${choice.feasibility || 'High'}</span>
+                <span class="badge-impact">I: ${choice.impact || 'High'}</span>
+                </div>
+            `;
+        
+        // Add drag event listeners
+        card.addEventListener('dragstart', this.handleDragStart.bind(this));
+        card.addEventListener('dragend', this.handleDragEnd.bind(this));
+        
+        return card;
     }
 
     initializePrioritySlots() {
