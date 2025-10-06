@@ -1147,14 +1147,26 @@ class GameController {
                 <div class="matrix-quadrant low-impact-high-feasibility"></div>
             </div>
             
-            <div class="matrix-axes">
-                <div class="axis-y"></div>
-                <div class="axis-x"></div>
+            <!-- SVG pour les vraies flèches des axes -->
+            <svg class="matrix-axes-svg" width="500" height="350" viewBox="0 0 500 350">
+                <!-- Axe horizontal (Feasibility) sur le bord bas -->
+                <line x1="0" y1="350" x2="500" y2="350" stroke="#ffffff" stroke-width="3"/>
+                <polygon points="490,345 500,350 490,355" fill="#ffffff"/>
+                
+                <!-- Axe vertical (Impact) sur le bord gauche -->
+                <line x1="0" y1="350" x2="0" y2="0" stroke="#ffffff" stroke-width="3"/>
+                <polygon points="5,10 0,0 -5,10" fill="#ffffff"/>
+            </svg>
+            
+            <!-- Conteneur pour l'axe IMPACT (vertical) -->
+            <div class="axis-container impact-container">
                 <div class="axis-label impact-label">IMPACT</div>
-                <div class="axis-label feasibility-label">FEASIBILITY</div>
-                <div class="axis-arrow impact-arrow">↑</div>
-                <div class="axis-arrow feasibility-arrow">→</div>
                 <div class="axis-description impact-desc">ROI potential<br>Asset builds<br>Competitive edge</div>
+            </div>
+            
+            <!-- Conteneur pour l'axe FEASIBILITY (horizontal) -->
+            <div class="axis-container feasibility-container">
+                <div class="axis-label feasibility-label">FEASIBILITY</div>
                 <div class="axis-description feasibility-desc">Data readiness, Technical complexity, Cost, Business engagement, Regulation...</div>
             </div>
         `;
