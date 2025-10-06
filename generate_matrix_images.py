@@ -17,8 +17,8 @@ def create_matrix_image(grayed_solutions=None, filename="matrix.png"):
     if grayed_solutions is None:
         grayed_solutions = []
     
-    # Dimensions de l'image
-    width = 800
+    # Dimensions de l'image (ajustées pour la matrice 500x350)
+    width = 900
     height = 600
     
     # Créer l'image avec fond blanc
@@ -33,11 +33,11 @@ def create_matrix_image(grayed_solutions=None, filename="matrix.png"):
     gray_dark = (107, 114, 128)  # Gris des solutions grisées
     text_blue = (30, 58, 138)  # Bleu foncé du texte
     
-    # Position et taille de la matrice
-    matrix_x = 150
-    matrix_y = 50
+    # Position et taille de la matrice (500x350 comme dans la Phase 2)
+    matrix_x = 200
+    matrix_y = 125
     matrix_width = 500
-    matrix_height = 450
+    matrix_height = 350
     
     # Dessiner la matrice
     draw.rounded_rectangle(
@@ -73,17 +73,18 @@ def create_matrix_image(grayed_solutions=None, filename="matrix.png"):
         (matrix_x + matrix_width - 20 - arrow_size, center_y + arrow_size)
     ], fill=white)
     
-    # Positions des solutions (en pourcentage de la matrice)
+    # Positions des solutions basées sur les coordonnées mathématiques exactes de la Phase 2
+    # Conversion pour matrice 500x350: X_pixel = 250 + (X_math × 31.25), Y_pixel = 175 - (Y_math × 35)
     solutions = [
-        {'id': 1, 'x': 70, 'y': 65},   # Bottom-right quadrant
-        {'id': 2, 'x': 40, 'y': 45},   # Top-left quadrant
-        {'id': 3, 'x': 80, 'y': 25},   # Top-right quadrant
-        {'id': 4, 'x': 65, 'y': 40},   # Top-right quadrant
-        {'id': 5, 'x': 45, 'y': 70},   # Bottom-left quadrant
-        {'id': 6, 'x': 25, 'y': 30},   # Top-left quadrant
-        {'id': 7, 'x': 30, 'y': 75},   # Bottom-left quadrant
-        {'id': 8, 'x': 85, 'y': 70},   # Bottom-right quadrant
-        {'id': 9, 'x': 20, 'y': 20}    # Top-left quadrant
+        {'id': 1, 'x': 312, 'y': 210},   # (2, -1) → Bottom-right quadrant
+        {'id': 2, 'x': 188, 'y': 140},   # (-2, 1) → Top-left quadrant  
+        {'id': 3, 'x': 375, 'y': 87},    # (4, 2.5) → Top-right quadrant, ONLY ONE
+        {'id': 4, 'x': 219, 'y': 105},   # (-1, 2) → Top-left quadrant
+        {'id': 5, 'x': 281, 'y': 245},   # (1, -2) → Bottom-right quadrant
+        {'id': 6, 'x': 156, 'y': 280},   # (-3, -3) → Top-left quadrant
+        {'id': 7, 'x': 125, 'y': 228},   # (-4, -1.5) → Bottom-left quadrant, ONLY ONE
+        {'id': 8, 'x': 422, 'y': 298},   # (5.5, -3.5) → Bottom-right quadrant
+        {'id': 9, 'x': 47, 'y': 35}      # (-6.5, 4) → Top-left quadrant
     ]
     
     # Dessiner les marqueurs de solutions
@@ -94,9 +95,9 @@ def create_matrix_image(grayed_solutions=None, filename="matrix.png"):
         font = ImageFont.load_default()
     
     for solution in solutions:
-        # Position absolue dans l'image
-        abs_x = matrix_x + (solution['x'] / 100) * matrix_width
-        abs_y = matrix_y + (solution['y'] / 100) * matrix_height
+        # Position absolue dans l'image (coordonnées déjà en pixels)
+        abs_x = matrix_x + solution['x']
+        abs_y = matrix_y + solution['y']
         
         # Couleur selon si la solution est grisée ou non
         if solution['id'] in grayed_solutions:
@@ -137,7 +138,7 @@ def create_matrix_image(grayed_solutions=None, filename="matrix.png"):
         desc_font = ImageFont.load_default()
     
     # Label IMPACT (à gauche)
-    impact_x = matrix_x - 80
+    impact_x = matrix_x - 120
     impact_y = center_y
     draw.text((impact_x, impact_y - 20), "IMPACT", fill=text_blue, font=label_font)
     
@@ -147,7 +148,7 @@ def create_matrix_image(grayed_solutions=None, filename="matrix.png"):
     
     # Label FEASIBILITY (en bas)
     feasibility_x = center_x
-    feasibility_y = matrix_y + matrix_height + 30
+    feasibility_y = matrix_y + matrix_height + 50
     draw.text((feasibility_x - 50, feasibility_y), "FEASIBILITY", fill=text_blue, font=label_font)
     
     # Légende FEASIBILITY

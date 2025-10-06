@@ -1755,7 +1755,7 @@ class GameController {
             statusBadge.textContent = 'Select enablers';
         } else if (this.budget < 30) {
             statusBadge.classList.add('badge-warning');
-            statusBadge.textContent = `${30 - this.budget} points needed`;
+            statusBadge.textContent = `${30 - this.budget} points remaining`;
         } else if (this.budget === 30) {
             statusBadge.classList.add('badge-success');
             statusBadge.textContent = 'Perfect budget!';
@@ -1764,8 +1764,8 @@ class GameController {
             statusBadge.textContent = `${this.budget - 30} points over`;
         }
         
-        // Enable/disable confirm button
-        if (this.budget === 30) {
+        // Enable/disable confirm button (allow confirmation if budget <= 30)
+        if (this.budget > 0 && this.budget <= 30) {
             confirmBtn.disabled = false;
             confirmBtn.classList.remove('btn-secondary');
             confirmBtn.classList.add('btn-primary');

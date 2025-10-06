@@ -403,7 +403,7 @@ class AIAccelerationGame:
         return list(self.game_data["mot4_hr_scaling_enablers"].values())
     
     def make_mot4_choices(self, enabler_ids: List[str]) -> bool:
-        """Effectue les choix MOT4 (budget exactement 30 points)"""
+        """Effectue les choix MOT4 (budget entre 1 et 30 points)"""
         total_cost = 0
         valid_enablers = []
         
@@ -413,14 +413,14 @@ class AIAccelerationGame:
                 total_cost += cost
                 valid_enablers.append(enabler_id)
         
-        if total_cost == 30 and len(valid_enablers) == len(enabler_ids):
+        if 1 <= total_cost <= 30 and len(valid_enablers) == len(enabler_ids):
             self.current_path.mot4_choices = valid_enablers
             self.current_state = GameState.MOT5
             mot4_score = self.calculate_mot_score(4)
             logger.info(f"MOT4 choices made: {valid_enablers} (total: {total_cost} points) - Score: {mot4_score}/3")
             return True
         
-        logger.warning(f"MOT4 invalid: {enabler_ids} = {total_cost} points (need exactly 30)")
+        logger.warning(f"MOT4 invalid: {enabler_ids} = {total_cost} points (need between 1 and 30)")
         return False
     
     def get_mot5_choices(self) -> List[Choice]:
