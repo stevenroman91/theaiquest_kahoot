@@ -50,5 +50,31 @@
       "mot4": 1,
       "mot5": 2
     }
+  },
+  {
+    "mot1_choice": "elena",
+    "mot2_choices": [
+      "intelligent_recruitment",
+      "virtual_hr_assistant",
+      "training_optimization"
+    ],
+    "mot3_choices": {
+      "people_processes": "hr_ai_training",
+      "platform_partnerships": "system_integration",
+      "policies_practices": "ai_ethics_charter"
+    },
+    "mot4_choices": [
+      "tech_stack_data_pipelines"
+    ],
+    "mot5_choice": "capability_building",
+    "total_score": 9,
+    "stars": 1,
+    "mot_scores": {
+      "mot1": 3,
+      "mot2": 2,
+      "mot3": 1,
+      "mot4": 1,
+      "mot5": 2
+    }
   }
 ]
