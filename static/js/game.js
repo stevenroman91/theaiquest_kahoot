@@ -2203,42 +2203,42 @@ class GameController {
                     <div class="modal-content" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%); border: none;">
                         <div class="modal-body p-0" style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                             <div class="text-center" style="max-width: 1200px; width: 90%;">
-                                <!-- Global Score Display - Smaller -->
-                                <div class="global-score-display mb-4">
-                                    <div class="global-score-badge" style="background: linear-gradient(135deg, #ffffff, #f8fafc); color: #1e40af; padding: 2rem; border-radius: 15px; box-shadow: 0 0 20px rgba(30, 64, 175, 0.3); border: 2px solid #60a5fa; min-height: 200px; display: flex; flex-direction: column; justify-content: center;">
-                                        <h1 class="display-1 mb-2" id="global-score-total" style="font-weight: 800; font-size: 60pt; line-height: 1; overflow: visible;">0</h1>
-                                        <p class="lead mb-0" style="font-size: 20pt; text-transform: uppercase;">Score Global</p>
+                                <!-- Global Score Display - Compact -->
+                                <div class="global-score-display mb-3">
+                                    <div class="global-score-badge" style="background: linear-gradient(135deg, #ffffff, #f8fafc); color: #1e40af; padding: 1rem; border-radius: 10px; box-shadow: 0 0 15px rgba(30, 64, 175, 0.3); border: 2px solid #60a5fa; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
+                                        <h1 class="display-1 mb-1" id="global-score-total" style="font-weight: 800; font-size: 2.5rem; line-height: 1; overflow: visible;">0</h1>
+                                        <p class="lead mb-0" style="font-size: 1rem; text-transform: uppercase;">Score Global</p>
                                     </div>
                                 </div>
                                 
-                                <!-- Score Breakdown - Smaller -->
-                                <div class="score-breakdown mb-4">
-                                    <h5 class="mb-3" style="color: #ffffff; font-size: 20pt; text-transform: uppercase; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);">Detail by Phase</h5>
+                                <!-- Score Breakdown - Compact -->
+                                <div class="score-breakdown mb-3">
+                                    <h5 class="mb-2" style="color: #ffffff; font-size: 1.2rem; text-transform: uppercase; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);">Detail by Phase</h5>
                                     <div class="row justify-content-center" id="global-score-breakdown">
                                         <!-- Score breakdown will be populated here -->
                                     </div>
                                 </div>
                                 
                                 <!-- Progress Bar -->
-                                <div class="progress-info mb-5">
-                                    <div class="progress" style="height: 30px; background: rgba(8, 239, 255, 0.2); border-radius: 15px;">
-                                        <div class="progress-bar" id="global-progress-bar" role="progressbar" style="width: 0%; background: linear-gradient(90deg, #08efff, #00b3bc); border-radius: 15px;"></div>
+                                <div class="progress-info mb-3">
+                                    <div class="progress" style="height: 20px; background: rgba(8, 239, 255, 0.2); border-radius: 10px;">
+                                        <div class="progress-bar" id="global-progress-bar" role="progressbar" style="width: 0%; background: linear-gradient(90deg, #08efff, #00b3bc); border-radius: 10px;"></div>
                                     </div>
-                                    <div class="mt-3" id="global-progress-text" style="color: #08efff; font-size: 20pt;">Progress: 0/15</div>
+                                    <div class="mt-2" id="global-progress-text" style="color: #08efff; font-size: 1rem;">Progress: 0/15</div>
                                 </div>
                                 
                                 <!-- MOT Status Squares -->
-                                <div class="mot-status mb-5">
-                                    <h6 class="mb-4" style="color: #08efff; font-size: 25pt; text-transform: uppercase;">Phase Status</h6>
-                                    <div class="mot-status-squares" id="global-mot-squares" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                                <div class="mot-status mb-3">
+                                    <h6 class="mb-2" style="color: #08efff; font-size: 1.1rem; text-transform: uppercase;">Phase Status</h6>
+                                    <div class="mot-status-squares" id="global-mot-squares" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
                                         <!-- MOT status squares will be populated here -->
                                     </div>
                                 </div>
                                 
                                 <!-- Continue Button -->
                                 <div class="continue-section">
-                                    <button id="global-continue-btn" class="NeonButton" style="border: 6px solid #08efff; border-radius: 20px; color: #08efff; background: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 25pt; padding: 25px 50px; text-transform: uppercase; filter: drop-shadow(0 0 5px #08EFFF); transition: all 0.3s ease;">
-                                        Continuer
+                                    <button id="global-continue-btn" class="NeonButton" style="border: 3px solid #08efff; border-radius: 10px; color: #08efff; background: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; padding: 12px 30px; text-transform: uppercase; filter: drop-shadow(0 0 5px #08EFFF); transition: all 0.3s ease;">
+                                        Continue
                                     </button>
                                 </div>
                             </div>
@@ -2472,21 +2472,21 @@ class GameController {
     showResults(results) {
         const container = document.getElementById('results-content');
         container.innerHTML = `
-            <div class="text-center">
-                <h2 class="mb-4">🎉 Félicitations !</h2>
+            <div class="text-center" style="font-size: 0.8rem; padding: 10px;">
+                <h3 class="mb-2" style="font-size: 1.2rem !important; margin-bottom: 0.5rem !important;">🎉 Félicitations !</h3>
                 
                 <!-- Recap Video Section -->
-                <div class="mb-4">
-                    <h4 class="mb-3"><i class="fas fa-video me-2"></i>Game Recap</h4>
-                    <div class="video-container mb-4">
-                        <div class="embed-responsive embed-responsive-16by9">
+                <div class="mb-2" style="margin-bottom: 0.5rem !important;">
+                    <h5 class="mb-1" style="font-size: 0.9rem !important; margin-bottom: 0.25rem !important;"><i class="fas fa-video me-1"></i>Game Recap</h5>
+                    <div class="video-container mb-2" style="margin-bottom: 0.5rem !important;">
+                        <div class="embed-responsive embed-responsive-16by9" style="max-height: 150px !important;">
                             <video 
                                 id="recap-video-results"
                                 class="embed-responsive-item" 
                                 controls
                                 autoplay
                                 playsinline
-                                style="width: 100%; height: 100%; border-radius: 15px;">
+                                style="width: 100%; height: 100%; border-radius: 8px;">
                                 <source src="/static/videos/recap_web.mp4" type="video/mp4">
                                 Votre navigateur ne supporte pas la lecture vidéo.
                             </video>
@@ -2494,28 +2494,28 @@ class GameController {
                     </div>
                 </div>
                 
-                <div class="row mb-4">
+                <div class="row mb-2" style="margin-bottom: 0.5rem !important;">
                     <div class="col-md-6">
-                        <h4>Score Final</h4>
-                        <div class="display-4 text-primary">${results.total}/15</div>
-                        <div class="h3">
+                        <h5 class="mb-1" style="font-size: 0.9rem !important; margin-bottom: 0.25rem !important;">Score Final</h5>
+                        <div class="score-total-display text-primary" style="font-size: 1.8rem !important; font-weight: bold;">${results.total}/15</div>
+                        <div class="stars-display" style="font-size: 1.1rem !important;">
                             ${'★'.repeat(results.stars)}${'☆'.repeat(3 - results.stars)}
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <h4>Detail by Phase</h4>
+                        <h5 class="mb-1" style="font-size: 0.9rem !important; margin-bottom: 0.25rem !important;">Detail by Phase</h5>
                         <div class="text-start">
-                            <div class="mb-2">Embedding GenAI in your AI transformation program: <span class="score-badge">${results.scores.mot1}/3</span></div>
-                            <div class="mb-2">Building the right foundation: <span class="score-badge">${results.scores.mot2}/3</span></div>
-                            <div class="mb-2">Scaling across the organization: <span class="score-badge">${results.scores.mot3}/3</span></div>
-                            <div class="mb-2">Ensuring sustainable success: <span class="score-badge">${results.scores.mot4}/3</span></div>
-                            <div class="mb-2">Accelerating the transformation: <span class="score-badge">${results.scores.mot5}/3</span></div>
+                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">Embedding GenAI in your AI transformation program: <span class="score-badge">${results.scores.mot1}/3</span></div>
+                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">Building the right foundation: <span class="score-badge">${results.scores.mot2}/3</span></div>
+                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">Scaling across the organization: <span class="score-badge">${results.scores.mot3}/3</span></div>
+                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">Ensuring sustainable success: <span class="score-badge">${results.scores.mot4}/3</span></div>
+                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">Accelerating the transformation: <span class="score-badge">${results.scores.mot5}/3</span></div>
                         </div>
                     </div>
                 </div>
-                <div class="alert alert-info">
-                    <h5>Votre Performance</h5>
-                    <p>${this.getPerformanceMessage(results.stars)}</p>
+                <div class="alert alert-info" style="font-size: 0.75rem !important; padding: 0.5rem !important;">
+                    <h6 class="mb-1" style="font-size: 0.8rem !important; margin-bottom: 0.25rem !important;">Votre Performance</h6>
+                    <p class="mb-0" style="font-size: 0.7rem !important;">${this.getPerformanceMessage(results.stars)}</p>
                 </div>
             </div>
         `;
