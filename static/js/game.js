@@ -1021,6 +1021,8 @@ class GameController {
         // Open clicked accordion if it wasn't expanded
         if (!isExpanded) {
             accordionItem.classList.add('expanded');
+            // Pré-sélectionner automatiquement cette option
+            this.selectPhase1Choice(choiceId);
         }
     }
 
