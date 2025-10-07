@@ -36,6 +36,10 @@ class Choice:
     cost: Optional[int] = None
     category: Optional[str] = None
     unlocks_enablers: Optional[List[str]] = None  # ENABLERS débloqués par ce choix
+    # Nouveaux champs pour les ENABLERS par niveau de score
+    enablers_1_star: Optional[List[str]] = None  # ENABLERS débloqués avec 1 étoile
+    enablers_2_stars: Optional[List[str]] = None  # ENABLERS débloqués avec 2 étoiles  
+    enablers_3_stars: Optional[List[str]] = None  # ENABLERS débloqués avec 3 étoiles
 
 @dataclass
 class GamePath:
@@ -53,6 +57,14 @@ class GamePath:
         "platform_partnerships": [],
         "policies_practices": [],
         "people_processes": []
+    })
+    # Nouveaux champs pour suivre les ENABLERS par phase
+    enablers_by_phase: Dict[str, List[str]] = field(default_factory=lambda: {
+        "phase1": [],
+        "phase2": [],
+        "phase3": [],
+        "phase4": [],
+        "phase5": []
     })
 
 class AIAccelerationGame:
@@ -74,27 +86,33 @@ class AIAccelerationGame:
         """Initialise toutes les données du jeu pour Smart Retail Group HR Managers"""
         return {
             "mot1_hr_approaches": {
-                "elena": Choice(
-                    id="elena",
-                    title="Elena - Strategic Approach",
-                    description="Map the transformative potential of GenAI on our HR functions and its impact on our teams. Structured vision, priority identification, leadership engagement, clear prioritized plan.",
-                    category="strategy",
-                    unlocks_enablers=["strategic_planning", "leadership_alignment", "structured_vision"]
-                ),
-                "james": Choice(
-                    id="james", 
-                    title="James - Technical Approach",
-                    description="Partnership with a GenAI platform to secure technical foundations. Solid infrastructure, technical support, exclusive conditions.",
-                    category="tech",
-                    unlocks_enablers=["tech_foundations", "platform_integration", "technical_support"]
-                ),
-                "amira": Choice(
-                    id="amira",
-                    title="Amira - Operational Approach", 
-                    description="Democratize GenAI and ask HR managers to develop their own tools. Rapid deployment, bottom-up innovation, low initial cost.",
-                    category="operational",
-                    unlocks_enablers=["rapid_deployment", "bottom_up_innovation", "cost_efficiency"]
-                )
+            "elena": Choice(
+                id="elena",
+                title="Elena - Strategic Approach",
+                description="Map the transformative potential of GenAI on our HR functions and its impact on our teams. Structured vision, priority identification, leadership engagement, clear prioritized plan.",
+                category="strategy",
+                enablers_1_star=["strategic_vision_mapping", "hr_function_diagnostic"],  # 1 étoile = les deux ENABLERS
+                enablers_2_stars=["strategic_vision_mapping", "hr_function_diagnostic"],  # 2 étoiles = les deux ENABLERS
+                enablers_3_stars=["strategic_vision_mapping", "hr_function_diagnostic"]  # 3 étoiles = les deux ENABLERS
+            ),
+            "james": Choice(
+                id="james", 
+                title="James - Technical Approach",
+                description="Partnership with a GenAI platform to secure technical foundations. Solid infrastructure, technical support, exclusive conditions.",
+                category="tech",
+                enablers_1_star=["genai_platform_partnership", "technical_foundation_setup"],  # 1 étoile = les deux ENABLERS
+                enablers_2_stars=["genai_platform_partnership", "technical_foundation_setup"],  # 2 étoiles = les deux ENABLERS
+                enablers_3_stars=["genai_platform_partnership", "technical_foundation_setup"]  # 3 étoiles = les deux ENABLERS
+            ),
+            "amira": Choice(
+                id="amira",
+                title="Amira - Operational Approach", 
+                description="Democratize GenAI and ask HR managers to develop their own tools. Rapid deployment, bottom-up innovation, low initial cost.",
+                category="operational",
+                enablers_1_star=["rapid_deployment", "bottom_up_innovation"],  # 1 étoile = les deux ENABLERS
+                enablers_2_stars=["rapid_deployment", "bottom_up_innovation"],  # 2 étoiles = les deux ENABLERS
+                enablers_3_stars=["rapid_deployment", "bottom_up_innovation"]  # 3 étoiles = les deux ENABLERS
+            )
             },
             
             "mot2_hr_solutions": {
@@ -102,31 +120,41 @@ class AIAccelerationGame:
                     id="intelligent_recruitment", 
                     title="Intelligent Recruitment", 
                     description="Automatic candidate-job matching, CV analysis, performance prediction (integrated GenAI)",
-                    unlocks_enablers=["candidate_matching", "cv_analysis", "performance_prediction"]
+                    enablers_1_star=["candidate_matching"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["candidate_matching"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["candidate_matching"]  # 3 étoiles = 1 ENABLER
                 ),
                 "virtual_hr_assistant": Choice(
                     id="virtual_hr_assistant", 
                     title="Virtual HR Assistant", 
                     description="Intelligent chatbot to accompany employees 24/7 (integrated GenAI)",
-                    unlocks_enablers=["employee_support", "24_7_assistance", "chatbot_intelligence"]
+                    enablers_1_star=["employee_support"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["employee_support"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["employee_support"]  # 3 étoiles = 1 ENABLER
                 ),
                 "training_optimization": Choice(
                     id="training_optimization", 
                     title="Training Path Optimization", 
                     description="Personalized recommendations, need prediction (integrated GenAI)",
-                    unlocks_enablers=["personalized_training", "need_prediction", "skill_development"]
+                    enablers_1_star=["personalized_training"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["personalized_training"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["personalized_training"]  # 3 étoiles = 1 ENABLER
                 ),
                 "sentiment_analysis": Choice(
                     id="sentiment_analysis", 
                     title="Employee Sentiment Analysis", 
                     description="Automatic detection of employee satisfaction via text analysis (integrated GenAI)",
-                    unlocks_enablers=["sentiment_detection", "employee_satisfaction", "text_analysis"]
+                    enablers_1_star=["sentiment_detection"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["sentiment_detection"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["sentiment_detection"]  # 3 étoiles = 1 ENABLER
                 ),
                 "hr_automation": Choice(
                     id="hr_automation", 
                     title="HR Process Automation", 
                     description="Intelligent automation of repetitive HR processes (integrated GenAI)",
-                    unlocks_enablers=["process_automation", "efficiency_gains", "repetitive_task_reduction"]
+                    enablers_1_star=["process_automation"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["process_automation"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["process_automation"]  # 3 étoiles = 1 ENABLER
                 )
             },
             
@@ -137,21 +165,27 @@ class AIAccelerationGame:
                         title="HR Team AI Training",
                         description="Comprehensive training program on AI and its HR applications",
                         category="people_processes",
-                        unlocks_enablers=["hr_ai_competencies", "team_upskilling", "knowledge_transfer"]
+                        enablers_1_star=["hr_ai_competencies"],  # 1 étoile = 1 ENABLER
+                        enablers_2_stars=["hr_ai_competencies"],  # 2 étoiles = 1 ENABLER
+                        enablers_3_stars=["hr_ai_competencies"]  # 3 étoiles = 1 ENABLER
                     ),
                     "hr_role_redefinition": Choice(
                         id="hr_role_redefinition",
                         title="HR Role Redefinition", 
                         description="Adaptation of job descriptions to integrate AI",
                         category="people_processes",
-                        unlocks_enablers=["role_evolution", "job_design", "competency_mapping"]
+                        enablers_1_star=["role_evolution"],  # 1 étoile = 1 ENABLER
+                        enablers_2_stars=["role_evolution"],  # 2 étoiles = 1 ENABLER
+                        enablers_3_stars=["role_evolution"]  # 3 étoiles = 1 ENABLER
                     ),
                     "cultural_change": Choice(
                         id="cultural_change",
                         title="Cultural Change", 
                         description="Communication campaign on AI",
                         category="people_processes",
-                        unlocks_enablers=["change_communication", "cultural_transformation", "employee_engagement"]
+                        enablers_1_star=["change_communication"],  # 1 étoile = 1 ENABLER
+                        enablers_2_stars=["change_communication"],  # 2 étoiles = 1 ENABLER
+                        enablers_3_stars=["change_communication"]  # 3 étoiles = 1 ENABLER
                     )
                 },
                 "platform_partnerships": {
@@ -160,22 +194,28 @@ class AIAccelerationGame:
                         title="Integration with existing HR systems",
                         description="Connection of AI solutions to current HR systems",
                         category="platform_partnerships",
-                        unlocks_enablers=["system_connectivity", "data_integration", "workflow_seamlessness"]
+                        enablers_1_star=["system_connectivity"],  # 1 étoile = 1 ENABLER
+                        enablers_2_stars=["system_connectivity"],  # 2 étoiles = 1 ENABLER
+                        enablers_3_stars=["system_connectivity"]  # 3 étoiles = 1 ENABLER
                     ),
                     "tech_partnerships": Choice(
                         id="tech_partnerships",
                         title="Technology partnerships", 
                         description="Agreements with specialized AI suppliers",
                         category="platform_partnerships",
-                        unlocks_enablers=["vendor_relationships", "technical_expertise", "innovation_access"]
+                        enablers_1_star=["vendor_relationships"],  # 1 étoile = 1 ENABLER
+                        enablers_2_stars=["vendor_relationships"],  # 2 étoiles = 1 ENABLER
+                        enablers_3_stars=["vendor_relationships"]  # 3 étoiles = 1 ENABLER
                     ),
                     "cloud_infrastructure": Choice(
                         id="cloud_infrastructure",
                         title="Cloud infrastructure", 
                         description="Migration to cloud infrastructure",
                         category="platform_partnerships",
-                        unlocks_enablers=["cloud_migration", "scalability", "infrastructure_flexibility"]
-                    )
+                        enablers_1_star=["cloud_migration"],  # 1 étoile = 1 ENABLER
+                        enablers_2_stars=["cloud_migration"],  # 2 étoiles = 1 ENABLER
+                        enablers_3_stars=["cloud_migration"]  # 3 étoiles = 1 ENABLER
+                    ),
                 },
                 "policies_practices": {
                     "ai_ethics_charter": Choice(
@@ -183,21 +223,27 @@ class AIAccelerationGame:
                         title="HR AI Ethics Charter",
                         description="Definition of ethical principles for HR AI",
                         category="policies_practices",
-                        unlocks_enablers=["ethical_framework", "ai_governance", "responsible_ai"]
+                        enablers_1_star=["ethical_framework"],  # 1 étoile = 1 ENABLER
+                        enablers_2_stars=["ethical_framework"],  # 2 étoiles = 1 ENABLER
+                        enablers_3_stars=["ethical_framework"]  # 3 étoiles = 1 ENABLER
                     ),
                     "data_governance": Choice(
                         id="data_governance",
                         title="Data governance", 
                         description="Rules for HR data management and protection",
                         category="policies_practices",
-                        unlocks_enablers=["data_protection", "compliance_framework", "privacy_management"]
+                        enablers_1_star=["data_protection"],  # 1 étoile = 1 ENABLER
+                        enablers_2_stars=["data_protection"],  # 2 étoiles = 1 ENABLER
+                        enablers_3_stars=["data_protection"]  # 3 étoiles = 1 ENABLER
                     ),
                     "performance_metrics": Choice(
                         id="performance_metrics",
                         title="Performance metrics", 
                         description="Definition of KPIs to measure AI impact",
                         category="policies_practices",
-                        unlocks_enablers=["kpi_definition", "impact_measurement", "performance_tracking"]
+                        enablers_1_star=["kpi_definition"],  # 1 étoile = 1 ENABLER
+                        enablers_2_stars=["kpi_definition"],  # 2 étoiles = 1 ENABLER
+                        enablers_3_stars=["kpi_definition"]  # 3 étoiles = 1 ENABLER
                     )
                 }
             },
@@ -208,63 +254,81 @@ class AIAccelerationGame:
                     title="APIs between internal and external HR systems", 
                     description="Improved data exchange between all HR systems", 
                     cost=5,
-                    unlocks_enablers=["api_connectivity", "system_interoperability", "data_flow_optimization"]
+                    enablers_1_star=["api_connectivity"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["api_connectivity"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["api_connectivity"]  # 3 étoiles = 1 ENABLER
                 ),
                 "tech_stack_data_pipelines": Choice(
                     id="tech_stack_data_pipelines", 
                     title="Technology stack for HR data pipelines", 
                     description="Industrialization of HR data pipelines", 
                     cost=10,
-                    unlocks_enablers=["data_pipeline_automation", "industrialization", "scalable_infrastructure"]
+                    enablers_1_star=["data_pipeline_automation"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["data_pipeline_automation"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["data_pipeline_automation"]  # 3 étoiles = 1 ENABLER
                 ),
                 "ai_ethics_officer": Choice(
                     id="ai_ethics_officer", 
                     title="Appointment of HR AI Ethics Officer", 
                     description="Dedicated officer for HR AI ethics", 
                     cost=5,
-                    unlocks_enablers=["ethics_oversight", "governance_structure", "responsible_leadership"]
+                    enablers_1_star=["ethics_oversight"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["ethics_oversight"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["ethics_oversight"]  # 3 étoiles = 1 ENABLER
                 ),
                 "risk_mitigation_plan": Choice(
                     id="risk_mitigation_plan", 
                     title="Country-specific risk mitigation plan", 
                     description="Risk management strategy by country", 
                     cost=5,
-                    unlocks_enablers=["risk_management", "compliance_readiness", "geographic_adaptation"]
+                    enablers_1_star=["risk_management"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["risk_management"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["risk_management"]  # 3 étoiles = 1 ENABLER
                 ),
                 "internal_mobility": Choice(
                     id="internal_mobility", 
                     title="Internal mobility program for HR AI talents", 
                     description="Development of internal AI talents", 
                     cost=5,
-                    unlocks_enablers=["talent_retention", "skill_mobility", "internal_development"]
+                    enablers_1_star=["talent_retention"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["talent_retention"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["talent_retention"]  # 3 étoiles = 1 ENABLER
                 ),
                 "data_collection_strategy": Choice(
                     id="data_collection_strategy", 
                     title="Data collection strategy and synthetic HR data", 
                     description="Optimization of data collection and generation", 
                     cost=5,
-                    unlocks_enablers=["data_strategy", "synthetic_data_generation", "data_quality"]
+                    enablers_1_star=["data_strategy"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["data_strategy"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["data_strategy"]  # 3 étoiles = 1 ENABLER
                 ),
                 "ceo_video_series": Choice(
                     id="ceo_video_series", 
                     title="CEO and leadership video series on HR AI", 
                     description="Leadership communication on HR AI", 
                     cost=5,
-                    unlocks_enablers=["leadership_communication", "change_narrative", "executive_sponsorship"]
+                    enablers_1_star=["leadership_communication"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["leadership_communication"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["leadership_communication"]  # 3 étoiles = 1 ENABLER
                 ),
                 "change_management": Choice(
                     id="change_management", 
                     title="Change management to boost adoption", 
                     description="Comprehensive change management program", 
                     cost=10,
-                    unlocks_enablers=["change_adoption", "user_engagement", "transformation_support"]
+                    enablers_1_star=["change_adoption"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["change_adoption"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["change_adoption"]  # 3 étoiles = 1 ENABLER
                 ),
                 "business_sponsors": Choice(
                     id="business_sponsors", 
                     title="Business sponsors responsible for value delivery", 
                     description="Business owners for AI solution value", 
                     cost=5,
-                    unlocks_enablers=["business_alignment", "value_delivery", "stakeholder_engagement"]
+                    enablers_1_star=["business_alignment"],  # 1 étoile = 1 ENABLER
+                    enablers_2_stars=["business_alignment"],  # 2 étoiles = 1 ENABLER
+                    enablers_3_stars=["business_alignment"]  # 3 étoiles = 1 ENABLER
                 )
             },
             
@@ -273,19 +337,25 @@ class AIAccelerationGame:
                     id="genai_for_all",
                     title="GenAI for all",
                     description="GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development.",
-                    unlocks_enablers=["organization_wide_ai", "rapid_deployment", "corporate_communication", "ethics_policies"]
+                    enablers_1_star=["organization_wide_ai", "rapid_deployment"],  # 1 étoile = 2 ENABLERS
+                    enablers_2_stars=["organization_wide_ai", "rapid_deployment"],  # 2 étoiles = 2 ENABLERS
+                    enablers_3_stars=["organization_wide_ai", "rapid_deployment"]  # 3 étoiles = 2 ENABLERS
                 ),
                 "capability_building": Choice(
                     id="capability_building", 
                     title="Continuous capability building",
                     description="Definition of long-term HR AI ethics roadmap, Value-based AI governance, Preferred supplier panel, creation of HR AI training Academy. Solid structure, clear governance, training. But less focus on people, more technical approach.",
-                    unlocks_enablers=["long_term_roadmap", "value_based_governance", "supplier_panel", "training_academy", "structured_approach"]
+                    enablers_1_star=["long_term_roadmap", "value_based_governance"],  # 1 étoile = 2 ENABLERS
+                    enablers_2_stars=["long_term_roadmap", "value_based_governance"],  # 2 étoiles = 2 ENABLERS
+                    enablers_3_stars=["long_term_roadmap", "value_based_governance"]  # 3 étoiles = 2 ENABLERS
                 ),
                 "people_speed": Choice(
                     id="people_speed",
                     title="Full speed on people",
                     description="New GenAI HR Hub, Preferred supplier panel, Investment in recruiting top AI talents and retaining analytics expertise, Creation of HR AI training Academy. Focus on skills, talent recruitment, continuous training. But higher initial investment.",
-                    unlocks_enablers=["genai_hub", "talent_recruitment", "analytics_expertise", "continuous_training", "people_focus"]
+                    enablers_1_star=["genai_hub", "talent_recruitment"],  # 1 étoile = 2 ENABLERS
+                    enablers_2_stars=["genai_hub", "talent_recruitment"],  # 2 étoiles = 2 ENABLERS
+                    enablers_3_stars=["genai_hub", "talent_recruitment"]  # 3 étoiles = 2 ENABLERS
                 )
             }
         }
@@ -494,11 +564,11 @@ class AIAccelerationGame:
         return False
     
     def calculate_mot_score(self, mot_number: int) -> int:
-        """Calcule le score pour un MOT spécifique (1-3 étoiles) - Version HR Managers"""
+        """Calcule le score pour une phase spécifique (1-3 étoiles) - Version HR Managers"""
         if mot_number == 1:
-            # MOT1: Elena=3, James=2, Amira=1
-            mot1_scores = {"elena": 3, "james": 2, "amira": 1}
-            return mot1_scores.get(self.current_path.mot1_choice, 0)
+            # Phase 1: Elena=3, James=2, Amira=1
+            phase1_scores = {"elena": 3, "james": 2, "amira": 1}
+            return phase1_scores.get(self.current_path.mot1_choice, 0)
         
         elif mot_number == 2:
             # MOT2: Positions optimales = 1, 3, 4 (intelligent_recruitment, training_optimization, sentiment_analysis)
@@ -592,56 +662,98 @@ class AIAccelerationGame:
         self._calculate_enablers()
     
     def _calculate_enablers(self):
-        """Calcule les ENABLERS débloqués par les choix, organisés par catégorie"""
-        # Initialiser les enablers par catégorie
+        """Calcule les ENABLERS débloqués par les choix selon le score obtenu"""
+        # Réinitialiser complètement les enablers par catégorie
         enablers_by_category = {
             "platform_partnerships": [],
             "policies_practices": [],
             "people_processes": []
         }
         
+        # Réinitialiser complètement les enablers par phase
+        enablers_by_phase = {
+            "phase1": [],
+            "phase2": [],
+            "phase3": [],
+            "phase4": [],
+            "phase5": []
+        }
+        
         # Mapping des choix vers leurs catégories
         choice_categories = self._get_choice_categories()
         
-        # MOT1 - HR Approach choice
+        # Phase 1 - HR Approach choice
         if self.current_path.mot1_choice:
             choice = self.game_data["mot1_hr_approaches"][self.current_path.mot1_choice]
-            if choice.unlocks_enablers:
+            # Utiliser le score calculé directement au lieu de mot_scores
+            phase1_score = self.calculate_mot_score(1)
+            phase_enablers = self._get_enablers_for_score(choice, phase1_score)
+            
+            if phase_enablers:
                 category = choice_categories.get(self.current_path.mot1_choice, "people_processes")
-                enablers_by_category[category].extend(choice.unlocks_enablers)
+                # Ajouter les ENABLERS
+                for enabler in phase_enablers:
+                    if enabler not in enablers_by_category[category]:
+                        enablers_by_category[category].append(enabler)
+                # Mettre à jour la phase 1
+                enablers_by_phase["phase1"] = phase_enablers
         
-        # MOT2 - HR Solution choices
+        # Phase 2 - HR Solution choices
+        phase2_score = self.calculate_mot_score(2)
+        phase2_enablers = []
         for solution_id in self.current_path.mot2_choices:
             choice = self.game_data["mot2_hr_solutions"][solution_id]
-            if choice.unlocks_enablers:
+            choice_enablers = self._get_enablers_for_score(choice, phase2_score)
+            if choice_enablers:
                 category = choice_categories.get(solution_id, "people_processes")
-                enablers_by_category[category].extend(choice.unlocks_enablers)
+                # Ajouter seulement les nouveaux ENABLERS
+                for enabler in choice_enablers:
+                    if enabler not in enablers_by_category[category]:
+                        enablers_by_category[category].append(enabler)
+                phase2_enablers.extend(choice_enablers)
+        # Mettre à jour la phase 2
+        enablers_by_phase["phase2"] = list(set(phase2_enablers))
         
-        # MOT3 - HR Facilitator choices (déjà organisés par catégorie)
+        # Phase 3 - HR Facilitator choices (déjà organisés par catégorie)
+        phase3_score = self.calculate_mot_score(3)
+        phase3_enablers = []
         for category, choice_id in self.current_path.mot3_choices.items():
             choice = self.game_data["mot3_hr_facilitators"][category][choice_id]
-            if choice.unlocks_enablers:
-                enablers_by_category[category].extend(choice.unlocks_enablers)
+            choice_enablers = self._get_enablers_for_score(choice, phase3_score)
+            if choice_enablers:
+                enablers_by_category[category].extend(choice_enablers)
+                phase3_enablers.extend(choice_enablers)
+        enablers_by_phase["phase3"] = list(set(phase3_enablers))
         
-        # MOT4 - HR Scaling choices
+        # Phase 4 - HR Scaling choices
+        phase4_score = self.calculate_mot_score(4)
+        phase4_enablers = []
         for scaling_id in self.current_path.mot4_choices:
             choice = self.game_data["mot4_hr_scaling_enablers"][scaling_id]
-            if choice.unlocks_enablers:
+            choice_enablers = self._get_enablers_for_score(choice, phase4_score)
+            if choice_enablers:
                 category = choice_categories.get(scaling_id, "people_processes")
-                enablers_by_category[category].extend(choice.unlocks_enablers)
+                enablers_by_category[category].extend(choice_enablers)
+                phase4_enablers.extend(choice_enablers)
+        enablers_by_phase["phase4"] = list(set(phase4_enablers))
         
-        # MOT5 - HR Deployment choice
+        # Phase 5 - HR Deployment choice
         if self.current_path.mot5_choice:
             choice = self.game_data["mot5_hr_deployment_choices"][self.current_path.mot5_choice]
-            if choice.unlocks_enablers:
+            phase5_score = self.calculate_mot_score(5)
+            phase_enablers = self._get_enablers_for_score(choice, phase5_score)
+            
+            if phase_enablers:
                 category = choice_categories.get(self.current_path.mot5_choice, "people_processes")
-                enablers_by_category[category].extend(choice.unlocks_enablers)
+                enablers_by_category[category].extend(phase_enablers)
+                enablers_by_phase["phase5"] = phase_enablers
         
         # Stocker les enablers débloqués par catégorie (sans doublons)
         for category in enablers_by_category:
             enablers_by_category[category] = list(set(enablers_by_category[category]))
         
         self.current_path.unlocked_enablers_by_category = enablers_by_category
+        self.current_path.enablers_by_phase = enablers_by_phase
         
         # Garder aussi la liste globale pour compatibilité
         all_enablers = []
@@ -649,15 +761,48 @@ class AIAccelerationGame:
             all_enablers.extend(category_enablers)
         self.current_path.unlocked_enablers = list(set(all_enablers))
     
+    def _get_enablers_for_score(self, choice: Choice, score: int) -> List[str]:
+        """Retourne les ENABLERS débloqués selon le score obtenu"""
+        enablers = []
+        
+        # Debug: afficher les informations du choix
+        logger.info(f"Checking enablers for choice {choice.id} with score {score}")
+        logger.info(f"Choice has unlocks_enablers: {choice.unlocks_enablers}")
+        logger.info(f"Choice has enablers_1_star: {choice.enablers_1_star}")
+        logger.info(f"Choice has enablers_2_stars: {choice.enablers_2_stars}")
+        logger.info(f"Choice has enablers_3_stars: {choice.enablers_3_stars}")
+        
+        # Si le choix utilise l'ancien système (unlocks_enablers), on l'utilise pour tous les scores
+        if choice.unlocks_enablers:
+            logger.info(f"Using old system: returning {choice.unlocks_enablers}")
+            return choice.unlocks_enablers
+        
+        # Nouveau système basé sur les scores
+        if score >= 1 and choice.enablers_1_star:
+            enablers.extend(choice.enablers_1_star)
+            logger.info(f"Added 1-star enablers: {choice.enablers_1_star}")
+        
+        if score >= 2 and choice.enablers_2_stars:
+            enablers.extend(choice.enablers_2_stars)
+            logger.info(f"Added 2-star enablers: {choice.enablers_2_stars}")
+        
+        if score >= 3 and choice.enablers_3_stars:
+            enablers.extend(choice.enablers_3_stars)
+            logger.info(f"Added 3-star enablers: {choice.enablers_3_stars}")
+        
+        result = list(set(enablers))  # Supprimer les doublons
+        logger.info(f"Final enablers for choice {choice.id}: {result}")
+        return result
+    
     def _get_choice_categories(self) -> Dict[str, str]:
         """Retourne le mapping des choix vers leurs catégories"""
         return {
-            # MOT1 - HR Approaches
-            "amira": "people_processes",      # Strategic planning approach
+            # Phase 1 - HR Approaches
+            "amira": "people_processes",      # Operational approach
             "james": "platform_partnerships", # Technology-first approach  
-            "elena": "policies_practices",    # Governance-first approach
+            "elena": "policies_practices",    # Strategic approach
             
-            # MOT2 - HR Solutions
+            # Phase 2 - HR Solutions
             "intelligent_recruitment": "platform_partnerships",
             "virtual_hr_assistant": "people_processes",
             "training_optimization": "people_processes",
@@ -665,9 +810,9 @@ class AIAccelerationGame:
             "process_automation": "platform_partnerships",
             "performance_prediction": "policies_practices",
             
-            # MOT4 - HR Scaling (déjà mappés dans web_interface.py)
+            # Phase 4 - HR Scaling (déjà mappés dans web_interface.py)
             "apis_internal_vendor": "platform_partnerships",
-            "tech_stack_pipelines": "platform_partnerships", 
+            "tech_stack_data_pipelines": "platform_partnerships", 
             "internal_mobility": "people_processes",
             "responsible_ai_lead": "policies_practices",
             "risk_mitigation": "policies_practices",
@@ -676,7 +821,7 @@ class AIAccelerationGame:
             "ceo_video_series": "people_processes",
             "change_management": "people_processes",
             
-            # MOT5 - HR Capabilities
+            # Phase 5 - HR Capabilities
             "capability_building": "people_processes",
             "technology_integration": "platform_partnerships",
             "governance_framework": "policies_practices"

@@ -1,59 +1,87 @@
 [
   {
-    "mot1_choice": "amira",
+    "mot1_choice": "elena",
     "mot2_choices": [
-      "intelligent_recruitment",
       "virtual_hr_assistant",
-      "training_optimization"
+      "training_optimization",
+      "sentiment_analysis"
     ],
     "mot3_choices": {
-      "people_processes": "hr_ai_training",
       "platform_partnerships": "tech_partnerships",
-      "policies_practices": "performance_metrics"
+      "policies_practices": "performance_metrics",
+      "people_processes": "hr_role_redefinition"
     },
     "mot4_choices": [
-      "internal_mobility"
+      "business_sponsors",
+      "change_management"
     ],
-    "mot5_choice": "capability_building",
-    "total_score": 9,
-    "stars": 1,
+    "mot5_choice": "people_speed",
+    "total_score": 12,
+    "stars": 2,
     "mot_scores": {
-      "mot1": 1,
+      "mot1": 3,
       "mot2": 2,
-      "mot3": 3,
-      "mot4": 1,
-      "mot5": 2
+      "mot3": 2,
+      "mot4": 2,
+      "mot5": 3
     },
     "unlocked_enablers": [
-      "internal_development",
-      "technical_expertise",
-      "candidate_matching",
-      "vendor_relationships",
-      "talent_retention",
-      "need_prediction",
-      "bottom_up_innovation",
+      "strategic_vision_mapping",
+      "change_adoption",
+      "role_evolution",
       "kpi_definition",
-      "training_academy",
-      "impact_measurement",
-      "value_based_governance",
-      "24_7_assistance",
-      "chatbot_intelligence",
-      "performance_tracking",
-      "innovation_access",
-      "long_term_roadmap",
-      "knowledge_transfer",
-      "performance_prediction",
-      "supplier_panel",
-      "structured_approach",
+      "vendor_relationships",
+      "sentiment_detection",
+      "business_alignment",
+      "talent_recruitment",
+      "genai_hub",
+      "hr_function_diagnostic",
       "personalized_training",
-      "rapid_deployment",
-      "employee_support",
-      "hr_ai_competencies",
-      "skill_mobility",
-      "skill_development",
-      "team_upskilling",
-      "cv_analysis",
-      "cost_efficiency"
-    ]
+      "employee_support"
+    ],
+    "unlocked_enablers_by_category": {
+      "platform_partnerships": [
+        "vendor_relationships"
+      ],
+      "policies_practices": [
+        "hr_function_diagnostic",
+        "kpi_definition",
+        "strategic_vision_mapping",
+        "sentiment_detection"
+      ],
+      "people_processes": [
+        "change_adoption",
+        "employee_support",
+        "business_alignment",
+        "genai_hub",
+        "talent_recruitment",
+        "personalized_training",
+        "role_evolution"
+      ]
+    },
+    "enablers_by_phase": {
+      "phase1": [
+        "hr_function_diagnostic",
+        "strategic_vision_mapping"
+      ],
+      "phase2": [
+        "personalized_training",
+        "employee_support",
+        "sentiment_detection"
+      ],
+      "phase3": [
+        "kpi_definition",
+        "vendor_relationships",
+        "role_evolution"
+      ],
+      "phase4": [
+        "change_adoption",
+        "business_alignment"
+      ],
+      "phase5": [
+        "talent_recruitment",
+        "genai_hub"
+      ]
+    }
   }
 ]
