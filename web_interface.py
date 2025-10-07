@@ -586,6 +586,187 @@ def api_statistics():
         'statistics': stats
     })
 
+@app.route('/api/executive_dashboard')
+def api_executive_dashboard():
+    """API pour récupérer les données de l'executive dashboard"""
+    if not session.get('logged_in'):
+        return jsonify({'success': False, 'message': 'Not logged in'})
+    
+    game = get_game()
+    current_score = game.get_current_score()
+    
+    # Calculer les ENABLERS débloqués
+    unlocked_enablers = []
+    enabler_descriptions = {
+        "strategic_planning": "Planification stratégique avancée",
+        "leadership_alignment": "Alignement du leadership",
+        "structured_vision": "Vision structurée",
+        "tech_foundations": "Fondations techniques solides",
+        "platform_integration": "Intégration de plateforme",
+        "technical_support": "Support technique",
+        "rapid_deployment": "Déploiement rapide",
+        "bottom_up_innovation": "Innovation bottom-up",
+        "cost_efficiency": "Efficacité des coûts",
+        "candidate_matching": "Correspondance candidats-posts",
+        "cv_analysis": "Analyse de CV",
+        "performance_prediction": "Prédiction de performance",
+        "employee_support": "Support employés",
+        "24_7_assistance": "Assistance 24/7",
+        "chatbot_intelligence": "Intelligence chatbot",
+        "personalized_training": "Formation personnalisée",
+        "need_prediction": "Prédiction des besoins",
+        "skill_development": "Développement des compétences",
+        "sentiment_detection": "Détection de sentiment",
+        "employee_satisfaction": "Satisfaction employés",
+        "text_analysis": "Analyse de texte",
+        "process_automation": "Automatisation des processus",
+        "efficiency_gains": "Gains d'efficacité",
+        "repetitive_task_reduction": "Réduction des tâches répétitives",
+        # Phase 3 ENABLERS
+        "hr_ai_competencies": "Compétences RH en IA",
+        "team_upskilling": "Montée en compétences équipe",
+        "knowledge_transfer": "Transfert de connaissances",
+        "role_evolution": "Évolution des rôles",
+        "job_design": "Conception des postes",
+        "competency_mapping": "Cartographie des compétences",
+        "change_communication": "Communication du changement",
+        "cultural_transformation": "Transformation culturelle",
+        "employee_engagement": "Engagement des employés",
+        "system_connectivity": "Connectivité des systèmes",
+        "data_integration": "Intégration des données",
+        "workflow_seamlessness": "Fluidité des processus",
+        "vendor_relationships": "Relations fournisseurs",
+        "technical_expertise": "Expertise technique",
+        "innovation_access": "Accès à l'innovation",
+        "cloud_migration": "Migration cloud",
+        "scalability": "Évolutivité",
+        "infrastructure_flexibility": "Flexibilité infrastructure",
+        "ethical_framework": "Cadre éthique",
+        "ai_governance": "Gouvernance IA",
+        "responsible_ai": "IA responsable",
+        "data_protection": "Protection des données",
+        "compliance_framework": "Cadre de conformité",
+        "privacy_management": "Gestion de la confidentialité",
+        "kpi_definition": "Définition des KPI",
+        "impact_measurement": "Mesure d'impact",
+        "performance_tracking": "Suivi de performance",
+        # Phase 4 ENABLERS
+        "api_connectivity": "Connectivité API",
+        "system_interoperability": "Interopérabilité des systèmes",
+        "data_flow_optimization": "Optimisation des flux de données",
+        "data_pipeline_automation": "Automatisation des pipelines de données",
+        "industrialization": "Industrialisation",
+        "scalable_infrastructure": "Infrastructure évolutive",
+        "ethics_oversight": "Surveillance éthique",
+        "governance_structure": "Structure de gouvernance",
+        "responsible_leadership": "Leadership responsable",
+        "risk_management": "Gestion des risques",
+        "compliance_readiness": "Préparation à la conformité",
+        "geographic_adaptation": "Adaptation géographique",
+        "talent_retention": "Rétention des talents",
+        "skill_mobility": "Mobilité des compétences",
+        "internal_development": "Développement interne",
+        "data_strategy": "Stratégie de données",
+        "synthetic_data_generation": "Génération de données synthétiques",
+        "data_quality": "Qualité des données",
+        "leadership_communication": "Communication de leadership",
+        "change_narrative": "Narrative du changement",
+        "executive_sponsorship": "Sponsorisation exécutive",
+        "change_adoption": "Adoption du changement",
+        "user_engagement": "Engagement utilisateur",
+        "transformation_support": "Support à la transformation",
+        "business_alignment": "Alignement métier",
+        "value_delivery": "Livraison de valeur",
+        "stakeholder_engagement": "Engagement des parties prenantes",
+        # Phase 5 ENABLERS
+        "organization_wide_ai": "IA organisationnelle",
+        "corporate_communication": "Communication d'entreprise",
+        "ethics_policies": "Politiques éthiques",
+        "long_term_roadmap": "Feuille de route long terme",
+        "value_based_governance": "Gouvernance basée sur les valeurs",
+        "supplier_panel": "Panel de fournisseurs",
+        "training_academy": "Académie de formation",
+        "structured_approach": "Approche structurée",
+        "genai_hub": "Hub GenAI",
+        "talent_recruitment": "Recrutement de talents",
+        "analytics_expertise": "Expertise analytique",
+        "continuous_training": "Formation continue",
+        "people_focus": "Focus sur les personnes"
+    }
+    
+    # Collecter les ENABLERS depuis les choix actuels
+    if game.current_path.mot1_choice:
+        choice = game.game_data["mot1_hr_approaches"][game.current_path.mot1_choice]
+        if choice.unlocks_enablers:
+            unlocked_enablers.extend(choice.unlocks_enablers)
+    
+    for solution_id in game.current_path.mot2_choices:
+        choice = game.game_data["mot2_hr_solutions"][solution_id]
+        if choice.unlocks_enablers:
+            unlocked_enablers.extend(choice.unlocks_enablers)
+    
+    for category, choice_id in game.current_path.mot3_choices.items():
+        choice = game.game_data["mot3_hr_facilitators"][category][choice_id]
+        if choice.unlocks_enablers:
+            unlocked_enablers.extend(choice.unlocks_enablers)
+    
+    for scaling_id in game.current_path.mot4_choices:
+        choice = game.game_data["mot4_hr_scaling_enablers"][scaling_id]
+        if choice.unlocks_enablers:
+            unlocked_enablers.extend(choice.unlocks_enablers)
+    
+    if game.current_path.mot5_choice:
+        choice = game.game_data["mot5_hr_deployment_choices"][game.current_path.mot5_choice]
+        if choice.unlocks_enablers:
+            unlocked_enablers.extend(choice.unlocks_enablers)
+    
+    # Supprimer les doublons et formater
+    unique_enablers = list(set(unlocked_enablers))
+    formatted_enablers = []
+    for enabler in unique_enablers:
+        formatted_enablers.append({
+            "id": enabler,
+            "title": enabler.replace("_", " ").title(),
+            "description": enabler_descriptions.get(enabler, "Capacité stratégique débloquée")
+        })
+    
+    # Générer un message d'impact pédagogique
+    impact_message = generate_impact_message(current_score, formatted_enablers)
+    
+    return jsonify({
+        'success': True,
+        'dashboard_data': {
+            'current_score': current_score,
+            'unlocked_enablers': formatted_enablers,
+            'impact_message': impact_message,
+            'current_phase': get_current_phase_title(game.get_current_state())
+        }
+    })
+
+def generate_impact_message(score_data, enablers):
+    """Génère un message d'impact pédagogique basé sur le score et les enablers"""
+    total_score = score_data.get('total', 0)
+    max_possible = score_data.get('max_possible', 15)
+    
+    if total_score >= 12:
+        return f"Excellent travail ! Avec un score de {total_score}/{max_possible}, vous avez débloqué {len(enablers)} capacités stratégiques RH. Vos décisions créent une transformation AI solide et durable pour votre équipe."
+    elif total_score >= 8:
+        return f"Bon parcours ! Votre score de {total_score}/{max_possible} vous donne accès à {len(enablers)} possibilités d'action RH. Continuez à optimiser vos choix pour maximiser l'impact sur vos équipes."
+    else:
+        return f"Avec un score de {total_score}/{max_possible}, vous avez {len(enablers)} capacités RH disponibles. Analysez vos choix pour améliorer votre stratégie AI RH."
+
+def get_current_phase_title(game_state):
+    """Retourne le titre de la phase actuelle"""
+    phase_titles = {
+        "mot1_hr_approach_selection": "Choix de l'Approche RH",
+        "phase2_hr_portfolio_selection": "Sélection Portfolio RH",
+        "mot3_hr_facilitator_selection": "Sélection Facilitateurs RH",
+        "mot4_hr_scaling_selection": "Sélection Scaling RH",
+        "mot5_hr_deployment_selection": "Choix Déploiement RH",
+        "results": "Résultats Finaux"
+    }
+    return phase_titles.get(game_state.value, "Phase en cours")
+
 if __name__ == '__main__':
     import os
     # Configuration pour Railway

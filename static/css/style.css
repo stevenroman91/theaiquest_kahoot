@@ -2110,6 +2110,333 @@ body {
     }
 }
 
+/* MOT Squares for Executive Dashboard - Original Style */
+.mot-squares {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.mot-square {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid #60a5fa;
+    transition: all 0.3s ease;
+    position: relative;
+    color: #ffffff;
+}
+
+.mot-square.completed {
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    border-color: #60a5fa;
+    color: #1e40af;
+    box-shadow: 0 0 20px rgba(30, 64, 175, 0.3);
+}
+
+.mot-square.current {
+    border-color: #f59e0b;
+    animation: pulse 1s infinite;
+}
+
+.mot-square .stars {
+    font-size: 0.8rem;
+    margin-top: 0.1rem;
+    color: #FFD700;
+}
+
+.total-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 25px;
+    padding: 12px 24px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Executive Dashboard Styles */
+.executive-dashboard {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #212529;
+    padding: 0;
+}
+
+.dashboard-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+    backdrop-filter: blur(10px);
+    padding: 30px 40px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dashboard-title h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: white;
+}
+
+.dashboard-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 5px 0 0 0;
+    color: white;
+}
+
+.current-phase-info {
+    text-align: right;
+    color: white;
+}
+
+.current-phase-info h3 {
+    color: white;
+}
+
+.current-phase-info h4 {
+    color: white;
+}
+
+.phase-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    opacity: 0.8;
+    letter-spacing: 1px;
+}
+
+.phase-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+.dashboard-content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 40px;
+}
+
+.dashboard-left, .dashboard-right {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.score-section, .progress-section, .enablers-section, .impact-section {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.score-section h2, .enablers-section h2, .progress-section h3, .impact-section h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    color: white;
+}
+
+.score-display {
+    text-align: center;
+}
+
+.score-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 10px;
+}
+
+.score-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+}
+
+.score-max {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+.score-stars {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.score-stars .star {
+    font-size: 2.5rem;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.score-total {
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+}
+
+.score-number {
+    color: #ffd700;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.score-max {
+    opacity: 0.7;
+    font-size: 2rem;
+}
+
+.phase-progress {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.phase-item {
+    flex: 1;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.phase-item.completed {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.phase-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.phase-score {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ffd700;
+}
+
+.enablers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.enabler-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.enabler-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.enabler-item h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: white;
+}
+
+.enabler-item p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin: 0;
+    color: white;
+}
+
+.impact-message {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    border-left: 4px solid #f59e0b;
+}
+
+.impact-message p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+    color: white;
+}
+
+.dashboard-footer {
+    padding: 30px 40px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+    backdrop-filter: blur(10px);
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+
+.dashboard-footer .btn {
+    font-size: 1.2rem;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-weight: 600;
+    background: linear-gradient(45deg, #10b981, #059669);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.dashboard-footer .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+}
+
+/* Responsive Design for Dashboard */
+@media (max-width: 768px) {
+    .dashboard-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .dashboard-title h1 {
+        font-size: 2rem;
+    }
+    
+    .phase-progress {
+        flex-wrap: wrap;
+    }
+    
+    .phase-item {
+        min-width: 80px;
+    }
+}
+
 .alert-success {
     background: linear-gradient(135deg, #10b981, #059669);
     color: white;

@@ -72,20 +72,20 @@ class GameController {
             this.resetGame();
         });
 
-        // Next button in score screen
-        document.getElementById('next-button').addEventListener('click', () => {
+        // Next button in executive dashboard
+        document.getElementById('dashboard-next-button').addEventListener('click', () => {
             // Version 1.4: Get Phase number from the modal title or use stored value
             const phaseNumber = this.currentPhaseNumber || 1;
-            console.log('Next button clicked, Phase number:', phaseNumber);
+            console.log('Dashboard next button clicked, Phase number:', phaseNumber);
             
-            // Hide the score modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
+            // Hide the executive dashboard modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('executiveDashboardModal'));
             if (modal) {
                 modal.hide();
             }
             
-            // Get current scores and show global score recap
-            this.getCurrentScoresAndShowRecap(phaseNumber);
+            // Proceed directly to next phase
+            this.proceedToNextMOT(phaseNumber);
         });
 
         // Skip video button
@@ -1091,7 +1091,7 @@ class GameController {
                 }
                 
                 this.updateScoreDisplay(scoreData);
-                this.showScoreScreen(1, mot1Score, scoreData);
+                this.showExecutiveDashboard(1, mot1Score, scoreData);
                 this.updateProgress(40, `Phase 1 completed - Score: ${mot1Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
@@ -1454,7 +1454,7 @@ class GameController {
             if (data.success) {
                 const mot2Score = data.score.scores.mot2;
                 this.updateScoreDisplay(data.score);
-                this.showScoreScreen(2, mot2Score, data.score);
+                this.showExecutiveDashboard(2, mot2Score, data.score);
                 this.updateProgress(60, `Phase 2 completed - Score: ${mot2Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
@@ -1642,7 +1642,7 @@ class GameController {
             if (data.success) {
                 const mot3Score = data.score.scores.mot3;
                 this.updateScoreDisplay(data.score);
-                this.showScoreScreen(3, mot3Score, data.score);
+                this.showExecutiveDashboard(3, mot3Score, data.score);
                 this.updateProgress(80, `Phase 3 completed - Score: ${mot3Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
@@ -1874,7 +1874,7 @@ class GameController {
             if (data.success) {
                 const mot4Score = data.score.scores.mot4;
                 this.updateScoreDisplay(data.score);
-                this.showScoreScreen(4, mot4Score, data.score);
+                this.showExecutiveDashboard(4, mot4Score, data.score);
                 this.updateProgress(90, `Phase 4 completed - Score: ${mot4Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
@@ -2071,71 +2071,89 @@ class GameController {
         }
     }
 
-    showScoreScreen(motNumber, score, scoreData) {
-        // Store current Phase number for Next button
-        this.currentPhaseNumber = motNumber;
+    async showExecutiveDashboard(motNumber, score, scoreData) {
+        try {
+            // Récupérer les données du dashboard
+            const response = await fetch('/api/executive_dashboard');
+            const data = await response.json();
+            
+            if (!data.success) {
+                console.error('Erreur lors de la récupération des données du dashboard:', data.message);
+                return;
+            }
+            
+            const dashboardData = data.dashboard_data;
+            
+            // Mettre à jour le titre de la phase
+            document.getElementById('current-phase-title').textContent = dashboardData.current_phase;
+            
+                    // Mettre à jour le score total
+                    document.getElementById('dashboard-total-score').textContent = dashboardData.current_score.total;
+                    
+                    // Mettre à jour les carrés de phases
+                    this.updateMOTSquares(dashboardData.current_score.scores, dashboardData.current_score.total);
+                    
+                    // Mettre à jour les ENABLERS
+            this.updateEnablersGrid(dashboardData.unlocked_enablers);
+            
+            // Mettre à jour le message d'impact
+            document.getElementById('impact-message').innerHTML = `<p>${dashboardData.impact_message}</p>`;
+            
+            // Afficher le dashboard
+            const modal = new bootstrap.Modal(document.getElementById('executiveDashboardModal'));
+            modal.show();
+            
+            // Store current Phase number for Next button
+            this.currentPhaseNumber = motNumber;
+            
+        } catch (error) {
+            console.error('Erreur lors de l\'affichage du dashboard:', error);
+            this.showAlert('Erreur lors de l\'affichage du dashboard', 'danger');
+        }
+    }
+    
+    updateMOTSquares(scores, totalScore) {
+        const motSquares = ['phase1-square', 'phase2-square', 'phase3-square', 'phase4-square', 'phase5-square'];
+        const motKeys = ['mot1', 'mot2', 'mot3', 'mot4', 'mot5'];
         
-        // Version 1.4: Hide score display card and total score in header
-        document.getElementById('score-display-card').style.display = 'none';
-        document.querySelector('.score-display-container').style.display = 'none';
+        motSquares.forEach((squareId, index) => {
+            const square = document.getElementById(squareId);
+            const score = scores[motKeys[index]] || 0;
+            
+            // Reset classes
+            square.className = 'mot-square';
+            
+            // Add appropriate class based on completion
+            if (score > 0) {
+                square.classList.add('completed');
+            }
+            
+            // Clear existing content and add number
+            square.innerHTML = `
+                <div style="font-weight: bold; font-size: 1.2rem;">${index + 1}</div>
+                <div class="stars">${'★'.repeat(score)}${'☆'.repeat(3 - score)}</div>
+            `;
+        });
+    }
+    
+    updateEnablersGrid(enablers) {
+        const enablersGrid = document.getElementById('enablers-grid');
+        enablersGrid.innerHTML = '';
         
-        // Update score display
-        this.updateScoreDisplay(scoreData);
-        
-        // Set MOT title
-        const motTitles = {
-            1: 'Embedding GenAI in your AI transformation program',
-            2: 'Building the right foundation',
-            3: 'Scaling across the organization',
-            4: 'Ensuring sustainable success',
-            5: 'Accelerating the transformation'
-        };
-        
-        document.getElementById('current-mot-title').textContent = motTitles[motNumber];
-        
-        // Generate stars
-        const starsContainer = document.getElementById('score-stars-container');
-        starsContainer.innerHTML = '';
-        for (let i = 1; i <= 3; i++) {
-            const star = document.createElement('span');
-            star.className = 'score-star';
-            star.textContent = i <= score ? '★' : '☆';
-            starsContainer.appendChild(star);
+        if (enablers.length === 0) {
+            enablersGrid.innerHTML = '<p style="text-align: center; opacity: 0.7;">Aucun ENABLER débloqué pour le moment</p>';
+            return;
         }
         
-        // Set description
-        const descriptions = {
-            1: score === 3 ? 'Excellent! You chose the optimal approach for embedding GenAI.' : 
-               score === 2 ? 'Good choice! You\'re on the right track.' : 
-               'Consider reviewing your approach for better results.',
-            2: score === 3 ? 'Perfect! You selected the ideal foundation solutions.' : 
-               score === 2 ? 'Good foundation! You made solid choices.' : 
-               'Your foundation could be stronger.',
-            3: score === 3 ? 'Outstanding! You\'ve mastered organizational scaling.' : 
-               score === 2 ? 'Well done! Good scaling strategy.' : 
-               'Consider improving your scaling approach.',
-            4: score === 3 ? 'Excellent! You\'ve ensured sustainable success.' : 
-               score === 2 ? 'Good sustainability planning!' : 
-               'Your sustainability strategy needs work.',
-            5: score === 3 ? 'Perfect! You\'ve accelerated the transformation.' : 
-               score === 2 ? 'Good acceleration strategy!' : 
-               'Consider optimizing your acceleration approach.'
-        };
-        
-        document.getElementById('score-description').textContent = descriptions[motNumber];
-        
-        // Update MOT squares
-        this.updatePhaseSquares(scoreData);
-        
-        // Update total badge
-        this.updateTotalBadge(scoreData);
-        
-        // Show modal
-        const modal = new bootstrap.Modal(document.getElementById('scoreModal'));
-        modal.show();
-        
-        // Version 1.4: Keep the original behavior - user clicks NEXT button
-        // The global score recap will be shown after the user clicks NEXT
+        enablers.forEach(enabler => {
+            const enablerItem = document.createElement('div');
+            enablerItem.className = 'enabler-item';
+            enablerItem.innerHTML = `
+                <h4>${enabler.title}</h4>
+                <p>${enabler.description}</p>
+            `;
+            enablersGrid.appendChild(enablerItem);
+        });
     }
 
     updatePhaseSquares(scoreData) {
@@ -2354,11 +2372,6 @@ class GameController {
     }
 
 
-    hideScoreScreen() {
-        // Hide score display card
-        document.getElementById('score-display-card').style.display = 'none';
-    }
-
     // Version 1.4: Function to get current score data from DOM elements
     getCurrentScoreData() {
         const scores = {};
@@ -2388,7 +2401,7 @@ class GameController {
         console.log('this.currentPhaseNumber:', this.currentPhaseNumber);
         
         // Hide modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
+        const modal = bootstrap.Modal.getInstance(document.getElementById('executiveDashboardModal'));
         console.log('Modal instance:', modal);
         if (modal) {
             modal.hide();
@@ -2403,12 +2416,8 @@ class GameController {
         document.body.style.overflow = '';
         document.body.style.paddingRight = '';
         
-        // Version 1.4: Show global score recap before proceeding to next MOT
-        // Get score data from the current score display elements
-        const currentScore = this.getCurrentScoreData();
-        console.log('Current score data:', currentScore);
-        console.log('About to show global score recap for MOT:', currentMOT);
-        this.showGlobalScoreRecap(currentMOT, currentScore);
+        // Proceed to next phase using original flow
+        this.proceedToActualNextMOT(currentMOT);
     }
 
     proceedToActualNextMOT(currentMOT) {

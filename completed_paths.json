@@ -8,73 +8,52 @@
     ],
     "mot3_choices": {
       "people_processes": "hr_ai_training",
-      "platform_partnerships": "system_integration",
-      "policies_practices": "ai_ethics_charter"
+      "platform_partnerships": "tech_partnerships",
+      "policies_practices": "performance_metrics"
     },
     "mot4_choices": [
-      "data_collection_strategy"
-    ],
-    "mot5_choice": "people_speed",
-    "total_score": 8,
-    "stars": 1,
-    "mot_scores": {
-      "mot1": 1,
-      "mot2": 2,
-      "mot3": 1,
-      "mot4": 1,
-      "mot5": 3
-    }
-  },
-  {
-    "mot1_choice": "james",
-    "mot2_choices": [
-      "training_optimization",
-      "virtual_hr_assistant",
-      "hr_automation"
-    ],
-    "mot3_choices": {
-      "policies_practices": "ai_ethics_charter",
-      "platform_partnerships": "system_integration",
-      "people_processes": "hr_ai_training"
-    },
-    "mot4_choices": [
-      "data_collection_strategy"
-    ],
-    "mot5_choice": "capability_building",
-    "total_score": 7,
-    "stars": 1,
-    "mot_scores": {
-      "mot1": 2,
-      "mot2": 1,
-      "mot3": 1,
-      "mot4": 1,
-      "mot5": 2
-    }
-  },
-  {
-    "mot1_choice": "elena",
-    "mot2_choices": [
-      "intelligent_recruitment",
-      "virtual_hr_assistant",
-      "training_optimization"
-    ],
-    "mot3_choices": {
-      "people_processes": "hr_ai_training",
-      "platform_partnerships": "system_integration",
-      "policies_practices": "ai_ethics_charter"
-    },
-    "mot4_choices": [
-      "tech_stack_data_pipelines"
+      "internal_mobility"
     ],
     "mot5_choice": "capability_building",
     "total_score": 9,
     "stars": 1,
     "mot_scores": {
-      "mot1": 3,
+      "mot1": 1,
       "mot2": 2,
-      "mot3": 1,
+      "mot3": 3,
       "mot4": 1,
       "mot5": 2
-    }
+    },
+    "unlocked_enablers": [
+      "internal_development",
+      "technical_expertise",
+      "candidate_matching",
+      "vendor_relationships",
+      "talent_retention",
+      "need_prediction",
+      "bottom_up_innovation",
+      "kpi_definition",
+      "training_academy",
+      "impact_measurement",
+      "value_based_governance",
+      "24_7_assistance",
+      "chatbot_intelligence",
+      "performance_tracking",
+      "innovation_access",
+      "long_term_roadmap",
+      "knowledge_transfer",
+      "performance_prediction",
+      "supplier_panel",
+      "structured_approach",
+      "personalized_training",
+      "rapid_deployment",
+      "employee_support",
+      "hr_ai_competencies",
+      "skill_mobility",
+      "skill_development",
+      "team_upskilling",
+      "cv_analysis",
+      "cost_efficiency"
+    ]
   }
 ]

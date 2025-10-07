@@ -35,6 +35,7 @@ class Choice:
     description: str
     cost: Optional[int] = None
     category: Optional[str] = None
+    unlocks_enablers: Optional[List[str]] = None  # ENABLERS débloqués par ce choix
 
 @dataclass
 class GamePath:
@@ -47,6 +48,7 @@ class GamePath:
     total_score: int = 0
     stars: int = 0
     mot_scores: Dict[str, int] = field(default_factory=dict)
+    unlocked_enablers: List[str] = field(default_factory=list)  # ENABLERS débloqués
 
 class AIAccelerationGame:
     """Jeu AI Acceleration EXEC - Smart Retail Group HR Managers Edition"""
@@ -71,19 +73,22 @@ class AIAccelerationGame:
                     id="elena",
                     title="Elena - Strategic Approach",
                     description="Map the transformative potential of GenAI on our HR functions and its impact on our teams. Structured vision, priority identification, leadership engagement, clear prioritized plan.",
-                    category="strategy"
+                    category="strategy",
+                    unlocks_enablers=["strategic_planning", "leadership_alignment", "structured_vision"]
                 ),
                 "james": Choice(
                     id="james", 
                     title="James - Technical Approach",
                     description="Partnership with a GenAI platform to secure technical foundations. Solid infrastructure, technical support, exclusive conditions.",
-                    category="tech"
+                    category="tech",
+                    unlocks_enablers=["tech_foundations", "platform_integration", "technical_support"]
                 ),
                 "amira": Choice(
                     id="amira",
                     title="Amira - Operational Approach", 
                     description="Democratize GenAI and ask HR managers to develop their own tools. Rapid deployment, bottom-up innovation, low initial cost.",
-                    category="operational"
+                    category="operational",
+                    unlocks_enablers=["rapid_deployment", "bottom_up_innovation", "cost_efficiency"]
                 )
             },
             
@@ -91,27 +96,32 @@ class AIAccelerationGame:
                 "intelligent_recruitment": Choice(
                     id="intelligent_recruitment", 
                     title="Intelligent Recruitment", 
-                    description="Automatic candidate-job matching, CV analysis, performance prediction (integrated GenAI)"
+                    description="Automatic candidate-job matching, CV analysis, performance prediction (integrated GenAI)",
+                    unlocks_enablers=["candidate_matching", "cv_analysis", "performance_prediction"]
                 ),
                 "virtual_hr_assistant": Choice(
                     id="virtual_hr_assistant", 
                     title="Virtual HR Assistant", 
-                    description="Intelligent chatbot to accompany employees 24/7 (integrated GenAI)"
+                    description="Intelligent chatbot to accompany employees 24/7 (integrated GenAI)",
+                    unlocks_enablers=["employee_support", "24_7_assistance", "chatbot_intelligence"]
                 ),
                 "training_optimization": Choice(
                     id="training_optimization", 
                     title="Training Path Optimization", 
-                    description="Personalized recommendations, need prediction (integrated GenAI)"
+                    description="Personalized recommendations, need prediction (integrated GenAI)",
+                    unlocks_enablers=["personalized_training", "need_prediction", "skill_development"]
                 ),
                 "sentiment_analysis": Choice(
                     id="sentiment_analysis", 
                     title="Employee Sentiment Analysis", 
-                    description="Automatic detection of employee satisfaction via text analysis (integrated GenAI)"
+                    description="Automatic detection of employee satisfaction via text analysis (integrated GenAI)",
+                    unlocks_enablers=["sentiment_detection", "employee_satisfaction", "text_analysis"]
                 ),
                 "hr_automation": Choice(
                     id="hr_automation", 
                     title="HR Process Automation", 
-                    description="Intelligent automation of repetitive HR processes (integrated GenAI)"
+                    description="Intelligent automation of repetitive HR processes (integrated GenAI)",
+                    unlocks_enablers=["process_automation", "efficiency_gains", "repetitive_task_reduction"]
                 )
             },
             
@@ -121,19 +131,22 @@ class AIAccelerationGame:
                         id="hr_ai_training",
                         title="HR Team AI Training",
                         description="Comprehensive training program on AI and its HR applications",
-                        category="people_processes"
+                        category="people_processes",
+                        unlocks_enablers=["hr_ai_competencies", "team_upskilling", "knowledge_transfer"]
                     ),
                     "hr_role_redefinition": Choice(
                         id="hr_role_redefinition",
                         title="HR Role Redefinition", 
                         description="Adaptation of job descriptions to integrate AI",
-                        category="people_processes"
+                        category="people_processes",
+                        unlocks_enablers=["role_evolution", "job_design", "competency_mapping"]
                     ),
                     "cultural_change": Choice(
                         id="cultural_change",
                         title="Cultural Change", 
                         description="Communication campaign on AI",
-                        category="people_processes"
+                        category="people_processes",
+                        unlocks_enablers=["change_communication", "cultural_transformation", "employee_engagement"]
                     )
                 },
                 "platform_partnerships": {
@@ -141,19 +154,22 @@ class AIAccelerationGame:
                         id="system_integration",
                         title="Integration with existing HR systems",
                         description="Connection of AI solutions to current HR systems",
-                        category="platform_partnerships"
+                        category="platform_partnerships",
+                        unlocks_enablers=["system_connectivity", "data_integration", "workflow_seamlessness"]
                     ),
                     "tech_partnerships": Choice(
                         id="tech_partnerships",
                         title="Technology partnerships", 
                         description="Agreements with specialized AI suppliers",
-                        category="platform_partnerships"
+                        category="platform_partnerships",
+                        unlocks_enablers=["vendor_relationships", "technical_expertise", "innovation_access"]
                     ),
                     "cloud_infrastructure": Choice(
                         id="cloud_infrastructure",
                         title="Cloud infrastructure", 
                         description="Migration to cloud infrastructure",
-                        category="platform_partnerships"
+                        category="platform_partnerships",
+                        unlocks_enablers=["cloud_migration", "scalability", "infrastructure_flexibility"]
                     )
                 },
                 "policies_practices": {
@@ -161,19 +177,22 @@ class AIAccelerationGame:
                         id="ai_ethics_charter",
                         title="HR AI Ethics Charter",
                         description="Definition of ethical principles for HR AI",
-                        category="policies_practices"
+                        category="policies_practices",
+                        unlocks_enablers=["ethical_framework", "ai_governance", "responsible_ai"]
                     ),
                     "data_governance": Choice(
                         id="data_governance",
                         title="Data governance", 
                         description="Rules for HR data management and protection",
-                        category="policies_practices"
+                        category="policies_practices",
+                        unlocks_enablers=["data_protection", "compliance_framework", "privacy_management"]
                     ),
                     "performance_metrics": Choice(
                         id="performance_metrics",
                         title="Performance metrics", 
                         description="Definition of KPIs to measure AI impact",
-                        category="policies_practices"
+                        category="policies_practices",
+                        unlocks_enablers=["kpi_definition", "impact_measurement", "performance_tracking"]
                     )
                 }
             },
@@ -183,55 +202,64 @@ class AIAccelerationGame:
                     id="apis_hr_systems", 
                     title="APIs between internal and external HR systems", 
                     description="Improved data exchange between all HR systems", 
-                    cost=5
+                    cost=5,
+                    unlocks_enablers=["api_connectivity", "system_interoperability", "data_flow_optimization"]
                 ),
                 "tech_stack_data_pipelines": Choice(
                     id="tech_stack_data_pipelines", 
                     title="Technology stack for HR data pipelines", 
                     description="Industrialization of HR data pipelines", 
-                    cost=10
+                    cost=10,
+                    unlocks_enablers=["data_pipeline_automation", "industrialization", "scalable_infrastructure"]
                 ),
                 "ai_ethics_officer": Choice(
                     id="ai_ethics_officer", 
                     title="Appointment of HR AI Ethics Officer", 
                     description="Dedicated officer for HR AI ethics", 
-                    cost=5
+                    cost=5,
+                    unlocks_enablers=["ethics_oversight", "governance_structure", "responsible_leadership"]
                 ),
                 "risk_mitigation_plan": Choice(
                     id="risk_mitigation_plan", 
                     title="Country-specific risk mitigation plan", 
                     description="Risk management strategy by country", 
-                    cost=5
+                    cost=5,
+                    unlocks_enablers=["risk_management", "compliance_readiness", "geographic_adaptation"]
                 ),
                 "internal_mobility": Choice(
                     id="internal_mobility", 
                     title="Internal mobility program for HR AI talents", 
                     description="Development of internal AI talents", 
-                    cost=5
+                    cost=5,
+                    unlocks_enablers=["talent_retention", "skill_mobility", "internal_development"]
                 ),
                 "data_collection_strategy": Choice(
                     id="data_collection_strategy", 
                     title="Data collection strategy and synthetic HR data", 
                     description="Optimization of data collection and generation", 
-                    cost=5
+                    cost=5,
+                    unlocks_enablers=["data_strategy", "synthetic_data_generation", "data_quality"]
                 ),
                 "ceo_video_series": Choice(
                     id="ceo_video_series", 
                     title="CEO and leadership video series on HR AI", 
                     description="Leadership communication on HR AI", 
-                    cost=5
+                    cost=5,
+                    unlocks_enablers=["leadership_communication", "change_narrative", "executive_sponsorship"]
                 ),
                 "change_management": Choice(
                     id="change_management", 
                     title="Change management to boost adoption", 
                     description="Comprehensive change management program", 
-                    cost=10
+                    cost=10,
+                    unlocks_enablers=["change_adoption", "user_engagement", "transformation_support"]
                 ),
                 "business_sponsors": Choice(
                     id="business_sponsors", 
                     title="Business sponsors responsible for value delivery", 
                     description="Business owners for AI solution value", 
-                    cost=5
+                    cost=5,
+                    unlocks_enablers=["business_alignment", "value_delivery", "stakeholder_engagement"]
                 )
             },
             
@@ -239,17 +267,20 @@ class AIAccelerationGame:
                 "genai_for_all": Choice(
                     id="genai_for_all",
                     title="GenAI for all",
-                    description="GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development."
+                    description="GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development.",
+                    unlocks_enablers=["organization_wide_ai", "rapid_deployment", "corporate_communication", "ethics_policies"]
                 ),
                 "capability_building": Choice(
                     id="capability_building", 
                     title="Continuous capability building",
-                    description="Definition of long-term HR AI ethics roadmap, Value-based AI governance, Preferred supplier panel, creation of HR AI training Academy. Solid structure, clear governance, training. But less focus on people, more technical approach."
+                    description="Definition of long-term HR AI ethics roadmap, Value-based AI governance, Preferred supplier panel, creation of HR AI training Academy. Solid structure, clear governance, training. But less focus on people, more technical approach.",
+                    unlocks_enablers=["long_term_roadmap", "value_based_governance", "supplier_panel", "training_academy", "structured_approach"]
                 ),
                 "people_speed": Choice(
                     id="people_speed",
                     title="Full speed on people",
-                    description="New GenAI HR Hub, Preferred supplier panel, Investment in recruiting top AI talents and retaining analytics expertise, Creation of HR AI training Academy. Focus on skills, talent recruitment, continuous training. But higher initial investment."
+                    description="New GenAI HR Hub, Preferred supplier panel, Investment in recruiting top AI talents and retaining analytics expertise, Creation of HR AI training Academy. Focus on skills, talent recruitment, continuous training. But higher initial investment.",
+                    unlocks_enablers=["genai_hub", "talent_recruitment", "analytics_expertise", "continuous_training", "people_focus"]
                 )
             }
         }
@@ -532,6 +563,45 @@ class AIAccelerationGame:
             self.current_path.stars = 2
         else:
             self.current_path.stars = 1
+        
+        # Calculer les ENABLERS débloqués
+        self._calculate_enablers()
+    
+    def _calculate_enablers(self):
+        """Calcule les ENABLERS débloqués par les choix"""
+        unlocked_enablers = []
+        
+        # MOT1 - HR Approach choice
+        if self.current_path.mot1_choice:
+            choice = self.game_data["mot1_hr_approaches"][self.current_path.mot1_choice]
+            if choice.unlocks_enablers:
+                unlocked_enablers.extend(choice.unlocks_enablers)
+        
+        # MOT2 - HR Solution choices
+        for solution_id in self.current_path.mot2_choices:
+            choice = self.game_data["mot2_hr_solutions"][solution_id]
+            if choice.unlocks_enablers:
+                unlocked_enablers.extend(choice.unlocks_enablers)
+        
+        # MOT3 - HR Facilitator choices
+        for category, choice_id in self.current_path.mot3_choices.items():
+            choice = self.game_data["mot3_hr_facilitators"][category][choice_id]
+            if choice.unlocks_enablers:
+                unlocked_enablers.extend(choice.unlocks_enablers)
+        
+        # MOT4 - HR Scaling choices
+        for scaling_id in self.current_path.mot4_choices:
+            choice = self.game_data["mot4_hr_scaling_enablers"][scaling_id]
+            if choice.unlocks_enablers:
+                unlocked_enablers.extend(choice.unlocks_enablers)
+        
+        # MOT5 - HR Deployment choice
+        if self.current_path.mot5_choice:
+            choice = self.game_data["mot5_hr_deployment_choices"][self.current_path.mot5_choice]
+            if choice.unlocks_enablers:
+                unlocked_enablers.extend(choice.unlocks_enablers)
+        
+        self.current_path.unlocked_enablers = list(set(unlocked_enablers))  # Remove duplicates
     
     def get_results(self) -> Dict:
         """Retourne les résultats finaux"""
