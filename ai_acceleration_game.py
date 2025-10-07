@@ -49,6 +49,11 @@ class GamePath:
     stars: int = 0
     mot_scores: Dict[str, int] = field(default_factory=dict)
     unlocked_enablers: List[str] = field(default_factory=list)  # ENABLERS débloqués
+    unlocked_enablers_by_category: Dict[str, List[str]] = field(default_factory=lambda: {
+        "platform_partnerships": [],
+        "policies_practices": [],
+        "people_processes": []
+    })
 
 class AIAccelerationGame:
     """Jeu AI Acceleration EXEC - Smart Retail Group HR Managers Edition"""
@@ -356,6 +361,10 @@ class AIAccelerationGame:
             self.current_state = GameState.MOT2
             mot1_score = self.calculate_mot_score(1)
             logger.info(f"MOT1 choice made: {approach_id} - Score: {mot1_score}/3")
+            
+            # Calculer les ENABLERS débloqués
+            self._calculate_enablers()
+            
             return True
         return False
     
@@ -405,6 +414,9 @@ class AIAccelerationGame:
             mot2_score = 0  # 0 étoile
             logger.info(f"MOT2 incorrect choices: {solution_ids} (0/3 correct positions) - Score: 0/3")
         
+        # Calculer les ENABLERS débloqués
+        self._calculate_enablers()
+        
         return True
     
     def get_mot3_choices(self) -> Dict[str, List[Choice]]:
@@ -427,6 +439,10 @@ class AIAccelerationGame:
         self.current_state = GameState.MOT4
         mot3_score = self.calculate_mot_score(3)
         logger.info(f"MOT3 choices made: {choices} - Score: {mot3_score}/3")
+        
+        # Calculer les ENABLERS débloqués
+        self._calculate_enablers()
+        
         return True
     
     def get_mot4_choices(self) -> List[Choice]:
@@ -449,6 +465,10 @@ class AIAccelerationGame:
             self.current_state = GameState.MOT5
             mot4_score = self.calculate_mot_score(4)
             logger.info(f"MOT4 choices made: {valid_enablers} (total: {total_cost} points) - Score: {mot4_score}/3")
+            
+            # Calculer les ENABLERS débloqués
+            self._calculate_enablers()
+            
             return True
         
         logger.warning(f"MOT4 invalid: {enabler_ids} = {total_cost} points (need between 1 and 30)")
@@ -464,6 +484,10 @@ class AIAccelerationGame:
             self.current_path.mot5_choice = choice_id
             self.current_state = GameState.RESULTS
             mot5_score = self.calculate_mot_score(5)
+            
+            # Calculer les ENABLERS débloqués
+            self._calculate_enablers()
+            
             self._calculate_final_score()
             logger.info(f"MOT5 choice made: {choice_id} - Score: {mot5_score}/3")
             return True
@@ -568,40 +592,95 @@ class AIAccelerationGame:
         self._calculate_enablers()
     
     def _calculate_enablers(self):
-        """Calcule les ENABLERS débloqués par les choix"""
-        unlocked_enablers = []
+        """Calcule les ENABLERS débloqués par les choix, organisés par catégorie"""
+        # Initialiser les enablers par catégorie
+        enablers_by_category = {
+            "platform_partnerships": [],
+            "policies_practices": [],
+            "people_processes": []
+        }
+        
+        # Mapping des choix vers leurs catégories
+        choice_categories = self._get_choice_categories()
         
         # MOT1 - HR Approach choice
         if self.current_path.mot1_choice:
             choice = self.game_data["mot1_hr_approaches"][self.current_path.mot1_choice]
             if choice.unlocks_enablers:
-                unlocked_enablers.extend(choice.unlocks_enablers)
+                category = choice_categories.get(self.current_path.mot1_choice, "people_processes")
+                enablers_by_category[category].extend(choice.unlocks_enablers)
         
         # MOT2 - HR Solution choices
         for solution_id in self.current_path.mot2_choices:
             choice = self.game_data["mot2_hr_solutions"][solution_id]
             if choice.unlocks_enablers:
-                unlocked_enablers.extend(choice.unlocks_enablers)
+                category = choice_categories.get(solution_id, "people_processes")
+                enablers_by_category[category].extend(choice.unlocks_enablers)
         
-        # MOT3 - HR Facilitator choices
+        # MOT3 - HR Facilitator choices (déjà organisés par catégorie)
         for category, choice_id in self.current_path.mot3_choices.items():
             choice = self.game_data["mot3_hr_facilitators"][category][choice_id]
             if choice.unlocks_enablers:
-                unlocked_enablers.extend(choice.unlocks_enablers)
+                enablers_by_category[category].extend(choice.unlocks_enablers)
         
         # MOT4 - HR Scaling choices
         for scaling_id in self.current_path.mot4_choices:
             choice = self.game_data["mot4_hr_scaling_enablers"][scaling_id]
             if choice.unlocks_enablers:
-                unlocked_enablers.extend(choice.unlocks_enablers)
+                category = choice_categories.get(scaling_id, "people_processes")
+                enablers_by_category[category].extend(choice.unlocks_enablers)
         
         # MOT5 - HR Deployment choice
         if self.current_path.mot5_choice:
             choice = self.game_data["mot5_hr_deployment_choices"][self.current_path.mot5_choice]
             if choice.unlocks_enablers:
-                unlocked_enablers.extend(choice.unlocks_enablers)
+                category = choice_categories.get(self.current_path.mot5_choice, "people_processes")
+                enablers_by_category[category].extend(choice.unlocks_enablers)
         
-        self.current_path.unlocked_enablers = list(set(unlocked_enablers))  # Remove duplicates
+        # Stocker les enablers débloqués par catégorie (sans doublons)
+        for category in enablers_by_category:
+            enablers_by_category[category] = list(set(enablers_by_category[category]))
+        
+        self.current_path.unlocked_enablers_by_category = enablers_by_category
+        
+        # Garder aussi la liste globale pour compatibilité
+        all_enablers = []
+        for category_enablers in enablers_by_category.values():
+            all_enablers.extend(category_enablers)
+        self.current_path.unlocked_enablers = list(set(all_enablers))
+    
+    def _get_choice_categories(self) -> Dict[str, str]:
+        """Retourne le mapping des choix vers leurs catégories"""
+        return {
+            # MOT1 - HR Approaches
+            "amira": "people_processes",      # Strategic planning approach
+            "james": "platform_partnerships", # Technology-first approach  
+            "elena": "policies_practices",    # Governance-first approach
+            
+            # MOT2 - HR Solutions
+            "intelligent_recruitment": "platform_partnerships",
+            "virtual_hr_assistant": "people_processes",
+            "training_optimization": "people_processes",
+            "sentiment_analysis": "policies_practices",
+            "process_automation": "platform_partnerships",
+            "performance_prediction": "policies_practices",
+            
+            # MOT4 - HR Scaling (déjà mappés dans web_interface.py)
+            "apis_internal_vendor": "platform_partnerships",
+            "tech_stack_pipelines": "platform_partnerships", 
+            "internal_mobility": "people_processes",
+            "responsible_ai_lead": "policies_practices",
+            "risk_mitigation": "policies_practices",
+            "data_collection_strategy": "platform_partnerships",
+            "business_sponsors": "people_processes",
+            "ceo_video_series": "people_processes",
+            "change_management": "people_processes",
+            
+            # MOT5 - HR Capabilities
+            "capability_building": "people_processes",
+            "technology_integration": "platform_partnerships",
+            "governance_framework": "policies_practices"
+        }
     
     def get_results(self) -> Dict:
         """Retourne les résultats finaux"""

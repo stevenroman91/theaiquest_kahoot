@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/style.css') }}?v=2.3" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/style.css') }}?v=2.9" rel="stylesheet">
 </head>
 <body>
     <div class="container-fluid">
@@ -787,44 +787,53 @@
                         
                         <!-- Main Dashboard Content -->
                         <div class="dashboard-content">
-                            <!-- Left Column: Score & Progress -->
-                            <div class="dashboard-left">
-                                <div class="score-section">
-                                    <h2><i class="fas fa-star me-2"></i>Current Score</h2>
-                                    <div class="score-display">
-                                        <div class="score-total">
-                                            <span class="score-number" id="dashboard-total-score">0</span>
-                                            <span class="score-max">/15</span>
+                            <!-- Top Section: Score, Progress, Impact -->
+                            <div class="dashboard-top-section">
+                                <div class="row g-4">
+                                    <!-- Current Score -->
+                                    <div class="col-md-4">
+                                        <div class="score-section">
+                                            <h2><i class="fas fa-star me-2"></i>Current Score</h2>
+                                            <div class="score-display">
+                                                <div class="score-total">
+                                                    <span class="score-number" id="dashboard-total-score">0</span>
+                                                    <span class="score-max">/15</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                
-                                <div class="progress-section">
-                                    <h3><i class="fas fa-tasks me-2"></i>Phase Progress</h3>
-                                    <div class="mot-squares">
-                                        <div class="mot-square" id="phase1-square">1</div>
-                                        <div class="mot-square" id="phase2-square">2</div>
-                                        <div class="mot-square" id="phase3-square">3</div>
-                                        <div class="mot-square" id="phase4-square">4</div>
-                                        <div class="mot-square" id="phase5-square">5</div>
+                                    
+                                    <!-- Phase Progress -->
+                                    <div class="col-md-4">
+                                        <div class="progress-section">
+                                            <h3><i class="fas fa-tasks me-2"></i>Phase Progress</h3>
+                                            <div class="mot-squares" id="mot-squares">
+                                                <div class="mot-square" id="phase1-square">1</div>
+                                                <div class="mot-square" id="phase2-square">2</div>
+                                                <div class="mot-square" id="phase3-square">3</div>
+                                                <div class="mot-square" id="phase4-square">4</div>
+                                                <div class="mot-square" id="phase5-square">5</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Educational Impact -->
+                                    <div class="col-md-4">
+                                        <div class="impact-section">
+                                            <h3><i class="fas fa-lightbulb me-2"></i>Educational Impact</h3>
+                                            <div class="impact-message" id="impact-message">
+                                                <!-- Impact message will be populated here -->
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Right Column: Enablers & Impact -->
-                            <div class="dashboard-right">
-                                <div class="enablers-section">
-                                    <h2><i class="fas fa-cogs me-2"></i>Unlocked ENABLERS</h2>
-                                    <div class="enablers-grid" id="enablers-grid">
-                                        <!-- Enablers will be populated here -->
-                                    </div>
-                                </div>
-                                
-                                <div class="impact-section">
-                                    <h3><i class="fas fa-lightbulb me-2"></i>Educational Impact</h3>
-                                    <div class="impact-message" id="impact-message">
-                                        <!-- Impact message will be populated here -->
-                                    </div>
+                            <!-- Bottom Section: ENABLERS by Category -->
+                            <div class="dashboard-bottom-section">
+                                <h2><i class="fas fa-cogs me-2"></i>Unlocked ENABLERS</h2>
+                                <div class="enablers-categories" id="enablers-categories">
+                                    <!-- Enablers will be populated here -->
                                 </div>
                             </div>
                         </div>
@@ -845,6 +854,6 @@
     <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="{{ url_for('static', filename='js/game.js') }}?v=1.9-recap-video-fixed"></script>
+        <script src="{{ url_for('static', filename='js/game.js') }}?v=1.20"></script>
 </body>
 </html>

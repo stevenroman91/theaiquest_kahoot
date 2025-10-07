@@ -2226,16 +2226,18 @@ body {
 
 .dashboard-content {
     flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 40px;
     padding: 40px;
 }
 
-.dashboard-left, .dashboard-right {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+.dashboard-top-section {
+    margin-bottom: 20px;
+}
+
+.dashboard-bottom-section {
+    flex: 1;
 }
 
 .score-section, .progress-section, .enablers-section, .impact-section {
@@ -2345,31 +2347,143 @@ body {
     gap: 15px;
 }
 
-.enabler-item {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
+/* ENABLERS Categories Layout */
+.enablers-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 20px;
 }
 
-.enabler-item:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
+.enabler-category-row {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.enabler-item h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 8px 0;
-    color: white;
+.enabler-category-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
 }
 
-.enabler-item p {
-    font-size: 0.9rem;
-    opacity: 0.8;
+.enabler-category-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin: 0;
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.enabler-category-title.platform-partnerships {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
+}
+
+.enabler-category-title.policies-practices {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.enabler-category-title.people-processes {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.enabler-icons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.enabler-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 3px solid transparent;
+}
+
+.enabler-icon.unlocked {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border-color: #10b981;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.enabler-icon.unlocked:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+}
+
+.enabler-icon.locked {
+    background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+    color: #9ca3af;
+    border-color: #d1d5db;
+    opacity: 0.6;
+}
+
+.enabler-icon.locked:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+/* Tooltip */
+.enabler-tooltip {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.enabler-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+.enabler-icon:hover .enabler-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.enabler-tooltip-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.enabler-tooltip-description {
+    font-size: 0.8rem;
+    opacity: 0.9;
 }
 
 .impact-message {

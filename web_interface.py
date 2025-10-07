@@ -595,8 +595,9 @@ def api_executive_dashboard():
     game = get_game()
     current_score = game.get_current_score()
     
-    # Calculer les ENABLERS débloqués
-    unlocked_enablers = []
+    # Calculer les ENABLERS débloqués par catégorie
+    unlocked_enablers_by_category = game.current_path.unlocked_enablers_by_category
+    
     enabler_descriptions = {
         "strategic_planning": "Planification stratégique avancée",
         "leadership_alignment": "Alignement du leadership",
@@ -694,41 +695,32 @@ def api_executive_dashboard():
         "people_focus": "Focus sur les personnes"
     }
     
-    # Collecter les ENABLERS depuis les choix actuels
-    if game.current_path.mot1_choice:
-        choice = game.game_data["mot1_hr_approaches"][game.current_path.mot1_choice]
-        if choice.unlocks_enablers:
-            unlocked_enablers.extend(choice.unlocks_enablers)
+    # Formater les ENABLERS par catégorie
+    formatted_enablers_by_category = {}
+    category_titles = {
+        "platform_partnerships": "Platform & Partnerships",
+        "policies_practices": "Policies & Practices", 
+        "people_processes": "People & Processes"
+    }
     
-    for solution_id in game.current_path.mot2_choices:
-        choice = game.game_data["mot2_hr_solutions"][solution_id]
-        if choice.unlocks_enablers:
-            unlocked_enablers.extend(choice.unlocks_enablers)
+    for category, enablers in unlocked_enablers_by_category.items():
+        formatted_enablers_by_category[category] = {
+            "title": category_titles[category],
+            "enablers": []
+        }
+        
+        for enabler in enablers:
+            formatted_enablers_by_category[category]["enablers"].append({
+                "id": enabler,
+                "title": enabler.replace("_", " ").title(),
+                "description": enabler_descriptions.get(enabler, f"Capacité {enabler.replace('_', ' ')}")
+            })
     
-    for category, choice_id in game.current_path.mot3_choices.items():
-        choice = game.game_data["mot3_hr_facilitators"][category][choice_id]
-        if choice.unlocks_enablers:
-            unlocked_enablers.extend(choice.unlocks_enablers)
-    
-    for scaling_id in game.current_path.mot4_choices:
-        choice = game.game_data["mot4_hr_scaling_enablers"][scaling_id]
-        if choice.unlocks_enablers:
-            unlocked_enablers.extend(choice.unlocks_enablers)
-    
-    if game.current_path.mot5_choice:
-        choice = game.game_data["mot5_hr_deployment_choices"][game.current_path.mot5_choice]
-        if choice.unlocks_enablers:
-            unlocked_enablers.extend(choice.unlocks_enablers)
-    
-    # Supprimer les doublons et formater
-    unique_enablers = list(set(unlocked_enablers))
-    formatted_enablers = []
-    for enabler in unique_enablers:
-        formatted_enablers.append({
-            "id": enabler,
-            "title": enabler.replace("_", " ").title(),
-            "description": enabler_descriptions.get(enabler, "Capacité stratégique débloquée")
-        })
+    # Garder aussi la liste globale pour compatibilité
+    all_enablers = []
+    for category_data in formatted_enablers_by_category.values():
+        all_enablers.extend(category_data["enablers"])
+    formatted_enablers = all_enablers
     
     # Générer un message d'impact pédagogique
     impact_message = generate_impact_message(current_score, formatted_enablers)
@@ -738,8 +730,9 @@ def api_executive_dashboard():
         'dashboard_data': {
             'current_score': current_score,
             'unlocked_enablers': formatted_enablers,
+            'unlocked_enablers_by_category': formatted_enablers_by_category,
             'impact_message': impact_message,
-            'current_phase': get_current_phase_title(game.get_current_state())
+            'phase_title': get_current_phase_title(game.current_state)
         }
     })
 
