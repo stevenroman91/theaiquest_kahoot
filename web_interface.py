@@ -531,6 +531,11 @@ def api_phase5_choose():
             'success': True,
             'message': f'Choice made: {choice_id}',
             'game_state': game.get_current_state().value,
+            'score_data': {
+                'total': results['total'],
+                'scores': results['scores'],
+                'stars': results['stars']
+            },
             'results': {
                 'score': results['score'],
                 'stars': results['stars'],

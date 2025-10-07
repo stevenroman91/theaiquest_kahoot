@@ -337,25 +337,25 @@ class AIAccelerationGame:
                     id="genai_for_all",
                     title="GenAI for all",
                     description="GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development.",
-                    enablers_1_star=["organization_wide_ai", "rapid_deployment"],  # 1 étoile = 2 ENABLERS
-                    enablers_2_stars=["organization_wide_ai", "rapid_deployment"],  # 2 étoiles = 2 ENABLERS
-                    enablers_3_stars=["organization_wide_ai", "rapid_deployment"]  # 3 étoiles = 2 ENABLERS
+                    enablers_1_star=["organization_wide_ai", "rapid_deployment", "leadership_communication"],  # 1 étoile = 3 ENABLERS
+                    enablers_2_stars=["organization_wide_ai", "rapid_deployment", "leadership_communication"],  # 2 étoiles = 3 ENABLERS
+                    enablers_3_stars=["organization_wide_ai", "rapid_deployment", "leadership_communication"]  # 3 étoiles = 3 ENABLERS
                 ),
                 "capability_building": Choice(
                     id="capability_building", 
                     title="Continuous capability building",
                     description="Definition of long-term HR AI ethics roadmap, Value-based AI governance, Preferred supplier panel, creation of HR AI training Academy. Solid structure, clear governance, training. But less focus on people, more technical approach.",
-                    enablers_1_star=["long_term_roadmap", "value_based_governance"],  # 1 étoile = 2 ENABLERS
-                    enablers_2_stars=["long_term_roadmap", "value_based_governance"],  # 2 étoiles = 2 ENABLERS
-                    enablers_3_stars=["long_term_roadmap", "value_based_governance"]  # 3 étoiles = 2 ENABLERS
+                    enablers_1_star=["long_term_roadmap", "value_based_governance", "hr_ai_training_academy"],  # 1 étoile = 3 ENABLERS
+                    enablers_2_stars=["long_term_roadmap", "value_based_governance", "hr_ai_training_academy"],  # 2 étoiles = 3 ENABLERS
+                    enablers_3_stars=["long_term_roadmap", "value_based_governance", "hr_ai_training_academy"]  # 3 étoiles = 3 ENABLERS
                 ),
                 "people_speed": Choice(
                     id="people_speed",
                     title="Full speed on people",
                     description="New GenAI HR Hub, Preferred supplier panel, Investment in recruiting top AI talents and retaining analytics expertise, Creation of HR AI training Academy. Focus on skills, talent recruitment, continuous training. But higher initial investment.",
-                    enablers_1_star=["genai_hub", "talent_recruitment"],  # 1 étoile = 2 ENABLERS
-                    enablers_2_stars=["genai_hub", "talent_recruitment"],  # 2 étoiles = 2 ENABLERS
-                    enablers_3_stars=["genai_hub", "talent_recruitment"]  # 3 étoiles = 2 ENABLERS
+                    enablers_1_star=["genai_hub", "talent_recruitment", "hr_ai_training_academy"],  # 1 étoile = 3 ENABLERS
+                    enablers_2_stars=["genai_hub", "talent_recruitment", "hr_ai_training_academy"],  # 2 étoiles = 3 ENABLERS
+                    enablers_3_stars=["genai_hub", "talent_recruitment", "hr_ai_training_academy"]  # 3 étoiles = 3 ENABLERS
                 )
             }
         }
@@ -689,9 +689,12 @@ class AIAccelerationGame:
             phase1_score = self.calculate_mot_score(1)
             phase_enablers = self._get_enablers_for_score(choice, phase1_score)
             
+            logger.info(f"Phase 1 DEBUG: choice={self.current_path.mot1_choice}, score={phase1_score}, enablers={phase_enablers}")
+            
             if phase_enablers:
                 category = choice_categories.get(self.current_path.mot1_choice, "people_processes")
-                # Ajouter les ENABLERS
+                logger.info(f"Phase 1 DEBUG: category={category}, adding enablers={phase_enablers}")
+                # Ajouter seulement les nouveaux ENABLERS pour éviter les doublons
                 for enabler in phase_enablers:
                     if enabler not in enablers_by_category[category]:
                         enablers_by_category[category].append(enabler)
@@ -706,7 +709,7 @@ class AIAccelerationGame:
             choice_enablers = self._get_enablers_for_score(choice, phase2_score)
             if choice_enablers:
                 category = choice_categories.get(solution_id, "people_processes")
-                # Ajouter seulement les nouveaux ENABLERS
+                # Ajouter seulement les nouveaux ENABLERS pour éviter les doublons
                 for enabler in choice_enablers:
                     if enabler not in enablers_by_category[category]:
                         enablers_by_category[category].append(enabler)
@@ -721,7 +724,10 @@ class AIAccelerationGame:
             choice = self.game_data["mot3_hr_facilitators"][category][choice_id]
             choice_enablers = self._get_enablers_for_score(choice, phase3_score)
             if choice_enablers:
-                enablers_by_category[category].extend(choice_enablers)
+                # Ajouter seulement les nouveaux ENABLERS pour éviter les doublons
+                for enabler in choice_enablers:
+                    if enabler not in enablers_by_category[category]:
+                        enablers_by_category[category].append(enabler)
                 phase3_enablers.extend(choice_enablers)
         enablers_by_phase["phase3"] = list(set(phase3_enablers))
         
@@ -733,11 +739,15 @@ class AIAccelerationGame:
             choice_enablers = self._get_enablers_for_score(choice, phase4_score)
             if choice_enablers:
                 category = choice_categories.get(scaling_id, "people_processes")
-                enablers_by_category[category].extend(choice_enablers)
+                # Ajouter seulement les nouveaux ENABLERS pour éviter les doublons
+                for enabler in choice_enablers:
+                    if enabler not in enablers_by_category[category]:
+                        enablers_by_category[category].append(enabler)
                 phase4_enablers.extend(choice_enablers)
         enablers_by_phase["phase4"] = list(set(phase4_enablers))
         
         # Phase 5 - HR Deployment choice
+        logger.info(f"Phase 5 DEBUG: mot5_choice={self.current_path.mot5_choice}")
         if self.current_path.mot5_choice:
             choice = self.game_data["mot5_hr_deployment_choices"][self.current_path.mot5_choice]
             phase5_score = self.calculate_mot_score(5)
@@ -745,7 +755,10 @@ class AIAccelerationGame:
             
             if phase_enablers:
                 category = choice_categories.get(self.current_path.mot5_choice, "people_processes")
-                enablers_by_category[category].extend(phase_enablers)
+                # Ajouter seulement les nouveaux ENABLERS pour éviter les doublons
+                for enabler in phase_enablers:
+                    if enabler not in enablers_by_category[category]:
+                        enablers_by_category[category].append(enabler)
                 enablers_by_phase["phase5"] = phase_enablers
         
         # Stocker les enablers débloqués par catégorie (sans doublons)
@@ -760,6 +773,15 @@ class AIAccelerationGame:
         for category_enablers in enablers_by_category.values():
             all_enablers.extend(category_enablers)
         self.current_path.unlocked_enablers = list(set(all_enablers))
+        
+        # Debug final
+        logger.info(f"FINAL DEBUG: Total enablers={len(self.current_path.unlocked_enablers)}")
+        logger.info(f"FINAL DEBUG: Enablers by category={enablers_by_category}")
+        logger.info(f"FINAL DEBUG: Enablers by phase={enablers_by_phase}")
+        logger.info(f"FINAL DEBUG: Current path mot1_choice={self.current_path.mot1_choice}")
+        logger.info(f"FINAL DEBUG: Current path mot2_choices={self.current_path.mot2_choices}")
+        logger.info(f"FINAL DEBUG: Current path mot3_choices={self.current_path.mot3_choices}")
+        logger.info(f"FINAL DEBUG: Current path mot4_choices={self.current_path.mot4_choices}")
     
     def _get_enablers_for_score(self, choice: Choice, score: int) -> List[str]:
         """Retourne les ENABLERS débloqués selon le score obtenu"""
@@ -807,24 +829,24 @@ class AIAccelerationGame:
             "virtual_hr_assistant": "people_processes",
             "training_optimization": "people_processes",
             "sentiment_analysis": "policies_practices",
-            "process_automation": "platform_partnerships",
+            "process_automation": "people_processes",
             "performance_prediction": "policies_practices",
             
-            # Phase 4 - HR Scaling (déjà mappés dans web_interface.py)
-            "apis_internal_vendor": "platform_partnerships",
+            # Phase 4 - HR Scaling
+            "apis_hr_systems": "platform_partnerships",
             "tech_stack_data_pipelines": "platform_partnerships", 
+            "ai_ethics_officer": "policies_practices",
+            "risk_mitigation_plan": "policies_practices",
             "internal_mobility": "people_processes",
-            "responsible_ai_lead": "policies_practices",
-            "risk_mitigation": "policies_practices",
             "data_collection_strategy": "platform_partnerships",
-            "business_sponsors": "people_processes",
             "ceo_video_series": "people_processes",
             "change_management": "people_processes",
+            "business_sponsors": "people_processes",
             
             # Phase 5 - HR Capabilities
-            "capability_building": "people_processes",
-            "technology_integration": "platform_partnerships",
-            "governance_framework": "policies_practices"
+            "genai_for_all": "people_processes",
+            "capability_building": "people_processes", 
+            "people_speed": "people_processes"
         }
     
     def get_results(self) -> Dict:
