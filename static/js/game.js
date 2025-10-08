@@ -530,7 +530,7 @@ class GameController {
                     document.getElementById('login-section').style.display = 'none';
                     this.showSection('video-intro-section');
                     document.getElementById('progress-card').style.display = 'block';
-                    this.updateProgress(10, 'Introduction Video');
+                    this.updateProgress(5, 'Introduction Video');
                     
                     // Initialize intro video
                     initializeIntroVideo();
@@ -701,7 +701,7 @@ class GameController {
         
         // Passer directement à la vidéo intro (intro.mp4)
         this.showSection('harnessing-video-section');
-        this.updateProgress(20, 'Introduction');
+        this.updateProgress(10, 'Introduction');
         
         // Initialize intro video
         initializeHarnessingVideo();
@@ -714,7 +714,7 @@ class GameController {
     startGameAfterVideo() {
         // Hide video and show intro video (intro.mp4)
         this.showSection('harnessing-video-section');
-        this.updateProgress(20, 'Introduction');
+        this.updateProgress(10, 'Introduction');
         
         // Initialize intro video
         initializeHarnessingVideo();
@@ -733,7 +733,7 @@ class GameController {
         
         // Show Phase1 video
         this.showSection('phase1-video-section');
-        this.updateProgress(30, 'Phase 1 - Embedding GenAI');
+        this.updateProgress(20, 'Phase 1 - Embedding GenAI');
         
         // Initialize Phase1 video
         initializePhase1Video();
@@ -749,7 +749,7 @@ class GameController {
         
         // Show Phase2 video
         this.showSection('phase2-video-section');
-        this.updateProgress(50, 'Phase 2 - HR Portfolio Selection');
+        this.updateProgress(35, 'Phase 2 - HR Portfolio Selection');
         
         // Initialize Phase2 video
         initializePhase2Video();
@@ -765,7 +765,7 @@ class GameController {
         
         // Show Phase3 video
         this.showSection('phase3-video-section');
-        this.updateProgress(70, 'Phase 3 - Launching your priority HR and GenAI pilots');
+        this.updateProgress(45, 'Phase 3 - Launching your priority HR and GenAI pilots');
         
         // Initialize Phase3 video
         initializePhase3Video();
@@ -781,7 +781,7 @@ class GameController {
         
         // Show Phase4 video
         this.showSection('phase4-video-section');
-        this.updateProgress(90, 'Phase 4 - Scaling your AI and GenAI solutions');
+        this.updateProgress(55, 'Phase 4 - Scaling your AI and GenAI solutions');
         
         // Initialize Phase4 video
         initializePhase4Video();
@@ -797,7 +797,7 @@ class GameController {
         
         // Show Phase5-1 video
         this.showSection('phase5-1-video-section');
-        this.updateProgress(95, 'Phase 5 - Final Decision');
+        this.updateProgress(65, 'Phase 5 - Final Decision');
         
         // Initialize Phase5-1 video
         initializePhase5_1Video();
@@ -812,7 +812,7 @@ class GameController {
         
         // Show Phase5-2 video
         this.showSection('phase5-2-video-section');
-        this.updateProgress(98, 'Phase 5 - Final Decision');
+        this.updateProgress(70, 'Phase 5 - Final Decision');
         
         // Initialize Phase5-2 video
         initializePhase5_2Video();
@@ -828,7 +828,7 @@ class GameController {
         
         // Show Recap video
         this.showSection('recap-video-section');
-        this.updateProgress(100, 'Game Recap');
+        this.updateProgress(75, 'Game Recap');
         
         // Initialize Recap video
         this.initializeRecapVideo();
@@ -840,7 +840,7 @@ class GameController {
         
         // Show harnessing video
         this.showSection('harnessing-video-section');
-        this.updateProgress(30, 'Vidéo Introduction');
+        this.updateProgress(15, 'Vidéo Introduction');
         
         // Initialize harnessing video
         initializeHarnessingVideo();
@@ -870,7 +870,7 @@ class GameController {
         
         // Go directly to MOT1 game
         this.loadMOT1Choices();
-        this.updateProgress(50, 'Game Start');
+        this.updateProgress(25, 'Game Start');
     }
 
     startPhase2Game() {
@@ -1107,7 +1107,7 @@ class GameController {
                 
                 this.updateScoreDisplay(scoreData);
                 this.showScoreScreen(1, mot1Score, scoreData);
-                this.updateProgress(40, `Phase 1 completed - Score: ${mot1Score}/3`);
+                this.updateProgress(30, `Phase 1 completed - Score: ${mot1Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -1470,7 +1470,7 @@ class GameController {
                 const mot2Score = data.score.scores.mot2;
                 this.updateScoreDisplay(data.score);
                 this.showScoreScreen(2, mot2Score, data.score);
-                this.updateProgress(60, `Phase 2 completed - Score: ${mot2Score}/3`);
+                this.updateProgress(40, `Phase 2 completed - Score: ${mot2Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -1658,7 +1658,7 @@ class GameController {
                 const mot3Score = data.score.scores.mot3;
                 this.updateScoreDisplay(data.score);
                 this.showScoreScreen(3, mot3Score, data.score);
-                this.updateProgress(80, `Phase 3 completed - Score: ${mot3Score}/3`);
+                this.updateProgress(50, `Phase 3 completed - Score: ${mot3Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -1890,7 +1890,7 @@ class GameController {
                 const mot4Score = data.score.scores.mot4;
                 this.updateScoreDisplay(data.score);
                 this.showScoreScreen(4, mot4Score, data.score);
-                this.updateProgress(90, `Phase 4 completed - Score: ${mot4Score}/3`);
+                this.updateProgress(60, `Phase 4 completed - Score: ${mot4Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }

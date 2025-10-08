@@ -187,5 +187,173 @@
         "rapid_deployment"
       ]
     }
+  },
+  {
+    "mot1_choice": "james",
+    "mot2_choices": [
+      "intelligent_recruitment",
+      "virtual_hr_assistant",
+      "training_optimization"
+    ],
+    "mot3_choices": {
+      "people_processes": "hr_ai_training",
+      "platform_partnerships": "tech_partnerships",
+      "policies_practices": "performance_metrics"
+    },
+    "mot4_choices": [
+      "change_management"
+    ],
+    "mot5_choice": "capability_building",
+    "total_score": 10,
+    "stars": 2,
+    "mot_scores": {
+      "mot1": 2,
+      "mot2": 2,
+      "mot3": 3,
+      "mot4": 1,
+      "mot5": 2
+    },
+    "unlocked_enablers": [
+      "technical_foundation_setup",
+      "personalized_training",
+      "kpi_definition",
+      "change_adoption",
+      "candidate_matching",
+      "vendor_relationships",
+      "hr_ai_competencies",
+      "hr_ai_training_academy",
+      "value_based_governance",
+      "long_term_roadmap",
+      "genai_platform_partnership",
+      "employee_support"
+    ],
+    "unlocked_enablers_by_category": {
+      "platform_partnerships": [
+        "candidate_matching",
+        "technical_foundation_setup",
+        "vendor_relationships",
+        "genai_platform_partnership"
+      ],
+      "policies_practices": [
+        "kpi_definition"
+      ],
+      "people_processes": [
+        "personalized_training",
+        "change_adoption",
+        "value_based_governance",
+        "hr_ai_competencies",
+        "hr_ai_training_academy",
+        "employee_support",
+        "long_term_roadmap"
+      ]
+    },
+    "enablers_by_phase": {
+      "phase1": [
+        "technical_foundation_setup",
+        "genai_platform_partnership"
+      ],
+      "phase2": [
+        "employee_support",
+        "personalized_training",
+        "candidate_matching"
+      ],
+      "phase3": [
+        "vendor_relationships",
+        "kpi_definition",
+        "hr_ai_competencies"
+      ],
+      "phase4": [
+        "change_adoption"
+      ],
+      "phase5": [
+        "value_based_governance",
+        "long_term_roadmap",
+        "hr_ai_training_academy"
+      ]
+    }
+  },
+  {
+    "mot1_choice": "james",
+    "mot2_choices": [
+      "intelligent_recruitment",
+      "virtual_hr_assistant",
+      "training_optimization"
+    ],
+    "mot3_choices": {
+      "people_processes": "hr_ai_training",
+      "platform_partnerships": "tech_partnerships",
+      "policies_practices": "performance_metrics"
+    },
+    "mot4_choices": [
+      "change_management"
+    ],
+    "mot5_choice": "capability_building",
+    "total_score": 10,
+    "stars": 2,
+    "mot_scores": {
+      "mot1": 2,
+      "mot2": 2,
+      "mot3": 3,
+      "mot4": 1,
+      "mot5": 2
+    },
+    "unlocked_enablers": [
+      "technical_foundation_setup",
+      "personalized_training",
+      "kpi_definition",
+      "change_adoption",
+      "candidate_matching",
+      "vendor_relationships",
+      "hr_ai_competencies",
+      "hr_ai_training_academy",
+      "value_based_governance",
+      "long_term_roadmap",
+      "genai_platform_partnership",
+      "employee_support"
+    ],
+    "unlocked_enablers_by_category": {
+      "platform_partnerships": [
+        "candidate_matching",
+        "technical_foundation_setup",
+        "vendor_relationships",
+        "genai_platform_partnership"
+      ],
+      "policies_practices": [
+        "kpi_definition"
+      ],
+      "people_processes": [
+        "personalized_training",
+        "change_adoption",
+        "value_based_governance",
+        "hr_ai_competencies",
+        "hr_ai_training_academy",
+        "employee_support",
+        "long_term_roadmap"
+      ]
+    },
+    "enablers_by_phase": {
+      "phase1": [
+        "technical_foundation_setup",
+        "genai_platform_partnership"
+      ],
+      "phase2": [
+        "employee_support",
+        "personalized_training",
+        "candidate_matching"
+      ],
+      "phase3": [
+        "vendor_relationships",
+        "kpi_definition",
+        "hr_ai_competencies"
+      ],
+      "phase4": [
+        "change_adoption"
+      ],
+      "phase5": [
+        "value_based_governance",
+        "long_term_roadmap",
+        "hr_ai_training_academy"
+      ]
+    }
   }
 ]
