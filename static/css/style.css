@@ -2214,12 +2214,13 @@ body {
 
 /* Score Screen Modal Styles (Original Fullscreen) */
 .score-screen-content {
-    height: 100vh;
+    min-height: 100vh;
     background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    padding-bottom: 1rem;
 }
 
 .score-screen-content * {
@@ -2232,10 +2233,16 @@ body {
 }
 
 .score-header {
-    padding: 2rem 3rem;
+    padding: 1.5rem 2rem;
     text-align: center;
     position: relative;
     z-index: 2;
+}
+
+@media (max-height: 800px) {
+    .score-header {
+        padding: 1rem 2rem;
+    }
 }
 
 .moment-score-label {
@@ -2322,64 +2329,6 @@ body {
     margin: 0;
 }
 
-.progress-summary {
-    padding: 2rem 3rem;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-    background: transparent;
-}
-
-.progress-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 1rem;
-}
-
-.progress-squares {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin: 1rem 0;
-    background: transparent;
-}
-
-.progress-square {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 1.2rem;
-    position: relative;
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.progress-square.completed {
-    background: rgba(255, 255, 255, 0.9);
-    color: #667eea;
-    border-color: rgba(255, 255, 255, 0.9);
-}
-
-.progress-square.current {
-    background: rgba(255, 215, 0, 0.9);
-    color: #333;
-    border-color: rgba(255, 215, 0, 0.9);
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
 
 .score-footer {
     padding: 2rem 3rem;
@@ -2801,6 +2750,47 @@ body {
 .alert-danger {
     background: linear-gradient(135deg, #ef4444, #dc2626);
     color: white;
+}
+
+/* Responsive adjustments for small screens (14-inch laptops) */
+@media (max-height: 800px) {
+    .score-header {
+        padding: 1rem 2rem;
+    }
+    
+    .moment-title {
+        font-size: 1.5rem;
+    }
+    
+    .score-title {
+        font-size: 2rem;
+        margin: 0 0 1rem 0;
+    }
+    
+    .score-star {
+        font-size: 3rem;
+    }
+    
+    .score-stars {
+        margin: 1rem 0;
+    }
+    
+    .score-message {
+        margin: 1rem 0;
+    }
+    
+    .score-message p {
+        font-size: 1rem;
+    }
+    
+    .score-footer {
+        padding: 1rem 2rem;
+    }
+    
+    .score-footer .btn-primary {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+    }
 }
 
 .alert-warning {

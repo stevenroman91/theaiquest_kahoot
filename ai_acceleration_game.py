@@ -333,14 +333,14 @@ class AIAccelerationGame:
             },
             
             "mot5_hr_deployment_choices": {
-                "genai_for_all": Choice(
-                    id="genai_for_all",
-                    title="GenAI for all",
-                    description="GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development.",
-                    enablers_1_star=["organization_wide_ai", "rapid_deployment", "leadership_communication"],  # 1 étoile = 3 ENABLERS
-                    enablers_2_stars=["organization_wide_ai", "rapid_deployment", "leadership_communication"],  # 2 étoiles = 3 ENABLERS
-                    enablers_3_stars=["organization_wide_ai", "rapid_deployment", "leadership_communication"]  # 3 étoiles = 3 ENABLERS
-                ),
+            "genai_for_all": Choice(
+                id="genai_for_all",
+                title="GenAI for all",
+                description="GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development.",
+                enablers_1_star=["organization_wide_ai", "rapid_deployment"],  # 1 étoile = 2 ENABLERS
+                enablers_2_stars=["organization_wide_ai", "rapid_deployment"],  # 2 étoiles = 2 ENABLERS
+                enablers_3_stars=["organization_wide_ai", "rapid_deployment"]  # 3 étoiles = 2 ENABLERS
+            ),
                 "capability_building": Choice(
                     id="capability_building", 
                     title="Continuous capability building",
@@ -624,7 +624,7 @@ class AIAccelerationGame:
             
             if matches >= 4:
                 return 3
-            elif matches >= 2:
+            elif matches == 3:
                 return 2
             else:
                 return 1
