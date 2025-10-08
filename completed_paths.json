@@ -1,256 +1,76 @@
 [
   {
-    "mot1_choice": "james",
-    "mot2_choices": [
-      "intelligent_recruitment",
-      "virtual_hr_assistant",
-      "training_optimization"
-    ],
-    "mot3_choices": {
-      "people_processes": "hr_ai_training",
-      "platform_partnerships": "tech_partnerships",
-      "policies_practices": "performance_metrics"
-    },
-    "mot4_choices": [
-      "tech_stack_data_pipelines",
-      "business_sponsors",
-      "change_management",
-      "risk_mitigation_plan"
-    ],
-    "mot5_choice": "capability_building",
-    "total_score": 12,
-    "stars": 2,
-    "mot_scores": {
-      "mot1": 2,
-      "mot2": 2,
-      "mot3": 3,
-      "mot4": 3,
-      "mot5": 2
-    },
-    "unlocked_enablers": [
-      "technical_foundation_setup",
-      "personalized_training",
-      "data_pipeline_automation",
-      "kpi_definition",
-      "candidate_matching",
-      "business_alignment",
-      "change_adoption",
-      "vendor_relationships",
-      "risk_management",
-      "hr_ai_competencies",
-      "hr_ai_training_academy",
-      "value_based_governance",
-      "long_term_roadmap",
-      "genai_platform_partnership",
-      "employee_support"
-    ],
-    "unlocked_enablers_by_category": {
-      "platform_partnerships": [
-        "technical_foundation_setup",
-        "data_pipeline_automation",
-        "candidate_matching",
-        "vendor_relationships",
-        "genai_platform_partnership"
-      ],
-      "policies_practices": [
-        "kpi_definition",
-        "risk_management"
-      ],
-      "people_processes": [
-        "personalized_training",
-        "business_alignment",
-        "change_adoption",
-        "value_based_governance",
-        "hr_ai_competencies",
-        "hr_ai_training_academy",
-        "employee_support",
-        "long_term_roadmap"
-      ]
-    },
-    "enablers_by_phase": {
-      "phase1": [
-        "technical_foundation_setup",
-        "genai_platform_partnership"
-      ],
-      "phase2": [
-        "employee_support",
-        "personalized_training",
-        "candidate_matching"
-      ],
-      "phase3": [
-        "vendor_relationships",
-        "kpi_definition",
-        "hr_ai_competencies"
-      ],
-      "phase4": [
-        "business_alignment",
-        "data_pipeline_automation",
-        "risk_management",
-        "change_adoption"
-      ],
-      "phase5": [
-        "value_based_governance",
-        "long_term_roadmap",
-        "hr_ai_training_academy"
-      ]
-    }
-  },
-  {
     "mot1_choice": "elena",
     "mot2_choices": [
       "intelligent_recruitment",
-      "training_optimization",
-      "sentiment_analysis"
+      "virtual_hr_assistant",
+      "training_optimization"
     ],
     "mot3_choices": {
-      "people_processes": "hr_ai_training",
+      "policies_practices": "ai_ethics_charter",
       "platform_partnerships": "tech_partnerships",
-      "policies_practices": "performance_metrics"
+      "people_processes": "hr_ai_training"
     },
     "mot4_choices": [
-      "tech_stack_data_pipelines",
-      "change_management",
-      "risk_mitigation_plan",
-      "business_sponsors"
+      "business_sponsors",
+      "internal_mobility",
+      "ceo_video_series",
+      "tech_stack_data_pipelines"
     ],
-    "mot5_choice": "genai_for_all",
-    "total_score": 13,
+    "mot5_choice": "capability_building",
+    "total_score": 10,
     "stars": 2,
     "mot_scores": {
       "mot1": 3,
-      "mot2": 3,
-      "mot3": 3,
-      "mot4": 3,
-      "mot5": 1
+      "mot2": 2,
+      "mot3": 2,
+      "mot4": 1,
+      "mot5": 2
     },
     "unlocked_enablers": [
-      "organization_wide_ai",
-      "personalized_training",
       "data_pipeline_automation",
-      "kpi_definition",
+      "hr_ai_competencies",
+      "talent_retention",
+      "ethical_framework",
+      "vendor_relationships",
       "candidate_matching",
       "business_alignment",
+      "value_based_governance",
+      "employee_support",
+      "personalized_training",
       "strategic_vision_mapping",
-      "hr_function_diagnostic",
-      "change_adoption",
-      "vendor_relationships",
-      "rapid_deployment",
-      "risk_management",
-      "hr_ai_competencies",
-      "sentiment_detection"
+      "hr_ai_training_academy",
+      "leadership_communication",
+      "long_term_roadmap",
+      "hr_function_diagnostic"
     ],
     "unlocked_enablers_by_category": {
       "platform_partnerships": [
-        "vendor_relationships",
         "data_pipeline_automation",
+        "vendor_relationships",
         "candidate_matching"
       ],
       "policies_practices": [
-        "kpi_definition",
+        "ethical_framework",
+        "value_based_governance",
         "strategic_vision_mapping",
-        "hr_function_diagnostic",
-        "risk_management",
-        "sentiment_detection"
-      ],
-      "people_processes": [
-        "organization_wide_ai",
-        "personalized_training",
-        "business_alignment",
-        "change_adoption",
-        "rapid_deployment",
-        "hr_ai_competencies"
-      ]
-    },
-    "enablers_by_phase": {
-      "phase1": [
-        "hr_function_diagnostic",
-        "strategic_vision_mapping"
-      ],
-      "phase2": [
-        "personalized_training",
-        "candidate_matching",
-        "sentiment_detection"
-      ],
-      "phase3": [
-        "vendor_relationships",
-        "kpi_definition",
-        "hr_ai_competencies"
-      ],
-      "phase4": [
-        "business_alignment",
-        "data_pipeline_automation",
-        "risk_management",
-        "change_adoption"
-      ],
-      "phase5": [
-        "organization_wide_ai",
-        "rapid_deployment"
-      ]
-    }
-  },
-  {
-    "mot1_choice": "james",
-    "mot2_choices": [
-      "intelligent_recruitment",
-      "virtual_hr_assistant",
-      "training_optimization"
-    ],
-    "mot3_choices": {
-      "people_processes": "hr_ai_training",
-      "platform_partnerships": "tech_partnerships",
-      "policies_practices": "performance_metrics"
-    },
-    "mot4_choices": [
-      "change_management"
-    ],
-    "mot5_choice": "capability_building",
-    "total_score": 10,
-    "stars": 2,
-    "mot_scores": {
-      "mot1": 2,
-      "mot2": 2,
-      "mot3": 3,
-      "mot4": 1,
-      "mot5": 2
-    },
-    "unlocked_enablers": [
-      "technical_foundation_setup",
-      "personalized_training",
-      "kpi_definition",
-      "change_adoption",
-      "candidate_matching",
-      "vendor_relationships",
-      "hr_ai_competencies",
-      "hr_ai_training_academy",
-      "value_based_governance",
-      "long_term_roadmap",
-      "genai_platform_partnership",
-      "employee_support"
-    ],
-    "unlocked_enablers_by_category": {
-      "platform_partnerships": [
-        "candidate_matching",
-        "technical_foundation_setup",
-        "vendor_relationships",
-        "genai_platform_partnership"
-      ],
-      "policies_practices": [
-        "kpi_definition"
-      ],
-      "people_processes": [
-        "personalized_training",
-        "change_adoption",
-        "value_based_governance",
-        "hr_ai_competencies",
         "hr_ai_training_academy",
+        "leadership_communication",
+        "long_term_roadmap",
+        "hr_function_diagnostic"
+      ],
+      "people_processes": [
+        "hr_ai_competencies",
+        "talent_retention",
+        "business_alignment",
         "employee_support",
-        "long_term_roadmap"
+        "personalized_training"
       ]
     },
     "enablers_by_phase": {
       "phase1": [
-        "technical_foundation_setup",
-        "genai_platform_partnership"
+        "strategic_vision_mapping",
+        "hr_function_diagnostic"
       ],
       "phase2": [
         "employee_support",
@@ -258,101 +78,20 @@
         "candidate_matching"
       ],
       "phase3": [
-        "vendor_relationships",
-        "kpi_definition",
-        "hr_ai_competencies"
-      ],
-      "phase4": [
-        "change_adoption"
-      ],
-      "phase5": [
-        "value_based_governance",
-        "long_term_roadmap",
-        "hr_ai_training_academy"
-      ]
-    }
-  },
-  {
-    "mot1_choice": "james",
-    "mot2_choices": [
-      "intelligent_recruitment",
-      "virtual_hr_assistant",
-      "training_optimization"
-    ],
-    "mot3_choices": {
-      "people_processes": "hr_ai_training",
-      "platform_partnerships": "tech_partnerships",
-      "policies_practices": "performance_metrics"
-    },
-    "mot4_choices": [
-      "change_management"
-    ],
-    "mot5_choice": "capability_building",
-    "total_score": 10,
-    "stars": 2,
-    "mot_scores": {
-      "mot1": 2,
-      "mot2": 2,
-      "mot3": 3,
-      "mot4": 1,
-      "mot5": 2
-    },
-    "unlocked_enablers": [
-      "technical_foundation_setup",
-      "personalized_training",
-      "kpi_definition",
-      "change_adoption",
-      "candidate_matching",
-      "vendor_relationships",
-      "hr_ai_competencies",
-      "hr_ai_training_academy",
-      "value_based_governance",
-      "long_term_roadmap",
-      "genai_platform_partnership",
-      "employee_support"
-    ],
-    "unlocked_enablers_by_category": {
-      "platform_partnerships": [
-        "candidate_matching",
-        "technical_foundation_setup",
-        "vendor_relationships",
-        "genai_platform_partnership"
-      ],
-      "policies_practices": [
-        "kpi_definition"
-      ],
-      "people_processes": [
-        "personalized_training",
-        "change_adoption",
-        "value_based_governance",
         "hr_ai_competencies",
-        "hr_ai_training_academy",
-        "employee_support",
-        "long_term_roadmap"
-      ]
-    },
-    "enablers_by_phase": {
-      "phase1": [
-        "technical_foundation_setup",
-        "genai_platform_partnership"
-      ],
-      "phase2": [
-        "employee_support",
-        "personalized_training",
-        "candidate_matching"
-      ],
-      "phase3": [
-        "vendor_relationships",
-        "kpi_definition",
-        "hr_ai_competencies"
+        "ethical_framework",
+        "vendor_relationships"
       ],
       "phase4": [
-        "change_adoption"
+        "leadership_communication",
+        "talent_retention",
+        "business_alignment",
+        "data_pipeline_automation"
       ],
       "phase5": [
-        "value_based_governance",
         "long_term_roadmap",
-        "hr_ai_training_academy"
+        "hr_ai_training_academy",
+        "value_based_governance"
       ]
     }
   }

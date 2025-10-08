@@ -337,9 +337,9 @@ class AIAccelerationGame:
                 id="genai_for_all",
                 title="GenAI for all",
                 description="GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development.",
-                enablers_1_star=["organization_wide_ai", "rapid_deployment"],  # 1 étoile = 2 ENABLERS
-                enablers_2_stars=["organization_wide_ai", "rapid_deployment"],  # 2 étoiles = 2 ENABLERS
-                enablers_3_stars=["organization_wide_ai", "rapid_deployment"]  # 3 étoiles = 2 ENABLERS
+                enablers_1_star=["leadership_communication", "rapid_deployment"],  # 1 étoile = 2 ENABLERS (1 violet + 1 vert)
+                enablers_2_stars=["leadership_communication", "rapid_deployment"],  # 2 étoiles = 2 ENABLERS (1 violet + 1 vert)
+                enablers_3_stars=["leadership_communication", "rapid_deployment"]  # 3 étoiles = 2 ENABLERS (1 violet + 1 vert)
             ),
                 "capability_building": Choice(
                     id="capability_building", 
@@ -703,10 +703,13 @@ class AIAccelerationGame:
         
         # Phase 2 - HR Solution choices
         phase2_score = self.calculate_mot_score(2)
+        print(f"DEBUG _calculate_enablers Phase 2: mot2_choices = {self.current_path.mot2_choices}")
+        print(f"DEBUG _calculate_enablers Phase 2: phase2_score = {phase2_score}")
         phase2_enablers = []
         for solution_id in self.current_path.mot2_choices:
             choice = self.game_data["mot2_hr_solutions"][solution_id]
             choice_enablers = self._get_enablers_for_score(choice, phase2_score)
+            print(f"DEBUG _calculate_enablers Phase 2: Choice '{solution_id}' unlocks {choice_enablers}")
             if choice_enablers:
                 category = choice_categories.get(solution_id, "people_processes")
                 # Ajouter seulement les nouveaux ENABLERS pour éviter les doublons
@@ -716,6 +719,8 @@ class AIAccelerationGame:
                 phase2_enablers.extend(choice_enablers)
         # Mettre à jour la phase 2
         enablers_by_phase["phase2"] = list(set(phase2_enablers))
+        print(f"DEBUG _calculate_enablers Phase 2: Final phase2_enablers = {enablers_by_phase['phase2']}")
+        print(f"DEBUG _calculate_enablers Phase 2: enablers_by_category = {enablers_by_category}")
         
         # Phase 3 - HR Facilitator choices (déjà organisés par catégorie)
         phase3_score = self.calculate_mot_score(3)
@@ -754,11 +759,23 @@ class AIAccelerationGame:
             phase_enablers = self._get_enablers_for_score(choice, phase5_score)
             
             if phase_enablers:
-                category = choice_categories.get(self.current_path.mot5_choice, "people_processes")
-                # Ajouter seulement les nouveaux ENABLERS pour éviter les doublons
-                for enabler in phase_enablers:
-                    if enabler not in enablers_by_category[category]:
-                        enablers_by_category[category].append(enabler)
+                # Logique spéciale pour genai_for_all qui active des ENABLERS dans plusieurs catégories
+                if self.current_path.mot5_choice == "genai_for_all":
+                    # Mapping spécifique pour genai_for_all
+                    enabler_categories = {
+                        "leadership_communication": "policies_practices",  # Violet
+                        "rapid_deployment": "people_processes"  # Vert
+                    }
+                    for enabler in phase_enablers:
+                        enabler_category = enabler_categories.get(enabler, "people_processes")
+                        if enabler not in enablers_by_category[enabler_category]:
+                            enablers_by_category[enabler_category].append(enabler)
+                else:
+                    # Logique normale pour les autres choix
+                    category = choice_categories.get(self.current_path.mot5_choice, "people_processes")
+                    for enabler in phase_enablers:
+                        if enabler not in enablers_by_category[category]:
+                            enablers_by_category[category].append(enabler)
                 enablers_by_phase["phase5"] = phase_enablers
         
         # Stocker les enablers débloqués par catégorie (sans doublons)
@@ -830,6 +847,7 @@ class AIAccelerationGame:
             "training_optimization": "people_processes",
             "sentiment_analysis": "policies_practices",
             "process_automation": "people_processes",
+            "hr_automation": "people_processes",
             "performance_prediction": "policies_practices",
             
             # Phase 4 - HR Scaling
@@ -838,15 +856,15 @@ class AIAccelerationGame:
             "ai_ethics_officer": "policies_practices",
             "risk_mitigation_plan": "policies_practices",
             "internal_mobility": "people_processes",
-            "data_collection_strategy": "platform_partnerships",
-            "ceo_video_series": "people_processes",
+            "data_collection_strategy": "platform_partnerships", # Corrected: data strategy is platform
+            "ceo_video_series": "policies_practices", # Corrected: CEO communication is policies
             "change_management": "people_processes",
             "business_sponsors": "people_processes",
             
             # Phase 5 - HR Capabilities
             "genai_for_all": "people_processes",
-            "capability_building": "people_processes", 
-            "people_speed": "people_processes"
+            "capability_building": "policies_practices", # Corrected: capability building is policies
+            "people_speed": "platform_partnerships" # Corrected: people speed is platform
         }
     
     def get_results(self) -> Dict:
@@ -895,6 +913,37 @@ class AIAccelerationGame:
             "total": total,
             "max_possible": len(scores) * 3
         }
+    
+    def get_all_enablers_by_phase_and_category(self) -> Dict:
+        """Retourne tous les ENABLERS possibles organisés par phase et par catégorie pour l'affichage pédagogique"""
+        all_enablers = {
+            "phase1": {
+                "platform_partnerships": ["technical_foundation_setup", "genai_platform_partnership"],
+                "policies_practices": ["strategic_vision_mapping", "hr_function_diagnostic"],
+                "people_processes": ["rapid_deployment", "bottom_up_innovation"]
+            },
+            "phase2": {
+                "platform_partnerships": ["candidate_matching"],
+                "policies_practices": ["sentiment_detection"],
+                "people_processes": ["personalized_training", "employee_support", "process_automation"]
+            },
+            "phase3": {
+                "platform_partnerships": ["vendor_relationships", "system_connectivity", "cloud_migration"],
+                "policies_practices": ["ethical_framework", "kpi_definition", "data_protection"],
+                "people_processes": ["hr_ai_competencies", "role_evolution", "change_communication"]
+            },
+            "phase4": {
+                "platform_partnerships": ["api_connectivity", "data_pipeline_automation", "data_strategy"],
+                "policies_practices": ["ethics_oversight", "risk_management", "leadership_communication"],
+                "people_processes": ["talent_retention", "change_adoption", "business_alignment"]
+            },
+            "phase5": {
+                "platform_partnerships": [],
+                "policies_practices": ["value_based_governance", "leadership_communication", "long_term_roadmap"],
+                "people_processes": ["organization_wide_ai", "rapid_deployment", "hr_ai_training_academy", "talent_recruitment", "genai_hub"]
+            }
+        }
+        return all_enablers
     
     def save_path(self):
         """Sauvegarde le chemin actuel"""

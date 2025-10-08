@@ -1529,6 +1529,24 @@ class GameController {
             }
         };
 
+        // Define specific icons for each choice
+        const choiceIcons = {
+            // People & Processes
+            'hr_ai_training': 'fas fa-graduation-cap',
+            'hr_role_redefinition': 'fas fa-user-cog',
+            'cultural_change': 'fas fa-comments',
+            
+            // Platform & Partnerships
+            'system_integration': 'fas fa-plug',
+            'tech_partnerships': 'fas fa-handshake',
+            'cloud_infrastructure': 'fas fa-cloud',
+            
+            // Policies & Practices
+            'ai_ethics_charter': 'fas fa-balance-scale',
+            'data_governance': 'fas fa-database',
+            'performance_metrics': 'fas fa-chart-line'
+        };
+
         // Create matrix structure
         Object.entries(choices).forEach(([category, categoryChoices]) => {
             const categoryDiv = document.createElement('div');
@@ -1542,10 +1560,12 @@ class GameController {
                 </div>
                     ${categoryChoices.map(choice => `
                     <div class="matrix-choice" data-choice-id="${choice.id}" data-category="${category}" onclick="gameController.selectMOT3Choice('${choice.id}', '${category}')">
-                        <div class="choice-icon">
-                            <i class="fas fa-cog"></i>
+                        <div class="choice-header">
+                            <div class="choice-icon ${category}">
+                                <i class="${choiceIcons[choice.id] || 'fas fa-cog'}"></i>
                                     </div>
                         <div class="choice-title">${choice.title}</div>
+                        </div>
                         <div class="choice-description">${choice.description}</div>
                         </div>
                     `).join('')}
@@ -1702,20 +1722,59 @@ class GameController {
         const container = document.getElementById('phase4-choices');
         container.innerHTML = '';
 
-        // Define category colors and icons
-        const categoryStyles = {
-            'platform_partnerships': {
-                color: '#8b5cf6', // Purple
-                icon: 'fas fa-handshake'
-            },
-            'policies_practices': {
-                color: '#06b6d4', // Blue
-                icon: 'fas fa-shield-alt'
-            },
-            'people_processes': {
-                color: '#f59e0b', // Yellow
-                icon: 'fas fa-users'
-            }
+        // Define category colors (consistent with dashboard)
+        const categoryColors = {
+            'platform_partnerships': '#3b82f6', // Blue
+            'policies_practices': '#8b5cf6', // Purple
+            'people_processes': '#10b981' // Green
+        };
+
+        // Get specific icons from allEnablersByCategory
+        const allEnablersByCategory = {
+            "platform_partnerships": [
+                { id: "genai_platform_partnership", title: "GenAI Platform Partnership", description: "Partenariat avec une plateforme GenAI", icon: "fas fa-handshake" },
+                { id: "technical_foundation_setup", title: "Technical Foundation Setup", description: "Mise en place des fondations techniques", icon: "fas fa-cogs" },
+                { id: "candidate_matching", title: "Candidate Matching", description: "Correspondance candidats-posts", icon: "fas fa-user-check" },
+                { id: "api_connectivity", title: "API Connectivity", description: "Connectivité API", icon: "fas fa-plug" },
+                { id: "vendor_relationships", title: "Vendor Relationships", description: "Relations fournisseurs", icon: "fas fa-handshake" },
+                { id: "system_connectivity", title: "System Connectivity", description: "Connectivité système", icon: "fas fa-link" },
+                { id: "cloud_infrastructure", title: "Cloud Infrastructure", description: "Infrastructure cloud", icon: "fas fa-cloud" },
+                { id: "data_pipeline_automation", title: "Data Pipeline Automation", description: "Automatisation des pipelines de données", icon: "fas fa-stream" },
+                { id: "cloud_migration", title: "Cloud Migration", description: "Migration vers le cloud", icon: "fas fa-cloud-upload-alt" },
+                { id: "data_strategy", title: "Data Strategy", description: "Stratégie de données", icon: "fas fa-database" }
+            ],
+            "policies_practices": [
+                { id: "strategic_vision_mapping", title: "Strategic Vision Mapping", description: "Cartographie de la vision stratégique", icon: "fas fa-brain" },
+                { id: "hr_function_diagnostic", title: "HR Function Diagnostic", description: "Diagnostic des fonctions RH", icon: "fas fa-search" },
+                { id: "sentiment_detection", title: "Sentiment Detection", description: "Détection de sentiment", icon: "fas fa-heart" },
+                { id: "ethical_framework", title: "Ethical Framework", description: "Cadre éthique", icon: "fas fa-balance-scale" },
+                { id: "kpi_definition", title: "KPI Definition", description: "Définition des KPI", icon: "fas fa-bullseye" },
+                { id: "ethics_oversight", title: "Ethics Oversight", description: "Surveillance éthique", icon: "fas fa-eye" },
+                { id: "risk_management", title: "Risk Management", description: "Gestion des risques", icon: "fas fa-shield-alt" },
+                { id: "ai_ethics_charter", title: "AI Ethics Charter", description: "Charte éthique IA", icon: "fas fa-scroll" },
+                { id: "leadership_communication", title: "Leadership Communication", description: "Communication du leadership", icon: "fas fa-bullhorn" }
+            ],
+            "people_processes": [
+                { id: "rapid_deployment", title: "Rapid Deployment", description: "Déploiement rapide", icon: "fas fa-rocket" },
+                { id: "bottom_up_innovation", title: "Bottom-up Innovation", description: "Innovation bottom-up", icon: "fas fa-lightbulb" },
+                { id: "personalized_training", title: "Personalized Training", description: "Formation personnalisée", icon: "fas fa-graduation-cap" },
+                { id: "employee_support", title: "Employee Support", description: "Support employés", icon: "fas fa-hands-helping" },
+                { id: "process_automation", title: "Process Automation", description: "Automatisation des processus", icon: "fas fa-cogs" },
+                { id: "hr_ai_competencies", title: "HR AI Competencies", description: "Compétences RH en IA", icon: "fas fa-user-graduate" },
+                { id: "role_evolution", title: "Role Evolution", description: "Évolution des rôles", icon: "fas fa-user-tag" },
+                { id: "cultural_change", title: "Cultural Change", description: "Changement culturel", icon: "fas fa-theater-masks" },
+                { id: "change_adoption", title: "Change Adoption", description: "Adoption du changement", icon: "fas fa-sync-alt" },
+                { id: "business_alignment", title: "Business Alignment", description: "Alignement métier", icon: "fas fa-bullseye" },
+                { id: "talent_retention", title: "Talent Retention", description: "Rétention des talents", icon: "fas fa-heart" },
+                { id: "organization_wide_ai", title: "Organization-wide AI", description: "IA organisationnelle", icon: "fas fa-building" },
+                { id: "long_term_roadmap", title: "Long-term Roadmap", description: "Feuille de route long terme", icon: "fas fa-road" },
+                { id: "value_based_governance", title: "Value-based Governance", description: "Gouvernance basée sur la valeur", icon: "fas fa-balance-scale" },
+                { id: "hr_ai_training_academy", title: "HR AI Training Academy", description: "Académie de formation RH en IA", icon: "fas fa-university" },
+                { id: "change_communication", title: "Change Communication", description: "Communication du changement", icon: "fas fa-comments" },
+                { id: "genai_hub", title: "GenAI Hub", description: "Hub GenAI", icon: "fas fa-building" },
+                { id: "internal_mobility", title: "Internal Mobility", description: "Mobilité interne", icon: "fas fa-exchange-alt" },
+                { id: "business_sponsors", title: "Business Sponsors", description: "Sponsors métier", icon: "fas fa-handshake" }
+            ]
         };
 
         // Create 3x3 matrix directly (no grouping by category)
@@ -1726,11 +1785,25 @@ class GameController {
             choiceDiv.dataset.cost = choice.cost;
             choiceDiv.onclick = () => gameController.selectMOT4Choice(choice.id, choice.cost);
             
-            const style = categoryStyles[choice.category] || { color: '#6b7280', icon: 'fas fa-cog' };
+            // Find the specific icon for this choice's enabler
+            let specificIcon = 'fas fa-cog'; // Default fallback
+            const categoryEnablers = allEnablersByCategory[choice.category] || [];
+            console.log(`DEBUG: choice=${choice.id}, category=${choice.category}, enabler_id=${choice.enabler_id}`);
+            console.log(`DEBUG: categoryEnablers=`, categoryEnablers);
+            const enablerInfo = categoryEnablers.find(e => e.id === choice.enabler_id);
+            console.log(`DEBUG: enablerInfo=`, enablerInfo);
+            if (enablerInfo) {
+                specificIcon = enablerInfo.icon;
+                console.log(`✅ Found icon for ${choice.id}: ${specificIcon}`);
+            } else {
+                console.log(`❌ No icon found for ${choice.id} with enabler_id=${choice.enabler_id}`);
+            }
+            
+            const categoryColor = categoryColors[choice.category] || '#6b7280';
             
             choiceDiv.innerHTML = `
-                <div class="choice-icon" style="color: ${style.color};">
-                    <i class="${style.icon}"></i>
+                <div class="choice-icon ${choice.category}">
+                    <i class="${specificIcon}"></i>
                         </div>
                 <div class="choice-title">${choice.title}</div>
                 <div class="choice-description">${choice.description}</div>
@@ -2216,9 +2289,9 @@ class GameController {
                     // Mettre à jour les carrés de phases
                     this.updateMOTSquares(dashboardData.current_score.scores, dashboardData.current_score.total);
                     
-                    // Mettre à jour les ENABLERS par catégorie
-                    console.log('unlocked_enablers_by_category:', dashboardData.unlocked_enablers_by_category);
-                    this.updateEnablersCategories(dashboardData.unlocked_enablers_by_category);
+                    // Mettre à jour les ENABLERS par catégorie avec la nouvelle interface pédagogique
+                    console.log('pedagogical_data:', dashboardData.pedagogical_data);
+                    this.updatePedagogicalCategories(dashboardData.pedagogical_data);
             
             // Mettre à jour le message d'impact
             document.getElementById('impact-message').innerHTML = `<p>${dashboardData.impact_message}</p>`;
@@ -2261,88 +2334,62 @@ class GameController {
         });
     }
     
-    updateEnablersCategories(enablersByCategory) {
-        const enablersCategories = document.getElementById('enablers-categories');
-        enablersCategories.innerHTML = '';
+    updatePedagogicalCategories(pedagogicalData) {
+        const pedagogicalCategories = document.getElementById('pedagogical-categories');
+        pedagogicalCategories.innerHTML = '';
         
-                // Définir tous les ENABLERS possibles par catégorie avec leurs icônes
-                const allEnablersByCategory = {
-                    "platform_partnerships": [
-                        { id: "genai_platform_partnership", title: "GenAI Platform Partnership", description: "Partenariat avec une plateforme GenAI", icon: "fas fa-handshake" },
-                        { id: "technical_foundation_setup", title: "Technical Foundation Setup", description: "Mise en place des fondations techniques", icon: "fas fa-cogs" },
+        // Déterminer quelles phases sont complétées pour afficher seulement leurs colonnes
+        const completedPhases = this.getCompletedPhases();
+        console.log('Completed phases:', completedPhases);
+        
+        // Mettre à jour les en-têtes de phase
+        this.updatePhaseHeaders(completedPhases);
+        
+        // Définir tous les ENABLERS possibles avec leurs icônes
+        const allEnablersByCategory = {
+            "platform_partnerships": [
+                { id: "genai_platform_partnership", title: "GenAI Platform Partnership", description: "Partenariat avec une plateforme GenAI", icon: "fas fa-handshake" },
+                { id: "technical_foundation_setup", title: "Technical Foundation Setup", description: "Mise en place des fondations techniques", icon: "fas fa-cogs" },
                 { id: "candidate_matching", title: "Candidate Matching", description: "Correspondance candidats-posts", icon: "fas fa-user-check" },
-                { id: "cv_analysis", title: "CV Analysis", description: "Analyse de CV", icon: "fas fa-file-alt" },
-                { id: "system_connectivity", title: "System Connectivity", description: "Connectivité des systèmes", icon: "fas fa-network-wired" },
-                { id: "data_integration", title: "Data Integration", description: "Intégration des données", icon: "fas fa-database" },
+                { id: "api_connectivity", title: "API Connectivity", description: "Connectivité API", icon: "fas fa-plug" },
                 { id: "vendor_relationships", title: "Vendor Relationships", description: "Relations fournisseurs", icon: "fas fa-handshake" },
-                { id: "technical_expertise", title: "Technical Expertise", description: "Expertise technique", icon: "fas fa-code" },
-                { id: "innovation_access", title: "Innovation Access", description: "Accès à l'innovation", icon: "fas fa-lightbulb" },
-                { id: "cloud_migration", title: "Cloud Migration", description: "Migration cloud", icon: "fas fa-cloud" },
-                { id: "scalability", title: "Scalability", description: "Évolutivité", icon: "fas fa-expand-arrows-alt" },
-                { id: "infrastructure_flexibility", title: "Infrastructure Flexibility", description: "Flexibilité infrastructure", icon: "fas fa-layer-group" },
-                { id: "tech_partnerships", title: "Tech Partnerships", description: "Partenariats technologiques", icon: "fas fa-handshake" },
-                { id: "tech_stack_data_pipelines", title: "Tech Stack Data Pipelines", description: "Pipelines de données", icon: "fas fa-project-diagram" },
-                { id: "data_pipeline_automation", title: "Data Pipeline Automation", description: "Automatisation des pipelines de données", icon: "fas fa-cogs" },
-                { id: "api_connectivity", title: "API Connectivity", description: "Connectivité API", icon: "fas fa-plug" }, // Added for Phase 4
-                { id: "data_strategy", title: "Data Strategy", description: "Stratégie de données", icon: "fas fa-database" } // Moved from people_processes
+                { id: "system_connectivity", title: "System Connectivity", description: "Connectivité système", icon: "fas fa-link" },
+                { id: "cloud_infrastructure", title: "Cloud Infrastructure", description: "Infrastructure cloud", icon: "fas fa-cloud" },
+                { id: "data_pipeline_automation", title: "Data Pipeline Automation", description: "Automatisation des pipelines de données", icon: "fas fa-stream" },
+                { id: "cloud_migration", title: "Cloud Migration", description: "Migration vers le cloud", icon: "fas fa-cloud-upload-alt" },
+                { id: "data_strategy", title: "Data Strategy", description: "Stratégie de données", icon: "fas fa-database" }
             ],
-                    "policies_practices": [
-                        { id: "strategic_vision_mapping", title: "Strategic Vision Mapping", description: "Cartographie de la vision stratégique", icon: "fas fa-brain" },
-                        { id: "hr_function_diagnostic", title: "HR Function Diagnostic", description: "Diagnostic des fonctions RH", icon: "fas fa-search" },
-                        { id: "sentiment_detection", title: "Sentiment Detection", description: "Détection de sentiment", icon: "fas fa-heart" },
-                        { id: "employee_satisfaction", title: "Employee Satisfaction", description: "Satisfaction employés", icon: "fas fa-smile" },
-                        { id: "text_analysis", title: "Text Analysis", description: "Analyse de texte", icon: "fas fa-font" },
-                        { id: "performance_prediction", title: "Performance Prediction", description: "Prédiction de performance", icon: "fas fa-chart-line" },
-                        { id: "ethical_framework", title: "Ethical Framework", description: "Cadre éthique", icon: "fas fa-balance-scale" },
-                        { id: "ai_governance", title: "AI Governance", description: "Gouvernance IA", icon: "fas fa-gavel" },
-                        { id: "responsible_ai", title: "Responsible AI", description: "IA responsable", icon: "fas fa-shield-alt" },
-                        { id: "data_protection", title: "Data Protection", description: "Protection des données", icon: "fas fa-lock" },
-                        { id: "compliance_framework", title: "Compliance Framework", description: "Cadre de conformité", icon: "fas fa-clipboard-check" },
-                        { id: "privacy_management", title: "Privacy Management", description: "Gestion de la confidentialité", icon: "fas fa-user-secret" },
-                        { id: "kpi_definition", title: "KPI Definition", description: "Définition des KPI", icon: "fas fa-bullseye" },
-                        { id: "impact_measurement", title: "Impact Measurement", description: "Mesure d'impact", icon: "fas fa-ruler" },
-                        { id: "performance_tracking", title: "Performance Tracking", description: "Suivi de performance", icon: "fas fa-chart-bar" },
-                        { id: "performance_metrics", title: "Performance Metrics", description: "Métriques de performance", icon: "fas fa-chart-pie" },
-                        { id: "risk_mitigation_plan", title: "Risk Mitigation Plan", description: "Plan d'atténuation des risques", icon: "fas fa-shield-alt" },
-                        { id: "ethics_oversight", title: "Ethics Oversight", description: "Surveillance éthique", icon: "fas fa-eye" },
-                        { id: "risk_management", title: "Risk Management", description: "Gestion des risques", icon: "fas fa-shield-alt" }
+            "policies_practices": [
+                { id: "strategic_vision_mapping", title: "Strategic Vision Mapping", description: "Cartographie de la vision stratégique", icon: "fas fa-brain" },
+                { id: "hr_function_diagnostic", title: "HR Function Diagnostic", description: "Diagnostic des fonctions RH", icon: "fas fa-search" },
+                { id: "sentiment_detection", title: "Sentiment Detection", description: "Détection de sentiment", icon: "fas fa-heart" },
+                { id: "ethical_framework", title: "Ethical Framework", description: "Cadre éthique", icon: "fas fa-balance-scale" },
+                { id: "kpi_definition", title: "KPI Definition", description: "Définition des KPI", icon: "fas fa-bullseye" },
+                { id: "ethics_oversight", title: "Ethics Oversight", description: "Surveillance éthique", icon: "fas fa-eye" },
+                { id: "risk_management", title: "Risk Management", description: "Gestion des risques", icon: "fas fa-shield-alt" },
+                { id: "ai_ethics_charter", title: "AI Ethics Charter", description: "Charte éthique IA", icon: "fas fa-scroll" },
+                { id: "leadership_communication", title: "Leadership Communication", description: "Communication du leadership", icon: "fas fa-bullhorn" }
             ],
-                    "people_processes": [
-                        { id: "bottom_up_innovation", title: "Bottom-up Innovation", description: "Innovation bottom-up", icon: "fas fa-users" },
-                        { id: "employee_support", title: "Employee Support", description: "Support employés", icon: "fas fa-hands-helping" },
-                        { id: "24_7_assistance", title: "24/7 Assistance", description: "Assistance 24/7", icon: "fas fa-clock" },
-                        { id: "chatbot_intelligence", title: "Chatbot Intelligence", description: "Intelligence chatbot", icon: "fas fa-robot" },
-                        { id: "personalized_training", title: "Personalized Training", description: "Formation personnalisée", icon: "fas fa-graduation-cap" },
-                        { id: "need_prediction", title: "Need Prediction", description: "Prédiction des besoins", icon: "fas fa-magic" },
-                        { id: "skill_development", title: "Skill Development", description: "Développement des compétences", icon: "fas fa-brain" },
-                        { id: "efficiency_gains", title: "Efficiency Gains", description: "Gains d'efficacité", icon: "fas fa-tachometer-alt" },
-                        { id: "repetitive_task_reduction", title: "Repetitive Task Reduction", description: "Réduction des tâches répétitives", icon: "fas fa-redo" },
-                        { id: "process_automation", title: "Process Automation", description: "Automatisation des processus", icon: "fas fa-cogs" },
-                        { id: "hr_ai_competencies", title: "HR AI Competencies", description: "Compétences RH en IA", icon: "fas fa-user-graduate" },
-                        { id: "team_upskilling", title: "Team Upskilling", description: "Montée en compétences équipe", icon: "fas fa-users" },
-                        { id: "knowledge_transfer", title: "Knowledge Transfer", description: "Transfert de connaissances", icon: "fas fa-exchange-alt" },
-                        { id: "role_evolution", title: "Role Evolution", description: "Évolution des rôles", icon: "fas fa-user-edit" },
-                        { id: "job_design", title: "Job Design", description: "Conception des postes", icon: "fas fa-briefcase" },
-                        { id: "competency_mapping", title: "Competency Mapping", description: "Cartographie des compétences", icon: "fas fa-map" },
-                        { id: "change_communication", title: "Change Communication", description: "Communication du changement", icon: "fas fa-bullhorn" },
-                        { id: "cultural_transformation", title: "Cultural Transformation", description: "Transformation culturelle", icon: "fas fa-magic" },
-                        { id: "employee_engagement", title: "Employee Engagement", description: "Engagement des employés", icon: "fas fa-heart" },
-                        { id: "workflow_seamlessness", title: "Workflow Seamlessness", description: "Fluidité des processus", icon: "fas fa-stream" },
-                        { id: "internal_mobility", title: "Internal Mobility", description: "Mobilité interne", icon: "fas fa-exchange-alt" },
-                        { id: "business_sponsors", title: "Business Sponsors", description: "Sponsors métier", icon: "fas fa-handshake" },
-                        { id: "change_management", title: "Change Management", description: "Gestion du changement", icon: "fas fa-sync-alt" },
-                        { id: "hr_ai_training", title: "HR AI Training", description: "Formation RH en IA", icon: "fas fa-chalkboard-teacher" },
-                        { id: "change_adoption", title: "Change Adoption", description: "Adoption du changement", icon: "fas fa-sync-alt" },
-                        { id: "talent_retention", title: "Talent Retention", description: "Rétention des talents", icon: "fas fa-users" },
-                        { id: "business_alignment", title: "Business Alignment", description: "Alignement métier", icon: "fas fa-handshake" },
-                        { id: "talent_recruitment", title: "Talent Recruitment", description: "Recrutement de talents", icon: "fas fa-user-plus" }, // Added for Phase 5
-                        { id: "leadership_communication", title: "Leadership Communication", description: "Communication du leadership", icon: "fas fa-bullhorn" }, // Added for Phase 4
-                        { id: "organization_wide_ai", title: "Organization-wide AI", description: "IA organisationnelle", icon: "fas fa-building" }, // Added for Phase 5
-                        { id: "genai_hub", title: "GenAI Hub", description: "Hub GenAI", icon: "fas fa-building" }, // Moved from platform_partnerships
-                        { id: "rapid_deployment", title: "Rapid Deployment", description: "Déploiement rapide", icon: "fas fa-rocket" }, // Added for Phase 5 genai_for_all
-                        { id: "long_term_roadmap", title: "Long-term Roadmap", description: "Feuille de route long terme", icon: "fas fa-road" }, // Moved from policies_practices
-                        { id: "value_based_governance", title: "Value-based Governance", description: "Gouvernance basée sur la valeur", icon: "fas fa-balance-scale" }, // Moved from policies_practices
-                        { id: "hr_ai_training_academy", title: "HR AI Training Academy", description: "Académie de formation RH en IA", icon: "fas fa-university" } // Added for Phase 5 people_speed
+            "people_processes": [
+                { id: "rapid_deployment", title: "Rapid Deployment", description: "Déploiement rapide", icon: "fas fa-rocket" },
+                { id: "bottom_up_innovation", title: "Bottom-up Innovation", description: "Innovation bottom-up", icon: "fas fa-lightbulb" },
+                { id: "personalized_training", title: "Personalized Training", description: "Formation personnalisée", icon: "fas fa-graduation-cap" },
+                { id: "employee_support", title: "Employee Support", description: "Support employés", icon: "fas fa-hands-helping" },
+                { id: "process_automation", title: "Process Automation", description: "Automatisation des processus", icon: "fas fa-cogs" },
+                { id: "hr_ai_competencies", title: "HR AI Competencies", description: "Compétences RH en IA", icon: "fas fa-user-graduate" },
+                { id: "role_evolution", title: "Role Evolution", description: "Évolution des rôles", icon: "fas fa-user-tag" },
+                { id: "cultural_change", title: "Cultural Change", description: "Changement culturel", icon: "fas fa-theater-masks" },
+                { id: "change_adoption", title: "Change Adoption", description: "Adoption du changement", icon: "fas fa-sync-alt" },
+                { id: "business_alignment", title: "Business Alignment", description: "Alignement métier", icon: "fas fa-bullseye" },
+                { id: "talent_retention", title: "Talent Retention", description: "Rétention des talents", icon: "fas fa-heart" },
+                { id: "organization_wide_ai", title: "Organization-wide AI", description: "IA organisationnelle", icon: "fas fa-building" },
+                { id: "long_term_roadmap", title: "Long-term Roadmap", description: "Feuille de route long terme", icon: "fas fa-road" },
+                { id: "value_based_governance", title: "Value-based Governance", description: "Gouvernance basée sur la valeur", icon: "fas fa-balance-scale" },
+                { id: "hr_ai_training_academy", title: "HR AI Training Academy", description: "Académie de formation RH en IA", icon: "fas fa-university" },
+                { id: "change_communication", title: "Change Communication", description: "Communication du changement", icon: "fas fa-comments" },
+                { id: "genai_hub", title: "GenAI Hub", description: "Hub GenAI", icon: "fas fa-building" },
+                { id: "internal_mobility", title: "Internal Mobility", description: "Mobilité interne", icon: "fas fa-exchange-alt" },
+                { id: "business_sponsors", title: "Business Sponsors", description: "Sponsors métier", icon: "fas fa-handshake" }
             ]
         };
         
@@ -2352,92 +2399,95 @@ class GameController {
             "people_processes": "People & Processes"
         };
         
-        // Afficher chaque catégorie
-        Object.entries(allEnablersByCategory).forEach(([categoryKey, allEnablers]) => {
-            const categoryData = enablersByCategory[categoryKey];
-            console.log(`Category ${categoryKey}:`, categoryData);
-            
-            // Vérifier si categoryData existe et a une propriété enablers
-            let unlockedEnablers = [];
-            if (categoryData && categoryData.enablers) {
-                unlockedEnablers = categoryData.enablers;
-            } else if (Array.isArray(categoryData)) {
-                unlockedEnablers = categoryData;
-            }
-            
-            const unlockedIds = unlockedEnablers.map(e => {
-                if (typeof e === 'string') return e;
-                return e.id || e;
-            });
-            
-            // Séparer les enablers débloqués et verrouillés
-            const unlockedEnablersList = allEnablers.filter(enabler => unlockedIds.includes(enabler.id));
-            const lockedEnablersList = allEnablers.filter(enabler => !unlockedIds.includes(enabler.id));
-            
-            // Debug: vérifier les ENABLERS débloqués non trouvés
-            const foundIds = allEnablers.map(e => e.id);
-            const missingIds = unlockedIds.filter(id => !foundIds.includes(id));
-            if (missingIds.length > 0) {
-                console.warn(`ENABLERS débloqués non trouvés dans allEnablersByCategory:`, missingIds);
-                console.warn(`Missing ENABLERS details:`, missingIds.map(id => ({id, category: categoryKey})));
-            }
-            
-            // Ne pas afficher la catégorie si aucun ENABLER n'est débloqué
-            console.log(`DEBUG: Category ${categoryKey} has ${unlockedEnablersList.length} enablers:`, unlockedEnablersList);
-            if (unlockedEnablersList.length === 0) {
-                console.log(`DEBUG: Skipping category ${categoryKey} - no enablers`);
-                return;
-            }
-            
-            // Créer la ligne de catégorie
+        // Créer une ligne pour chaque catégorie
+        Object.entries(categoryTitles).forEach(([categoryKey, categoryTitle]) => {
             const categoryRow = document.createElement('div');
-            categoryRow.className = 'enabler-category-row';
+            categoryRow.className = 'pedagogical-category-row';
             
-            // Créer le header avec titre et icônes
-            const categoryHeader = document.createElement('div');
-            categoryHeader.className = 'enabler-category-header';
+            // Titre de la catégorie avec couleur
+            const categoryTitleDiv = document.createElement('div');
+            categoryTitleDiv.className = `pedagogical-category-title ${categoryKey}`;
+            categoryTitleDiv.textContent = categoryTitle;
+            categoryRow.appendChild(categoryTitleDiv);
             
-            // Titre de la catégorie
-            const categoryTitle = document.createElement('h3');
-            categoryTitle.className = `enabler-category-title ${categoryKey.replace('_', '-')}`;
-            categoryTitle.textContent = categoryTitles[categoryKey];
-            categoryHeader.appendChild(categoryTitle);
-            
-            // Conteneur des icônes
-            const iconsContainer = document.createElement('div');
-            iconsContainer.className = 'enabler-icons-container';
-            
-            // Afficher SEULEMENT les ENABLERS débloqués (pas les locked)
-            unlockedEnablersList.forEach(enabler => {
-                const isUnlocked = unlockedIds.includes(enabler.id);
+            // Colonnes pour chaque phase (seulement celles complétées)
+            const phases = ['phase1', 'phase2', 'phase3', 'phase4', 'phase5'];
+            phases.forEach((phaseKey, index) => {
+                const phaseNumber = index + 1;
+                const phaseColumn = document.createElement('div');
+                phaseColumn.className = `pedagogical-phase-column ${completedPhases.includes(phaseNumber) ? 'visible' : 'hidden'}`;
                 
-                // Ne créer l'icône QUE si l'ENABLER est débloqué
-                if (isUnlocked) {
+                // Obtenir les ENABLERS pour cette phase et cette catégorie
+                const phaseData = pedagogicalData[phaseKey];
+                const categoryData = phaseData ? phaseData[categoryKey] : null;
+                const enablers = categoryData ? categoryData.enablers : [];
+                
+                // Afficher TOUS les ENABLERS pour cette phase (verts pour débloqués, rouges pour non débloqués)
+                enablers.forEach(enabler => {
                     const enablerIcon = document.createElement('div');
-                    enablerIcon.className = 'enabler-icon unlocked';
                     
-                    // Debug: vérifier si l'icône existe
-                    if (!enabler.icon) {
-                        console.warn(`Missing icon for enabler: ${enabler.id}`);
-                        enabler.icon = "fas fa-question"; // Icône de fallback
+                    // Appliquer les couleurs selon l'état
+                    if (enabler.unlocked) {
+                        // ENABLER débloqué : vert
+                        enablerIcon.className = `pedagogical-enabler-icon unlocked`;
+                    } else {
+                        // ENABLER non débloqué : rouge
+                        enablerIcon.className = `pedagogical-enabler-icon locked`;
                     }
                     
-                    enablerIcon.innerHTML = `
-                        <i class="${enabler.icon}"></i>
-                        <div class="enabler-tooltip">
-                            <div class="enabler-tooltip-title">${enabler.title}</div>
-                            <div class="enabler-tooltip-description">${enabler.description}</div>
-                        </div>
-                    `;
+                    // Trouver l'icône correspondante
+                    const enablerInfo = allEnablersByCategory[categoryKey].find(e => e.id === enabler.id);
+                    const iconClass = enablerInfo ? enablerInfo.icon : 'fas fa-question';
                     
-                    iconsContainer.appendChild(enablerIcon);
-                }
+                    enablerIcon.innerHTML = `<i class="${iconClass}"></i>`;
+                    
+                    // Ajouter le tooltip
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'pedagogical-enabler-tooltip';
+                    tooltip.innerHTML = `
+                        <div class="pedagogical-tooltip-title">${enabler.title}</div>
+                        <div class="pedagogical-tooltip-description">${enabler.description}</div>
+                    `;
+                    enablerIcon.appendChild(tooltip);
+                    
+                    phaseColumn.appendChild(enablerIcon);
+                });
+                
+                categoryRow.appendChild(phaseColumn);
             });
             
-            categoryHeader.appendChild(iconsContainer);
-            categoryRow.appendChild(categoryHeader);
-            enablersCategories.appendChild(categoryRow);
+            pedagogicalCategories.appendChild(categoryRow);
         });
+    }
+    
+    getCompletedPhases() {
+        // Déterminer quelles phases sont complétées basé sur l'état actuel du jeu
+        const completedPhases = [];
+        
+        // Vérifier chaque phase
+        if (this.currentPhaseNumber >= 1) completedPhases.push(1);
+        if (this.currentPhaseNumber >= 2) completedPhases.push(2);
+        if (this.currentPhaseNumber >= 3) completedPhases.push(3);
+        if (this.currentPhaseNumber >= 4) completedPhases.push(4);
+        if (this.currentPhaseNumber >= 5) completedPhases.push(5);
+        
+        return completedPhases;
+    }
+    
+    updatePhaseHeaders(completedPhases) {
+        // Mettre à jour la visibilité des en-têtes de phase
+        for (let i = 1; i <= 5; i++) {
+            const phaseHeader = document.querySelector(`.phase-header-${i}`);
+            if (phaseHeader) {
+                if (completedPhases.includes(i)) {
+                    phaseHeader.classList.remove('hidden');
+                    phaseHeader.classList.add('visible');
+                } else {
+                    phaseHeader.classList.remove('visible');
+                    phaseHeader.classList.add('hidden');
+                }
+            }
+        }
     }
     
     updateEnablersGrid(enablers) {

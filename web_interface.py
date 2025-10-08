@@ -321,9 +321,13 @@ def api_phase3_choices():
     
     game = get_game()
     
+    # Debug logs
+    print(f"DEBUG Phase 3 API: mot2_choices = {game.current_path.mot2_choices}")
+    print(f"DEBUG Phase 3 API: len(mot2_choices) = {len(game.current_path.mot2_choices) if game.current_path.mot2_choices else 0}")
+    
     # Vérifier que Phase2 est terminé
     if not game.current_path.mot2_choices or len(game.current_path.mot2_choices) != 3:
-        return jsonify({'success': False, 'message': 'Phase2 must be completed first'})
+        return jsonify({'success': False, 'message': f'Phase2 must be completed first. Current choices: {game.current_path.mot2_choices}, count: {len(game.current_path.mot2_choices) if game.current_path.mot2_choices else 0}'})
     
     choices_by_category = game.get_mot3_choices()
     
@@ -437,17 +441,30 @@ def api_phase4_choices():
     game = get_game()
     choices = game.get_mot4_choices()
     
-    # Define category for each choice
+    # Define category for each choice (corrected IDs and categories)
     choice_categories = {
-        'apis_internal_vendor': 'platform_partnerships',
-        'tech_stack_pipelines': 'platform_partnerships',
+        'apis_hr_systems': 'platform_partnerships',
+        'tech_stack_data_pipelines': 'platform_partnerships',
+        'ai_ethics_officer': 'policies_practices',
+        'risk_mitigation_plan': 'policies_practices',
         'internal_mobility': 'people_processes',
-        'responsible_ai_lead': 'policies_practices',
-        'risk_mitigation': 'policies_practices',
         'data_collection_strategy': 'platform_partnerships',
-        'business_sponsors': 'people_processes',
-        'ceo_video_series': 'people_processes',
-        'change_management': 'people_processes'
+        'ceo_video_series': 'policies_practices',
+        'change_management': 'people_processes',
+        'business_sponsors': 'people_processes'
+    }
+    
+    # Define enabler mapping for each choice
+    choice_enablers = {
+        'apis_hr_systems': 'api_connectivity',
+        'tech_stack_data_pipelines': 'data_pipeline_automation',
+        'ai_ethics_officer': 'ethics_oversight',
+        'risk_mitigation_plan': 'risk_management',
+        'internal_mobility': 'talent_retention',
+        'data_collection_strategy': 'data_strategy',
+        'ceo_video_series': 'leadership_communication',
+        'change_management': 'change_adoption',
+        'business_sponsors': 'business_alignment'
     }
     
     return jsonify({
@@ -458,7 +475,8 @@ def api_phase4_choices():
                 'title': choice.title,
                 'description': choice.description,
                 'cost': choice.cost,
-                'category': choice_categories.get(choice.id, 'people_processes')
+                'category': choice_categories.get(choice.id, 'people_processes'),
+                'enabler_id': choice_enablers.get(choice.id, 'unknown')
             }
             for choice in choices
         ]
@@ -603,6 +621,18 @@ def api_executive_dashboard():
     # Calculer les ENABLERS débloqués par catégorie
     unlocked_enablers_by_category = game.current_path.unlocked_enablers_by_category
     
+    # Récupérer les ENABLERS par phase
+    enablers_by_phase = game.current_path.enablers_by_phase
+    
+    # Obtenir tous les ENABLERS possibles par phase et par catégorie pour l'affichage pédagogique
+    all_enablers_by_phase_and_category = game.get_all_enablers_by_phase_and_category()
+    
+    # S'assurer que les ENABLERS sont calculés
+    game._calculate_enablers()
+    
+    # Récupérer les ENABLERS par phase après calcul
+    enablers_by_phase = game.current_path.enablers_by_phase
+    
     enabler_descriptions = {
         "strategic_planning": "Planification stratégique avancée",
         "leadership_alignment": "Alignement du leadership",
@@ -647,6 +677,33 @@ def api_executive_dashboard():
         "cloud_migration": "Migration cloud",
         "scalability": "Évolutivité",
         "infrastructure_flexibility": "Flexibilité infrastructure",
+        "kpi_definition": "Définition des KPI",
+        "ethical_framework": "Cadre éthique",
+        "ai_ethics_charter": "Charte éthique IA",
+        "system_integration": "Intégration système",
+        "cloud_infrastructure": "Infrastructure cloud",
+        "hr_role_redefinition": "Redéfinition des rôles RH",
+        "cultural_change": "Changement culturel",
+        "data_pipeline_automation": "Automatisation des pipelines de données",
+        "tech_stack_data_pipelines": "Stack technique et pipelines de données",
+        "apis_hr_systems": "APIs systèmes RH",
+        "ethics_oversight": "Surveillance éthique",
+        "risk_management": "Gestion des risques",
+        "ai_ethics_officer": "Responsable éthique IA",
+        "internal_mobility": "Mobilité interne",
+        "ceo_video_series": "Série vidéo CEO",
+        "business_sponsors": "Sponsors métier",
+        "hr_ai_training_academy": "Académie de formation RH en IA",
+        "genai_hub": "Hub GenAI",
+        "system_connectivity": "Connectivité système",
+        "role_evolution": "Évolution des rôles",
+        "ai_ethics_charter": "Charte éthique IA",
+        "data_collection_strategy": "Stratégie de collecte de données",
+        "change_communication": "Communication du changement",
+        "system_connectivity": "Connectivité système",
+        "role_evolution": "Évolution des rôles",
+        "process_automation": "Automatisation des processus",
+        "tech_stack_data_pipelines": "Stack technique et pipelines de données",
         "ethical_framework": "Cadre éthique",
         "ai_governance": "Gouvernance IA",
         "responsible_ai": "IA responsable",
@@ -730,12 +787,35 @@ def api_executive_dashboard():
     # Générer un message d'impact pédagogique
     impact_message = generate_impact_message(current_score, formatted_enablers)
     
+    # Formater les données pédagogiques par phase et catégorie
+    pedagogical_data = {}
+    for phase, phase_data in all_enablers_by_phase_and_category.items():
+        pedagogical_data[phase] = {}
+        for category, enablers in phase_data.items():
+            pedagogical_data[phase][category] = {
+                "title": category_titles[category],
+                "enablers": []
+            }
+            
+            # Déterminer quels ENABLERS sont débloqués dans cette phase
+            unlocked_in_phase = enablers_by_phase.get(phase, [])
+            
+            for enabler in enablers:
+                is_unlocked = enabler in unlocked_in_phase
+                pedagogical_data[phase][category]["enablers"].append({
+                    "id": enabler,
+                    "title": enabler.replace("_", " ").title(),
+                    "description": enabler_descriptions.get(enabler, f"Capacité {enabler.replace('_', ' ')}"),
+                    "unlocked": is_unlocked
+                })
+    
     return jsonify({
         'success': True,
         'dashboard_data': {
             'current_score': current_score,
             'unlocked_enablers': formatted_enablers,
             'unlocked_enablers_by_category': formatted_enablers_by_category,
+            'pedagogical_data': pedagogical_data,
             'impact_message': impact_message,
             'phase_title': get_current_phase_title(game.current_state)
         }
