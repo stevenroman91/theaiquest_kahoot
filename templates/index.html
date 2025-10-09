@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-        <link href="{{ url_for('static', filename='css/style.css') }}?v=6.3" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/style.css') }}?v=7.5" rel="stylesheet">
 </head>
 <body>
     <div class="container-fluid">
@@ -426,6 +426,21 @@
                         </button>
                         <button id="start-game-after-harnessing-btn" class="btn btn-primary" style="display: none;">
                             <i class="fas fa-play me-2"></i>Start Game
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teams Meeting Introduction Section -->
+            <div id="teams-meeting-section" class="teams-meeting-page">
+                <div class="teams-meeting-content">
+                    <div class="teams-meeting-frame">
+                        <h3><i class="fas fa-users"></i>Teams Meeting</h3>
+                        <p>
+                            Sophie is organising a Teams meeting with her colleagues <strong>Amira (Marketing Expert)</strong>, <strong>James (IT Expert)</strong> and <strong>Elena (Transformation Expert)</strong> to gather their recommendations and define the best strategy for deploying generative AI.
+                        </p>
+                        <button id="join-teams-meeting-btn" class="btn btn-light btn-lg">
+                            <i class="fas fa-video me-2"></i>Join the Teams meeting
                         </button>
                     </div>
                 </div>
@@ -900,6 +915,6 @@
     <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="{{ url_for('static', filename='js/game.js') }}?v=1.83"></script>
+        <script src="{{ url_for('static', filename='js/game.js') }}?v=1.96"></script>
 </body>
 </html>

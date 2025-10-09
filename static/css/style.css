@@ -3,6 +3,90 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+/* Teams Meeting Page Styles */
+.teams-meeting-page {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #1e40af;
+    z-index: 9999;
+}
+
+.teams-meeting-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    text-align: center;
+    padding: 20px;
+}
+
+.teams-meeting-content h3 {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.teams-meeting-content h3 i {
+    margin-right: 10px;
+}
+
+.teams-meeting-content p {
+    color: white;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    max-width: 800px;
+}
+
+.teams-meeting-content button {
+    font-size: 1.2rem;
+    padding: 15px 30px;
+}
+
+.teams-meeting-frame {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 100%;
+}
+
+.teams-meeting-frame h3 {
+    color: #1e40af;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.teams-meeting-frame h3 i {
+    margin-right: 10px;
+}
+
+.teams-meeting-frame p {
+    color: #1e40af;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+}
+
+.teams-meeting-frame button {
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    background-color: #1e40af;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
 /* FDJ United Brand Colors */
 :root {
     --fdj-blue-primary: #1e40af;
@@ -331,10 +415,19 @@ body.modal-open {
     cursor: not-allowed;
 }
 
+.solution-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
 .solution-title {
     font-size: 1rem;
     font-weight: 600;
     color: #1f2937;
+    margin: 0;
+    flex: 1;
     margin-bottom: 6px;
 }
 

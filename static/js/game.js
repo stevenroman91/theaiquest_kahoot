@@ -189,6 +189,14 @@ class GameController {
         const startGameAfterHarnessingBtn = document.getElementById('start-game-after-harnessing-btn');
         if (startGameAfterHarnessingBtn) {
             startGameAfterHarnessingBtn.addEventListener('click', () => {
+                this.showTeamsMeetingSection();
+            });
+        }
+
+        // Join Teams meeting button
+        const joinTeamsMeetingBtn = document.getElementById('join-teams-meeting-btn');
+        if (joinTeamsMeetingBtn) {
+            joinTeamsMeetingBtn.addEventListener('click', () => {
                 this.showMOT1Video();
             });
         }
@@ -724,12 +732,86 @@ class GameController {
         document.getElementById('start-game-after-harnessing-btn').style.display = 'none';
     }
 
+    showTeamsMeetingSection() {
+        console.log('🔵 showTeamsMeetingSection() called');
+        
+        // Hide harnessing video section completely
+        document.getElementById('harnessing-video-section').style.display = 'none';
+        
+        // Hide ALL other elements including progress bar, header, etc.
+        const elementsToHide = [
+            '.progress-container',
+            '.header-brand',
+            '.main-container',
+            '#login-section',
+            '#phase1-section',
+            '#phase2-section',
+            '#phase3-section',
+            '#phase4-section',
+            '#phase5-section',
+            '#results-section'
+        ];
+        
+        elementsToHide.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => {
+                if (el) el.style.display = 'none';
+            });
+        });
+        
+        // Create a completely new element that will work
+        const newTeamsSection = document.createElement('div');
+        newTeamsSection.id = 'new-teams-meeting';
+        newTeamsSection.innerHTML = `
+            <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #1e40af; z-index: 999999; display: flex; align-items: center; justify-content: center;">
+                <div style="background: #1e40af; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 600px; text-align: center; border: 2px solid rgba(255,255,255,0.2);">
+                    <h3 style="color: white; font-size: 2.5rem; margin-bottom: 2rem; font-weight: 600;">
+                        <i class="fas fa-users" style="margin-right: 10px;"></i>Teams Meeting
+                    </h3>
+                    <p style="color: white; font-size: 1.4rem; line-height: 1.6; margin-bottom: 3rem;">
+                        Sophie is organising a Teams meeting with her colleagues <strong>Amira (Marketing Expert)</strong>, <strong>James (IT Expert)</strong> and <strong>Elena (Transformation Expert)</strong> to gather their recommendations and define the best strategy for deploying generative AI.
+                    </p>
+                    <button id="new-join-teams-meeting-btn" style="font-size: 1.2rem; padding: 15px 30px; background-color: white; color: #1e40af; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';">
+                        <i class="fas fa-video" style="margin-right: 10px;"></i>Join the Teams meeting
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(newTeamsSection);
+        
+        // Add event listener to the new button
+        document.getElementById('new-join-teams-meeting-btn').addEventListener('click', () => {
+            document.body.removeChild(newTeamsSection);
+            this.showMOT1Video();
+        });
+        
+        console.log('🔵 New Teams section created and should be visible');
+    }
+
     showMOT1Video() {
         // Arrêter toutes les vidéos en cours
         this.stopAllVideos();
         
-        // Hide harnessing video section completely
-        document.getElementById('harnessing-video-section').style.display = 'none';
+        // Hide Teams meeting section completely
+        const teamsSection = document.getElementById('teams-meeting-section');
+        if (teamsSection) {
+            teamsSection.style.display = 'none';
+        }
+        
+        // Show all hidden elements again
+        const elementsToShow = [
+            '.header-brand',
+            '.main-container',
+            '.progress-container'
+        ];
+        
+        elementsToShow.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => {
+                if (el) el.style.display = '';
+            });
+        });
         
         // Show Phase1 video
         this.showSection('phase1-video-section');
@@ -857,8 +939,8 @@ class GameController {
         // Hide harnessing video section completely
         document.getElementById('harnessing-video-section').style.display = 'none';
         
-        // Go to MOT1 video
-        this.showMOT1Video();
+        // Show Teams meeting section instead of going directly to MOT1 video
+        this.showTeamsMeetingSection();
     }
 
     startMOT1Game() {
@@ -1228,20 +1310,40 @@ class GameController {
         
         const matrixPosition = choiceToMatrixPosition[choice.id] || '?';
         
-            const card = document.createElement('div');
+        // Déterminer si la solution est disponible (positions 1-5) ou grisée (6-9)
+        const isAvailable = matrixPosition <= 5;
+        const backgroundColor = isAvailable 
+            ? 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)'  // Bleu cyan pour disponibles
+            : 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)'; // Gris pour non disponibles
+        
+        const card = document.createElement('div');
         card.className = 'solution-card';
         card.draggable = true;
         card.dataset.choiceId = choice.id;
-            card.innerHTML = `
-            <div class="solution-options">
-                <i class="fas fa-ellipsis-v"></i>
-                        </div>
+        card.innerHTML = `
+        <div class="solution-options">
+            <i class="fas fa-ellipsis-v"></i>
+                    </div>
+        <div class="solution-header">
             <div class="solution-title">${choice.title}</div>
-            <div class="solution-description">${choice.description}</div>
-            <div class="solution-badges">
-                <span class="badge-matrix-position">Position: ${matrixPosition}</span>
-                </div>
-            `;
+            <div class="matrix-number-square" style="
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+                background: ${backgroundColor};
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 1.2rem;
+                box-shadow: ${isAvailable ? '0 2px 8px rgba(6, 182, 212, 0.3)' : '0 2px 8px rgba(107, 114, 128, 0.3)'};
+                flex-shrink: 0;
+                border: 2px solid white;
+            ">${matrixPosition}</div>
+        </div>
+        <div class="solution-description">${choice.description}</div>
+        `;
         
         // Add drag event listeners
         card.addEventListener('dragstart', this.handleDragStart.bind(this));
