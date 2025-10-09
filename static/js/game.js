@@ -2099,24 +2099,24 @@ class GameController {
         const choiceDetails = {
             'genai_for_all': {
                 options: [
-                    { icon: 'fas fa-rocket', label: 'Rapid deployment', class: 'deployment' },
-                    { icon: 'fas fa-bullhorn', label: 'Clear communication', class: 'communication' }
+                    { icon: 'fas fa-rocket', label: 'Rapid Deployment', class: 'deployment' },
+                    { icon: 'fas fa-bullhorn', label: 'Leadership Communication', class: 'communication' }
                 ],
                 description: 'GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development.'
             },
             'capability_building': {
                 options: [
-                    { icon: 'fas fa-cogs', label: 'Solid structure', class: 'structure' },
-                    { icon: 'fas fa-shield-alt', label: 'Clear governance', class: 'governance' },
-                    { icon: 'fas fa-graduation-cap', label: 'Training focus', class: 'training' }
+                    { icon: 'fas fa-road', label: 'Long Term Roadmap', class: 'structure' },
+                    { icon: 'fas fa-balance-scale', label: 'Value Based Governance', class: 'governance' },
+                    { icon: 'fas fa-university', label: 'Hr Ai Training Academy', class: 'training' }
                 ],
                 description: 'Definition of long-term HR AI ethics roadmap, Value-based AI governance, Preferred supplier panel, creation of HR AI training Academy. Solid structure, clear governance, training. But less focus on people, more technical approach.'
             },
             'people_speed': {
                 options: [
-                    { icon: 'fas fa-users', label: 'Focus on skills', class: 'skills' },
-                    { icon: 'fas fa-user-plus', label: 'Talent recruitment', class: 'recruitment' },
-                    { icon: 'fas fa-sync', label: 'Continuous training', class: 'training' }
+                    { icon: 'fas fa-building', label: 'Genai Hub', class: 'skills' },
+                    { icon: 'fas fa-user-plus', label: 'Talent Recruitment', class: 'recruitment' },
+                    { icon: 'fas fa-university', label: 'Hr Ai Training Academy', class: 'training' }
                 ],
                 description: 'New GenAI HR Hub, Preferred supplier panel, Investment in recruiting top AI talents and retaining analytics expertise, Creation of HR AI training Academy. Focus on skills, talent recruitment, continuous training. But higher initial investment.'
             }
@@ -2537,9 +2537,8 @@ class GameController {
                         enablerIcon.className = `pedagogical-enabler-icon locked`;
                     }
                     
-                    // Trouver l'icône correspondante
-                    const enablerInfo = allEnablersByCategory[categoryKey].find(e => e.id === enabler.id);
-                    const iconClass = enablerInfo ? enablerInfo.icon : 'fas fa-question';
+                    // Utiliser l'icône fournie par l'API (cohérence garantie)
+                    const iconClass = enabler.icon || 'fas fa-question';
                     
                     enablerIcon.innerHTML = `<i class="${iconClass}"></i>`;
                     

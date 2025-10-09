@@ -633,7 +633,106 @@ def api_executive_dashboard():
     # Récupérer les ENABLERS par phase après calcul
     enablers_by_phase = game.current_path.enablers_by_phase
     
+    # Mapping des enablers vers les titres des choix (cohérence avec les phases)
+    enabler_titles = {
+        # Phase 1 - Titres des choix
+        "strategic_vision_mapping": "Strategic Vision Mapping",
+        "hr_function_diagnostic": "HR Function Diagnostic", 
+        "genai_platform_partnership": "GenAI Platform Partnership",
+        "technical_foundation_setup": "Technical Foundation Setup",
+        "rapid_deployment": "Rapid Deployment",
+        "bottom_up_innovation": "Bottom-up Innovation",
+        
+        # Phase 2 - Titres des choix
+        "candidate_matching": "Intelligent Recruitment",
+        "employee_support": "Virtual HR Assistant",
+        "personalized_training": "Training Path Optimization",
+        "sentiment_detection": "Employee Sentiment Analysis",
+        "process_automation": "HR Process Automation",
+        
+        # Phase 3 - Titres des choix
+        "hr_ai_competencies": "HR Team AI Training",
+        "role_evolution": "HR Role Redefinition",
+        "change_communication": "Cultural Change",
+        "system_connectivity": "Integration with existing HR systems",
+        "vendor_relationships": "Technology partnerships",
+        "cloud_migration": "Cloud infrastructure",
+        "ethical_framework": "HR AI Ethics Charter",
+        "data_protection": "Data governance",
+        "kpi_definition": "Performance metrics",
+        
+        # Phase 4 - Titres des choix
+        "api_connectivity": "APIs between internal and external HR systems",
+        "data_pipeline_automation": "Technology stack for HR data pipelines",
+        "ethics_oversight": "Appointment of HR AI Ethics Officer",
+        "risk_management": "Country-specific risk mitigation plan",
+        "talent_retention": "Internal mobility program for HR AI talents",
+        "data_strategy": "Data collection strategy and synthetic HR data",
+        "leadership_communication": "CEO and leadership video series on HR AI",
+        "change_adoption": "Change management to boost adoption",
+        "business_alignment": "Business sponsors responsible for value delivery",
+        
+        # Phase 5 - Les enablers gardent leurs noms (pas de mapping vers les titres des choix)
+        # "organization_wide_ai": "GenAI for all",
+        # "long_term_roadmap": "Continuous capability building", 
+        # "value_based_governance": "Continuous capability building",
+        # "hr_ai_training_academy": "Full speed on people",
+        # "genai_hub": "Full speed on people",
+        # "talent_recruitment": "Full speed on people",
+        # "rapid_deployment": "Rapid Deployment"
+    }
+    
+    # Dictionnaire des icônes pour les enablers (cohérent avec game.js)
+    enabler_icons = {
+        # Phase 1 ENABLERS
+        "strategic_vision_mapping": "fas fa-brain",
+        "hr_function_diagnostic": "fas fa-search",
+        "genai_platform_partnership": "fas fa-handshake",
+        "technical_foundation_setup": "fas fa-cogs",
+        # Phase 2 ENABLERS
+        "candidate_matching": "fas fa-user-check",
+        "employee_support": "fas fa-hands-helping",
+        "personalized_training": "fas fa-graduation-cap",
+        "sentiment_detection": "fas fa-heart",
+        "process_automation": "fas fa-cogs",
+        # Phase 3 ENABLERS
+        "hr_ai_competencies": "fas fa-user-graduate",
+        "role_evolution": "fas fa-user-tag",
+        "change_communication": "fas fa-comments",
+        "system_connectivity": "fas fa-link",
+        "vendor_relationships": "fas fa-handshake",
+        "cloud_migration": "fas fa-cloud-upload-alt",
+        "ethical_framework": "fas fa-balance-scale",
+        "data_protection": "fas fa-shield-alt",
+        "kpi_definition": "fas fa-bullseye",
+        # Phase 4 ENABLERS
+        "api_connectivity": "fas fa-plug",
+        "data_pipeline_automation": "fas fa-stream",
+        "ethics_oversight": "fas fa-eye",
+        "risk_management": "fas fa-shield-alt",
+        "talent_retention": "fas fa-heart",
+        "data_strategy": "fas fa-database",
+        "leadership_communication": "fas fa-bullhorn",
+        "change_adoption": "fas fa-sync-alt",
+        "business_alignment": "fas fa-bullseye",
+        # Phase 5 ENABLERS
+        "organization_wide_ai": "fas fa-building",
+        "long_term_roadmap": "fas fa-road",
+        "value_based_governance": "fas fa-balance-scale",
+        "hr_ai_training_academy": "fas fa-university",
+        "genai_hub": "fas fa-building",
+        "talent_recruitment": "fas fa-user-plus",
+        "rapid_deployment": "fas fa-rocket",
+        "bottom_up_innovation": "fas fa-lightbulb"
+    }
+    
     enabler_descriptions = {
+        # Phase 1 ENABLERS - Ajout des enablers manquants
+        "strategic_vision_mapping": "Cartographie de la vision stratégique",
+        "hr_function_diagnostic": "Diagnostic de la fonction RH",
+        "genai_platform_partnership": "Partenariat plateforme GenAI",
+        "technical_foundation_setup": "Configuration des fondations techniques",
+        # Autres enablers existants
         "strategic_planning": "Planification stratégique avancée",
         "leadership_alignment": "Alignement du leadership",
         "structured_vision": "Vision structurée",
@@ -774,8 +873,9 @@ def api_executive_dashboard():
         for enabler in enablers:
             formatted_enablers_by_category[category]["enablers"].append({
                 "id": enabler,
-                "title": enabler.replace("_", " ").title(),
-                "description": enabler_descriptions.get(enabler, f"Capacité {enabler.replace('_', ' ')}")
+                "title": enabler_titles.get(enabler, enabler.replace("_", " ").title()),
+                "description": enabler_descriptions.get(enabler, f"Capacité {enabler.replace('_', ' ')}"),
+                "icon": enabler_icons.get(enabler, "fas fa-cog")
             })
     
     # Garder aussi la liste globale pour compatibilité
@@ -804,8 +904,9 @@ def api_executive_dashboard():
                 is_unlocked = enabler in unlocked_in_phase
                 pedagogical_data[phase][category]["enablers"].append({
                     "id": enabler,
-                    "title": enabler.replace("_", " ").title(),
+                    "title": enabler_titles.get(enabler, enabler.replace("_", " ").title()),
                     "description": enabler_descriptions.get(enabler, f"Capacité {enabler.replace('_', ' ')}"),
+                    "icon": enabler_icons.get(enabler, "fas fa-cog"),
                     "unlocked": is_unlocked
                 })
     

@@ -846,9 +846,7 @@ class AIAccelerationGame:
             "virtual_hr_assistant": "people_processes",
             "training_optimization": "people_processes",
             "sentiment_analysis": "policies_practices",
-            "process_automation": "people_processes",
             "hr_automation": "people_processes",
-            "performance_prediction": "policies_practices",
             
             # Phase 4 - HR Scaling
             "apis_hr_systems": "platform_partnerships",
@@ -925,7 +923,7 @@ class AIAccelerationGame:
             "phase2": {
                 "platform_partnerships": ["candidate_matching"],
                 "policies_practices": ["sentiment_detection"],
-                "people_processes": ["personalized_training", "employee_support", "process_automation"]
+                "people_processes": ["employee_support", "personalized_training", "process_automation"]
             },
             "phase3": {
                 "platform_partnerships": ["vendor_relationships", "system_connectivity", "cloud_migration"],
