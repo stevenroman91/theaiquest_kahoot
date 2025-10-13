@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Acceleration EXEC - Smart Retail Group HR Managers v1.9</title>
+    <title>{{ game_title }} - {{ company_name }} v1.9</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-        <link href="{{ url_for('static', filename='css/style.css') }}?v=7.5" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/style.css') }}?v=10.9" rel="stylesheet">
 </head>
 <body>
     <div class="container-fluid">
@@ -21,8 +21,8 @@
                                 <i class="fas fa-brain brand-logo-icon" style="font-size: 2.5rem; color: var(--fdj-blue-primary);"></i>
                             </div>
                             <div>
-                                <h1 class="brand-title mb-0">AI Acceleration EXEC</h1>
-                                <p class="brand-subtitle mb-0">Smart Retail Group - HR Managers Edition v1.9</p>
+                                <h1 class="brand-title mb-0 game-title">{{ game_title }}</h1>
+                                <p class="brand-subtitle mb-0 company-name">{{ company_name }} - HR Managers Edition v1.9</p>
                             </div>
                         </div>
                     </div>
@@ -207,7 +207,7 @@
             <!-- Phase1 Video Section -->
             <div id="phase1-video-section" class="card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-video me-2"></i>Phase 1 - Embedding GenAI in your AI transformation program</h3>
+                    <h3><i class="fas fa-video me-2"></i>{{ template.get_phase_title('phase1') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="video-container mb-4">
@@ -235,7 +235,7 @@
             <!-- Phase2 Video Section -->
             <div id="phase2-video-section" class="card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-video me-2"></i>Phase 2 - HR Portfolio Selection</h3>
+                    <h3><i class="fas fa-video me-2"></i>{{ template.get_phase_title('phase2') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="video-container mb-4">
@@ -263,7 +263,7 @@
             <!-- Phase3 Video Section -->
             <div id="phase3-video-section" class="card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-video me-2"></i>Phase 3 - Launching your priority HR and GenAI pilots</h3>
+                    <h3><i class="fas fa-video me-2"></i>{{ template.get_phase_title('phase3') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="video-container mb-4">
@@ -291,7 +291,7 @@
             <!-- Phase4 Video Section -->
             <div id="phase4-video-section" class="card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-video me-2"></i>Phase 4 - Scaling your AI and GenAI solutions</h3>
+                    <h3><i class="fas fa-video me-2"></i>{{ template.get_phase_title('phase4') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="video-container mb-4">
@@ -319,7 +319,7 @@
             <!-- Phase5-1 Video Section -->
             <div id="phase5-1-video-section" class="card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-video me-2"></i>Phase 5 - Final Decision</h3>
+                    <h3><i class="fas fa-video me-2"></i>{{ template.get_phase_title('phase5') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="video-container mb-4">
@@ -347,7 +347,7 @@
             <!-- Phase5-2 Video Section -->
             <div id="phase5-2-video-section" class="card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-video me-2"></i>Phase 5 - Final Decision</h3>
+                    <h3><i class="fas fa-video me-2"></i>{{ template.get_phase_title('phase5') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="video-container mb-4">
@@ -400,6 +400,59 @@
                 </div>
             </div>
 
+            <!-- Welcome Page Section -->
+            <div id="welcome-section" class="welcome-page" style="display: none;">
+                <div class="welcome-content">
+                    <div class="welcome-frame">
+                        <h3><i class="fas fa-handshake"></i>Welcome!</h3>
+                        <p class="welcome-text">
+                            Welcome ! You are the AI Transformation Leader at PlayNext, a leading gaming company with 1 800 employees worldwide. Facing fast-moving competition and evolving player expectations, the company must reinvent how it creates, delivers, and scales innovation.
+                            <br><br>
+                            Your mission: define how AI can accelerate creativity and performance — without compromising the culture, values, and human spirit that make PlayNext unique.
+                        </p>
+                        <button id="continue-welcome-btn" class="btn btn-light btn-lg">
+                            <i class="fas fa-arrow-right me-2"></i>Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pilot Phase Transition Section -->
+            <div id="pilot-phase-section" class="welcome-page" style="display: none;">
+                <div class="welcome-content">
+                    <div class="welcome-frame">
+                        <h3><i class="fas fa-rocket"></i>Pilot Phase</h3>
+                        <p class="welcome-text" id="pilot-phase-text">
+                            The three selected projects — Smart Game Design Assistant, Player Journey Optimizer, and Fraud & Integrity Detection — are now moving into pilot phase. Each team has begun working with vendors, datasets, and internal champions.
+                            <br><br>
+                            Sophie's next challenge is to ensure that these pilots not only deliver results but also inspire adoption across the company. To do this, she must choose the right enablers — initiatives that accelerate transformation, build trust, and make change sustainable.
+                        </p>
+                        <button id="continue-pilot-phase-btn" class="btn btn-light btn-lg">
+                            <i class="fas fa-arrow-right me-2"></i>Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scaling Phase Transition Section -->
+            <div id="scaling-phase-section" class="welcome-page" style="display: none;">
+                <div class="welcome-content">
+                    <div class="welcome-frame">
+                        <h3><i class="fas fa-building"></i>Enterprise Scaling</h3>
+                        <p class="welcome-text" id="scaling-phase-text">
+                            After several months of scaling, AI and GenAI are now part of PlayNext's daily rhythm.
+                            <br><br>
+                            The company's success has caught the attention of the executive committee — who now want to accelerate even further, extending AI across all studios, markets, and business functions.
+                            <br><br>
+                            Sophie faces a new challenge: scaling not just systems, but capabilities — data, skills, governance, and partnerships — to make AI truly enterprise-wide.
+                        </p>
+                        <button id="continue-scaling-phase-btn" class="btn btn-light btn-lg">
+                            <i class="fas fa-arrow-right me-2"></i>Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Harnessing Video Section -->
             <div id="harnessing-video-section" class="card mb-4" style="display: none;">
                 <div class="card-header">
@@ -436,11 +489,11 @@
                 <div class="teams-meeting-content">
                     <div class="teams-meeting-frame">
                         <h3><i class="fas fa-users"></i>Teams Meeting</h3>
-                        <p>
-                            Sophie is organising a Teams meeting with her colleagues <strong>Amira (Marketing Expert)</strong>, <strong>James (IT Expert)</strong> and <strong>Elena (Transformation Expert)</strong> to gather their recommendations and define the best strategy for deploying generative AI.
+                        <p class="teams-meeting-text">
+                            {{ teams_meeting_text }}
                         </p>
                         <button id="join-teams-meeting-btn" class="btn btn-light btn-lg">
-                            <i class="fas fa-video me-2"></i>Join the Teams meeting
+                            <i class="fas fa-video me-2"></i>{{ teams_meeting_button_text }}
                         </button>
                     </div>
                 </div>
@@ -450,7 +503,7 @@
             <!-- Phase 1: Character Selection with Accordion -->
             <div id="phase1-section" class="phase-section card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-users me-2"></i>Phase 1 - Embedding GenAI in your AI transformation program</h3>
+                    <h3><i class="fas fa-users me-2"></i>{{ template.get_phase_title('phase1') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
@@ -459,7 +512,7 @@
                             <div>
                                 <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
                                 <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
-                                    You have heard three different approaches on how to move forward. It's time to determine which one is best.
+                                    {{ template.get_phase_description('phase1') }}
                                 </p>
                             </div>
                         </div>
@@ -480,7 +533,7 @@
             <!-- Phase 2: Portfolio Selection with Drag & Drop -->
             <div id="phase2-section" class="phase-section card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-chart-line me-2"></i>Phase 2 - Revisiting your HR and AI portfolio</h3>
+                    <h3><i class="fas fa-chart-line me-2"></i>{{ template.get_phase_title('phase2') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
@@ -489,7 +542,7 @@
                             <div>
                                 <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
                                 <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
-                                    Among the six generative AI and AI solutions highlighted on the matrix, which three will you select and launch first?
+                                    {{ template.get_phase_description('phase2') }}
                                 </p>
                             </div>
                         </div>
@@ -549,7 +602,7 @@
             <!-- Phase 3: Enabler Selection with 3x3 Matrix -->
             <div id="phase3-section" class="phase-section card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-cogs me-2"></i>Phase 3 - Launching your priority HR and GenAI pilots</h3>
+                    <h3><i class="fas fa-cogs me-2"></i>{{ template.get_phase_title('phase3') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
@@ -558,7 +611,7 @@
                             <div>
                                 <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
                                 <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
-                                    Select the most impactful and timely facilitator in each line to accelerate value creation from your AI and GenAI pilots: People & Processes, Platform & Partnerships, Policies & Practices.
+                                    You can only activate one enabler per domain to maximize impact and adoption. Which ones will you choose?
                                 </p>
                             </div>
                         </div>
@@ -606,7 +659,7 @@
             <!-- Phase 4: Budget Selection with 3x3 Matrix -->
             <div id="phase4-section" class="phase-section card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-coins me-2"></i>Phase 4 - Scaling your priority HR and GenAI solutions</h3>
+                    <h3><i class="fas fa-coins me-2"></i>{{ template.get_phase_title('phase4') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
@@ -615,7 +668,8 @@
                             <div>
                                 <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
                                 <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
-                                    Select the most impactful and timely facilitators within your 30-point budget that will allow you to successfully scale your AI and GenAI solutions to continue accelerating value delivery. Don't forget you need to balance between different categories.
+                                    You now have a better idea of what needs to be done to scale AI solutions. It's time to make a decision.<br>
+                                    Select the most impactful and timely enablers within your 30-point budget that will allow you to successfully scale your AI solutions to continue accelerating value delivery. Don't forget you need to balance between different categories.
                                 </p>
                             </div>
                         </div>
@@ -661,7 +715,7 @@
             <!-- Phase 5: Final Selection -->
             <div id="phase5-section" class="phase-section card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-flag-checkered me-2"></i>Phase 5 - Deploying AI and GenAI across the organization</h3>
+                    <h3><i class="fas fa-flag-checkered me-2"></i>{{ template.get_phase_title('phase5') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
@@ -670,6 +724,7 @@
                             <div>
                                 <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
                                 <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
+                                    It's time to launch and scale more solutions at the enterprise level. Let's decide what actions to take!<br>
                                     Select the option that will maximize your chances of bringing the most new scaled solutions to market. Consider what you need most at this stage of transformation to scale effectively.
                                 </p>
                             </div>
@@ -789,8 +844,8 @@
                 <div class="modal-body p-0">
                     <div class="score-screen-content">
                         <div class="score-header">
-                            <div class="moment-score-label">PHASE SCORE</div>
-                            <div class="moment-title" id="current-mot-title">Embedding GenAI in your AI transformation program</div>
+                            <div class="moment-score-label">STEP SCORE</div>
+                            <div class="moment-title" id="current-mot-title">{{ template.get_phase_title('phase1') }}</div>
                         </div>
                         
                         <div class="score-display-large">
@@ -801,7 +856,7 @@
                             </div>
                             
                             <div class="score-message">
-                                <p id="score-description">Congratulations! You earned stars for this phase. These stars will be a quick visual cue of your overall success throughout the rest of the game.</p>
+                                <p id="score-description"></p>
                             </div>
                         </div>
                         
@@ -824,11 +879,11 @@
                         <!-- Header -->
                         <div class="dashboard-header">
                                     <div class="dashboard-title">
-                                        <h1><i class="fas fa-chart-line me-3"></i>Executive Dashboard HR</h1>
-                                        <p class="dashboard-subtitle">Impact of your strategic HR decisions</p>
+                                        <h1><i class="fas fa-chart-line me-3"></i>{{ template.get_dashboard_title() }}</h1>
+                                        <p class="dashboard-subtitle">{{ template.get_dashboard_subtitle() }}</p>
                                     </div>
                             <div class="current-phase-info">
-                                <div class="phase-label" id="current-phase-label">PHASE SCORE</div>
+                                <div class="phase-label" id="current-phase-label">STEP SCORE</div>
                                 <div class="phase-title" id="current-phase-title">AI HR Transformation</div>
                             </div>
                         </div>
@@ -851,10 +906,10 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- Phase Progress -->
+                                    <!-- Step Progress -->
                                     <div class="col-md-4">
                                         <div class="progress-section">
-                                            <h3><i class="fas fa-tasks me-2"></i>Phase Progress</h3>
+                                            <h3><i class="fas fa-tasks me-2"></i>Step Progress</h3>
                                             <div class="mot-squares" id="mot-squares">
                                                 <div class="mot-square" id="phase1-square">1</div>
                                                 <div class="mot-square" id="phase2-square">2</div>
@@ -877,23 +932,33 @@
                                 </div>
                             </div>
                             
-                            <!-- Bottom Section: ENABLERS by Phase and Category -->
+                            <!-- Bottom Section: ENABLERS by Step and Category -->
                             <div class="dashboard-bottom-section">
-                                <h2><i class="fas fa-cogs me-2"></i>ENABLERS Progress by Phase</h2>
+                                <h2><i class="fas fa-cogs me-2"></i>ENABLERS Progress by Step</h2>
                                 <div class="pedagogical-grid">
-                    <!-- Phase Headers -->
+                    <!-- Step Headers -->
                     <div class="phase-headers">
                         <div class="category-header"></div>
-                        <div class="phase-header phase-header-1">Phase 1</div>
-                        <div class="phase-header phase-header-2">Phase 2</div>
-                        <div class="phase-header phase-header-3">Phase 3</div>
-                        <div class="phase-header phase-header-4">Phase 4</div>
-                        <div class="phase-header phase-header-5">Phase 5</div>
+                        <div class="phase-header phase-header-1">{{ template.get_terminology('phase') }} 1</div>
+                        <div class="phase-header phase-header-2">{{ template.get_terminology('phase') }} 2</div>
+                        <div class="phase-header phase-header-3">{{ template.get_terminology('phase') }} 3</div>
+                        <div class="phase-header phase-header-4">{{ template.get_terminology('phase') }} 4</div>
+                        <div class="phase-header phase-header-5">{{ template.get_terminology('phase') }} 5</div>
                     </div>
                                     
                                     <!-- Category Rows -->
                                     <div class="pedagogical-categories" id="pedagogical-categories">
                                         <!-- Pedagogical data will be populated here -->
+                                    </div>
+                                    
+                                    <!-- Use Cases Section -->
+                                    <div id="use-cases-section" class="dashboard-section" style="display: none;">
+                                        <h3 class="dashboard-section-title">
+                                            <i class="fas fa-lightbulb me-2"></i>Use Cases
+                                        </h3>
+                                        <div id="use-cases-content" class="use-cases-content">
+                                            <!-- Use Cases will be populated here -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -915,6 +980,6 @@
     <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="{{ url_for('static', filename='js/game.js') }}?v=2.02"></script>
+        <script src="{{ url_for('static', filename='js/game.js') }}?v=2.62&t={{ range(1000000, 9999999) | random }}"></script>
 </body>
 </html>

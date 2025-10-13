@@ -13,8 +13,94 @@ class GameController {
         this.budget = 0;
         this.maxBudget = 30;
         this.currentPhaseNumber = 1;
+        this.gameConfig = null;
         
         this.initializeEventListeners();
+        this.loadGameConfig();
+    }
+
+    async loadGameConfig() {
+        // Load game configuration from template
+        try {
+            const response = await fetch('/api/game_config');
+            const data = await response.json();
+            
+            if (data.success) {
+                this.gameConfig = data.config;
+                this.updateUIWithConfig();
+            } else {
+                console.error('Failed to load game config:', data.message);
+            }
+        } catch (error) {
+            console.error('Error loading game config:', error);
+        }
+    }
+
+    updateUIWithConfig() {
+        // Update UI elements with template configuration
+        if (!this.gameConfig) return;
+        
+        // Update page title
+        document.title = this.gameConfig.game_info.game_title;
+        
+        // Update game title in UI
+        const gameTitleElement = document.querySelector('.game-title');
+        if (gameTitleElement) {
+            gameTitleElement.textContent = this.gameConfig.game_info.game_title;
+        }
+        
+        // Update company name
+        const companyNameElements = document.querySelectorAll('.company-name');
+        companyNameElements.forEach(element => {
+            element.textContent = this.gameConfig.game_info.company_name;
+        });
+        
+        // Update Teams meeting text
+        const teamsMeetingText = document.querySelector('.teams-meeting-text');
+        if (teamsMeetingText) {
+            teamsMeetingText.textContent = this.gameConfig.ui_text.teams_meeting.text;
+        }
+        
+        // Update Teams meeting button text
+        const teamsMeetingButton = document.querySelector('#join-teams-meeting-btn');
+        if (teamsMeetingButton) {
+            teamsMeetingButton.textContent = this.gameConfig.ui_text.teams_meeting.button_text;
+        }
+        
+        // Update terminology throughout the UI
+        if (this.gameConfig.terminology) {
+            const phaseTerm = this.gameConfig.terminology.phase || 'Phase';
+            
+            // Update all phase titles
+            document.querySelectorAll('.phase-title, .step-title').forEach(element => {
+                element.textContent = element.textContent.replace(/Phase \d+/g, (match) => {
+                    const number = match.match(/\d+/)[0];
+                    return `${phaseTerm} ${number}`;
+                });
+            });
+            
+            // Update phase indicators in progress bar
+            document.querySelectorAll('.phase-indicator').forEach(element => {
+                element.textContent = element.textContent.replace(/Phase/g, phaseTerm);
+            });
+            
+            // Update dashboard titles
+            document.querySelectorAll('.dashboard-title').forEach(element => {
+                element.textContent = element.textContent.replace(/Phase/g, phaseTerm);
+            });
+        }
+        
+        // Update dashboard title
+        const dashboardTitle = document.querySelector('.dashboard-title');
+        if (dashboardTitle) {
+            dashboardTitle.textContent = this.gameConfig.ui_text.dashboard.title;
+        }
+        
+        // Update dashboard subtitle
+        const dashboardSubtitle = document.querySelector('.dashboard-subtitle');
+        if (dashboardSubtitle) {
+            dashboardSubtitle.textContent = this.gameConfig.ui_text.dashboard.subtitle;
+        }
     }
 
     initializeEventListeners() {
@@ -99,8 +185,16 @@ class GameController {
                 modal.hide();
             }
             
-            // Proceed directly to next phase
-            this.proceedToNextMOT(phaseNumber);
+            // After Step 2, show Pilot Phase transition screen
+            if (phaseNumber === 2) {
+                this.showPilotPhaseScreen();
+            } else if (phaseNumber === 4) {
+                // After Step 4, show Enterprise Scaling transition screen
+                this.showScalingPhaseScreen();
+            } else {
+                // Proceed directly to next phase for other steps
+                this.proceedToNextMOT(phaseNumber);
+            }
         });
 
         // Skip video button
@@ -198,6 +292,32 @@ class GameController {
         if (joinTeamsMeetingBtn) {
             joinTeamsMeetingBtn.addEventListener('click', () => {
                 this.showMOT1Video();
+            });
+        }
+
+        // Continue Welcome button
+        const continueWelcomeBtn = document.getElementById('continue-welcome-btn');
+        if (continueWelcomeBtn) {
+            continueWelcomeBtn.addEventListener('click', () => {
+                this.showIntroductionVideo();
+            });
+        }
+
+        // Continue Pilot Phase button
+        const continuePilotPhaseBtn = document.getElementById('continue-pilot-phase-btn');
+        if (continuePilotPhaseBtn) {
+            continuePilotPhaseBtn.addEventListener('click', () => {
+                console.log('Continue Pilot Phase button clicked!');
+                this.proceedToNextMOT(2); // Proceed to Phase 3 after Step 2
+            });
+        }
+
+        // Continue Scaling Phase button
+        const continueScalingPhaseBtn = document.getElementById('continue-scaling-phase-btn');
+        if (continueScalingPhaseBtn) {
+            continueScalingPhaseBtn.addEventListener('click', () => {
+                console.log('Continue Enterprise Scaling button clicked!');
+                this.proceedToNextMOT(4); // Proceed to Phase 5 after Step 4
             });
         }
 
@@ -707,7 +827,25 @@ class GameController {
         // Arrêter toutes les vidéos en cours
         this.stopAllVideos();
         
-        // Passer directement à la vidéo intro (intro.mp4)
+        // Passer à la page Welcome
+        this.showWelcomeSection();
+    }
+
+    startGameAfterVideo() {
+        // Hide video and show Welcome page
+        this.showWelcomeSection();
+    }
+
+    showWelcomeSection() {
+        console.log('🔵 showWelcomeSection() called');
+        
+        // Show Welcome section (showSection already hides all other sections)
+        this.showSection('welcome-section');
+        this.updateProgress(7, 'Welcome');
+    }
+
+    showIntroductionVideo() {
+        // Hide Welcome section and show intro video (intro.mp4)
         this.showSection('harnessing-video-section');
         this.updateProgress(10, 'Introduction');
         
@@ -719,17 +857,66 @@ class GameController {
         document.getElementById('start-game-after-harnessing-btn').style.display = 'none';
     }
 
-    startGameAfterVideo() {
-        // Hide video and show intro video (intro.mp4)
-        this.showSection('harnessing-video-section');
-        this.updateProgress(10, 'Introduction');
+    showPilotPhaseScreen() {
+        console.log('🚀 showPilotPhaseScreen() called');
         
-        // Initialize intro video
-        initializeHarnessingVideo();
+        // Update the text based on selected use cases
+        this.updatePilotPhaseText();
         
-        // Reset button states
-        document.getElementById('skip-harnessing-btn').style.display = 'inline-block';
-        document.getElementById('start-game-after-harnessing-btn').style.display = 'none';
+        // Show Pilot Phase section
+        this.showSection('pilot-phase-section');
+        this.updateProgress(60, 'Pilot Phase');
+    }
+
+    updatePilotPhaseText() {
+        // Get the selected use cases from Step 2
+        const selectedUseCases = this.selectedChoices.mot2 || [];
+        console.log('Selected use cases for pilot phase:', selectedUseCases);
+        
+        // Map use case IDs to their display names
+        const useCaseNames = {
+            'fraud_integrity_detection': 'Fraud & Integrity Detection',
+            'ai_storyline_generator': 'AI-Powered Storyline Generator',
+            'smart_game_design_assistant': 'Smart Game Design Assistant',
+            'player_journey_optimizer': 'Player Journey Optimizer',
+            'talent_analytics_dashboard': 'Talent Analytics Dashboard'
+        };
+        
+        // Get the display names for selected use cases
+        const selectedNames = selectedUseCases.map(id => useCaseNames[id] || id);
+        
+        // Create the dynamic text
+        let projectsText = '';
+        if (selectedNames.length > 0) {
+            if (selectedNames.length === 1) {
+                projectsText = `The selected project — ${selectedNames[0]} — is now moving into pilot phase.`;
+            } else if (selectedNames.length === 2) {
+                projectsText = `The two selected projects — ${selectedNames[0]} and ${selectedNames[1]} — are now moving into pilot phase.`;
+            } else {
+                const lastProject = selectedNames.pop();
+                projectsText = `The ${selectedNames.length + 1} selected projects — ${selectedNames.join(', ')}, and ${lastProject} — are now moving into pilot phase.`;
+            }
+        } else {
+            projectsText = 'The selected projects are now moving into pilot phase.';
+        }
+        
+        // Update the text in the pilot phase section
+        const pilotPhaseText = document.getElementById('pilot-phase-text');
+        if (pilotPhaseText) {
+            pilotPhaseText.innerHTML = `
+                ${projectsText} Each team has begun working with vendors, datasets, and internal champions.
+                <br><br>
+                Sophie's next challenge is to ensure that these pilots not only deliver results but also inspire adoption across the company. To do this, she must choose the right enablers — initiatives that accelerate transformation, build trust, and make change sustainable.
+            `;
+        }
+    }
+
+    showScalingPhaseScreen() {
+        console.log('📈 showScalingPhaseScreen() called');
+        
+        // Show Scaling Phase section
+        this.showSection('scaling-phase-section');
+        this.updateProgress(75, 'Scaling Phase');
     }
 
     showTeamsMeetingSection() {
@@ -769,10 +956,10 @@ class GameController {
                         <i class="fas fa-users" style="margin-right: 10px;"></i>Teams Meeting
                     </h3>
                     <p style="color: white; font-size: 1.4rem; line-height: 1.6; margin-bottom: 3rem;">
-                        Sophie is organising a Teams meeting with her colleagues <strong>Amira (Marketing Expert)</strong>, <strong>James (IT Expert)</strong> and <strong>Elena (Transformation Expert)</strong> to gather their recommendations and define the best strategy for deploying generative AI.
+                        ${this.gameConfig.ui_text.teams_meeting.text}
                     </p>
                     <button id="new-join-teams-meeting-btn" style="font-size: 1.2rem; padding: 15px 30px; background-color: white; color: #1e40af; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';">
-                        <i class="fas fa-video" style="margin-right: 10px;"></i>Join the Teams meeting
+                        <i class="fas fa-video" style="margin-right: 10px;"></i>${this.gameConfig.ui_text.teams_meeting.button_text}
                     </button>
                 </div>
             </div>
@@ -815,7 +1002,7 @@ class GameController {
         
         // Show Phase1 video
         this.showSection('phase1-video-section');
-        this.updateProgress(20, 'Phase 1 - Embedding GenAI');
+        this.updateProgress(20, this.gameConfig.phases.phase1.title);
         
         // Initialize Phase1 video
         initializePhase1Video();
@@ -1036,24 +1223,28 @@ class GameController {
         const choiceDetails = {
             'elena': {
                 options: [
-                    { icon: 'fas fa-brain', label: 'Strategic vision mapping', class: 'strategy' },
-                    { icon: 'fas fa-search', label: 'HR function diagnostic', class: 'diagnostic' }
+                    { icon: 'fas fa-chart-line', label: 'AI Productivity Opportunities', class: 'transformation-change' },
+                    { icon: 'fas fa-search', label: 'AI Landscape Scan', class: 'technology-partnerships' }
                 ],
-                description: 'Transformation must be anchored in a solid strategy. We need to identify the HR areas where generative AI and AI have the most transformative potential to improve employee experience and HR productivity. I would also like to understand what\'s feasible now, estimate associated costs and get an idea of the overall impact of generative AI on our HR teams.'
+                description: null // Will use API description
             },
             'james': {
                 options: [
-                    { icon: 'fas fa-handshake', label: 'GenAI platform partnership', class: 'partnership' },
-                    { icon: 'fas fa-cogs', label: 'Technical foundation setup', class: 'technical' }
+                    { icon: 'fas fa-handshake', label: 'Strategic Tech Alliances', class: 'technology-partnerships' },
+                    { icon: 'fas fa-balance-scale', label: 'Vendor Value Steering', class: 'technology-partnerships' }
                 ],
-                description: 'We don\'t have the technological infrastructure to support generative AI. First, we need to build solid technical foundations. I suggest we select a generative AI platform to manage our future needs. HRTech Pro has the best capabilities on the market today.'
+                description: null // Will use API description
             },
             'amira': {
                 options: [
-                    { icon: 'fas fa-rocket', label: 'Rapid deployment', class: 'deployment' },
-                    { icon: 'fas fa-users', label: 'Bottom-up innovation', class: 'innovation' }
+                    { icon: 'fas fa-image', label: 'Automated Banners Generation', class: 'use-case' },
+                    { icon: 'fas fa-envelope', label: 'Customer Email Classifier', class: 'use-case' },
+                    { icon: 'fas fa-graduation-cap', label: 'Virtual Learning Coach Prototype', class: 'use-case' },
+                    { icon: 'fas fa-shield-alt', label: 'Supplier Risk Scoring', class: 'use-case' },
+                    { icon: 'fas fa-gamepad', label: 'Simulated Game Design', class: 'use-case' },
+                    { icon: 'fas fa-tools', label: 'Predictive Maintenance Sandbox', class: 'use-case' }
                 ],
-                description: 'We don\'t have time to waste in this competitiveness race, generative AI is so powerful that we should go all out. I suggest we ask our HR managers to experiment with generative AI and develop their own HR tools.'
+                description: null // Will use API description
             }
         };
 
@@ -1082,7 +1273,7 @@ class GameController {
                             `).join('')}
                         </div>
                         <div class="choice-description">
-                            "${details.description}"
+                            "${choice.description}"
                         </div>
                     </div>
                 </div>
@@ -1188,8 +1379,10 @@ class GameController {
                 }
                 
                 this.updateScoreDisplay(scoreData);
+                // Add the choice to scoreData for Phase 1
+                scoreData.choice = this.selectedChoices.mot1;
                 this.showScoreScreen(1, mot1Score, scoreData);
-                this.updateProgress(30, `Phase 1 completed - Score: ${mot1Score}/3`);
+                this.updateProgress(30, `Step 1 completed - Score: ${mot1Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -1301,11 +1494,11 @@ class GameController {
     createSolutionCard(choice) {
         // Mapping des choix vers leurs positions dans la matrice (seulement 1-5 disponibles)
         const choiceToMatrixPosition = {
-            'intelligent_recruitment': 1,    // Position 1
-            'virtual_hr_assistant': 2,        // Position 2  
-            'training_optimization': 3,      // Position 3
-            'sentiment_analysis': 4,         // Position 4
-            'hr_automation': 5               // Position 5
+            'fraud_integrity_detection': 1,        // Position 1
+            'ai_storyline_generator': 2,           // Position 2  
+            'smart_game_design_assistant': 3,      // Position 3
+            'player_journey_optimizer': 4,          // Position 4
+            'talent_analytics_dashboard': 5         // Position 5
         };
         
         const matrixPosition = choiceToMatrixPosition[choice.id] || '?';
@@ -1316,14 +1509,14 @@ class GameController {
             ? 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)'  // Bleu cyan pour disponibles
             : 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)'; // Gris pour non disponibles
         
-        const card = document.createElement('div');
+            const card = document.createElement('div');
         card.className = 'solution-card';
         card.draggable = true;
         card.dataset.choiceId = choice.id;
-        card.innerHTML = `
-        <div class="solution-options">
-            <i class="fas fa-ellipsis-v"></i>
-                    </div>
+            card.innerHTML = `
+            <div class="solution-options">
+                <i class="fas fa-ellipsis-v"></i>
+                        </div>
         <div class="solution-header">
             <div class="solution-title">${choice.title}</div>
             <div class="matrix-number-square" style="
@@ -1341,9 +1534,9 @@ class GameController {
                 flex-shrink: 0;
                 border: 2px solid white;
             ">${matrixPosition}</div>
-        </div>
+                </div>
         <div class="solution-description">${choice.description}</div>
-        `;
+            `;
         
         // Add drag event listeners
         card.addEventListener('dragstart', this.handleDragStart.bind(this));
@@ -1572,7 +1765,7 @@ class GameController {
                 const mot2Score = data.score.scores.mot2;
                 this.updateScoreDisplay(data.score);
                 this.showScoreScreen(2, mot2Score, data.score);
-                this.updateProgress(40, `Phase 2 completed - Score: ${mot2Score}/3`);
+                this.updateProgress(40, `Step 2 completed - Score: ${mot2Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -1614,39 +1807,39 @@ class GameController {
 
         // Define category metadata
         const categoryMetadata = {
-            'people_processes': {
-                title: 'People & Processes',
+            'transformation_change': {
+                title: 'Transformation & Change',
                 icon: 'fas fa-users',
-                class: 'people-processes'
+                class: 'transformation-change'
             },
-            'platform_partnerships': {
-                title: 'Platform & Partnerships',
+            'technology_partnerships': {
+                title: 'Technology & Partnerships',
                 icon: 'fas fa-handshake',
-                class: 'platform-partnerships'
+                class: 'technology-partnerships'
             },
-            'policies_practices': {
-                title: 'Policies & Practices',
+            'policies_governance': {
+                title: 'Policies & Governance',
                 icon: 'fas fa-shield-alt',
-                class: 'policies-practices'
+                class: 'policies-governance'
             }
         };
 
         // Define specific icons for each choice
         const choiceIcons = {
-            // People & Processes
-            'hr_ai_training': 'fas fa-graduation-cap',
-            'hr_role_redefinition': 'fas fa-user-cog',
-            'cultural_change': 'fas fa-comments',
+            // Technology & Partnerships
+            'ai_data_foundations': 'fas fa-database',
+            'model_automation_framework': 'fas fa-robot',
+            'data_readiness_review': 'fas fa-clipboard-check',
             
-            // Platform & Partnerships
-            'system_integration': 'fas fa-plug',
-            'tech_partnerships': 'fas fa-handshake',
-            'cloud_infrastructure': 'fas fa-cloud',
+            // Transformation & Change
+            'ai_leadership_program': 'fas fa-graduation-cap',
+            'hands_on_ai_bootcamp': 'fas fa-laptop-code',
+            'ai_co_creation_labs': 'fas fa-users',
             
-            // Policies & Practices
-            'ai_ethics_charter': 'fas fa-balance-scale',
-            'data_governance': 'fas fa-database',
-            'performance_metrics': 'fas fa-chart-line'
+            // Policies & Governance
+            'responsible_ai_framework': 'fas fa-shield-alt',
+            'ai_governance_roadmap': 'fas fa-route',
+            'ai_governance_board': 'fas fa-gavel'
         };
 
         // Create matrix structure
@@ -1663,8 +1856,8 @@ class GameController {
                     ${categoryChoices.map(choice => `
                     <div class="matrix-choice" data-choice-id="${choice.id}" data-category="${category}" onclick="gameController.selectMOT3Choice('${choice.id}', '${category}')">
                         <div class="choice-header">
-                            <div class="choice-icon ${category}">
-                                <i class="${choiceIcons[choice.id] || 'fas fa-cog'}"></i>
+                            <div style="background-color: ${category === 'transformation_change' ? '#eab308' : category === 'technology_partnerships' ? '#8b5cf6' : '#3b82f6'}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <i class="${choiceIcons[choice.id] || 'fas fa-cog'}" style="color: white; font-size: 1rem;"></i>
                                     </div>
                         <div class="choice-title">${choice.title}</div>
                         </div>
@@ -1780,7 +1973,7 @@ class GameController {
                 const mot3Score = data.score.scores.mot3;
                 this.updateScoreDisplay(data.score);
                 this.showScoreScreen(3, mot3Score, data.score);
-                this.updateProgress(50, `Phase 3 completed - Score: ${mot3Score}/3`);
+                this.updateProgress(50, `Step 3 completed - Score: ${mot3Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -1826,60 +2019,25 @@ class GameController {
 
         // Define category colors (consistent with dashboard)
         const categoryColors = {
-            'platform_partnerships': '#3b82f6', // Blue
-            'policies_practices': '#8b5cf6', // Purple
-            'people_processes': '#10b981' // Green
+            'technology_partnerships': '#8b5cf6', // Purple
+            'policies_governance': '#3b82f6', // Blue
+            'transformation_change': '#eab308' // Yellow
         };
 
-        // Get specific icons from allEnablersByCategory
-        const allEnablersByCategory = {
-            "platform_partnerships": [
-                { id: "genai_platform_partnership", title: "GenAI Platform Partnership", description: "Partenariat avec une plateforme GenAI", icon: "fas fa-handshake" },
-                { id: "technical_foundation_setup", title: "Technical Foundation Setup", description: "Mise en place des fondations techniques", icon: "fas fa-cogs" },
-                { id: "candidate_matching", title: "Candidate Matching", description: "Correspondance candidats-posts", icon: "fas fa-user-check" },
-                { id: "api_connectivity", title: "API Connectivity", description: "Connectivité API", icon: "fas fa-plug" },
-                { id: "vendor_relationships", title: "Vendor Relationships", description: "Relations fournisseurs", icon: "fas fa-handshake" },
-                { id: "system_connectivity", title: "System Connectivity", description: "Connectivité système", icon: "fas fa-link" },
-                { id: "cloud_infrastructure", title: "Cloud Infrastructure", description: "Infrastructure cloud", icon: "fas fa-cloud" },
-                { id: "data_pipeline_automation", title: "Data Pipeline Automation", description: "Automatisation des pipelines de données", icon: "fas fa-stream" },
-                { id: "cloud_migration", title: "Cloud Migration", description: "Migration vers le cloud", icon: "fas fa-cloud-upload-alt" },
-                { id: "data_strategy", title: "Data Strategy", description: "Stratégie de données", icon: "fas fa-database" }
-            ],
-            "policies_practices": [
-                { id: "strategic_vision_mapping", title: "Strategic Vision Mapping", description: "Cartographie de la vision stratégique", icon: "fas fa-brain" },
-                { id: "hr_function_diagnostic", title: "HR Function Diagnostic", description: "Diagnostic des fonctions RH", icon: "fas fa-search" },
-                { id: "sentiment_detection", title: "Sentiment Detection", description: "Détection de sentiment", icon: "fas fa-heart" },
-                { id: "ethical_framework", title: "Ethical Framework", description: "Cadre éthique", icon: "fas fa-balance-scale" },
-                { id: "kpi_definition", title: "KPI Definition", description: "Définition des KPI", icon: "fas fa-bullseye" },
-                { id: "ethics_oversight", title: "Ethics Oversight", description: "Surveillance éthique", icon: "fas fa-eye" },
-                { id: "risk_management", title: "Risk Management", description: "Gestion des risques", icon: "fas fa-shield-alt" },
-                { id: "ai_ethics_charter", title: "AI Ethics Charter", description: "Charte éthique IA", icon: "fas fa-scroll" },
-                { id: "leadership_communication", title: "Leadership Communication", description: "Communication du leadership", icon: "fas fa-bullhorn" }
-            ],
-            "people_processes": [
-                { id: "rapid_deployment", title: "Rapid Deployment", description: "Déploiement rapide", icon: "fas fa-rocket" },
-                { id: "bottom_up_innovation", title: "Bottom-up Innovation", description: "Innovation bottom-up", icon: "fas fa-lightbulb" },
-                { id: "personalized_training", title: "Personalized Training", description: "Formation personnalisée", icon: "fas fa-graduation-cap" },
-                { id: "employee_support", title: "Employee Support", description: "Support employés", icon: "fas fa-hands-helping" },
-                { id: "process_automation", title: "Process Automation", description: "Automatisation des processus", icon: "fas fa-cogs" },
-                { id: "hr_ai_competencies", title: "HR AI Competencies", description: "Compétences RH en IA", icon: "fas fa-user-graduate" },
-                { id: "role_evolution", title: "Role Evolution", description: "Évolution des rôles", icon: "fas fa-user-tag" },
-                { id: "cultural_change", title: "Cultural Change", description: "Changement culturel", icon: "fas fa-theater-masks" },
-                { id: "change_adoption", title: "Change Adoption", description: "Adoption du changement", icon: "fas fa-sync-alt" },
-                { id: "business_alignment", title: "Business Alignment", description: "Alignement métier", icon: "fas fa-bullseye" },
-                { id: "talent_retention", title: "Talent Retention", description: "Rétention des talents", icon: "fas fa-heart" },
-                { id: "organization_wide_ai", title: "Organization-wide AI", description: "IA organisationnelle", icon: "fas fa-building" },
-                { id: "long_term_roadmap", title: "Long-term Roadmap", description: "Feuille de route long terme", icon: "fas fa-road" },
-                { id: "value_based_governance", title: "Value-based Governance", description: "Gouvernance basée sur la valeur", icon: "fas fa-balance-scale" },
-                { id: "hr_ai_training_academy", title: "HR AI Training Academy", description: "Académie de formation RH en IA", icon: "fas fa-university" },
-                { id: "change_communication", title: "Change Communication", description: "Communication du changement", icon: "fas fa-comments" },
-                { id: "genai_hub", title: "GenAI Hub", description: "Hub GenAI", icon: "fas fa-building" },
-                { id: "internal_mobility", title: "Internal Mobility", description: "Mobilité interne", icon: "fas fa-exchange-alt" },
-                { id: "business_sponsors", title: "Business Sponsors", description: "Sponsors métier", icon: "fas fa-handshake" }
-            ]
+        // Map enabler IDs to categories
+        const enablerCategories = {
+            'reusable_api_patterns': 'technology_partnerships',
+            'industrial_data_pipelines': 'technology_partnerships',
+            'privacy_by_design_data': 'technology_partnerships',
+            'talent_mobility_program': 'transformation_change',
+            'business_ai_champions': 'transformation_change',
+            'ai_storytelling_communication': 'transformation_change',
+            'adoption_playbook': 'transformation_change',
+            'clear_ownership_accountability': 'policies_governance',
+            'local_ai_risk_management': 'policies_governance'
         };
 
-        // Create 3x3 matrix directly (no grouping by category)
+        // Create simple grid directly (no grouping by category)
         choices.forEach(choice => {
             const choiceDiv = document.createElement('div');
             choiceDiv.className = 'matrix-choice';
@@ -1887,25 +2045,17 @@ class GameController {
             choiceDiv.dataset.cost = choice.cost;
             choiceDiv.onclick = () => gameController.selectMOT4Choice(choice.id, choice.cost);
             
-            // Find the specific icon for this choice's enabler
-            let specificIcon = 'fas fa-cog'; // Default fallback
-            const categoryEnablers = allEnablersByCategory[choice.category] || [];
-            console.log(`DEBUG: choice=${choice.id}, category=${choice.category}, enabler_id=${choice.enabler_id}`);
-            console.log(`DEBUG: categoryEnablers=`, categoryEnablers);
-            const enablerInfo = categoryEnablers.find(e => e.id === choice.enabler_id);
-            console.log(`DEBUG: enablerInfo=`, enablerInfo);
-            if (enablerInfo) {
-                specificIcon = enablerInfo.icon;
-                console.log(`✅ Found icon for ${choice.id}: ${specificIcon}`);
-            } else {
-                console.log(`❌ No icon found for ${choice.id} with enabler_id=${choice.enabler_id}`);
-            }
+            const category = enablerCategories[choice.id] || 'technology_partnerships';
+            const categoryColor = categoryColors[category];
+            const specificIcon = this.getEnablerIcon(choice.id);
             
-            const categoryColor = categoryColors[choice.category] || '#6b7280';
+            // Convert underscores to hyphens for CSS classes (like Step 3)
+            const categoryClass = category.replace(/_/g, '-');
+            console.log(`DEBUG Step 4: choice.id=${choice.id}, category=${category}, categoryClass=${categoryClass}, categoryColor=${categoryColor}`);
             
             choiceDiv.innerHTML = `
-                <div class="choice-icon ${choice.category}">
-                    <i class="${specificIcon}"></i>
+                <div style="background-color: ${categoryColor}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                    <i class="${specificIcon}" style="color: white; font-size: 1rem;"></i>
                         </div>
                 <div class="choice-title">${choice.title}</div>
                 <div class="choice-description">${choice.description}</div>
@@ -1916,6 +2066,30 @@ class GameController {
 
         // Initialize budget tracking
         this.initializePhase4Budget();
+    }
+
+    getEnablerIcon(enablerId) {
+        const iconMap = {
+            'reusable_api_patterns': 'fas fa-code',
+            'industrial_data_pipelines': 'fas fa-database',
+            'privacy_by_design_data': 'fas fa-shield-alt',
+            'talent_mobility_program': 'fas fa-users',
+            'business_ai_champions': 'fas fa-trophy',
+            'ai_storytelling_communication': 'fas fa-bullhorn',
+            'adoption_playbook': 'fas fa-book',
+            'clear_ownership_accountability': 'fas fa-clipboard-check',
+            'local_ai_risk_management': 'fas fa-exclamation-triangle'
+        };
+        return iconMap[enablerId] || 'fas fa-cog';
+    }
+
+    getCategoryTitle(category) {
+        const categoryTitles = {
+            'technology_partnerships': 'Technology & Partnerships',
+            'policies_governance': 'Policies & Governance',
+            'transformation_change': 'Transformation & Change'
+        };
+        return categoryTitles[category] || category;
     }
 
     initializePhase4Budget() {
@@ -2065,7 +2239,7 @@ class GameController {
                 const mot4Score = data.score.scores.mot4;
                 this.updateScoreDisplay(data.score);
                 this.showScoreScreen(4, mot4Score, data.score);
-                this.updateProgress(60, `Phase 4 completed - Score: ${mot4Score}/3`);
+                this.updateProgress(60, `Step 4 completed - Score: ${mot4Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -2259,7 +2433,7 @@ class GameController {
 
     showScoreScreen(motNumber, score, scoreData) {
         console.log('=== showScoreScreen called ===');
-        console.log('Phase:', motNumber, 'Score:', score);
+        console.log('Step:', motNumber, 'Score:', score, 'ScoreData:', scoreData);
         
         // Store current Phase number for Next button
         this.currentPhaseNumber = motNumber;
@@ -2278,16 +2452,16 @@ class GameController {
         // Update score display
         this.updateScoreDisplay(scoreData);
         
-        // Set Phase title
-        const phaseTitles = {
-            1: 'Embedding GenAI in your AI transformation program',
-            2: 'Building the right foundation',
-            3: 'Scaling across the organization',
-            4: 'Ensuring sustainable success',
-            5: 'Accelerating the transformation'
+        // Set Step title dynamically from template
+        const stepTitles = {
+            1: this.gameConfig?.phases?.phase1?.title || 'Step 1 - Embedding GenAI in your AI transformation program',
+            2: this.gameConfig?.phases?.phase2?.title || 'Step 2 - Building the right foundation',
+            3: this.gameConfig?.phases?.phase3?.title || 'Step 3 - Scaling across the organization',
+            4: this.gameConfig?.phases?.phase4?.title || 'Step 4 - Ensuring sustainable success',
+            5: this.gameConfig?.phases?.phase5?.title || 'Step 5 - Accelerating the transformation'
         };
         
-        document.getElementById('current-mot-title').textContent = phaseTitles[motNumber];
+        document.getElementById('current-mot-title').textContent = stepTitles[motNumber];
         
         // Generate stars
         const starsContainer = document.getElementById('score-stars-container');
@@ -2301,16 +2475,77 @@ class GameController {
         
         console.log(`Generated ${score} stars for phase ${motNumber}`);
         
-        // Set description
-        const descriptions = {
-            1: 'Congratulations! You earned stars for this phase. These stars will be a quick visual cue of your overall success throughout the rest of the game.',
-            2: 'Great work! You earned stars for this phase. These stars will be a quick visual cue of your overall success throughout the rest of the game.',
-            3: 'Excellent! You earned stars for this phase. These stars will be a quick visual cue of your overall success throughout the rest of the game.',
-            4: 'Outstanding! You earned stars for this phase. These stars will be a quick visual cue of your overall success throughout the rest of the game.',
-            5: 'Fantastic! You earned stars for this phase. These stars will be a quick visual cue of your overall success throughout the rest of the game.'
-        };
+        // Set description based on choice and score
+        let description = '';
         
-        document.getElementById('score-description').textContent = descriptions[motNumber];
+        if (motNumber === 1) {
+            // Phase 1 specific messages based on choice
+            const currentChoice = scoreData.choice || this.currentPath?.mot1_choice;
+            console.log('DEBUG showScoreScreen:', { motNumber, score, currentChoice, scoreDataChoice: scoreData.choice, currentPath: this.currentPath });
+            
+            if (currentChoice === 'elena' && score === 3) {
+                description = "By choosing Elena's approach, you earned 3 stars out of 3. This value-driven and culture-aligned strategy ensures you'll build a sustainable AI roadmap that inspires creativity, empowers teams, and delivers measurable business impact.";
+            } else if (currentChoice === 'james' && score === 2) {
+                description = "By choosing James's approach, you earned 2 stars out of 3. While this technology-first strategy builds solid foundations, it may miss opportunities for immediate value creation and team engagement that could accelerate your AI transformation.";
+            } else if (currentChoice === 'amira' && score === 1) {
+                description = "By choosing Amira's approach, you earned 1 star out of 3. While this rapid experimentation strategy enables quick learning, it lacks strategic alignment and foundational structure, potentially leading to fragmented AI initiatives and missed long-term opportunities.";
+            } else {
+                // Fallback for other cases
+                console.log('Using fallback message for Phase 1');
+                description = `Congratulations! You earned ${score} stars for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`;
+            }
+        } else if (motNumber === 2) {
+            // Phase 2 specific messages based on score
+            if (score === 3) {
+                description = "By selecting the first three — Smart Game Design Assistant, Player Journey Optimizer, and Fraud & Integrity Detection — you earned 3 stars out of 3. You chose solutions that deliver immediate player impact while nurturing creativity and future-ready skills. PlayNext is now ready to move from vision to action.";
+            } else if (score === 2) {
+                description = "You earned 2 stars out of 3 for your portfolio selection. While you've chosen some strong solutions, consider balancing immediate player impact with long-term strategic value. The optimal mix combines creative tools, player experience optimization, and security measures to build a comprehensive AI foundation.";
+            } else if (score === 1) {
+                description = "You earned 1 star out of 3 for your portfolio selection. Your choices show potential, but may lack the strategic balance needed for sustainable growth. Consider selecting solutions that work together to create both immediate player value and long-term competitive advantage.";
+            } else {
+                description = `Congratulations! You earned ${score} stars for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`;
+            }
+        } else if (motNumber === 3) {
+            // Phase 3 specific messages based on score
+            console.log('DEBUG Phase 3:', { motNumber, score, scoreData });
+            console.log('motNumber === 3:', motNumber === 3);
+            if (score === 3) {
+                description = "By choosing the AI Co-Creation Labs, AI & Data Foundations & AI Governance board you earned 3 stars out of 3. This choice focuses on people and collaboration — the most powerful accelerators of real adoption. Your teams now share ownership of the AI journey, turning experimentation into collective learning.";
+            } else if (score === 2) {
+                description = "You earned 2 stars out of 3 for your enabler selection. While you've chosen solid foundations, you may have missed opportunities to fully engage your teams in the AI transformation. Consider balancing technical infrastructure with people-focused initiatives to accelerate adoption and build lasting change.";
+            } else if (score === 1) {
+                description = "You earned 1 star out of 3 for your enabler selection. Your choices show some strategic thinking, but may lack the comprehensive approach needed for sustainable AI adoption. Focus on creating both technical foundations and human-centered change to ensure your AI initiatives succeed long-term.";
+            } else {
+                description = `Congratulations! You earned ${score} stars for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`;
+            }
+            console.log('Phase 3 description selected:', description);
+        } else if (motNumber === 4) {
+            // Phase 4 specific messages based on score
+            console.log('DEBUG Phase 4:', { motNumber, score, scoreData });
+            console.log('motNumber === 4:', motNumber === 4);
+            if (score === 3) {
+                description = "By selecting Industrial Data Pipelines, Local AI Risk Management, Business AI Champions plus the Adoption Playbook you achieved the perfect balance — adoption, scalability, and trust.\n\nYou earned 3 stars out of 3.\nPlayNext is now ready to move from pilot success to enterprise-wide impact.";
+            } else if (score === 2) {
+                description = "You earned 2 stars out of 3 for your scaling enabler selection. While you've chosen solid foundations for scaling, you may have missed some key elements that ensure both technical robustness and organizational readiness. Consider balancing infrastructure investments with change management and governance to accelerate enterprise-wide adoption.";
+            } else if (score === 1) {
+                description = "You earned 1 star out of 3 for your scaling enabler selection. Your choices show some strategic thinking, but may lack the comprehensive approach needed for successful enterprise-wide scaling. Focus on creating both technical foundations and human-centered change management to ensure your AI initiatives scale effectively across the organization.";
+            } else {
+                description = `Congratulations! You earned ${score} stars for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`;
+            }
+            console.log('Phase 4 description selected:', description);
+        } else {
+            // Generic messages for other phases
+        const descriptions = {
+                1: `Congratulations! You earned ${score} star${score > 1 ? 's' : ''} for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`,
+                2: `Great work! You earned ${score} star${score > 1 ? 's' : ''} for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`,
+                3: `Excellent! You earned ${score} star${score > 1 ? 's' : ''} for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`,
+                4: `Outstanding! You earned ${score} star${score > 1 ? 's' : ''} for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`,
+                5: `Fantastic! You earned ${score} star${score > 1 ? 's' : ''} for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`
+            };
+            description = descriptions[score] || descriptions[1];
+        }
+        
+        document.getElementById('score-description').textContent = description;
         
         // Update progress squares (only if element exists)
         const progressSquares = document.getElementById('progress-squares');
@@ -2369,6 +2604,9 @@ class GameController {
     }
 
     async showExecutiveDashboard(motNumber, score, scoreData) {
+        console.log('=== showExecutiveDashboard called ===');
+        console.log('Phase:', motNumber, 'Score:', score);
+        console.log('=== About to call /api/executive_dashboard ===');
         try {
             // Récupérer les données du dashboard
             const response = await fetch('/api/executive_dashboard');
@@ -2394,6 +2632,12 @@ class GameController {
                     // Mettre à jour les ENABLERS par catégorie avec la nouvelle interface pédagogique
                     console.log('pedagogical_data:', dashboardData.pedagogical_data);
                     this.updatePedagogicalCategories(dashboardData.pedagogical_data);
+                    
+                    // Mettre à jour les Use Cases
+                    if (dashboardData.use_cases_data) {
+                        console.log('use_cases_data:', dashboardData.use_cases_data);
+                        this.updateUseCases(dashboardData.use_cases_data);
+                    }
             
             // Mettre à jour le message d'impact
             document.getElementById('impact-message').innerHTML = `<p>${dashboardData.impact_message}</p>`;
@@ -2449,7 +2693,7 @@ class GameController {
         
         // Définir tous les ENABLERS possibles avec leurs icônes
         const allEnablersByCategory = {
-            "platform_partnerships": [
+            "technology_partnerships": [
                 { id: "genai_platform_partnership", title: "GenAI Platform Partnership", description: "Partenariat avec une plateforme GenAI", icon: "fas fa-handshake" },
                 { id: "technical_foundation_setup", title: "Technical Foundation Setup", description: "Mise en place des fondations techniques", icon: "fas fa-cogs" },
                 { id: "candidate_matching", title: "Candidate Matching", description: "Correspondance candidats-posts", icon: "fas fa-user-check" },
@@ -2461,7 +2705,7 @@ class GameController {
                 { id: "cloud_migration", title: "Cloud Migration", description: "Migration vers le cloud", icon: "fas fa-cloud-upload-alt" },
                 { id: "data_strategy", title: "Data Strategy", description: "Stratégie de données", icon: "fas fa-database" }
             ],
-            "policies_practices": [
+            "policies_governance": [
                 { id: "strategic_vision_mapping", title: "Strategic Vision Mapping", description: "Cartographie de la vision stratégique", icon: "fas fa-brain" },
                 { id: "hr_function_diagnostic", title: "HR Function Diagnostic", description: "Diagnostic des fonctions RH", icon: "fas fa-search" },
                 { id: "sentiment_detection", title: "Sentiment Detection", description: "Détection de sentiment", icon: "fas fa-heart" },
@@ -2472,7 +2716,7 @@ class GameController {
                 { id: "ai_ethics_charter", title: "AI Ethics Charter", description: "Charte éthique IA", icon: "fas fa-scroll" },
                 { id: "leadership_communication", title: "Leadership Communication", description: "Communication du leadership", icon: "fas fa-bullhorn" }
             ],
-            "people_processes": [
+            "transformation_change": [
                 { id: "rapid_deployment", title: "Rapid Deployment", description: "Déploiement rapide", icon: "fas fa-rocket" },
                 { id: "bottom_up_innovation", title: "Bottom-up Innovation", description: "Innovation bottom-up", icon: "fas fa-lightbulb" },
                 { id: "personalized_training", title: "Personalized Training", description: "Formation personnalisée", icon: "fas fa-graduation-cap" },
@@ -2496,9 +2740,9 @@ class GameController {
         };
         
         const categoryTitles = {
-            "platform_partnerships": "Platform & Partnerships",
-            "policies_practices": "Policies & Practices", 
-            "people_processes": "People & Processes"
+            "technology_partnerships": "Technology & Partnerships",
+            "transformation_change": "Transformation & Change",
+            "policies_governance": "Policies & Governance"
         };
         
         // Créer une ligne pour chaque catégorie
@@ -2512,10 +2756,10 @@ class GameController {
             categoryTitleDiv.textContent = categoryTitle;
             categoryRow.appendChild(categoryTitleDiv);
             
-            // Colonnes pour chaque phase (seulement celles complétées)
-            const phases = ['phase1', 'phase2', 'phase3', 'phase4', 'phase5'];
+            // Colonnes pour chaque phase (seulement celles complétées, sauf Step 2 qui n'a pas d'enablers)
+            const phases = ['phase1', 'phase3', 'phase4', 'phase5']; // Exclure phase2 car elle n'a pas d'enablers
             phases.forEach((phaseKey, index) => {
-                const phaseNumber = index + 1;
+                const phaseNumber = phaseKey === 'phase1' ? 1 : (phaseKey === 'phase3' ? 3 : (phaseKey === 'phase4' ? 4 : 5));
                 const phaseColumn = document.createElement('div');
                 phaseColumn.className = `pedagogical-phase-column ${completedPhases.includes(phaseNumber) ? 'visible' : 'hidden'}`;
                 
@@ -2561,6 +2805,88 @@ class GameController {
         });
     }
     
+    updateUseCases(useCasesData) {
+        console.log('=== updateUseCases called ===');
+        console.log('useCasesData:', useCasesData);
+        
+        // Utiliser la section Use Cases existante dans le HTML
+        const useCasesContainer = document.getElementById('use-cases-section');
+        if (!useCasesContainer) {
+            console.error('Could not find use-cases-section in HTML');
+            return;
+        }
+        
+        // Toujours afficher la section Use Cases
+        useCasesContainer.style.display = 'block';
+        console.log('Use Cases section displayed');
+        
+        const useCasesContent = document.getElementById('use-cases-content');
+        useCasesContent.innerHTML = '';
+        
+        // Traiter chaque phase avec des Use Cases (Step 2 en premier, puis Step 1)
+        console.log('Processing phases:', Object.keys(useCasesData));
+        
+        // Trier les phases : phase2 en premier, puis phase1
+        const sortedPhases = Object.entries(useCasesData).sort(([a], [b]) => {
+            if (a === 'phase2') return -1;
+            if (b === 'phase2') return 1;
+            return 0;
+        });
+        
+        sortedPhases.forEach(([phaseKey, phaseData]) => {
+            console.log(`Processing phase: ${phaseKey}`, phaseData);
+            const phaseDiv = document.createElement('div');
+            // Appliquer des styles différents selon la phase
+            if (phaseKey === 'phase1') {
+                phaseDiv.className = 'use-cases-phase use-cases-phase-secondary';
+            } else {
+                phaseDiv.className = 'use-cases-phase use-cases-phase-primary';
+            }
+            
+            // Titre de la phase
+            const phaseTitle = document.createElement('h4');
+            phaseTitle.textContent = phaseData.title;
+            phaseTitle.className = phaseKey === 'phase1' ? 'use-cases-phase-title-secondary' : 'use-cases-phase-title-primary';
+            phaseDiv.appendChild(phaseTitle);
+            
+            // Conteneur des Use Cases
+            const useCasesGrid = document.createElement('div');
+            useCasesGrid.className = 'use-cases-grid';
+            
+            // Afficher chaque Use Case
+            phaseData.use_cases.forEach(useCase => {
+                const useCaseDiv = document.createElement('div');
+                useCaseDiv.className = `use-case-item ${useCase.unlocked ? 'unlocked' : 'locked'}`;
+                
+                // Icône
+                const icon = document.createElement('div');
+                icon.className = 'use-case-icon';
+                icon.innerHTML = `<i class="${useCase.icon || 'fas fa-lightbulb'}"></i>`;
+                useCaseDiv.appendChild(icon);
+                
+                // Titre
+                const title = document.createElement('div');
+                title.className = 'use-case-title';
+                title.textContent = useCase.title;
+                useCaseDiv.appendChild(title);
+                
+                // Description (tooltip)
+                const tooltip = document.createElement('div');
+                tooltip.className = 'use-case-tooltip';
+                tooltip.innerHTML = `
+                    <div class="use-case-tooltip-title">${useCase.title}</div>
+                    <div class="use-case-tooltip-description">${useCase.description}</div>
+                `;
+                useCaseDiv.appendChild(tooltip);
+                
+                useCasesGrid.appendChild(useCaseDiv);
+            });
+            
+            phaseDiv.appendChild(useCasesGrid);
+            useCasesContent.appendChild(phaseDiv);
+        });
+    }
+    
     getCompletedPhases() {
         // Déterminer quelles phases sont complétées basé sur l'état actuel du jeu
         const completedPhases = [];
@@ -2576,8 +2902,9 @@ class GameController {
     }
     
     updatePhaseHeaders(completedPhases) {
-        // Mettre à jour la visibilité des en-têtes de phase
-        for (let i = 1; i <= 5; i++) {
+        // Mettre à jour la visibilité des en-têtes de phase (exclure Step 2 qui n'a pas d'enablers)
+        const phasesWithEnablers = [1, 3, 4, 5]; // Exclure Step 2
+        phasesWithEnablers.forEach(i => {
             const phaseHeader = document.querySelector(`.phase-header-${i}`);
             if (phaseHeader) {
                 if (completedPhases.includes(i)) {
@@ -2588,6 +2915,13 @@ class GameController {
                     phaseHeader.classList.add('hidden');
                 }
             }
+        });
+        
+        // Masquer l'en-tête Step 2
+        const phaseHeader2 = document.querySelector(`.phase-header-2`);
+        if (phaseHeader2) {
+            phaseHeader2.classList.remove('visible');
+            phaseHeader2.classList.add('hidden');
         }
     }
     
@@ -2893,9 +3227,9 @@ class GameController {
                 this.showPhase3Video();
                 break;
             case 3:
-                console.log('Starting Phase4 game...');
+                console.log('Showing Phase4 video...');
                 this.currentPhaseNumber = 4;
-                this.startPhase4Game();
+                this.showPhase4Video();
                 break;
             case 4:
                 console.log('Showing Phase5-1 video...');
@@ -2990,13 +3324,13 @@ class GameController {
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <h5 class="mb-1" style="font-size: 0.9rem !important; margin-bottom: 0.25rem !important;">Detail by Phase</h5>
+                        <h5 class="mb-1" style="font-size: 0.9rem !important; margin-bottom: 0.25rem !important;">Detail by Step</h5>
                         <div class="text-start">
-                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">Embedding GenAI in your AI transformation program: <span class="score-badge">${results.scores.mot1}/3</span></div>
-                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">Building the right foundation: <span class="score-badge">${results.scores.mot2}/3</span></div>
-                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">Scaling across the organization: <span class="score-badge">${results.scores.mot3}/3</span></div>
-                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">Ensuring sustainable success: <span class="score-badge">${results.scores.mot4}/3</span></div>
-                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">Accelerating the transformation: <span class="score-badge">${results.scores.mot5}/3</span></div>
+                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">${this.gameConfig?.phases?.phase1?.title || 'Step 1 - Embedding GenAI in your AI transformation program'}: <span class="score-badge">${results.scores.mot1}/3</span></div>
+                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">${this.gameConfig?.phases?.phase2?.title || 'Step 2 - Building the right foundation'}: <span class="score-badge">${results.scores.mot2}/3</span></div>
+                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">${this.gameConfig?.phases?.phase3?.title || 'Step 3 - Scaling across the organization'}: <span class="score-badge">${results.scores.mot3}/3</span></div>
+                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">${this.gameConfig?.phases?.phase4?.title || 'Step 4 - Ensuring sustainable success'}: <span class="score-badge">${results.scores.mot4}/3</span></div>
+                            <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">${this.gameConfig?.phases?.phase5?.title || 'Step 5 - Accelerating the transformation'}: <span class="score-badge">${results.scores.mot5}/3</span></div>
                         </div>
                     </div>
                 </div>
