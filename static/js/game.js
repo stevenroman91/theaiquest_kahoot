@@ -787,6 +787,13 @@ class GameController {
         }, 5000);
     }
 
+    hideAlert() {
+        const alertContainer = document.getElementById('alert-container');
+        if (alertContainer) {
+            alertContainer.innerHTML = '';
+        }
+    }
+
     stopAllVideos() {
         // Liste de tous les IDs de vidéos possibles
         const videoIds = [
@@ -1201,16 +1208,23 @@ class GameController {
 
     async loadMOT1Choices() {
         try {
+            console.log('🔍 Loading MOT1 choices...');
             const response = await fetch('/api/phase1/choices', {
                 credentials: 'include'
             });
             const data = await response.json();
+            console.log('📡 MOT1 API response:', data);
 
             if (data.success) {
+                console.log('✅ MOT1 choices loaded successfully');
                 this.renderMOT1Choices(data.choices);
                 this.showSection('phase1-section');
+            } else {
+                console.error('❌ MOT1 API failed:', data.message);
+                this.showAlert('Erreur lors du chargement des choix: ' + data.message, 'danger');
             }
         } catch (error) {
+            console.error('❌ MOT1 loading error:', error);
             this.showAlert('Erreur lors du chargement des choix', 'danger');
         }
     }
@@ -1219,32 +1233,29 @@ class GameController {
         const container = document.getElementById('phase1-choices');
         container.innerHTML = '';
 
-        // Define choice details based on the scripts
+        // Define choice details based on the template
         const choiceDetails = {
             'elena': {
-                options: [
-                    { icon: 'fas fa-chart-line', label: 'AI Productivity Opportunities', class: 'transformation-change' },
-                    { icon: 'fas fa-search', label: 'AI Landscape Scan', class: 'technology-partnerships' }
-                ],
-                description: null // Will use API description
+                enablers: [
+                    { id: 'ai_productivity_opportunities', icon: 'fas fa-chart-line', label: 'AI Productivity Opportunities', category: 'transformation_change' },
+                    { id: 'ai_landscape_scan', icon: 'fas fa-search', label: 'AI Landscape Scan', category: 'technology_partnerships' }
+                ]
             },
             'james': {
-                options: [
-                    { icon: 'fas fa-handshake', label: 'Strategic Tech Alliances', class: 'technology-partnerships' },
-                    { icon: 'fas fa-balance-scale', label: 'Vendor Value Steering', class: 'technology-partnerships' }
-                ],
-                description: null // Will use API description
+                enablers: [
+                    { id: 'strategic_tech_alliances', icon: 'fas fa-handshake', label: 'Strategic Tech Alliances', category: 'technology_partnerships' },
+                    { id: 'vendor_value_steering', icon: 'fas fa-balance-scale', label: 'Vendor Value Steering', category: 'technology_partnerships' }
+                ]
             },
             'amira': {
-                options: [
-                    { icon: 'fas fa-image', label: 'Automated Banners Generation', class: 'use-case' },
-                    { icon: 'fas fa-envelope', label: 'Customer Email Classifier', class: 'use-case' },
-                    { icon: 'fas fa-graduation-cap', label: 'Virtual Learning Coach Prototype', class: 'use-case' },
-                    { icon: 'fas fa-shield-alt', label: 'Supplier Risk Scoring', class: 'use-case' },
-                    { icon: 'fas fa-gamepad', label: 'Simulated Game Design', class: 'use-case' },
-                    { icon: 'fas fa-tools', label: 'Predictive Maintenance Sandbox', class: 'use-case' }
-                ],
-                description: null // Will use API description
+                use_cases: [
+                    { id: 'automated_banners_generation', icon: 'fas fa-image', label: 'Automated Banners Generation' },
+                    { id: 'customer_email_classifier', icon: 'fas fa-envelope', label: 'Customer Email Classifier' },
+                    { id: 'virtual_learning_coach_prototype', icon: 'fas fa-graduation-cap', label: 'Virtual Learning Coach Prototype' },
+                    { id: 'supplier_risk_scoring', icon: 'fas fa-shield-alt', label: 'Supplier Risk Scoring' },
+                    { id: 'simulated_game_design', icon: 'fas fa-gamepad', label: 'Simulated Game Design' },
+                    { id: 'predictive_maintenance_sandbox', icon: 'fas fa-tools', label: 'Predictive Maintenance Sandbox' }
+                ]
             }
         };
 
@@ -1253,7 +1264,37 @@ class GameController {
             accordionItem.className = 'accordion-choice';
             accordionItem.dataset.choiceId = choice.id;
             
-            const details = choiceDetails[choice.id] || { options: [], description: choice.description };
+            const details = choiceDetails[choice.id] || { enablers: [], use_cases: [], description: choice.description };
+            
+            // Générer le contenu selon le type de choix
+            let contentHtml = '';
+            if (details.enablers && details.enablers.length > 0) {
+                contentHtml = `
+                    <div class="choice-enablers">
+                        ${details.enablers.map(enabler => `
+                            <div class="choice-enabler">
+                                <div class="enabler-icon ${enabler.category}">
+                                    <i class="${enabler.icon}"></i>
+                                </div>
+                                <div class="enabler-label">${enabler.label}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (details.use_cases && details.use_cases.length > 0) {
+                contentHtml = `
+                    <div class="choice-use-cases">
+                        ${details.use_cases.map(useCase => `
+                            <div class="choice-use-case" data-use-case-id="${useCase.id}">
+                                <div class="use-case-icon">
+                                    <i class="${useCase.icon}"></i>
+                                </div>
+                                <div class="use-case-label">${useCase.label}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
             
             accordionItem.innerHTML = `
                 <div class="accordion-header" onclick="gameController.toggleAccordion('${choice.id}')">
@@ -1262,18 +1303,9 @@ class GameController {
                         </div>
                 <div class="accordion-content">
                     <div class="accordion-details">
-                        <div class="choice-options">
-                            ${details.options.map(option => `
-                                <div class="choice-option">
-                                    <div class="option-icon ${option.class}">
-                                        <i class="${option.icon}"></i>
-                                    </div>
-                                    <div class="option-label">${option.label}</div>
-                                </div>
-                            `).join('')}
-                        </div>
+                        ${contentHtml}
                         <div class="choice-description">
-                            "${choice.description}"
+                            ${choice.description}
                         </div>
                     </div>
                 </div>
@@ -1282,18 +1314,84 @@ class GameController {
             container.appendChild(accordionItem);
         });
 
-        // Initialize accordion functionality
-        this.initializeAccordion();
+        // Tooltips are now created directly in HTML
+        // Load descriptions from API and update tooltips
     }
 
-    initializeAccordion() {
-        // Add click handlers for selection
-        document.querySelectorAll('.accordion-choice').forEach(item => {
-            item.addEventListener('click', (e) => {
-                if (!e.target.closest('.accordion-header')) {
-                    this.selectPhase1Choice(item.dataset.choiceId);
-                }
+    async loadEnablerDescriptions() {
+        try {
+            console.log('🔍 Loading enabler descriptions from template...');
+            
+            // Charger les descriptions des enablers depuis l'API du template
+            const response = await fetch('/api/game_config', {
+                credentials: 'include'
             });
+            const data = await response.json();
+            console.log('📡 Game config response:', data);
+            
+            if (data.success && data.enablers) {
+                console.log('✅ Enablers data loaded from template, creating tooltips...');
+                // Créer les tooltips pour les enablers
+                const enablerElements = document.querySelectorAll('.choice-enabler[data-enabler-id]');
+                console.log(`🔍 Found ${enablerElements.length} enabler elements`);
+                
+                enablerElements.forEach(enablerEl => {
+                    const enablerId = enablerEl.dataset.enablerId;
+                    console.log(`🔍 Processing enabler: ${enablerId}`);
+                    const enablerData = data.enablers[enablerId];
+                    
+                    if (enablerData) {
+                        console.log(`✅ Updating tooltip for ${enablerId}:`, enablerData);
+                        // Mettre à jour le tooltip existant
+                        const tooltip = enablerEl.querySelector('.enabler-tooltip');
+                        if (tooltip) {
+                            tooltip.innerHTML = `
+                                <div class="tooltip-title">${enablerData.title}</div>
+                                <div class="tooltip-description">${enablerData.description}</div>
+                            `;
+                            console.log(`✅ Tooltip updated for ${enablerId}`);
+                        }
+                    } else {
+                        console.log(`❌ No data found for enabler: ${enablerId}`);
+                    }
+                });
+            } else {
+                console.log('❌ No enablers data available in template');
+            }
+        } catch (error) {
+            console.error('❌ Error loading enabler descriptions:', error);
+        }
+    }
+    
+    findEnablerInData(enablersByCategory, enablerId) {
+        for (const category in enablersByCategory) {
+            const enablers = enablersByCategory[category];
+            for (const enabler of enablers) {
+                if (enabler.id === enablerId) {
+                    return enabler;
+                }
+            }
+        }
+        return null;
+    }
+    
+    createEnablerTooltip(element, title, description) {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'enabler-tooltip';
+        tooltip.innerHTML = `
+            <div class="tooltip-title">${title}</div>
+            <div class="tooltip-description">${description}</div>
+        `;
+        
+        element.appendChild(tooltip);
+        
+        // Ajouter les événements hover
+        element.addEventListener('mouseenter', () => {
+            tooltip.style.display = 'block';
+        });
+        
+        element.addEventListener('mouseleave', () => {
+            tooltip.style.display = 'none';
         });
     }
 
@@ -2078,7 +2176,15 @@ class GameController {
             'ai_storytelling_communication': 'fas fa-bullhorn',
             'adoption_playbook': 'fas fa-book',
             'clear_ownership_accountability': 'fas fa-clipboard-check',
-            'local_ai_risk_management': 'fas fa-exclamation-triangle'
+            'local_ai_risk_management': 'fas fa-exclamation-triangle',
+            // Phase 5 enablers
+            'trusted_partner_ecosystem': 'fas fa-handshake',
+            'enterprise_ai_service_layer': 'fas fa-layer-group',
+            'ai_collaboration_hub': 'fas fa-project-diagram',
+            'group_responsible_ai_awareness': 'fas fa-shield-alt',
+            'early_career_pipeline_expert_retention': 'fas fa-graduation-cap',
+            'value_driven_governance': 'fas fa-chart-line',
+            'data_ai_academy': 'fas fa-university'
         };
         return iconMap[enablerId] || 'fas fa-cog';
     }
@@ -2103,6 +2209,9 @@ class GameController {
         const budgetFill = document.getElementById('budget-fill');
         const statusBadge = document.getElementById('budget-status');
         const confirmBtn = document.getElementById('phase4-confirm-btn');
+        
+        console.log('DEBUG updatePhase4Budget: budget =', this.budget);
+        console.log('DEBUG updatePhase4Budget: confirmBtn =', confirmBtn);
         
         // Update budget display
         budgetDisplay.textContent = `${this.budget}/30 points`;
@@ -2145,6 +2254,8 @@ class GameController {
         console.log('MOT4 choice selected:', choiceId, 'cost:', cost);
         console.log('Current budget:', this.budget, 'max:', this.maxBudget);
         console.log('Current choices:', this.selectedChoices.mot4);
+        
+        this.hideAlert();
         
         if (this.selectedChoices.mot4.includes(choiceId)) {
             // Deselect
@@ -2222,6 +2333,7 @@ class GameController {
         console.log('Phase 4 confirm called with choices:', this.selectedChoices.mot4);
         console.log('Phase 4 budget:', this.budget);
         console.log('Full selectedChoices object:', this.selectedChoices);
+        this.hideAlert();
         this.showLoading(true);
 
         try {
@@ -2234,6 +2346,9 @@ class GameController {
             });
 
             const data = await response.json();
+
+            console.log('DEBUG API Response:', data);
+            console.log('DEBUG data.success:', data.success);
 
             if (data.success) {
                 const mot4Score = data.score.scores.mot4;
@@ -2269,30 +2384,26 @@ class GameController {
         const container = document.getElementById('phase5-choices');
         container.innerHTML = '';
 
-        // Define choice details based on the scripts
+        // Define choice details based on the template
         const choiceDetails = {
-            'genai_for_all': {
-                options: [
-                    { icon: 'fas fa-rocket', label: 'Rapid Deployment', class: 'deployment' },
-                    { icon: 'fas fa-bullhorn', label: 'Leadership Communication', class: 'communication' }
-                ],
-                description: 'GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development.'
+            'ai_for_all': {
+                enablers: [
+                    { id: 'trusted_partner_ecosystem', icon: 'fas fa-handshake', label: 'Trusted Partner Ecosystem', category: 'technology_partnerships' },
+                    { id: 'enterprise_ai_service_layer', icon: 'fas fa-layer-group', label: 'Enterprise AI service layer', category: 'technology_partnerships' },
+                    { id: 'ai_collaboration_hub', icon: 'fas fa-project-diagram', label: 'AI Collaboration Hub', category: 'transformation_change' }
+                ]
             },
-            'capability_building': {
-                options: [
-                    { icon: 'fas fa-road', label: 'Long Term Roadmap', class: 'structure' },
-                    { icon: 'fas fa-balance-scale', label: 'Value Based Governance', class: 'governance' },
-                    { icon: 'fas fa-university', label: 'Hr Ai Training Academy', class: 'training' }
-                ],
-                description: 'Definition of long-term HR AI ethics roadmap, Value-based AI governance, Preferred supplier panel, creation of HR AI training Academy. Solid structure, clear governance, training. But less focus on people, more technical approach.'
+            'continuous_capability_building': {
+                enablers: [
+                    { id: 'group_responsible_ai_awareness', icon: 'fas fa-shield-alt', label: 'Group Responsible AI awareness', category: 'policies_governance' },
+                    { id: 'early_career_pipeline_expert_retention', icon: 'fas fa-graduation-cap', label: 'Early‑career pipeline & expert retention', category: 'transformation_change' }
+                ]
             },
-            'people_speed': {
-                options: [
-                    { icon: 'fas fa-building', label: 'Genai Hub', class: 'skills' },
-                    { icon: 'fas fa-user-plus', label: 'Talent Recruitment', class: 'recruitment' },
-                    { icon: 'fas fa-university', label: 'Hr Ai Training Academy', class: 'training' }
-                ],
-                description: 'New GenAI HR Hub, Preferred supplier panel, Investment in recruiting top AI talents and retaining analytics expertise, Creation of HR AI training Academy. Focus on skills, talent recruitment, continuous training. But higher initial investment.'
+            'full_speed_on_people': {
+                enablers: [
+                    { id: 'value_driven_governance', icon: 'fas fa-chart-line', label: 'Value-Driven Governance', category: 'transformation_change' },
+                    { id: 'data_ai_academy', icon: 'fas fa-university', label: 'Data & AI Academy', category: 'transformation_change' }
+                ]
             }
         };
 
@@ -2301,7 +2412,7 @@ class GameController {
             accordionItem.className = 'accordion-choice';
             accordionItem.dataset.choiceId = choice.id;
             
-            const details = choiceDetails[choice.id] || { options: [], description: choice.description };
+            const details = choiceDetails[choice.id] || { enablers: [], description: choice.description };
             
             accordionItem.innerHTML = `
                 <div class="accordion-header" onclick="gameController.togglePhase5Accordion('${choice.id}')">
@@ -2310,18 +2421,18 @@ class GameController {
                         </div>
                 <div class="accordion-content">
                     <div class="accordion-details">
-                        <div class="choice-options">
-                            ${details.options.map(option => `
-                                <div class="choice-option">
-                                    <div class="option-icon ${option.class}">
-                                        <i class="${option.icon}"></i>
+                        <div class="choice-enablers">
+                            ${details.enablers.map(enabler => `
+                                <div class="choice-enabler">
+                                    <div class="enabler-icon ${enabler.category}">
+                                        <i class="${enabler.icon}"></i>
                                     </div>
-                                    <div class="option-label">${option.label}</div>
+                                    <div class="enabler-label">${enabler.label}</div>
                                 </div>
                             `).join('')}
                         </div>
                         <div class="choice-description">
-                            ${details.description}
+                            ${choice.description}
                         </div>
                     </div>
                 </div>

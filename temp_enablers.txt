@@ -1,0 +1,43 @@
+    },
+    "trusted_partner_ecosystem": {
+      "title": "Trusted Partner Ecosystem",
+      "description": "Keep a curated bench of consulting and technology partners, selected per scope (marketing, platform, governance, change) with measurable outcomes and exit criteria.",
+      "icon": "fas fa-handshake",
+      "category": "technology_partnerships"
+    },
+    "enterprise_ai_service_layer": {
+      "title": "Enterprise AI service layer",
+      "description": "Offer secure, curated access to approved models and enterprise assistants through a managed service (policies, provisioning, monitoring, billing) integrated with our AI platform.",
+      "icon": "fas fa-layer-group",
+      "category": "technology_partnerships"
+    },
+    "ai_collaboration_hub": {
+      "title": "AI Collaboration Hub",
+      "description": "Host a light, shared space (physical + virtual) to experiment, document re‑usable patterns, and disseminate standard agents/workflows under governance.",
+      "icon": "fas fa-project-diagram",
+      "category": "transformation_change"
+    },
+    "group_responsible_ai_awareness": {
+      "title": "Group Responsible AI awareness",
+      "description": "Make \"Responsible Data & AI\" modules mandatory, with simple guidance on dos/don'ts and where to ask for help or report issues.",
+      "icon": "fas fa-shield-alt",
+      "category": "policies_governance"
+    },
+    "early_career_pipeline_expert_retention": {
+      "title": "Early‑career pipeline & expert retention",
+      "description": "Institutionalize a selective graduate track in data/AI/business and reinforce recognition paths to retain key experts.",
+      "icon": "fas fa-graduation-cap",
+      "category": "transformation_change"
+    },
+    "value_driven_governance": {
+      "title": "Value-Driven Governance",
+      "description": "Prioritize and fund AI initiatives based on transparent value cases, capacity, and risk, with regular performance reviews and stop/go criteria.",
+      "icon": "fas fa-chart-line",
+      "category": "transformation_change"
+    },
+    "data_ai_academy": {
+      "title": "Data & AI Academy",
+      "description": "Provide a single entry point to foundational micro‑learning, role paths, and certification support, with belt progression and communities.",
+      "icon": "fas fa-university",
+      "category": "transformation_change"
+    }

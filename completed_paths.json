@@ -1,98 +1,84 @@
 [
   {
-    "mot1_choice": "elena",
+    "mot1_choice": "james",
     "mot2_choices": [
-      "intelligent_recruitment",
-      "virtual_hr_assistant",
-      "training_optimization"
+      "fraud_integrity_detection",
+      "ai_storyline_generator",
+      "smart_game_design_assistant"
     ],
     "mot3_choices": {
-      "policies_practices": "ai_ethics_charter",
-      "platform_partnerships": "tech_partnerships",
-      "people_processes": "hr_ai_training"
+      "transformation_change": "ai_leadership_program",
+      "technology_partnerships": "model_automation_framework",
+      "policies_governance": "ai_governance_board"
     },
     "mot4_choices": [
-      "business_sponsors",
-      "internal_mobility",
-      "ceo_video_series",
-      "tech_stack_data_pipelines"
+      "privacy_by_design_data"
     ],
-    "mot5_choice": "capability_building",
-    "total_score": 10,
-    "stars": 2,
+    "mot5_choice": "full_speed_on_people",
+    "total_score": 9,
+    "stars": 1,
     "mot_scores": {
-      "mot1": 3,
+      "mot1": 2,
       "mot2": 2,
-      "mot3": 2,
+      "mot3": 1,
       "mot4": 1,
-      "mot5": 2
+      "mot5": 3
     },
     "unlocked_enablers": [
-      "data_pipeline_automation",
-      "hr_ai_competencies",
-      "talent_retention",
-      "ethical_framework",
-      "vendor_relationships",
-      "candidate_matching",
-      "business_alignment",
-      "value_based_governance",
-      "employee_support",
-      "personalized_training",
-      "strategic_vision_mapping",
-      "hr_ai_training_academy",
-      "leadership_communication",
-      "long_term_roadmap",
-      "hr_function_diagnostic"
+      "strategic_tech_alliances",
+      "model_automation_framework",
+      "value_driven_governance",
+      "privacy_by_design_data",
+      "vendor_value_steering",
+      "ai_governance_board",
+      "ai_storyline_generator",
+      "fraud_integrity_detection",
+      "data_ai_academy",
+      "ai_leadership_program",
+      "smart_game_design_assistant"
     ],
     "unlocked_enablers_by_category": {
-      "platform_partnerships": [
-        "data_pipeline_automation",
-        "vendor_relationships",
-        "candidate_matching"
+      "technology_partnerships": [
+        "strategic_tech_alliances",
+        "model_automation_framework",
+        "vendor_value_steering",
+        "privacy_by_design_data"
       ],
-      "policies_practices": [
-        "ethical_framework",
-        "value_based_governance",
-        "strategic_vision_mapping",
-        "hr_ai_training_academy",
-        "leadership_communication",
-        "long_term_roadmap",
-        "hr_function_diagnostic"
+      "policies_governance": [
+        "ai_governance_board"
       ],
-      "people_processes": [
-        "hr_ai_competencies",
-        "talent_retention",
-        "business_alignment",
-        "employee_support",
-        "personalized_training"
+      "transformation_change": [
+        "value_driven_governance",
+        "ai_storyline_generator",
+        "fraud_integrity_detection",
+        "data_ai_academy",
+        "ai_leadership_program",
+        "smart_game_design_assistant"
       ]
     },
     "enablers_by_phase": {
       "phase1": [
-        "strategic_vision_mapping",
-        "hr_function_diagnostic"
+        "strategic_tech_alliances",
+        "vendor_value_steering"
       ],
       "phase2": [
-        "employee_support",
-        "personalized_training",
-        "candidate_matching"
+        "ai_storyline_generator",
+        "smart_game_design_assistant",
+        "fraud_integrity_detection"
       ],
       "phase3": [
-        "hr_ai_competencies",
-        "ethical_framework",
-        "vendor_relationships"
+        "ai_leadership_program",
+        "model_automation_framework",
+        "ai_governance_board"
       ],
       "phase4": [
-        "leadership_communication",
-        "talent_retention",
-        "business_alignment",
-        "data_pipeline_automation"
+        "privacy_by_design_data"
       ],
       "phase5": [
-        "long_term_roadmap",
-        "hr_ai_training_academy",
-        "value_based_governance"
+        "value_driven_governance",
+        "data_ai_academy"
       ]
-    }
+    },
+    "mot4_score": 1
   }
 ]

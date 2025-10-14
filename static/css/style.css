@@ -1092,19 +1092,114 @@ body.modal-open {
     color: #374151;
 }
 
-.choice-options {
+.choice-enablers {
     display: flex;
     gap: 20px;
     margin-bottom: 20px;
     flex-wrap: wrap;
 }
 
-.choice-option {
+.choice-enabler {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     min-width: 120px;
+}
+
+.enabler-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.enabler-icon.technology_partnerships {
+    background: #6f42c1;
+}
+
+.enabler-icon.transformation_change {
+    background: #ffc107;
+    color: #333;
+}
+
+.enabler-icon.policies_governance {
+    background: #007bff;
+}
+
+.choice-use-cases {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.choice-use-case {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 120px;
+}
+
+.use-case-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    background: #6c757d;
+    color: white;
+}
+
+.enabler-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    width: 300px;
+    max-width: 300px;
+    z-index: 99999;
+    display: none;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.tooltip-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #fff;
+}
+
+.tooltip-description {
+    line-height: 1.4;
+    color: #e9ecef;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.choice-enabler:hover .enabler-tooltip {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+.choice-enabler {
+    position: relative;
 }
 
 .option-icon {

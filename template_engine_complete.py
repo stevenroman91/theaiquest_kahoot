@@ -46,19 +46,19 @@ class GameTemplateEngine:
                     "choices": {
                         "elena": {
                             "title": "Elena: Map where AI creates the most value and align with company culture",
-                            "description": "Map where AI creates the most value and align with company culture",
+                            "description": "Transformation without structure leads to chaos. If we deploy AI too fast, we'll create silos, duplicated tools, and confusion. We need to start by mapping where AI adds the most value — identify the high-impact use cases and build around them.",
                             "icon": "fas fa-map",
                             "enablers": ["ai_productivity_opportunities", "ai_landscape_scan"]
                         },
                         "james": {
-                            "title": "James: Focus on strategic tech alliances and vendor value steering",
-                            "description": "Focus on strategic tech alliances and vendor value steering",
+                            "title": "James: Build strong foundations: secure data, tools, and architecture first",
+                            "description": "Without solid data foundations, this won't scale. We'll soon face a surge in talent data and analytics needs. My recommendation: select a robust AI platform now. BusinessAI Pro is the market leader and offers great terms if we sign an exclusive deal. Without this, we risk chaos later.",
                             "icon": "fas fa-handshake",
                             "enablers": ["strategic_tech_alliances", "vendor_value_steering"]
                         },
                         "amira": {
-                            "title": "Amira: Start with use cases to demonstrate immediate value",
-                            "description": "Start with use cases to demonstrate immediate value",
+                            "title": "Amira: Act fast - democratize AI, let teams experiment immediately",
+                            "description": "From a market standpoint, speed is everything. Players' expectations change weekly — if we hesitate, we lose them. We should empower our teams to experiment with AI tools right now: content generation, campaign optimization, player segmentation. Let them test, iterate, and learn fast.",
                             "icon": "fas fa-lightbulb",
                             "enablers": [],
                             "use_cases": [
@@ -245,19 +245,22 @@ class GameTemplateEngine:
                             "title": "AI for all: Turn AI into a company-wide service by communicating ethical standards and sharing tools across teams.",
                             "description": "Turn AI into a company-wide service by communicating ethical standards and sharing tools across teams.",
                             "icon": "fas fa-share-alt",
-                            "enablers": ["trusted_partner_ecosystem", "enterprise_ai_service_layer", "ai_collaboration_hub"]
+                            "enablers": ["trusted_partner_ecosystem", "enterprise_ai_service_layer", "ai_collaboration_hub"],
+                            "score": 1
                         },
                         "continuous_capability_building": {
                             "title": "Continuous capability building: Define a long-term roadmap for AI governance, develop preferred supplier partnerships, and expand the AI Academy to strengthen internal skills.",
                             "description": "Define a long-term roadmap for AI governance, develop preferred supplier partnerships, and expand the AI Academy to strengthen internal skills.",
                             "icon": "fas fa-graduation-cap",
-                            "enablers": ["group_responsible_ai_awareness", "early_career_pipeline_expert_retention"]
+                            "enablers": ["group_responsible_ai_awareness", "early_career_pipeline_expert_retention"],
+                            "score": 2
                         },
                         "full_speed_on_people": {
                             "title": "Full speed on people: Create a dedicated AI Hub, formalize partnerships, invest in recruiting top AI talents, and grow internal expertise through the AI Academy.",
                             "description": "Create a dedicated AI Hub, formalize partnerships, invest in recruiting top AI talents, and grow internal expertise through the AI Academy.",
                             "icon": "fas fa-users",
-                            "enablers": ["value_driven_governance", "data_ai_academy"]
+                            "enablers": ["value_driven_governance", "data_ai_academy"],
+                            "score": 3
                         }
                     }
                 }
@@ -265,26 +268,26 @@ class GameTemplateEngine:
             "enablers": {
                 "ai_productivity_opportunities": {
                     "title": "AI Productivity Opportunities",
-                    "description": "Identify and prioritize AI opportunities across business functions",
+                    "description": "Quantify where augmentation and automation bring the most impact across teams (engineering, corporate functions, operations), using pilot evidence and value notes.",
                     "icon": "fas fa-chart-line",
                     "category": "transformation_change"
                 },
                 "ai_landscape_scan": {
                     "title": "AI Landscape Scan",
-                    "description": "Comprehensive analysis of AI technologies and market trends",
+                    "description": "Systematically benchmark AI/GenAI and data solutions, documenting value, TCO, integration complexity, and fit with our reference architectures.",
                     "icon": "fas fa-search",
                     "category": "technology_partnerships"
                 },
                 "strategic_tech_alliances": {
-                    "title": "Strategic Tech Alliances",
-                    "description": "Build strategic partnerships with key technology providers",
+                    "title": "Strategic Alliances",
+                    "description": "Maintain a small set of core partners (Mistral, Leonardo.ai, Footovision, ...) with clear joint roadmaps, security baselines, and co-innovation tracks.",
                     "icon": "fas fa-handshake",
                     "category": "technology_partnerships"
                 },
                 "vendor_value_steering": {
                     "title": "Vendor Value Steering",
-                    "description": "Optimize vendor relationships and value delivery",
-                    "icon": "fas fa-cogs",
+                    "description": "Govern vendors through portfolio steering and value tracking (business impact, risks, SLAs, contract lifecycle), with a single intake and arbitration path.",
+                    "icon": "fas fa-balance-scale",
                     "category": "technology_partnerships"
                 },
                 "ai_data_foundations": {
@@ -397,43 +400,43 @@ class GameTemplateEngine:
                 },
                 "trusted_partner_ecosystem": {
                     "title": "Trusted Partner Ecosystem",
-                    "description": "Keep a curated bench of consulting and technology partners",
+                    "description": "Keep a curated bench of consulting and technology partners, selected per scope (marketing, platform, governance, change) with measurable outcomes and exit criteria.",
                     "icon": "fas fa-handshake",
                     "category": "technology_partnerships"
                 },
                 "enterprise_ai_service_layer": {
-                    "title": "Enterprise AI Service Layer",
-                    "description": "Offer secure, curated access to approved models",
+                    "title": "Enterprise AI service layer",
+                    "description": "Offer secure, curated access to approved models and enterprise assistants through a managed service (policies, provisioning, monitoring, billing) integrated with our AI platform.",
                     "icon": "fas fa-layer-group",
                     "category": "technology_partnerships"
                 },
                 "ai_collaboration_hub": {
                     "title": "AI Collaboration Hub",
-                    "description": "Host a light, shared space to experiment",
+                    "description": "Host a light, shared space (physical + virtual) to experiment, document re‑usable patterns, and disseminate standard agents/workflows under governance.",
                     "icon": "fas fa-project-diagram",
                     "category": "transformation_change"
                 },
                 "group_responsible_ai_awareness": {
-                    "title": "Group Responsible AI Awareness",
-                    "description": "Make Responsible Data & AI modules mandatory",
+                    "title": "Group Responsible AI awareness",
+                    "description": "Make \"Responsible Data & AI\" modules mandatory, with simple guidance on dos/don'ts and where to ask for help or report issues.",
                     "icon": "fas fa-shield-alt",
                     "category": "policies_governance"
                 },
                 "early_career_pipeline_expert_retention": {
-                    "title": "Early-career Pipeline & Expert Retention",
-                    "description": "Institutionalize a selective graduate track",
+                    "title": "Early‑career pipeline & expert retention",
+                    "description": "Institutionalize a selective graduate track in data/AI/business and reinforce recognition paths to retain key experts.",
                     "icon": "fas fa-graduation-cap",
                     "category": "transformation_change"
                 },
                 "value_driven_governance": {
                     "title": "Value-Driven Governance",
-                    "description": "Prioritize and fund AI initiatives based on transparent value cases",
+                    "description": "Prioritize and fund AI initiatives based on transparent value cases, capacity, and risk, with regular performance reviews and stop/go criteria.",
                     "icon": "fas fa-chart-line",
                     "category": "transformation_change"
                 },
                 "data_ai_academy": {
                     "title": "Data & AI Academy",
-                    "description": "Provide a single entry point to foundational micro-learning",
+                    "description": "Provide a single entry point to foundational micro‑learning, role paths, and certification support, with belt progression and communities.",
                     "icon": "fas fa-university",
                     "category": "transformation_change"
                 }

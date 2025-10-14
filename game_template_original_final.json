@@ -1,0 +1,401 @@
+{
+  "game_config": {
+    "company_name": "TechCorp",
+    "game_title": "AI Acceleration Game",
+    "language": "en",
+    "theme": {
+      "primary_color": "#1e3a8a",
+      "secondary_color": "#3b82f6",
+      "accent_color": "#10b981"
+    }
+  },
+  "terminology": {
+    "phase": "phase",
+    "enabler": "enabler",
+    "choice": "choice",
+    "score": "score",
+    "dashboard": "dashboard"
+  },
+  "characters": {
+    "protagonist": {
+      "name": "Sophie",
+      "role": "HR Director",
+      "description": "Sophie is leading the AI transformation initiative"
+    },
+    "experts": {
+      "amira": {
+        "name": "Amira",
+        "role": "Marketing Expert",
+        "description": "Amira brings marketing expertise to the AI transformation"
+      },
+      "james": {
+        "name": "James",
+        "role": "IT Expert",
+        "description": "James provides technical guidance for AI implementation"
+      },
+      "elena": {
+        "name": "Elena",
+        "role": "Transformation Expert",
+        "description": "Elena specializes in organizational change management"
+      }
+    }
+  },
+  "phases": {
+    "phase1": {
+      "title": "Phase 1 - Embedding GenAI in your AI transformation program",
+      "description": "Define the strategic foundation for AI transformation",
+      "choices": {
+        "amira": {
+          "title": "Marketing-Driven Approach",
+          "description": "Focus on marketing and customer-facing AI applications"
+        },
+        "james": {
+          "title": "Technology-First Approach",
+          "description": "Prioritize technical infrastructure and platform development"
+        },
+        "elena": {
+          "title": "Transformation-Focused Approach",
+          "description": "Emphasize organizational change and capability building"
+        }
+      }
+    },
+    "phase2": {
+      "title": "Phase 2 - HR AI Use Cases",
+      "description": "Select specific HR AI applications to implement",
+      "choices": {
+        "intelligent_recruitment": {
+          "title": "Intelligent Recruitment",
+          "description": "AI-powered candidate screening and matching"
+        },
+        "virtual_hr_assistant": {
+          "title": "Virtual HR Assistant",
+          "description": "AI chatbot for employee support and queries"
+        },
+        "training_optimization": {
+          "title": "Training Path Optimization",
+          "description": "Personalized learning paths and skill development"
+        },
+        "sentiment_analysis": {
+          "title": "Employee Sentiment Analysis",
+          "description": "Monitor employee satisfaction and engagement"
+        },
+        "hr_automation": {
+          "title": "HR Process Automation",
+          "description": "Automate routine HR tasks and workflows"
+        }
+      }
+    },
+    "phase3": {
+      "title": "Phase 3 - Implementation Strategy",
+      "description": "Choose your implementation approach across different areas",
+      "categories": {
+        "policies_practices": {
+          "title": "Policies & Practices",
+          "description": "Governance and ethical frameworks"
+        },
+        "platform_partnerships": {
+          "title": "Platform & Partnerships",
+          "description": "Technology partnerships and integrations"
+        },
+        "people_processes": {
+          "title": "People & Processes",
+          "description": "Human resources and operational processes"
+        }
+      }
+    },
+    "phase4": {
+      "title": "Phase 4 - Scaling & Governance",
+      "description": "Establish governance and scaling mechanisms",
+      "choices": {
+        "api_connectivity": {
+          "title": "APIs between internal and external HR systems",
+          "description": "Connect internal and external HR systems"
+        },
+        "data_pipeline_automation": {
+          "title": "Technology stack for HR data pipelines",
+          "description": "Automate HR data processing workflows"
+        },
+        "ethics_oversight": {
+          "title": "Appointment of HR AI Ethics Officer",
+          "description": "Appoint dedicated AI ethics oversight"
+        },
+        "risk_management": {
+          "title": "Country-specific risk mitigation plan",
+          "description": "Country-specific risk mitigation strategies"
+        },
+        "talent_retention": {
+          "title": "Internal mobility program for HR AI talents",
+          "description": "Internal mobility programs for AI talent"
+        },
+        "data_strategy": {
+          "title": "Data collection strategy and synthetic HR data",
+          "description": "Comprehensive data collection and synthetic data"
+        },
+        "leadership_communication": {
+          "title": "CEO and leadership video series on HR AI",
+          "description": "CEO video series on AI transformation"
+        },
+        "change_adoption": {
+          "title": "Change management to boost adoption",
+          "description": "Change management for user adoption"
+        },
+        "business_sponsors": {
+          "title": "Business sponsors responsible for value delivery",
+          "description": "Executive sponsors for value delivery"
+        }
+      }
+    },
+    "phase5": {
+      "title": "Phase 5 - Future Vision",
+      "description": "Define your long-term AI transformation vision",
+      "choices": {
+        "genai_for_all": {
+          "title": "GenAI for all",
+          "description": "GenAI initiative as a service, Corporate communication of HR AI ethics policies. Rapid deployment, clear communication. But lack of structure, little skill development."
+        },
+        "capability_building": {
+          "title": "Continuous capability building",
+          "description": "Definition of long-term HR AI ethics roadmap, Value-based AI governance, Preferred supplier panel, creation of HR AI training Academy. Solid structure, clear governance, training. But less focus on people, more technical approach."
+        },
+        "people_speed": {
+          "title": "Full speed on people",
+          "description": "Focus on skills, Talent recruitment, Continuous training. People-first approach, rapid skill development, talent acquisition. But less structure, limited governance."
+        }
+      }
+    }
+  },
+  "capabilities": {
+    "strategic_vision_mapping": {
+      "title": "Strategic Vision Mapping",
+      "description": "Map AI strategy to business objectives",
+      "icon": "fas fa-brain",
+      "category": "policies_practices"
+    },
+    "hr_function_diagnostic": {
+      "title": "HR Function Diagnostic",
+      "description": "Assess current HR capabilities and gaps",
+      "icon": "fas fa-search",
+      "category": "policies_practices"
+    },
+    "genai_platform_partnership": {
+      "title": "GenAI Platform Partnership",
+      "description": "Strategic partnership with GenAI platform provider",
+      "icon": "fas fa-handshake",
+      "category": "platform_partnerships"
+    },
+    "technical_foundation_setup": {
+      "title": "Technical Foundation Setup",
+      "description": "Set up technical infrastructure for AI implementation",
+      "icon": "fas fa-cogs",
+      "category": "platform_partnerships"
+    },
+    "candidate_matching": {
+      "title": "Smart Candidate Matching",
+      "description": "AI-powered recruitment and candidate screening",
+      "icon": "fas fa-user-check",
+      "category": "platform_partnerships"
+    },
+    "employee_support": {
+      "title": "Employee Support System",
+      "description": "AI assistant for employee queries and support",
+      "icon": "fas fa-hands-helping",
+      "category": "people_processes"
+    },
+    "personalized_training": {
+      "title": "Personalized Training",
+      "description": "AI-driven personalized learning paths",
+      "icon": "fas fa-graduation-cap",
+      "category": "people_processes"
+    },
+    "sentiment_detection": {
+      "title": "Employee Sentiment Analysis",
+      "description": "Monitor and analyze employee satisfaction",
+      "icon": "fas fa-heart",
+      "category": "policies_practices"
+    },
+    "process_automation": {
+      "title": "HR Process Automation",
+      "description": "Automate routine HR tasks and workflows",
+      "icon": "fas fa-cogs",
+      "category": "people_processes"
+    },
+    "hr_ai_competencies": {
+      "title": "HR AI Competencies",
+      "description": "Develop AI skills within HR team",
+      "icon": "fas fa-user-graduate",
+      "category": "people_processes"
+    },
+    "role_evolution": {
+      "title": "HR Role Evolution",
+      "description": "Redefine HR roles for AI era",
+      "icon": "fas fa-user-tag",
+      "category": "people_processes"
+    },
+    "change_communication": {
+      "title": "Change Communication",
+      "description": "Communicate AI transformation to organization",
+      "icon": "fas fa-comments",
+      "category": "people_processes"
+    },
+    "system_connectivity": {
+      "title": "System Integration",
+      "description": "Integrate AI with existing HR systems",
+      "icon": "fas fa-link",
+      "category": "platform_partnerships"
+    },
+    "vendor_relationships": {
+      "title": "Technology Partnerships",
+      "description": "Build strategic technology partnerships",
+      "icon": "fas fa-handshake",
+      "category": "platform_partnerships"
+    },
+    "cloud_migration": {
+      "title": "Cloud Infrastructure",
+      "description": "Migrate to cloud-based AI infrastructure",
+      "icon": "fas fa-cloud-upload-alt",
+      "category": "platform_partnerships"
+    },
+    "ethical_framework": {
+      "title": "AI Ethics Charter",
+      "description": "Establish ethical guidelines for AI use",
+      "icon": "fas fa-balance-scale",
+      "category": "policies_practices"
+    },
+    "data_protection": {
+      "title": "Data Governance",
+      "description": "Implement comprehensive data protection",
+      "icon": "fas fa-shield-alt",
+      "category": "policies_practices"
+    },
+    "kpi_definition": {
+      "title": "Performance Metrics",
+      "description": "Define KPIs for AI transformation success",
+      "icon": "fas fa-bullseye",
+      "category": "policies_practices"
+    },
+    "api_connectivity": {
+      "title": "API Integration",
+      "description": "Connect internal and external HR systems",
+      "icon": "fas fa-plug",
+      "category": "platform_partnerships"
+    },
+    "data_pipeline_automation": {
+      "title": "Data Pipeline Automation",
+      "description": "Automate HR data processing workflows",
+      "icon": "fas fa-stream",
+      "category": "platform_partnerships"
+    },
+    "ethics_oversight": {
+      "title": "AI Ethics Officer",
+      "description": "Appoint dedicated AI ethics oversight",
+      "icon": "fas fa-eye",
+      "category": "policies_practices"
+    },
+    "risk_management": {
+      "title": "Risk Management",
+      "description": "Country-specific risk mitigation strategies",
+      "icon": "fas fa-shield-alt",
+      "category": "policies_practices"
+    },
+    "talent_retention": {
+      "title": "Talent Retention",
+      "description": "Internal mobility programs for AI talent",
+      "icon": "fas fa-heart",
+      "category": "people_processes"
+    },
+    "data_strategy": {
+      "title": "Data Strategy",
+      "description": "Comprehensive data collection and synthetic data",
+      "icon": "fas fa-database",
+      "category": "platform_partnerships"
+    },
+    "leadership_communication": {
+      "title": "Leadership Communication",
+      "description": "CEO video series on AI transformation",
+      "icon": "fas fa-bullhorn",
+      "category": "policies_practices"
+    },
+    "change_adoption": {
+      "title": "Change Adoption",
+      "description": "Change management for user adoption",
+      "icon": "fas fa-sync-alt",
+      "category": "people_processes"
+    },
+    "business_alignment": {
+      "title": "Business Sponsors",
+      "description": "Executive sponsors for value delivery",
+      "icon": "fas fa-bullseye",
+      "category": "people_processes"
+    },
+    "organization_wide_ai": {
+      "title": "Organization-Wide AI",
+      "description": "Deploy AI across entire organization",
+      "icon": "fas fa-building",
+      "category": "platform_partnerships"
+    },
+    "long_term_roadmap": {
+      "title": "Long Term Roadmap",
+      "description": "Define long-term AI transformation roadmap",
+      "icon": "fas fa-road",
+      "category": "policies_practices"
+    },
+    "value_based_governance": {
+      "title": "Value-Based Governance",
+      "description": "Implement value-based AI governance",
+      "icon": "fas fa-balance-scale",
+      "category": "policies_practices"
+    },
+    "hr_ai_training_academy": {
+      "title": "HR AI Training Academy",
+      "description": "Create dedicated AI training academy",
+      "icon": "fas fa-university",
+      "category": "platform_partnerships"
+    },
+    "genai_hub": {
+      "title": "GenAI Hub",
+      "description": "Central AI innovation and development hub",
+      "icon": "fas fa-building",
+      "category": "platform_partnerships"
+    },
+    "talent_recruitment": {
+      "title": "Talent Recruitment",
+      "description": "AI-powered talent acquisition strategies",
+      "icon": "fas fa-user-plus",
+      "category": "platform_partnerships"
+    },
+    "rapid_deployment": {
+      "title": "Rapid Deployment",
+      "description": "Fast-track AI solution deployment",
+      "icon": "fas fa-rocket",
+      "category": "people_processes"
+    },
+    "bottom_up_innovation": {
+      "title": "Bottom-Up Innovation",
+      "description": "Encourage grassroots AI innovation",
+      "icon": "fas fa-lightbulb",
+      "category": "people_processes"
+    }
+  },
+  "ui_text": {
+    "teams_meeting": {
+      "title": "Teams Meeting",
+      "description": "{protagonist_name} is organising a Teams meeting with her colleagues {amira_name} ({amira_role}), {james_name} ({james_role}) and {elena_name} ({elena_role}) to gather their recommendations and define the best strategy for deploying generative AI",
+      "button_text": "Join the Teams meeting"
+    },
+    "dashboard": {
+      "title": "Executive Dashboard",
+      "subtitle": "Track your AI transformation progress",
+      "categories": {
+        "policies_practices": "Policies & Practices",
+        "platform_partnerships": "Platform & Partnerships",
+        "people_processes": "People & Processes"
+      }
+    },
+    "navigation": {
+      "next": "Next",
+      "previous": "Previous",
+      "continue": "Continue",
+      "finish": "Finish"
+    }
+  }
+}

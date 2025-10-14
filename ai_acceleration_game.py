@@ -460,8 +460,9 @@ class AIAccelerationGame:
 
         # Passer à l'état suivant
         self.current_state = GameState.MOT5
-
+        
         logger.info(f"MOT4 choices made: {enabler_ids}, total cost: {total_cost}/30, score: {score}/4")
+        
         return True
     
     def get_mot5_choices(self) -> List[Choice]:
@@ -640,12 +641,13 @@ class AIAccelerationGame:
                 logger.info(f"Phase 1 DEBUG: choice={self.current_path.mot1_choice}, score={phase1_score}, enablers={phase_enablers}")
 
                 if phase_enablers:
-                    category = choice_categories.get(self.current_path.mot1_choice, "transformation_change")
-                    logger.info(f"Phase 1 DEBUG: category={category}, adding enablers={phase_enablers}")
-                    # Ajouter seulement les nouveaux ENABLERS pour éviter les doublons
+                    logger.info(f"Phase 1 DEBUG: adding enablers={phase_enablers}")
+                    # Ajouter chaque enabler dans sa propre catégorie selon le template
                     for enabler in phase_enablers:
-                        if enabler not in enablers_by_category[category]:
-                            enablers_by_category[category].append(enabler)
+                        enabler_category = self.template.get_enabler_category(enabler)
+                        logger.info(f"Phase 1 DEBUG: enabler '{enabler}' has category '{enabler_category}'")
+                        if enabler not in enablers_by_category[enabler_category]:
+                            enablers_by_category[enabler_category].append(enabler)
                     # Mettre à jour la phase 1
                     enablers_by_phase["phase1"] = phase_enablers
 
@@ -659,11 +661,11 @@ class AIAccelerationGame:
             choice_enablers = self._get_enablers_for_score(choice, phase2_score)
             print(f"DEBUG _calculate_enablers Phase 2: Choice '{solution_id}' unlocks {choice_enablers}")
             if choice_enablers:
-                category = choice_categories.get(solution_id, "transformation_change")
-                # Ajouter seulement les nouveaux ENABLERS pour éviter les doublons
+                # Ajouter chaque enabler dans sa propre catégorie selon le template
                 for enabler in choice_enablers:
-                    if enabler not in enablers_by_category[category]:
-                        enablers_by_category[category].append(enabler)
+                    enabler_category = self.template.get_enabler_category(enabler)
+                    if enabler not in enablers_by_category[enabler_category]:
+                        enablers_by_category[enabler_category].append(enabler)
                 phase2_enablers.extend(choice_enablers)
         # Mettre à jour la phase 2
         enablers_by_phase["phase2"] = list(set(phase2_enablers))
@@ -710,13 +712,13 @@ class AIAccelerationGame:
                 choice_enablers = self._get_enablers_for_score(choice_obj, phase4_score)
                 print(f"DEBUG _calculate_enablers Phase 4: Choice '{choice_id}' unlocks {choice_enablers}")
                 if choice_enablers:
-                    category = choice_categories.get(choice_id, "transformation_change")
-                    print(f"DEBUG _calculate_enablers Phase 4: Choice '{choice_id}' has category '{category}'")
-                    # Ajouter seulement les nouveaux ENABLERS pour éviter les doublons
+                    # Ajouter chaque enabler dans sa propre catégorie selon le template
                     for enabler in choice_enablers:
-                        if enabler not in enablers_by_category[category]:
-                            enablers_by_category[category].append(enabler)
-                            print(f"DEBUG _calculate_enablers Phase 4: Added '{enabler}' to category '{category}'")
+                        enabler_category = self.template.get_enabler_category(enabler)
+                        print(f"DEBUG _calculate_enablers Phase 4: Enabler '{enabler}' has category '{enabler_category}'")
+                        if enabler not in enablers_by_category[enabler_category]:
+                            enablers_by_category[enabler_category].append(enabler)
+                            print(f"DEBUG _calculate_enablers Phase 4: Added '{enabler}' to category '{enabler_category}'")
                     phase4_enablers.extend(choice_enablers)
             else:
                 print(f"DEBUG _calculate_enablers Phase 4: Choice '{choice_id}' not found in choice_dict")

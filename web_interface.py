@@ -113,9 +113,13 @@ def api_game_config():
             "theme_colors": template.get_theme_colors()
         }
         
+        # Ajouter les enablers pour les tooltips
+        enablers = template.get_all_enablers()
+        
         return jsonify({
             "success": True,
-            "config": config
+            "config": config,
+            "enablers": enablers
         })
         
     except Exception as e:
@@ -604,7 +608,7 @@ def api_phase4_choose():
     else:
         return jsonify({
             'success': False,
-            'message': 'Invalid choices (must total exactly 30 points)'
+            'message': 'Invalid choices (budget exceeded 30 points)'
         })
 
 @app.route('/api/phase5/choices')
