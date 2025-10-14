@@ -4,94 +4,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* Teams Meeting Page Styles */
-.teams-meeting-page {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #1e40af;
-    z-index: 9999;
-}
-
-.teams-meeting-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100vw;
-    text-align: center;
-    padding: 20px;
-}
-
-.teams-meeting-content h3 {
-    color: white;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    font-weight: 600;
-}
-
-.teams-meeting-content h3 i {
-    margin-right: 10px;
-}
-
-.teams-meeting-content p {
-    color: white;
-    font-size: 1.4rem;
-    line-height: 1.6;
-    margin-bottom: 3rem;
-    max-width: 800px;
-}
-
-.teams-meeting-content button {
-    font-size: 1.2rem;
-    padding: 15px 30px;
-}
-
-.teams-meeting-frame {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    max-width: 600px;
-    width: 100%;
-}
-
-.teams-meeting-frame h3 {
-    color: #1e40af;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    font-weight: 600;
-}
-
-.teams-meeting-frame h3 i {
-    margin-right: 10px;
-}
-
-.teams-meeting-frame p {
-    color: #1e40af;
-    font-size: 1.4rem;
-    line-height: 1.6;
-    margin-bottom: 3rem;
-}
-
-.teams-meeting-frame button {
-    font-size: 1.2rem;
-    padding: 15px 30px;
-    background-color: #1e40af;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.teams-meeting-frame button:hover {
-    background-color: #1e3a8a;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
 
 /* Welcome Page Styles */
 .welcome-page {
@@ -141,7 +53,7 @@
 }
 
 .welcome-frame {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.95) !important;
     padding: 40px;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -4037,4 +3949,24 @@ body {
 
 #phase4-choices .matrix-choice .choice-icon.policies-governance[style*="background-color"] {
     background-color: #3b82f6 !important;
+}
+
+
+#teams-meeting-section .welcome-frame h3 {
+    color: #1e40af !important;
+}
+
+#teams-meeting-section .welcome-frame p {
+    color: #1e40af !important;
+}
+
+#teams-meeting-section .welcome-frame button {
+    background-color: #1e40af !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+#teams-meeting-section .welcome-frame button:hover {
+    background-color: #1d4ed8 !important;
+    color: #ffffff !important;
 }

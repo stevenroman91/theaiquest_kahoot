@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AI Acceleration EXEC - Smart Retail Group HR Managers Edition
+AI Transformation - PlayNext Leader Edition
 Adapté pour les managers RH du Smart Retail Group
 """
 
@@ -69,7 +69,7 @@ class GamePath:
     })
 
 class AIAccelerationGame:
-    """Jeu AI Acceleration EXEC - Smart Retail Group HR Managers Edition"""
+    """Jeu AI Transformation - PlayNext Leader Edition"""
     
     def __init__(self):
         self.current_state = GameState.LOGIN
@@ -256,7 +256,7 @@ class AIAccelerationGame:
         """Starts the game and returns the introduction"""
         self.current_state = GameState.MOT1
         return """
-        🎯 Welcome to AI Acceleration EXEC - Smart Retail Group HR Managers Edition
+        🎯 Welcome to AI Transformation - PlayNext Leader Edition
         
         You are leading a GenAI transformation in your HR department.
         Your mission: make the right strategic decisions to succeed in this HR transformation.
@@ -975,7 +975,7 @@ def main():
             print(f"{i}. {choice.title}")
         
         # Simulation d'un choix (positions 1, 3, 4)
-        game.make_mot2_choices(["intelligent_recruitment", "training_optimization", "sentiment_analysis"])
+        game.make_mot2_choices(["fraud_integrity_detection", "smart_game_design_assistant", "player_journey_optimizer"])
         print(f"\n✅ Choix MOT2: {game.current_path.mot2_choices}")
         
         # Continuer avec les autres MOTs...

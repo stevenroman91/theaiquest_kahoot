@@ -29,9 +29,9 @@ class GameTemplateEngine:
         """Fallback default configuration"""
         return {
             "game_info": {
-                "company_name": "Smart Retail Group",
-                "game_title": "AI Acceleration EXEC",
-                "game_subtitle": "Jeu Sérieux"
+                "company_name": "PlayNext",
+                "game_title": "AI Transformation",
+                "game_subtitle": "Leader Edition v1.9"
             },
             "terminology": {
                 "phase": "Phase",
@@ -41,7 +41,7 @@ class GameTemplateEngine:
             "characters": {},
             "phases": {
                 "phase1": {
-                    "title": "STEP 1",
+                    "title": "STEP 1: Designing Your AI-Enhanced Business Strategy",
                     "description": "You've heard three different approaches to launch your AI transformation. Which one will you choose?",
                     "choices": {
                         "elena": {
@@ -73,7 +73,7 @@ class GameTemplateEngine:
                     }
                 },
                 "phase2": {
-                    "title": "STEP 2",
+                    "title": "STEP 2: Building Your AI Use Case Portfolio",
                     "description": "Among the five AI solutions highlighted on the matrix, which three will you select and implement first?",
                     "choices": {
                         "fraud_integrity_detection": {
@@ -109,7 +109,7 @@ class GameTemplateEngine:
                     }
                 },
                 "phase3": {
-                    "title": "STEP 3", 
+                    "title": "STEP 3: Launching Your Priority AI Pilots", 
                     "description": "You can only activate one enabler per domain to maximize impact and adoption. Which ones will you choose?",
                     "choices": {
                         "ai_data_foundations": {
@@ -169,7 +169,7 @@ class GameTemplateEngine:
                     }
                 },
                 "phase4": {
-                    "title": "STEP 4",
+                    "title": "STEP 4: Scaling Your Priority AI and GenAI Solutions",
                     "description": "You now have a better idea of what needs to be done to scale AI solutions. It's time to make a decision.\\nSelect the most impactful and timely enablers within your 30-point budget that will allow you to successfully scale your AI solutions to continue accelerating value delivery. Don't forget you need to balance between different categories.",
                     "choices": {
                         "reusable_api_patterns": {
@@ -238,7 +238,7 @@ class GameTemplateEngine:
                     }
                 },
                 "phase5": {
-                    "title": "STEP 5",
+                    "title": "STEP 5: Deploying AI Across the Organization",
                     "description": "It's time to launch and scale more solutions at the enterprise level. Let's decide what actions to take!\\nSelect the option that will maximize your chances of bringing the most new scaled solutions to market. Consider what you need most at this stage of transformation to scale effectively.",
                     "choices": {
                         "ai_for_all": {
@@ -556,15 +556,15 @@ class GameTemplateEngine:
         
         # Correction en dur pour contourner le problème de chargement JSON
         if title == "Phase1":
-            title = "STEP 1"
+            title = "STEP 1: Designing Your AI-Enhanced Business Strategy"
         elif title == "Phase2":
-            title = "STEP 2"
+            title = "STEP 2: Building Your AI Use Case Portfolio"
         elif title == "Phase3":
-            title = "STEP 3"
+            title = "STEP 3: Launching Your Priority AI Pilots"
         elif title == "Phase4":
-            title = "STEP 4"
+            title = "STEP 4: Scaling Your Priority AI and GenAI Solutions"
         elif title == "Phase5":
-            title = "STEP 5"
+            title = "STEP 5: Deploying AI Across the Organization"
             
         return title
     

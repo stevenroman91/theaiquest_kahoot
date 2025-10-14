@@ -1035,12 +1035,12 @@ def get_personalized_step_message(mot_key, choice, score):
             return "You earned 1 star out of 3 for your scaling enabler selection. Your choices show some strategic thinking, but may lack the comprehensive approach needed for successful enterprise-wide scaling. Focus on creating both technical foundations and human-centered change management to ensure your AI initiatives scale effectively across the organization."
     
     elif mot_key == 'mot5':
-        if score == 3:
-            return "By choosing 'Full speed on people', you earned 3 stars out of 3. This people-first approach creates a dedicated AI Hub, formalizes partnerships, and invests in recruiting top AI talents while growing internal expertise through the AI Academy. This comprehensive strategy ensures sustainable AI transformation through human capital development."
-        elif score == 2:
-            return "By choosing 'Continuous capability building', you earned 2 stars out of 3. This approach focuses on long-term governance and skill development, which provides solid foundations for AI transformation. However, it may miss opportunities for immediate impact and rapid scaling that could accelerate your AI journey."
-        elif score == 1:
-            return "By choosing 'AI for all', you earned 1 star out of 3. While this approach aims to democratize AI across the company, it may lack the strategic focus and foundational structure needed for sustainable transformation. Consider balancing broad access with targeted capability building and governance."
+        if choice == 'full_speed_on_people' and score == 3:
+            return "By choosing \"Full Speed on People,\" you earned three stars out of three. You focused on what matters most — people, skills, and collaboration. This approach maximizes the impact of PlayNext's AI strategy while ensuring a sustainable, human-centered transformation."
+        elif choice == 'continuous_capability_building' and score == 2:
+            return "By choosing \"Continuous Capability Building,\" you earned two stars out of three. While this approach builds solid foundations for long-term AI governance and skill development, it may miss opportunities for immediate impact and rapid scaling that could accelerate your transformation journey."
+        elif choice == 'ai_for_all' and score == 1:
+            return "By choosing \"AI for All,\" you earned one star out of three. While this approach aims to democratize AI across the company, it may lack the strategic focus and foundational structure needed for sustainable transformation. Consider balancing broad access with targeted capability building and governance."
     
     # Messages génériques pour les autres phases
     return f"Congratulations! You earned {score} star{'s' if score > 1 else ''} for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game."

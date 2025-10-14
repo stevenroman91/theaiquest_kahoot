@@ -185,8 +185,11 @@ class GameController {
                 modal.hide();
             }
             
-            // After Step 2, show Pilot Phase transition screen
-            if (phaseNumber === 2) {
+            // After Step 1, show Step 1 follow-up screen
+            if (phaseNumber === 1) {
+                this.showStep1FollowupScreen();
+            } else if (phaseNumber === 2) {
+                // After Step 2, show Pilot Phase transition screen
                 this.showPilotPhaseScreen();
             } else if (phaseNumber === 4) {
                 // After Step 4, show Enterprise Scaling transition screen
@@ -211,7 +214,7 @@ class GameController {
         const nextToHarnessingBtn = document.getElementById('next-to-harnessing-btn');
         if (nextToHarnessingBtn) {
             nextToHarnessingBtn.addEventListener('click', () => {
-                this.showMOT1Video();
+                this.showTeamsMeetingSection();
             });
         }
 
@@ -279,19 +282,27 @@ class GameController {
             });
         }
 
-        // Start game after harnessing button
-        const startGameAfterHarnessingBtn = document.getElementById('start-game-after-harnessing-btn');
-        if (startGameAfterHarnessingBtn) {
-            startGameAfterHarnessingBtn.addEventListener('click', () => {
-                this.showTeamsMeetingSection();
-            });
-        }
-
         // Join Teams meeting button
         const joinTeamsMeetingBtn = document.getElementById('join-teams-meeting-btn');
         if (joinTeamsMeetingBtn) {
             joinTeamsMeetingBtn.addEventListener('click', () => {
                 this.showMOT1Video();
+            });
+        }
+
+        // Continue to Step 2 button
+        const continueToStep2Btn = document.getElementById('continue-to-step2-btn');
+        if (continueToStep2Btn) {
+            continueToStep2Btn.addEventListener('click', () => {
+                this.proceedToNextMOT(1);
+            });
+        }
+
+        // Start game after harnessing button
+        const startGameAfterHarnessingBtn = document.getElementById('start-game-after-harnessing-btn');
+        if (startGameAfterHarnessingBtn) {
+            startGameAfterHarnessingBtn.addEventListener('click', () => {
+                this.startMOT1Game();
             });
         }
 
@@ -846,9 +857,17 @@ class GameController {
     showWelcomeSection() {
         console.log('🔵 showWelcomeSection() called');
         
-        // Show Welcome section (showSection already hides all other sections)
+        // Show Welcome section
         this.showSection('welcome-section');
         this.updateProgress(7, 'Welcome');
+    }
+
+    showTeamsMeetingSection() {
+        console.log('🔵 showTeamsMeetingSection() called');
+        
+        // Show Teams Meeting section
+        this.showSection('teams-meeting-section');
+        this.updateProgress(10, 'Teams Meeting');
     }
 
     showIntroductionVideo() {
@@ -872,7 +891,7 @@ class GameController {
         
         // Show Pilot Phase section
         this.showSection('pilot-phase-section');
-        this.updateProgress(60, 'Pilot Phase');
+        this.updateProgress(60, 'Pilot Step');
     }
 
     updatePilotPhaseText() {
@@ -918,6 +937,14 @@ class GameController {
         }
     }
 
+    showStep1FollowupScreen() {
+        console.log('📊 showStep1FollowupScreen() called');
+        
+        // Show Step 1 follow-up section
+        this.showSection('step1-followup-section');
+        this.updateProgress(25, 'Strategic Assessment Complete');
+    }
+
     showScalingPhaseScreen() {
         console.log('📈 showScalingPhaseScreen() called');
         
@@ -926,72 +953,9 @@ class GameController {
         this.updateProgress(75, 'Scaling Phase');
     }
 
-    showTeamsMeetingSection() {
-        console.log('🔵 showTeamsMeetingSection() called');
-        
-        // Hide harnessing video section completely
-        document.getElementById('harnessing-video-section').style.display = 'none';
-        
-        // Hide ALL other elements including progress bar, header, etc.
-        const elementsToHide = [
-            '.progress-container',
-            '.header-brand',
-            '.main-container',
-            '#login-section',
-            '#phase1-section',
-            '#phase2-section',
-            '#phase3-section',
-            '#phase4-section',
-            '#phase5-section',
-            '#results-section'
-        ];
-        
-        elementsToHide.forEach(selector => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(el => {
-                if (el) el.style.display = 'none';
-            });
-        });
-        
-        // Create a completely new element that will work
-        const newTeamsSection = document.createElement('div');
-        newTeamsSection.id = 'new-teams-meeting';
-        newTeamsSection.innerHTML = `
-            <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #1e40af; z-index: 999999; display: flex; align-items: center; justify-content: center;">
-                <div style="background: #1e40af; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 600px; text-align: center; border: 2px solid rgba(255,255,255,0.2);">
-                    <h3 style="color: white; font-size: 2.5rem; margin-bottom: 2rem; font-weight: 600;">
-                        <i class="fas fa-users" style="margin-right: 10px;"></i>Teams Meeting
-                    </h3>
-                    <p style="color: white; font-size: 1.4rem; line-height: 1.6; margin-bottom: 3rem;">
-                        ${this.gameConfig.ui_text.teams_meeting.text}
-                    </p>
-                    <button id="new-join-teams-meeting-btn" style="font-size: 1.2rem; padding: 15px 30px; background-color: white; color: #1e40af; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';">
-                        <i class="fas fa-video" style="margin-right: 10px;"></i>${this.gameConfig.ui_text.teams_meeting.button_text}
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(newTeamsSection);
-        
-        // Add event listener to the new button
-        document.getElementById('new-join-teams-meeting-btn').addEventListener('click', () => {
-            document.body.removeChild(newTeamsSection);
-            this.showMOT1Video();
-        });
-        
-        console.log('🔵 New Teams section created and should be visible');
-    }
-
     showMOT1Video() {
         // Arrêter toutes les vidéos en cours
         this.stopAllVideos();
-        
-        // Hide Teams meeting section completely
-        const teamsSection = document.getElementById('teams-meeting-section');
-        if (teamsSection) {
-            teamsSection.style.display = 'none';
-        }
         
         // Show all hidden elements again
         const elementsToShow = [
@@ -1025,7 +989,7 @@ class GameController {
         
         // Show Phase2 video
         this.showSection('phase2-video-section');
-        this.updateProgress(35, 'Phase 2 - HR Portfolio Selection');
+        this.updateProgress(35, 'STEP 2: Building Your AI Use Case Portfolio');
         
         // Initialize Phase2 video
         initializePhase2Video();
@@ -1041,7 +1005,7 @@ class GameController {
         
         // Show Phase3 video
         this.showSection('phase3-video-section');
-        this.updateProgress(45, 'Phase 3 - Launching your priority HR and GenAI pilots');
+        this.updateProgress(45, 'STEP 3: Launching Your Priority AI Pilots');
         
         // Initialize Phase3 video
         initializePhase3Video();
@@ -1057,7 +1021,7 @@ class GameController {
         
         // Show Phase4 video
         this.showSection('phase4-video-section');
-        this.updateProgress(55, 'Phase 4 - Scaling your AI and GenAI solutions');
+        this.updateProgress(55, 'STEP 4: Scaling Your Priority AI and GenAI Solutions');
         
         // Initialize Phase4 video
         initializePhase4Video();
@@ -1073,7 +1037,7 @@ class GameController {
         
         // Show Phase5-1 video
         this.showSection('phase5-1-video-section');
-        this.updateProgress(65, 'Phase 5 - Final Decision');
+        this.updateProgress(65, 'STEP 5: Deploying AI Across the Organization');
         
         // Initialize Phase5-1 video
         initializePhase5_1Video();
@@ -1088,7 +1052,7 @@ class GameController {
         
         // Show Phase5-2 video
         this.showSection('phase5-2-video-section');
-        this.updateProgress(70, 'Phase 5 - Final Decision');
+        this.updateProgress(70, 'STEP 5: Deploying AI Across the Organization');
         
         // Initialize Phase5-2 video
         initializePhase5_2Video();
@@ -1133,7 +1097,7 @@ class GameController {
         // Hide harnessing video section completely
         document.getElementById('harnessing-video-section').style.display = 'none';
         
-        // Show Teams meeting section instead of going directly to MOT1 video
+        // Go to Teams Meeting instead of directly to Step 1
         this.showTeamsMeetingSection();
     }
 
@@ -1891,7 +1855,7 @@ class GameController {
                 console.log('Phase 3 section shown');
             } else {
                 console.error('Phase 3 API failed:', data.message);
-                this.showAlert('Erreur lors du chargement des choix Phase 3: ' + data.message, 'danger');
+                this.showAlert('Erreur lors du chargement des choix STEP 3: ' + data.message, 'danger');
             }
         } catch (error) {
             console.error('Phase 3 loading error:', error);
@@ -2103,7 +2067,7 @@ class GameController {
                 console.log('Phase 4 section should now be visible');
             } else {
                 console.error('Phase 4 API failed:', data.message);
-                this.showAlert('Erreur lors du chargement des choix Phase 4: ' + data.message, 'danger');
+                this.showAlert('Erreur lors du chargement des choix STEP 4: ' + data.message, 'danger');
             }
         } catch (error) {
             console.error('Phase 4 loading error:', error);
@@ -2644,6 +2608,21 @@ class GameController {
                 description = `Congratulations! You earned ${score} stars for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`;
             }
             console.log('Phase 4 description selected:', description);
+        } else if (motNumber === 5) {
+            // Phase 5 specific messages based on choice and score
+            const currentChoice = this.selectedChoices.mot5;
+            console.log('DEBUG Phase 5:', { motNumber, score, currentChoice, scoreData });
+            
+            if (currentChoice === 'full_speed_on_people' && score === 3) {
+                description = "By choosing \"Full Speed on People,\" you earned three stars out of three. You focused on what matters most — people, skills, and collaboration. This approach maximizes the impact of PlayNext's AI strategy while ensuring a sustainable, human-centered transformation.";
+            } else if (currentChoice === 'continuous_capability_building' && score === 2) {
+                description = "By choosing \"Continuous Capability Building,\" you earned two stars out of three. While this approach builds solid foundations for long-term AI governance and skill development, it may miss opportunities for immediate impact and rapid scaling that could accelerate your transformation journey.";
+            } else if (currentChoice === 'ai_for_all' && score === 1) {
+                description = "By choosing \"AI for All,\" you earned one star out of three. While this approach aims to democratize AI across the company, it may lack the strategic focus and foundational structure needed for sustainable transformation. Consider balancing broad access with targeted capability building and governance.";
+            } else {
+                description = `Congratulations! You earned ${score} stars for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`;
+            }
+            console.log('Phase 5 description selected:', description);
         } else {
             // Generic messages for other phases
         const descriptions = {
@@ -3158,7 +3137,7 @@ class GameController {
                                 
                                 <!-- MOT Status Squares -->
                                 <div class="mot-status mb-3">
-                                    <h6 class="mb-2" style="color: #08efff; font-size: 1.1rem; text-transform: uppercase;">Phase Status</h6>
+                                    <h6 class="mb-2" style="color: #08efff; font-size: 1.1rem; text-transform: uppercase;">Step Status</h6>
                                     <div class="mot-status-squares" id="global-mot-squares" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
                                         <!-- MOT status squares will be populated here -->
                                     </div>
@@ -3225,7 +3204,7 @@ class GameController {
             col.className = 'col-md-6 col-lg-3 mb-3';
             col.innerHTML = `
                 <div style="background: rgba(255, 255, 255, 0.15); padding: 1.5rem; border-radius: 12px; border-left: 3px solid #60a5fa; margin-bottom: 0.8rem; backdrop-filter: blur(10px);">
-                    <div style="color: #ffffff; font-size: 18pt; font-weight: bold; text-transform: uppercase;">Phase ${phaseNum}: ${score}/3</div>
+                    <div style="color: #ffffff; font-size: 18pt; font-weight: bold; text-transform: uppercase;">Step ${phaseNum}: ${score}/3</div>
                     <div style="color: #f8fafc; font-size: 14pt; margin-top: 0.3rem;">${phaseTitles[phaseNum] || mot}</div>
                 </div>
             `;
