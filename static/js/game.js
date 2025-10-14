@@ -859,7 +859,7 @@ class GameController {
         
         // Show Welcome section
         this.showSection('welcome-section');
-        this.updateProgress(7, 'Welcome');
+        this.updateProgress(10, 'Welcome');
     }
 
     showTeamsMeetingSection() {
@@ -867,13 +867,13 @@ class GameController {
         
         // Show Teams Meeting section
         this.showSection('teams-meeting-section');
-        this.updateProgress(10, 'Teams Meeting');
+        this.updateProgress(20, 'Teams Meeting');
     }
 
     showIntroductionVideo() {
         // Hide Welcome section and show intro video (intro.mp4)
         this.showSection('harnessing-video-section');
-        this.updateProgress(10, 'Introduction');
+        this.updateProgress(15, 'Introduction');
         
         // Initialize intro video
         initializeHarnessingVideo();
@@ -891,7 +891,7 @@ class GameController {
         
         // Show Pilot Phase section
         this.showSection('pilot-phase-section');
-        this.updateProgress(60, 'Pilot Step');
+        this.updateProgress(55, 'Pilot Step');
     }
 
     updatePilotPhaseText() {
@@ -942,7 +942,7 @@ class GameController {
         
         // Show Step 1 follow-up section
         this.showSection('step1-followup-section');
-        this.updateProgress(25, 'Strategic Assessment Complete');
+        this.updateProgress(40, 'Strategic Assessment Complete');
     }
 
     showScalingPhaseScreen() {
@@ -950,7 +950,7 @@ class GameController {
         
         // Show Scaling Phase section
         this.showSection('scaling-phase-section');
-        this.updateProgress(75, 'Scaling Phase');
+        this.updateProgress(80, 'Scaling Phase');
     }
 
     showMOT1Video() {
@@ -973,7 +973,7 @@ class GameController {
         
         // Show Phase1 video
         this.showSection('phase1-video-section');
-        this.updateProgress(20, this.gameConfig.phases.phase1.title);
+        this.updateProgress(25, this.gameConfig.phases.phase1.title);
         
         // Initialize Phase1 video
         initializePhase1Video();
@@ -989,7 +989,7 @@ class GameController {
         
         // Show Phase2 video
         this.showSection('phase2-video-section');
-        this.updateProgress(35, 'STEP 2: Building Your AI Use Case Portfolio');
+        this.updateProgress(45, 'STEP 2: Building Your AI Use Case Portfolio');
         
         // Initialize Phase2 video
         initializePhase2Video();
@@ -1005,7 +1005,7 @@ class GameController {
         
         // Show Phase3 video
         this.showSection('phase3-video-section');
-        this.updateProgress(45, 'STEP 3: Launching Your Priority AI Pilots');
+        this.updateProgress(60, 'STEP 3: Launching Your Priority AI Pilots');
         
         // Initialize Phase3 video
         initializePhase3Video();
@@ -1021,7 +1021,7 @@ class GameController {
         
         // Show Phase4 video
         this.showSection('phase4-video-section');
-        this.updateProgress(55, 'STEP 4: Scaling Your Priority AI and GenAI Solutions');
+        this.updateProgress(70, 'STEP 4: Scaling Your Priority AI and GenAI Solutions');
         
         // Initialize Phase4 video
         initializePhase4Video();
@@ -1037,7 +1037,7 @@ class GameController {
         
         // Show Phase5-1 video
         this.showSection('phase5-1-video-section');
-        this.updateProgress(65, 'STEP 5: Deploying AI Across the Organization');
+        this.updateProgress(80, 'STEP 5: Deploying AI Across the Organization');
         
         // Initialize Phase5-1 video
         initializePhase5_1Video();
@@ -1052,7 +1052,7 @@ class GameController {
         
         // Show Phase5-2 video
         this.showSection('phase5-2-video-section');
-        this.updateProgress(70, 'STEP 5: Deploying AI Across the Organization');
+        this.updateProgress(85, 'STEP 5: Deploying AI Across the Organization');
         
         // Initialize Phase5-2 video
         initializePhase5_2Video();
@@ -1068,7 +1068,7 @@ class GameController {
         
         // Show Recap video
         this.showSection('recap-video-section');
-        this.updateProgress(75, 'Game Recap');
+        this.updateProgress(90, 'Game Recap');
         
         // Initialize Recap video
         this.initializeRecapVideo();
@@ -1444,7 +1444,7 @@ class GameController {
                 // Add the choice to scoreData for Phase 1
                 scoreData.choice = this.selectedChoices.mot1;
                 this.showScoreScreen(1, mot1Score, scoreData);
-                this.updateProgress(30, `Step 1 completed - Score: ${mot1Score}/3`);
+                this.updateProgress(35, `Step 1 completed - Score: ${mot1Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -1827,7 +1827,7 @@ class GameController {
                 const mot2Score = data.score.scores.mot2;
                 this.updateScoreDisplay(data.score);
                 this.showScoreScreen(2, mot2Score, data.score);
-                this.updateProgress(40, `Step 2 completed - Score: ${mot2Score}/3`);
+                this.updateProgress(50, `Step 2 completed - Score: ${mot2Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -2035,7 +2035,7 @@ class GameController {
                 const mot3Score = data.score.scores.mot3;
                 this.updateScoreDisplay(data.score);
                 this.showScoreScreen(3, mot3Score, data.score);
-                this.updateProgress(50, `Step 3 completed - Score: ${mot3Score}/3`);
+                this.updateProgress(65, `Step 3 completed - Score: ${mot3Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -2318,7 +2318,7 @@ class GameController {
                 const mot4Score = data.score.scores.mot4;
                 this.updateScoreDisplay(data.score);
                 this.showScoreScreen(4, mot4Score, data.score);
-                this.updateProgress(60, `Step 4 completed - Score: ${mot4Score}/3`);
+                this.updateProgress(75, `Step 4 completed - Score: ${mot4Score}/3`);
             } else {
                 this.showAlert(data.message, 'danger');
             }
@@ -2858,18 +2858,12 @@ class GameController {
                 const categoryData = phaseData ? phaseData[categoryKey] : null;
                 const enablers = categoryData ? categoryData.enablers : [];
                 
-                // Afficher TOUS les ENABLERS pour cette phase (verts pour débloqués, rouges pour non débloqués)
-                enablers.forEach(enabler => {
+                // Afficher SEULEMENT les ENABLERS débloqués (activés)
+                enablers.filter(enabler => enabler.unlocked).forEach(enabler => {
                     const enablerIcon = document.createElement('div');
                     
-                    // Appliquer les couleurs selon l'état
-                    if (enabler.unlocked) {
-                        // ENABLER débloqué : vert
-                        enablerIcon.className = `pedagogical-enabler-icon unlocked`;
-                    } else {
-                        // ENABLER non débloqué : rouge
-                        enablerIcon.className = `pedagogical-enabler-icon locked`;
-                    }
+                    // ENABLER débloqué : vert
+                    enablerIcon.className = `pedagogical-enabler-icon unlocked`;
                     
                     // Utiliser l'icône fournie par l'API (cohérence garantie)
                     const iconClass = enabler.icon || 'fas fa-question';
