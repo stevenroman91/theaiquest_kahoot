@@ -58,8 +58,18 @@ python3 web_interface.py
 ### Accès
 - **URL** : http://localhost:5001
 - **Utilisateurs par défaut** :
-  - `admin` / `FDJ2024!Admin`
-  - `trainer` / `Trainer2024!`
+  - Créés automatiquement au premier démarrage
+  - Utilisez le script `create_default_users.py` pour créer des utilisateurs
+
+## 🔐 Sécurité
+
+### Création d'Utilisateurs
+```bash
+# Créer les utilisateurs par défaut
+python3 create_default_users.py
+```
+
+⚠️ **IMPORTANT** : Ne jamais commiter de mots de passe en dur dans le code ou la documentation !
 
 ## 🔧 Configuration
 
