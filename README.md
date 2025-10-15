@@ -192,6 +192,27 @@ curl http://localhost:5001/api/game_config
 - Requêtes SQL optimisées
 - Limitation de taille des uploads
 
+## 🔐 Configuration des utilisateurs
+
+### Déploiement initial
+
+Pour créer les utilisateurs par défaut lors du premier déploiement :
+
+```bash
+# Définir les mots de passe (remplacer par vos mots de passe sécurisés)
+export ADMIN_PASSWORD='votre_mot_de_passe_admin_securise'
+export TRAINER_PASSWORD='votre_mot_de_passe_trainer_securise'
+
+# Créer les utilisateurs
+python3 deploy_users.py
+```
+
+### Utilisateurs par défaut
+- **Admin** : `admin` / [mot de passe défini via ADMIN_PASSWORD]
+- **Trainer** : `trainer` / [mot de passe défini via TRAINER_PASSWORD]
+
+⚠️ **Important** : Ne jamais commiter les mots de passe dans le code source !
+
 ## 🚀 Déploiement
 
 ### Production

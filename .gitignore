@@ -3,6 +3,13 @@
 .dev_server.log
 *.log
 
+# Fichiers de configuration sensibles
+.env
+.env.local
+.env.production
+create_users.py
+users.db
+
 # Environnement virtuel Python
 .venv/
 venv/

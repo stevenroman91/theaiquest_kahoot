@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
-Script pour créer les utilisateurs par défaut
+Script de déploiement sécurisé pour créer les utilisateurs par défaut
+À utiliser uniquement lors du déploiement initial
 """
 
+import os
 import sqlite3
 import hashlib
 import secrets
@@ -12,9 +14,21 @@ def hash_password(password: str) -> str:
     """Hash un mot de passe avec SHA-256"""
     return hashlib.sha256(password.encode()).hexdigest()
 
-def create_users():
-    """Crée les utilisateurs par défaut"""
+def create_default_users():
+    """Crée les utilisateurs par défaut depuis les variables d'environnement"""
     db_path = "users.db"
+    
+    # Récupération des identifiants depuis les variables d'environnement
+    admin_username = os.environ.get('ADMIN_USERNAME', 'admin')
+    admin_password = os.environ.get('ADMIN_PASSWORD')
+    trainer_username = os.environ.get('TRAINER_USERNAME', 'trainer')
+    trainer_password = os.environ.get('TRAINER_PASSWORD')
+    
+    if not admin_password or not trainer_password:
+        print("❌ Erreur: Les variables d'environnement ADMIN_PASSWORD et TRAINER_PASSWORD doivent être définies")
+        print("Exemple: export ADMIN_PASSWORD='votre_mot_de_passe_admin'")
+        print("         export TRAINER_PASSWORD='votre_mot_de_passe_trainer'")
+        return False
     
     # Connexion à la base de données
     conn = sqlite3.connect(db_path)
@@ -35,18 +49,17 @@ def create_users():
         )
     ''')
     
-    # Utilisateurs à créer
     users = [
         {
-            'username': 'admin',
-            'email': 'admin@playnext.com',
-            'password': 'FDJ2024!Admin',
+            'username': admin_username,
+            'email': f'{admin_username}@playnext.com',
+            'password': admin_password,
             'role': 'admin'
         },
         {
-            'username': 'trainer',
-            'email': 'trainer@playnext.com',
-            'password': 'Trainer2024!',
+            'username': trainer_username,
+            'email': f'{trainer_username}@playnext.com',
+            'password': trainer_password,
             'role': 'trainer'
         }
     ]
@@ -58,7 +71,7 @@ def create_users():
             # Vérifier si l'utilisateur existe déjà
             cursor.execute('SELECT id FROM users WHERE username = ?', (user_data['username'],))
             if cursor.fetchone():
-                print(f"Utilisateur '{user_data['username']}' existe déjà")
+                print(f"ℹ️  Utilisateur '{user_data['username']}' existe déjà")
                 continue
             
             # Créer le salt et hasher le mot de passe
@@ -80,11 +93,6 @@ def create_users():
             ))
             
             print(f"✅ Utilisateur '{user_data['username']}' créé avec succès")
-            print(f"   Email: {user_data['email']}")
-            print(f"   Rôle: {user_data['role']}")
-            print(f"   Mot de passe: {user_data['password']}")
-            print()
-            
             created_count += 1
             
         except sqlite3.Error as e:
@@ -95,9 +103,9 @@ def create_users():
     conn.close()
     
     print(f"🎉 {created_count} utilisateur(s) créé(s) avec succès !")
-    print("\n📋 Identifiants de connexion :")
-    print("   Admin: admin / FDJ2024!Admin")
-    print("   Trainer: trainer / Trainer2024!")
+    return True
 
 if __name__ == "__main__":
-    create_users()
+    print("🔐 Script de déploiement sécurisé")
+    print("⚠️  Assurez-vous que les variables d'environnement sont définies")
+    create_default_users()
