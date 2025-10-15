@@ -9,6 +9,7 @@ import json
 import pickle
 import base64
 import logging
+import os
 from datetime import datetime
 from ai_acceleration_game import AIAccelerationGame, GameState
 from user_manager import user_manager
@@ -19,7 +20,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.secret_key = 'ai_acceleration_secret_key_2024'
+app.secret_key = os.environ.get('SECRET_KEY', 'ai_acceleration_secret_key_2024')
 
 # Instance globale du jeu (retour à la version simple qui fonctionnait)
 game_instance = None

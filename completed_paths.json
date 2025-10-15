@@ -1,327 +1,69 @@
 [
   {
-    "mot1_choice": "amira",
+    "mot1_choice": "james",
     "mot2_choices": [
       "fraud_integrity_detection",
-      "ai_storyline_generator",
-      "smart_game_design_assistant"
+      "smart_game_design_assistant",
+      "talent_analytics_dashboard"
     ],
     "mot3_choices": {
-      "policies_governance": "responsible_ai_framework",
       "transformation_change": "ai_co_creation_labs",
-      "technology_partnerships": "ai_data_foundations"
-    },
-    "mot4_choices": [
-      "business_ai_champions",
-      "clear_ownership_accountability"
-    ],
-    "mot5_choice": "ai_for_all",
-    "total_score": 7,
-    "stars": 1,
-    "mot_scores": {
-      "mot1": 1,
-      "mot2": 2,
-      "mot3": 2,
-      "mot4": 1,
-      "mot5": 1
-    },
-    "unlocked_enablers": [
-      "responsible_ai_framework",
-      "ai_storyline_generator",
-      "trusted_partner_ecosystem",
-      "ai_co_creation_labs",
-      "fraud_integrity_detection",
-      "smart_game_design_assistant",
-      "clear_ownership_accountability",
-      "business_ai_champions",
-      "enterprise_ai_service_layer",
-      "ai_collaboration_hub",
-      "ai_data_foundations"
-    ],
-    "unlocked_enablers_by_category": {
-      "technology_partnerships": [
-        "ai_data_foundations",
-        "trusted_partner_ecosystem",
-        "enterprise_ai_service_layer"
-      ],
-      "policies_governance": [
-        "responsible_ai_framework",
-        "clear_ownership_accountability"
-      ],
-      "transformation_change": [
-        "ai_storyline_generator",
-        "ai_co_creation_labs",
-        "fraud_integrity_detection",
-        "smart_game_design_assistant",
-        "business_ai_champions",
-        "ai_collaboration_hub"
-      ]
-    },
-    "enablers_by_phase": {
-      "phase1": [
-        "automated_banners_generation",
-        "customer_email_classifier",
-        "virtual_learning_coach_prototype",
-        "supplier_risk_scoring",
-        "simulated_game_design",
-        "predictive_maintenance_sandbox"
-      ],
-      "phase2": [
-        "smart_game_design_assistant",
-        "ai_storyline_generator",
-        "fraud_integrity_detection"
-      ],
-      "phase3": [
-        "responsible_ai_framework",
-        "ai_data_foundations",
-        "ai_co_creation_labs"
-      ],
-      "phase4": [
-        "clear_ownership_accountability",
-        "business_ai_champions"
-      ],
-      "phase5": [
-        "trusted_partner_ecosystem",
-        "enterprise_ai_service_layer",
-        "ai_collaboration_hub"
-      ]
-    },
-    "mot4_score": 1
-  },
-  {
-    "mot1_choice": "elena",
-    "mot2_choices": [
-      "fraud_integrity_detection",
-      "smart_game_design_assistant",
-      "player_journey_optimizer"
-    ],
-    "mot3_choices": {
-      "technology_partnerships": "model_automation_framework",
-      "policies_governance": "ai_governance_board",
-      "transformation_change": "ai_co_creation_labs"
-    },
-    "mot4_choices": [
-      "business_ai_champions",
-      "adoption_playbook"
-    ],
-    "mot5_choice": "continuous_capability_building",
-    "total_score": 11,
-    "stars": 2,
-    "mot_scores": {
-      "mot1": 3,
-      "mot2": 3,
-      "mot3": 2,
-      "mot4": 1,
-      "mot5": 2
-    },
-    "unlocked_enablers": [
-      "ai_landscape_scan",
-      "early_career_pipeline_expert_retention",
-      "ai_productivity_opportunities",
-      "ai_co_creation_labs",
-      "fraud_integrity_detection",
-      "smart_game_design_assistant",
-      "player_journey_optimizer",
-      "group_responsible_ai_awareness",
-      "adoption_playbook",
-      "ai_governance_board",
-      "business_ai_champions",
-      "model_automation_framework"
-    ],
-    "unlocked_enablers_by_category": {
-      "technology_partnerships": [
-        "ai_landscape_scan",
-        "model_automation_framework"
-      ],
-      "policies_governance": [
-        "ai_governance_board",
-        "group_responsible_ai_awareness"
-      ],
-      "transformation_change": [
-        "early_career_pipeline_expert_retention",
-        "ai_productivity_opportunities",
-        "ai_co_creation_labs",
-        "fraud_integrity_detection",
-        "smart_game_design_assistant",
-        "adoption_playbook",
-        "business_ai_champions",
-        "player_journey_optimizer"
-      ]
-    },
-    "enablers_by_phase": {
-      "phase1": [
-        "ai_landscape_scan",
-        "ai_productivity_opportunities"
-      ],
-      "phase2": [
-        "smart_game_design_assistant",
-        "player_journey_optimizer",
-        "fraud_integrity_detection"
-      ],
-      "phase3": [
-        "ai_governance_board",
-        "model_automation_framework",
-        "ai_co_creation_labs"
-      ],
-      "phase4": [
-        "business_ai_champions",
-        "adoption_playbook"
-      ],
-      "phase5": [
-        "group_responsible_ai_awareness",
-        "early_career_pipeline_expert_retention"
-      ]
-    },
-    "mot4_score": 1
-  },
-  {
-    "mot1_choice": "amira",
-    "mot2_choices": [
-      "fraud_integrity_detection",
-      "smart_game_design_assistant",
-      "player_journey_optimizer"
-    ],
-    "mot3_choices": {
       "technology_partnerships": "ai_data_foundations",
-      "transformation_change": "ai_co_creation_labs",
       "policies_governance": "ai_governance_board"
     },
     "mot4_choices": [
       "industrial_data_pipelines",
-      "adoption_playbook",
-      "local_ai_risk_management",
-      "business_ai_champions"
-    ],
-    "mot5_choice": "continuous_capability_building",
-    "total_score": 12,
-    "stars": 2,
-    "mot_scores": {
-      "mot1": 1,
-      "mot2": 3,
-      "mot3": 3,
-      "mot4": 3,
-      "mot5": 2
-    },
-    "unlocked_enablers": [
-      "early_career_pipeline_expert_retention",
-      "local_ai_risk_management",
-      "ai_co_creation_labs",
-      "fraud_integrity_detection",
-      "smart_game_design_assistant",
-      "group_responsible_ai_awareness",
-      "adoption_playbook",
-      "ai_governance_board",
       "business_ai_champions",
-      "industrial_data_pipelines",
-      "ai_data_foundations",
-      "player_journey_optimizer"
+      "adoption_playbook",
+      "local_ai_risk_management"
     ],
-    "unlocked_enablers_by_category": {
-      "technology_partnerships": [
-        "industrial_data_pipelines",
-        "ai_data_foundations"
-      ],
-      "policies_governance": [
-        "ai_governance_board",
-        "group_responsible_ai_awareness",
-        "local_ai_risk_management"
-      ],
-      "transformation_change": [
-        "early_career_pipeline_expert_retention",
-        "ai_co_creation_labs",
-        "fraud_integrity_detection",
-        "smart_game_design_assistant",
-        "adoption_playbook",
-        "business_ai_champions",
-        "player_journey_optimizer"
-      ]
-    },
-    "enablers_by_phase": {
-      "phase1": [
-        "automated_banners_generation",
-        "customer_email_classifier",
-        "virtual_learning_coach_prototype",
-        "supplier_risk_scoring",
-        "simulated_game_design",
-        "predictive_maintenance_sandbox"
-      ],
-      "phase2": [
-        "smart_game_design_assistant",
-        "player_journey_optimizer",
-        "fraud_integrity_detection"
-      ],
-      "phase3": [
-        "ai_governance_board",
-        "ai_data_foundations",
-        "ai_co_creation_labs"
-      ],
-      "phase4": [
-        "industrial_data_pipelines",
-        "local_ai_risk_management",
-        "business_ai_champions",
-        "adoption_playbook"
-      ],
-      "phase5": [
-        "group_responsible_ai_awareness",
-        "early_career_pipeline_expert_retention"
-      ]
-    },
-    "mot4_score": 3
-  },
-  {
-    "mot1_choice": "james",
-    "mot2_choices": [
-      "fraud_integrity_detection",
-      "ai_storyline_generator",
-      "smart_game_design_assistant"
-    ],
-    "mot3_choices": {
-      "technology_partnerships": "ai_data_foundations",
-      "policies_governance": "ai_governance_board",
-      "transformation_change": "ai_co_creation_labs"
-    },
-    "mot4_choices": [
-      "industrial_data_pipelines"
-    ],
-    "mot5_choice": "continuous_capability_building",
-    "total_score": 10,
+    "mot5_choice": "ai_for_all",
+    "total_score": 11,
     "stars": 2,
     "mot_scores": {
       "mot1": 2,
       "mot2": 2,
       "mot3": 3,
-      "mot4": 1,
-      "mot5": 2
+      "mot4": 3,
+      "mot5": 1
     },
     "unlocked_enablers": [
+      "local_ai_risk_management",
+      "talent_analytics_dashboard",
+      "adoption_playbook",
       "strategic_tech_alliances",
-      "early_career_pipeline_expert_retention",
-      "ai_storyline_generator",
+      "ai_governance_board",
+      "vendor_value_steering",
+      "enterprise_ai_service_layer",
+      "trusted_partner_ecosystem",
       "ai_co_creation_labs",
       "fraud_integrity_detection",
+      "ai_collaboration_hub",
+      "business_ai_champions",
       "smart_game_design_assistant",
-      "group_responsible_ai_awareness",
-      "ai_governance_board",
-      "industrial_data_pipelines",
       "ai_data_foundations",
-      "vendor_value_steering"
+      "industrial_data_pipelines"
     ],
     "unlocked_enablers_by_category": {
       "technology_partnerships": [
-        "industrial_data_pipelines",
         "strategic_tech_alliances",
+        "trusted_partner_ecosystem",
+        "vendor_value_steering",
+        "enterprise_ai_service_layer",
         "ai_data_foundations",
-        "vendor_value_steering"
+        "industrial_data_pipelines"
       ],
       "policies_governance": [
-        "ai_governance_board",
-        "group_responsible_ai_awareness"
+        "local_ai_risk_management",
+        "ai_governance_board"
       ],
       "transformation_change": [
-        "early_career_pipeline_expert_retention",
-        "ai_storyline_generator",
+        "talent_analytics_dashboard",
+        "adoption_playbook",
         "ai_co_creation_labs",
         "fraud_integrity_detection",
+        "ai_collaboration_hub",
+        "business_ai_champions",
         "smart_game_design_assistant"
       ]
     },
@@ -331,23 +73,27 @@
         "vendor_value_steering"
       ],
       "phase2": [
-        "smart_game_design_assistant",
-        "ai_storyline_generator",
-        "fraud_integrity_detection"
+        "talent_analytics_dashboard",
+        "fraud_integrity_detection",
+        "smart_game_design_assistant"
       ],
       "phase3": [
-        "ai_governance_board",
         "ai_data_foundations",
-        "ai_co_creation_labs"
+        "ai_co_creation_labs",
+        "ai_governance_board"
       ],
       "phase4": [
+        "local_ai_risk_management",
+        "adoption_playbook",
+        "business_ai_champions",
         "industrial_data_pipelines"
       ],
       "phase5": [
-        "group_responsible_ai_awareness",
-        "early_career_pipeline_expert_retention"
+        "trusted_partner_ecosystem",
+        "enterprise_ai_service_layer",
+        "ai_collaboration_hub"
       ]
     },
-    "mot4_score": 1
+    "mot4_score": 3
   }
 ]

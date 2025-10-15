@@ -110,21 +110,6 @@ class GameController {
             this.handleLoginAndStart();
         });
         
-        // Register form
-        document.getElementById('register-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleRegister();
-        });
-        
-        // Navigation entre login et register
-        document.getElementById('show-register-form').addEventListener('click', () => {
-            this.showRegisterForm();
-        });
-        
-        document.getElementById('show-login-form').addEventListener('click', () => {
-            this.showLoginForm();
-        });
-        
         // Validation en temps réel pour login
         document.getElementById('username').addEventListener('input', () => {
             this.validateUsernameField();
@@ -134,23 +119,6 @@ class GameController {
             this.validatePasswordField();
         });
         
-        // Validation en temps réel pour register
-        document.getElementById('reg-username').addEventListener('input', () => {
-            this.validateRegUsernameField();
-        });
-        
-        document.getElementById('reg-email').addEventListener('input', () => {
-            this.validateRegEmailField();
-        });
-        
-        document.getElementById('reg-password').addEventListener('input', () => {
-            this.validateRegPasswordField();
-        });
-        
-        document.getElementById('reg-confirm-password').addEventListener('input', () => {
-            this.validateRegConfirmPasswordField();
-        });
-
         // Start game button (removed - handled by handleLoginAndStart)
 
         // Play again button
@@ -428,135 +396,9 @@ class GameController {
         }
     }
     
-    // Validation des champs d'inscription
-    validateRegUsernameField() {
-        const usernameField = document.getElementById('reg-username');
-        const usernameError = document.getElementById('reg-username-error');
-        const value = usernameField.value.trim();
-        
-        // Clear previous validation states
-        usernameField.classList.remove('is-invalid', 'is-valid');
-        
-        if (!value) {
-            usernameField.classList.add('is-invalid');
-            usernameError.textContent = 'Username is required';
-            return false;
-        } else if (value.length < 2) {
-            usernameField.classList.add('is-invalid');
-            usernameError.textContent = 'Username must contain at least 2 characters';
-            return false;
-        } else if (value.length > 50) {
-            usernameField.classList.add('is-invalid');
-            usernameError.textContent = 'Username cannot exceed 50 characters';
-            return false;
-        } else {
-            usernameField.classList.add('is-valid');
-            usernameError.textContent = '';
-            return true;
-        }
-    }
-    
-    validateRegEmailField() {
-        const emailField = document.getElementById('reg-email');
-        const emailError = document.getElementById('reg-email-error');
-        const value = emailField.value.trim();
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
-        // Clear previous validation states
-        emailField.classList.remove('is-invalid', 'is-valid');
-        
-        if (!value) {
-            emailField.classList.add('is-invalid');
-            emailError.textContent = 'Email address is required';
-            return false;
-        } else if (!emailRegex.test(value)) {
-            emailField.classList.add('is-invalid');
-            emailError.textContent = 'Invalid email address';
-            return false;
-        } else {
-            emailField.classList.add('is-valid');
-            emailError.textContent = '';
-            return true;
-        }
-    }
-    
-    validateRegPasswordField() {
-        const passwordField = document.getElementById('reg-password');
-        const passwordError = document.getElementById('reg-password-error');
-        const value = passwordField.value;
-        
-        // Clear previous validation states
-        passwordField.classList.remove('is-invalid', 'is-valid');
-        
-        if (!value) {
-            passwordField.classList.add('is-invalid');
-            passwordError.textContent = 'Password is required';
-            return false;
-        } else if (value.length < 6) {
-            passwordField.classList.add('is-invalid');
-            passwordError.textContent = 'Password must contain at least 6 characters';
-            return false;
-        } else {
-            passwordField.classList.add('is-valid');
-            passwordError.textContent = '';
-            return true;
-        }
-    }
-    
-    validateRegConfirmPasswordField() {
-        const passwordField = document.getElementById('reg-password');
-        const confirmField = document.getElementById('reg-confirm-password');
-        const confirmError = document.getElementById('reg-confirm-password-error');
-        const value = confirmField.value;
-        
-        // Clear previous validation states
-        confirmField.classList.remove('is-invalid', 'is-valid');
-        
-        if (!value) {
-            confirmField.classList.add('is-invalid');
-            confirmError.textContent = 'Password confirmation is required';
-            return false;
-        } else if (value !== passwordField.value) {
-            confirmField.classList.add('is-invalid');
-            confirmError.textContent = 'Passwords do not match';
-            return false;
-        } else {
-            confirmField.classList.add('is-valid');
-            confirmError.textContent = '';
-            return true;
-        }
-    }
-    
-    // Navigation entre formulaires
-    showLoginForm() {
-        document.getElementById('login-section').style.display = 'block';
-        document.getElementById('register-section').style.display = 'none';
-    }
-    
-    showRegisterForm() {
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('register-section').style.display = 'block';
-    }
-    
     showLoginAlert(message, type = 'danger') {
         const alert = document.getElementById('login-alert');
         const alertMessage = document.getElementById('login-alert-message');
-        
-        alert.className = `alert alert-${type} alert-dismissible fade show`;
-        alertMessage.textContent = message;
-        alert.style.display = 'block';
-        
-        // Auto-hide après 5 secondes pour les messages de succès
-        if (type === 'success') {
-            setTimeout(() => {
-                alert.style.display = 'none';
-            }, 5000);
-        }
-    }
-    
-    showRegisterAlert(message, type = 'danger') {
-        const alert = document.getElementById('register-alert');
-        const alertMessage = document.getElementById('register-alert-message');
         
         alert.className = `alert alert-${type} alert-dismissible fade show`;
         alertMessage.textContent = message;
@@ -575,31 +417,10 @@ class GameController {
         alert.style.display = 'none';
     }
     
-    hideRegisterAlert() {
-        const alert = document.getElementById('register-alert');
-        alert.style.display = 'none';
-    }
-    
     setLoginLoading(loading) {
         const submitBtn = document.getElementById('login-submit-btn');
         const btnText = document.getElementById('login-btn-text');
         const btnLoading = document.getElementById('login-btn-loading');
-        
-        if (loading) {
-            submitBtn.disabled = true;
-            btnText.style.display = 'none';
-            btnLoading.style.display = 'inline';
-        } else {
-            submitBtn.disabled = false;
-            btnText.style.display = 'inline';
-            btnLoading.style.display = 'none';
-        }
-    }
-    
-    setRegisterLoading(loading) {
-        const submitBtn = document.getElementById('register-submit-btn');
-        const btnText = document.getElementById('register-btn-text');
-        const btnLoading = document.getElementById('register-btn-loading');
         
         if (loading) {
             submitBtn.disabled = true;
@@ -693,58 +514,6 @@ class GameController {
         }
     }
     
-    async handleRegister() {
-        // Validation côté client
-        const isUsernameValid = this.validateRegUsernameField();
-        const isEmailValid = this.validateRegEmailField();
-        const isPasswordValid = this.validateRegPasswordField();
-        const isConfirmPasswordValid = this.validateRegConfirmPasswordField();
-        
-        if (!isUsernameValid || !isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
-            this.showRegisterAlert('Please correct the errors in the form', 'warning');
-            return;
-        }
-        
-        const username = document.getElementById('reg-username').value.trim();
-        const email = document.getElementById('reg-email').value.trim();
-        const password = document.getElementById('reg-password').value;
-        
-        this.setRegisterLoading(true);
-        this.hideRegisterAlert();
-        
-        try {
-            // Register
-            const registerResponse = await fetch('/api/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({ username, email, password })
-            });
-
-            const registerData = await registerResponse.json();
-
-            if (registerData.success) {
-                this.showRegisterAlert(registerData.message, 'success');
-                
-                // Retourner au formulaire de login après 2 secondes
-                setTimeout(() => {
-                    this.showLoginForm();
-                    // Pré-remplir le nom d'utilisateur
-                    document.getElementById('username').value = username;
-                }, 2000);
-            } else {
-                this.showRegisterAlert(registerData.message, 'danger');
-            }
-        } catch (error) {
-            console.error('Register error:', error);
-            this.showRegisterAlert('Server connection error', 'danger');
-        } finally {
-            this.setRegisterLoading(false);
-        }
-    }
-
     showSection(sectionId) {
         console.log('=== showSection called with:', sectionId, '===');
         // Hide all sections
