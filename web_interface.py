@@ -25,6 +25,43 @@ app.secret_key = os.environ.get('SECRET_KEY', 'ai_acceleration_secret_key_2024')
 # Instance globale du jeu (retour à la version simple qui fonctionnait)
 game_instance = None
 
+def initialize_default_users():
+    """Initialise les utilisateurs par défaut au démarrage"""
+    try:
+        logger.info("🔐 Initialisation des utilisateurs par défaut...")
+        
+        # Vérifier si les utilisateurs existent déjà
+        admin_user = user_manager.get_user_by_username('admin')
+        trainer_user = user_manager.get_user_by_username('trainer')
+        
+        users_created = 0
+        
+        if not admin_user:
+            if user_manager.create_user('admin', 'admin@playnext.com', 'FDJ2024!Admin', 'admin'):
+                logger.info("✅ Utilisateur 'admin' créé")
+                users_created += 1
+            else:
+                logger.error("❌ Échec création utilisateur 'admin'")
+        else:
+            logger.info("ℹ️  Utilisateur 'admin' existe déjà")
+        
+        if not trainer_user:
+            if user_manager.create_user('trainer', 'trainer@playnext.com', 'Trainer2024!', 'trainer'):
+                logger.info("✅ Utilisateur 'trainer' créé")
+                users_created += 1
+            else:
+                logger.error("❌ Échec création utilisateur 'trainer'")
+        else:
+            logger.info("ℹ️  Utilisateur 'trainer' existe déjà")
+        
+        if users_created > 0:
+            logger.info(f"🎉 {users_created} utilisateur(s) créé(s) au démarrage")
+        else:
+            logger.info("ℹ️  Tous les utilisateurs existent déjà")
+            
+    except Exception as e:
+        logger.error(f"❌ Erreur lors de l'initialisation des utilisateurs: {e}")
+
 def get_game():
     """Récupère ou crée l'instance du jeu"""
     global game_instance
@@ -1128,6 +1165,10 @@ def get_current_phase_title(game_state):
 
 if __name__ == '__main__':
     import os
+    
+    # Initialiser les utilisateurs par défaut au démarrage
+    initialize_default_users()
+    
     # Configuration pour Railway
     port = int(os.environ.get('PORT', 5001))
     debug = os.environ.get('FLASK_ENV') != 'production'
