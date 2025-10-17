@@ -3970,3 +3970,410 @@ body {
     background-color: #1d4ed8 !important;
     color: #ffffff !important;
 }
+
+/* ========================================
+   RESPONSIVE DESIGN - MOBILE FIRST
+   ======================================== */
+
+/* Mobile Styles (up to 768px) */
+@media screen and (max-width: 768px) {
+    
+    /* Welcome Page Mobile Styles */
+    .welcome-page {
+        padding: 10px;
+    }
+    
+    .welcome-content {
+        padding: 15px;
+    }
+    
+    .welcome-content h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .welcome-content p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    .welcome-content button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .welcome-frame {
+        padding: 25px 20px;
+        margin: 10px;
+        max-width: none;
+        width: calc(100% - 20px);
+    }
+    
+    .welcome-frame h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .welcome-frame p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    .welcome-frame button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    /* Teams Meeting Mobile Styles */
+    #teams-meeting-section .welcome-content {
+        padding: 15px;
+    }
+    
+    #teams-meeting-section .welcome-content h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    #teams-meeting-section .welcome-content p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    #teams-meeting-section .welcome-content button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    #teams-meeting-section .welcome-frame {
+        padding: 25px 20px;
+        margin: 10px;
+        max-width: none;
+        width: calc(100% - 20px);
+    }
+    
+    #teams-meeting-section .welcome-frame h3 {
+        font-size: 1.8rem !important;
+        margin-bottom: 1.5rem;
+    }
+    
+    #teams-meeting-section .welcome-frame p {
+        font-size: 1.1rem !important;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    #teams-meeting-section .welcome-frame button {
+        font-size: 1rem !important;
+        padding: 12px 24px !important;
+        width: 100% !important;
+        max-width: 300px !important;
+    }
+    
+    /* Introduction Page Mobile Styles */
+    .introduction-section .welcome-content {
+        padding: 15px;
+    }
+    
+    .introduction-section .welcome-content h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .introduction-section .welcome-content p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    .introduction-section .welcome-content button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .introduction-section .welcome-frame {
+        padding: 25px 20px;
+        margin: 10px;
+        max-width: none;
+        width: calc(100% - 20px);
+    }
+    
+    .introduction-section .welcome-frame h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .introduction-section .welcome-frame p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    .introduction-section .welcome-frame button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    /* Step 1 Follow-up Mobile Styles */
+    .step1-followup-section .welcome-content {
+        padding: 15px;
+    }
+    
+    .step1-followup-section .welcome-content h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .step1-followup-section .welcome-content p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    .step1-followup-section .welcome-content button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .step1-followup-section .welcome-frame {
+        padding: 25px 20px;
+        margin: 10px;
+        max-width: none;
+        width: calc(100% - 20px);
+    }
+    
+    .step1-followup-section .welcome-frame h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .step1-followup-section .welcome-frame p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    .step1-followup-section .welcome-frame button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    /* Pilot Phase Mobile Styles */
+    #pilot-phase-section .welcome-content {
+        padding: 15px;
+    }
+    
+    #pilot-phase-section .welcome-content h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    #pilot-phase-section .welcome-content p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    #pilot-phase-section .welcome-content button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    #pilot-phase-section .welcome-frame {
+        padding: 25px 20px;
+        margin: 10px;
+        max-width: none;
+        width: calc(100% - 20px);
+    }
+    
+    #pilot-phase-section .welcome-frame h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    #pilot-phase-section .welcome-frame p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    #pilot-phase-section .welcome-frame button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    /* Enterprise Scaling Mobile Styles */
+    #scaling-phase-section .welcome-content {
+        padding: 15px;
+    }
+    
+    #scaling-phase-section .welcome-content h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    #scaling-phase-section .welcome-content p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    #scaling-phase-section .welcome-content button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    #scaling-phase-section .welcome-frame {
+        padding: 25px 20px;
+        margin: 10px;
+        max-width: none;
+        width: calc(100% - 20px);
+    }
+    
+    #scaling-phase-section .welcome-frame h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    #scaling-phase-section .welcome-frame p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+    
+    #scaling-phase-section .welcome-frame button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+/* Tablet Styles (768px to 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    
+    .welcome-frame {
+        max-width: 500px;
+        padding: 35px 30px;
+    }
+    
+    .welcome-frame h3 {
+        font-size: 2.2rem;
+    }
+    
+    .welcome-frame p {
+        font-size: 1.3rem;
+    }
+    
+    .welcome-frame button {
+        font-size: 1.1rem;
+        padding: 14px 28px;
+    }
+    
+    #teams-meeting-section .welcome-frame {
+        max-width: 500px;
+        padding: 35px 30px;
+    }
+    
+    #teams-meeting-section .welcome-frame h3 {
+        font-size: 2.2rem !important;
+    }
+    
+    #teams-meeting-section .welcome-frame p {
+        font-size: 1.3rem !important;
+    }
+    
+    #teams-meeting-section .welcome-frame button {
+        font-size: 1.1rem !important;
+        padding: 14px 28px !important;
+    }
+    
+    #pilot-phase-section .welcome-frame {
+        max-width: 500px;
+        padding: 35px 30px;
+    }
+    
+    #pilot-phase-section .welcome-frame h3 {
+        font-size: 2.2rem;
+    }
+    
+    #pilot-phase-section .welcome-frame p {
+        font-size: 1.3rem;
+    }
+    
+    #pilot-phase-section .welcome-frame button {
+        font-size: 1.1rem;
+        padding: 14px 28px;
+    }
+    
+    #scaling-phase-section .welcome-frame {
+        max-width: 500px;
+        padding: 35px 30px;
+    }
+    
+    #scaling-phase-section .welcome-frame h3 {
+        font-size: 2.2rem;
+    }
+    
+    #scaling-phase-section .welcome-frame p {
+        font-size: 1.3rem;
+    }
+    
+    #scaling-phase-section .welcome-frame button {
+        font-size: 1.1rem;
+        padding: 14px 28px;
+    }
+    
+    .step1-followup-section .welcome-frame {
+        max-width: 500px;
+        padding: 35px 30px;
+    }
+    
+    .step1-followup-section .welcome-frame h3 {
+        font-size: 2.2rem;
+    }
+    
+    .step1-followup-section .welcome-frame p {
+        font-size: 1.3rem;
+    }
+    
+    .step1-followup-section .welcome-frame button {
+        font-size: 1.1rem;
+        padding: 14px 28px;
+    }
+}
+
+/* Touch-friendly button styles for mobile */
+@media screen and (max-width: 768px) {
+    .welcome-frame button,
+    #teams-meeting-section .welcome-frame button,
+    #pilot-phase-section .welcome-frame button,
+    #scaling-phase-section .welcome-frame button,
+    .step1-followup-section .welcome-frame button {
+        min-height: 48px; /* Minimum touch target size */
+        touch-action: manipulation; /* Prevent double-tap zoom */
+        -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+    }
+}
