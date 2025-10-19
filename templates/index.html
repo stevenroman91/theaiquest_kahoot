@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ game_title }} - {{ company_name }} v1.9</title>
+    <title>The AI Quest - PlayForward</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-        <link href="{{ url_for('static', filename='css/style.css') }}?v=10.9" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/style.css') }}?v=11.1" rel="stylesheet">
 </head>
 <body>
     <div class="container-fluid">
@@ -18,10 +18,10 @@
                     <div class="col-md-6">
                         <div class="d-flex align-items-center">
                             <div class="brand-logo-container">
-                                <i class="fas fa-brain brand-logo-icon" style="font-size: 2.5rem; color: var(--fdj-blue-primary);"></i>
+                                <i class="fas fa-space-shuttle brand-logo-icon" style="font-size: 2.5rem; color: var(--fdj-blue-primary);"></i>
                             </div>
                             <div>
-                                <h1 class="brand-title mb-0 game-title">{{ game_title }}</h1>
+                                <h1 class="brand-title mb-0 game-title">The AI Quest</h1>
                                 <p class="brand-subtitle mb-0 company-name">{{ company_name }} - HR Managers Edition v1.9</p>
                             </div>
                         </div>
@@ -33,6 +33,12 @@
                                     <i class="fas fa-star me-2"></i>
                                     Score Total: <span id="total-score">0</span>/15
                                 </div>
+                            </div>
+                            <div class="banner-image-container ms-3">
+                                <img src="{{ url_for('static', filename='images/image (1).png') }}" 
+                                     alt="Banner Image" 
+                                     class="banner-image"
+                                     style="height: 90px; width: auto;">
                             </div>
                         </div>
                     </div>
@@ -46,9 +52,9 @@
             <div id="login-section" class="login-container">
                 <div class="login-card">
                     <div class="text-center mb-4">
-                        <i class="fas fa-brain mb-3" style="font-size: 3rem; color: var(--fdj-blue-primary);"></i>
-                        <h2 class="mb-2" style="color: var(--fdj-blue-primary); font-weight: 700;">AI Transformation</h2>
-                        <p class="text-muted mb-4">PlayNext - Leader Edition v1.9</p>
+                        <i class="fas fa-space-shuttle mb-3" style="font-size: 3rem; color: var(--fdj-blue-primary);"></i>
+                        <h2 class="mb-2" style="color: var(--fdj-blue-primary); font-weight: 700;">The AI Quest</h2>
+                        <p class="text-muted mb-4">PlayForward - Build your AI journey</p>
                     </div>
                     
                     <!-- Alert Messages -->
@@ -103,12 +109,10 @@
                     <div class="video-container mb-4">
                         <div class="embed-responsive embed-responsive-16by9">
                             <video 
-                                id="intro-video"
+                                id="presentation-video"
                                 class="embed-responsive-item" 
                                 preload="none" 
-                                preload="none" 
                                 controls
-                                autoplay
                                 playsinline
                                 style="width: 100%; height: 100%; border-radius: 15px;">
                                 <source src="{{ url_for('static', filename='videos/presentation_serious_game.mp4') }}" type="video/mp4">
@@ -352,9 +356,9 @@
                     <div class="welcome-frame">
                         <h3><i class="fas fa-handshake"></i>Welcome!</h3>
                         <p class="welcome-text">
-                            Welcome ! You are the AI Transformation Leader at PlayNext, a leading gaming company with 1 800 employees worldwide. Facing fast-moving competition and evolving player expectations, the company must reinvent how it creates, delivers, and scales innovation.
+                            Welcome ! You are the AI Quest Leader at PlayForward, a leading gaming company with 1 800 employees worldwide. Facing fast-moving competition and evolving player expectations, the company must reinvent how it creates, delivers, and scales innovation.
                             <br><br>
-                            Your mission: define how AI can accelerate creativity and performance — without compromising the culture, values, and human spirit that make PlayNext unique.
+                            Your mission: define how AI can accelerate creativity and performance — without compromising the culture, values, and human spirit that make PlayForward unique.
                         </p>
                         <button id="continue-welcome-btn" class="btn btn-light btn-lg">
                             <i class="fas fa-arrow-right me-2"></i>Continue

@@ -1,0 +1,720 @@
+{
+  "game_branding": {
+    "company_name": "PlayForward",
+    "game_title": "The AI Quest",
+    "game_subtitle": "Build your AI journey",
+    "logo_icon": "fas fa-space-shuttle",
+    "logo_color": "#1e40af",
+    "version": "1.9"
+  },
+  "terminology": {
+    "phase": "Step",
+    "choice": "Choice",
+    "enabler": "Enabler",
+    "dashboard": "Dashboard",
+    "score": "Score"
+  },
+  "ui_text": {
+    "welcome_message": "Welcome to AI Transformation!",
+    "login_success": "Login successful!",
+    "game_started": "Game started successfully!"
+  },
+  "characters": {
+    "protagonist": {
+      "name": "Sophie",
+      "role": "AI Transformation Leader"
+    },
+    "elena": {
+      "name": "Elena",
+      "role": "Strategy & Change Director"
+    },
+    "james": {
+      "name": "James",
+      "role": "CIO"
+    },
+    "amira": {
+      "name": "Amira",
+      "role": "Marketing & Player Experience Director"
+    }
+  },
+  "theme_colors": {
+    "primary": "#1e40af",
+    "secondary": "#3b82f6",
+    "success": "#10b981",
+    "warning": "#f59e0b",
+    "danger": "#ef4444"
+  },
+  "page_templates": {
+    "login_page": {
+      "title": "The AI Quest",
+      "subtitle": "PlayForward",
+      "description": "Connectez-vous pour commencer votre transformation IA"
+    },
+    "welcome_page": {
+      "title": "Welcome !",
+      "subtitle": "You are the AI Transformation Leader at PlayNext",
+      "description": "a leading gaming company with 1 800 employees worldwide. Facing fast-moving competition and evolving player expectations, the company must reinvent how it creates, delivers, and scales innovation.",
+      "mission": "Your mission: define how AI can accelerate creativity and performance — without compromising the culture, values, and human spirit that make PlayNext unique.",
+      "button_text": "Start the Journey"
+    },
+    "introduction_page": {
+      "title": "Introduction",
+      "subtitle": "Strategic Assessment Complete",
+      "description": "Following the first strategic discussions, Sophie has chosen a value-driven approach with Elena. Over the past weeks, the AI team has assessed potential opportunities across production, marketing, operations, and player engagement. Now Marcus expects Sophie to present the most promising use cases — the ones that deliver measurable impact quickly, with reasonable effort and manageable risk.",
+      "objective": "Your objective is to prioritize where AI can create visible value while keeping complexity under control.",
+      "button_text": "Continue"
+    },
+    "teams_meeting_page": {
+      "title": "Teams Meeting",
+      "subtitle": "Strategy Workshop",
+      "description": "Sophie is now organizing a strategy workshop with three key stakeholders — the CIO, the Strategy & Change Director, and the Marketing & Player Experience Director — to define how AI should be integrated into the company's innovation and production model.",
+      "button_text": "Join Teams meeting"
+    },
+    "step1_followup_page": {
+      "title": "Strategic Assessment Complete",
+      "subtitle": "Step 1 Follow-up",
+      "description": "Following the first strategic discussions, Sophie has chosen a value-driven approach with Elena. Over the past weeks, the AI team has assessed potential opportunities across production, marketing, operations, and player engagement. Now Marcus expects Sophie to present the most promising use cases — the ones that deliver measurable impact quickly, with reasonable effort and manageable risk.",
+      "objective": "Your objective is to prioritize where AI can create visible value while keeping complexity under control.",
+      "button_text": "Continue to Step 2"
+    },
+    "pilot_step_page": {
+      "title": "Pilot Step",
+      "subtitle": "Launching Your Priority AI Pilots",
+      "description": "After several months of scaling, AI and GenAI are now part of PlayNext's daily rhythm.",
+      "button_text": "Continue"
+    },
+    "enterprise_scaling_page": {
+      "title": "Enterprise Scaling",
+      "subtitle": "Scaling Your AI and GenAI Solutions",
+      "description": "After several months of scaling, AI and GenAI are now part of PlayNext's daily rhythm.",
+      "button_text": "Continue"
+    }
+  },
+  "game_steps": {
+    "step1": {
+      "title": "STEP 1: Designing Your AI-Enhanced Business Strategy",
+      "description": "You've heard three different approaches to launch your AI transformation. Which one will you choose?",
+      "video": "phase_1.mp4",
+      "choices": {
+        "elena": {
+          "title": "Value-Driven Approach with Elena",
+          "description": "Focus on high-impact, low-effort AI initiatives aligned with business value.",
+          "icon": "fas fa-handshake",
+          "cost": 0,
+          "enablers_1_star": ["ai_productivity_opportunities", "ai_landscape_scan"],
+          "enablers_2_stars": ["ai_productivity_opportunities", "ai_landscape_scan"],
+          "enablers_3_stars": ["ai_productivity_opportunities", "ai_landscape_scan"]
+        },
+        "james": {
+          "title": "Technology-Driven Approach with James",
+          "description": "Prioritize cutting-edge AI technologies and infrastructure upgrades.",
+          "icon": "fas fa-microchip",
+          "cost": 0,
+          "enablers_1_star": ["data_governance_framework", "cloud_ai_infrastructure"],
+          "enablers_2_stars": ["data_governance_framework", "cloud_ai_infrastructure"],
+          "enablers_3_stars": ["data_governance_framework", "cloud_ai_infrastructure"]
+        },
+        "amira": {
+          "title": "Customer-Centric Approach with Amira",
+          "description": "Develop AI solutions that directly enhance player experience and engagement.",
+          "icon": "fas fa-users",
+          "cost": 0,
+          "use_cases": [
+            "automated_banners_generation",
+            "customer_email_classifier",
+            "virtual_learning_coach_prototype",
+            "supplier_risk_scoring",
+            "simulated_game_design",
+            "predictive_maintenance_sandbox"
+          ]
+        }
+      }
+    },
+    "step2": {
+      "title": "STEP 2: Building Your AI Use Case Portfolio",
+      "description": "Now that you've defined your strategic approach, it's time to identify the most promising AI use cases.",
+      "video": "phase_2.mp4"
+    },
+    "step3": {
+      "title": "STEP 3: Launching Your Priority AI Pilots",
+      "description": "With your use cases identified, it's time to launch your first AI pilots.",
+      "video": "phase_3.mp4"
+    },
+    "step4": {
+      "title": "STEP 4: Scaling Your AI and GenAI Solutions",
+      "description": "Your pilots are successful! Now it's time to scale across the organization.",
+      "video": "phase_4.mp4"
+    },
+    "step5": {
+      "title": "STEP 5: Deploying AI Across the Organization",
+      "description": "The final step: deploying AI across the entire organization.",
+      "video": "phase_5_1.mp4"
+    }
+  },
+  "phases": {
+    "phase1": {
+      "title": "STEP 1: Designing Your AI-Enhanced Business Strategy",
+      "description": "You've heard three different approaches to launch your AI transformation. Which one will you choose?",
+      "video_file": "phase_1.mp4",
+      "choices": {
+        "elena": {
+          "title": "Elena: Map where AI creates the most value and align with company culture",
+          "description": "Transformation without structure leads to chaos. If we deploy AI too fast, we'll create silos, duplicated tools, and confusion. We need to start by mapping where AI adds the most value — identify the high-impact use cases and build around them.",
+          "enablers": [
+            "ai_productivity_opportunities",
+            "ai_landscape_scan"
+          ]
+        },
+        "james": {
+          "title": "James: Build strong foundations: secure data, tools, and architecture first",
+          "description": "Without solid data foundations, this won't scale. We'll soon face a surge in talent data and analytics needs. My recommendation: select a robust AI platform now. BusinessAI Pro is the market leader and offers great terms if we sign an exclusive deal. Without this, we risk chaos later.",
+          "enablers": [
+            "strategic_tech_alliances",
+            "vendor_value_steering"
+          ]
+        },
+        "amira": {
+          "title": "Amira: Act fast - democratize AI, let teams experiment immediately",
+          "description": "From a market standpoint, speed is everything. Players' expectations change weekly — if we hesitate, we lose them. We should empower our teams to experiment with AI tools right now: content generation, campaign optimization, player segmentation. Let them test, iterate, and learn fast.",
+          "use_cases": [
+            "automated_banners_generation",
+            "customer_email_classifier",
+            "virtual_learning_coach_prototype",
+            "supplier_risk_scoring",
+            "simulated_game_design",
+            "predictive_maintenance_sandbox"
+          ]
+        }
+      }
+    },
+    "phase2": {
+      "title": "STEP 2: Building Your AI Use Case Portfolio",
+      "description": "Among the five AI solutions highlighted on the matrix, which three will you select and implement first?",
+      "video_file": "phase_2.mp4",
+      "choices": {
+        "fraud_integrity_detection": {
+          "title": "Fraud & Integrity Detection",
+          "description": "Machine learning system that spots irregular in-game transactions and protects player trust.",
+          "enablers": [
+            "Fraud & Integrity Detection"
+          ]
+        },
+        "ai_storyline_generator": {
+          "title": "AI-Powered Storyline Generator",
+          "description": "Supports writers by creating adaptive narratives based on player choices.",
+          "enablers": [
+            "AI-Powered Storyline Generator"
+          ]
+        },
+        "smart_game_design_assistant": {
+          "title": "Smart Game Design Assistant",
+          "description": "Generative AI that helps designers create concept art and levels faster while keeping our art style.",
+          "enablers": [
+            "Smart Game Design Assistant"
+          ]
+        },
+        "player_journey_optimizer": {
+          "title": "Player Journey Optimizer",
+          "description": "Predictive engine that analyzes player behavior and suggests personalized missions and rewards",
+          "enablers": [
+            "Player Journey Optimizer"
+          ]
+        },
+        "talent_analytics_dashboard": {
+          "title": "Talent Analytics Dashboard",
+          "description": "Internal tool to track AI skills and training needs across teams.",
+          "enablers": [
+            "Talent Analytics Dashboard"
+          ]
+        }
+      }
+    },
+    "phase3": {
+      "title": "STEP 3: Launching Your Priority AI Pilots",
+      "description": "You can only activate one enabler per domain to maximize impact and adoption. Which ones will you choose?",
+      "video_file": "phase_3.mp4",
+      "choices": {
+        "ai_data_foundations": {
+          "title": "AI & Data Foundations",
+          "description": "Evolve hybrid data platform (warehouse + lakehouse) to an Agentic Lakehouse platform, model registry and secure model hosting, with governed Data Products exposed through the Data Marketplace.",
+          "enablers": [
+            "ai_data_foundations"
+          ]
+        },
+        "model_automation_framework": {
+          "title": "Model Automation Framework",
+          "description": "Implement automated and standardized practices (MLOps & FMOps) to seamlessly deploy, monitor, and maintain AI and foundational models in production, ensuring scalability, reliability, and faster time-to-value.",
+          "enablers": [
+            "model_automation_framework"
+          ]
+        },
+        "data_readiness_review": {
+          "title": "Data Readiness Review",
+          "description": "Maintain an enterprise view of Data Products (availability, quality, lineage, ownership) to inform AI feasibility and enrichment opportunities.",
+          "enablers": [
+            "data_readiness_review"
+          ]
+        },
+        "ai_leadership_program": {
+          "title": "AI Leadership Program",
+          "description": "Run focused learning for leaders on AI potential, risk, and value realization, anchored in company use cases and leadership toolkits (ethics, governance, talent).",
+          "enablers": [
+            "ai_leadership_program"
+          ]
+        },
+        "hands_on_ai_bootcamp": {
+          "title": "Hands-On AI Bootcamp for Teams",
+          "description": "A practical upskilling program for delivery teams (designers, analysts, and operators) to master generative and predictive AI tools.",
+          "enablers": [
+            "hands_on_ai_bootcamp"
+          ]
+        },
+        "ai_co_creation_labs": {
+          "title": "AI Co-Creation Labs",
+          "description": "Bring together representative end‑users to collaboratively shape future workflows, prototype AI‑enabled processes, and run in‑context tests to confirm usability and business fit before scaling.",
+          "enablers": [
+            "ai_co_creation_labs"
+          ]
+        },
+        "responsible_ai_framework": {
+          "title": "Responsible AI Framework",
+          "description": "Integrating responsible AI duties into leadership and expert roles to make ethics part of daily decision-making.",
+          "enablers": [
+            "responsible_ai_framework"
+          ]
+        },
+        "ai_governance_roadmap": {
+          "title": "AI Governance Roadmap",
+          "description": "Establish clear governance structures, roles, and processes to ensure AI initiatives align with business objectives and regulatory requirements.",
+          "enablers": [
+            "ai_governance_roadmap"
+          ]
+        },
+        "ai_governance_board": {
+          "title": "AI Governance Board",
+          "description": "Create a cross-functional board to oversee AI strategy, risk management, and ethical considerations.",
+          "enablers": [
+            "ai_governance_board"
+          ]
+        }
+      }
+    },
+    "phase4": {
+      "title": "STEP 4: Scaling Your AI and GenAI Solutions",
+      "description": "You have a budget of 30 points to allocate across different scaling initiatives. Choose wisely!",
+      "video_file": "phase_4.mp4",
+      "budget": 30,
+      "choices": {
+        "reusable_api_patterns": {
+          "title": "Reusable API Patterns",
+          "description": "Standardize API patterns for AI services to enable faster development and better integration.",
+          "cost": 5,
+          "enablers": [
+            "reusable_api_patterns"
+          ]
+        },
+        "industrial_data_pipelines": {
+          "title": "Industrial Data Pipelines",
+          "description": "Build robust, scalable data pipelines to support AI workloads across the organization.",
+          "cost": 8,
+          "enablers": [
+            "industrial_data_pipelines"
+          ]
+        },
+        "privacy_by_design_data": {
+          "title": "Privacy by Design Data",
+          "description": "Implement privacy-first data practices to ensure compliance and build trust.",
+          "cost": 6,
+          "enablers": [
+            "privacy_by_design_data"
+          ]
+        },
+        "talent_mobility_program": {
+          "title": "Talent Mobility Program",
+          "description": "Create programs to help employees transition into AI roles and develop new skills.",
+          "cost": 7,
+          "enablers": [
+            "talent_mobility_program"
+          ]
+        },
+        "business_ai_champions": {
+          "title": "Business AI Champions",
+          "description": "Identify and develop AI champions across business units to drive adoption.",
+          "cost": 4,
+          "enablers": [
+            "business_ai_champions"
+          ]
+        },
+        "ai_storytelling_communication": {
+          "title": "AI Storytelling Communication",
+          "description": "Develop communication strategies to share AI success stories and build excitement.",
+          "cost": 3,
+          "enablers": [
+            "ai_storytelling_communication"
+          ]
+        },
+        "adoption_playbook": {
+          "title": "Adoption Playbook",
+          "description": "Create a comprehensive playbook for rolling out AI solutions across the organization.",
+          "cost": 5,
+          "enablers": [
+            "adoption_playbook"
+          ]
+        },
+        "clear_ownership_accountability": {
+          "title": "Clear Ownership & Accountability",
+          "description": "Establish clear ownership structures and accountability frameworks for AI initiatives.",
+          "cost": 4,
+          "enablers": [
+            "clear_ownership_accountability"
+          ]
+        },
+        "local_ai_risk_management": {
+          "title": "Local AI Risk Management",
+          "description": "Implement localized risk management practices for AI deployments.",
+          "cost": 6,
+          "enablers": [
+            "local_ai_risk_management"
+          ]
+        }
+      }
+    },
+    "phase5": {
+      "title": "STEP 5: Deploying AI Across the Organization",
+      "description": "Choose your final deployment strategy to complete your AI transformation journey.",
+      "video_file": "phase_5_1.mp4",
+      "choices": {
+        "trusted_partner_ecosystem": {
+          "title": "Trusted Partner Ecosystem",
+          "description": "Build a network of trusted AI partners to accelerate innovation and reduce risk.",
+          "enablers": [
+            "trusted_partner_ecosystem",
+            "enterprise_ai_service_layer",
+            "ai_collaboration_hub"
+          ]
+        },
+        "group_responsible_ai_awareness": {
+          "title": "Group Responsible AI Awareness",
+          "description": "Develop organization-wide responsible AI practices and awareness programs.",
+          "enablers": [
+            "group_responsible_ai_awareness",
+            "early_career_pipeline_expert_retention"
+          ]
+        },
+        "value_driven_governance": {
+          "title": "Value-Driven Governance",
+          "description": "Implement governance structures focused on maximizing AI value while managing risks.",
+          "enablers": [
+            "value_driven_governance",
+            "data_ai_academy"
+          ]
+        }
+      }
+    }
+  },
+  "enablers": {
+    "ai_productivity_opportunities": {
+      "title": "AI Productivity Opportunities",
+      "description": "Identify and implement AI solutions that enhance internal productivity and operational efficiency.",
+      "category": "transformation_change",
+      "icon": "fas fa-chart-line"
+    },
+    "ai_landscape_scan": {
+      "title": "AI Landscape Scan",
+      "description": "Regularly assess the evolving AI landscape to identify new technologies, trends, and potential partners.",
+      "category": "technology_partnerships",
+      "icon": "fas fa-magnifying-glass"
+    },
+    "strategic_tech_alliances": {
+      "title": "Strategic Tech Alliances",
+      "description": "Build strategic partnerships with leading AI technology providers.",
+      "category": "technology_partnerships"
+    },
+    "vendor_value_steering": {
+      "title": "Vendor Value Steering",
+      "description": "Optimize vendor relationships to maximize AI value and minimize costs.",
+      "category": "technology_partnerships"
+    },
+    "Fraud & Integrity Detection": {
+      "title": "Fraud & Integrity Detection",
+      "description": "Machine learning system that spots irregular in-game transactions and protects player trust.",
+      "category": "technology_partnerships"
+    },
+    "AI-Powered Storyline Generator": {
+      "title": "AI-Powered Storyline Generator",
+      "description": "Supports writers by creating adaptive narratives based on player choices.",
+      "category": "technology_partnerships"
+    },
+    "Smart Game Design Assistant": {
+      "title": "Smart Game Design Assistant",
+      "description": "Generative AI that helps designers create concept art and levels faster while keeping our art style.",
+      "category": "technology_partnerships"
+    },
+    "Player Journey Optimizer": {
+      "title": "Player Journey Optimizer",
+      "description": "Predictive engine that analyzes player behavior and suggests personalized missions and rewards.",
+      "category": "technology_partnerships"
+    },
+    "Talent Analytics Dashboard": {
+      "title": "Talent Analytics Dashboard",
+      "description": "Internal tool to track AI skills and training needs across teams.",
+      "category": "technology_partnerships"
+    },
+    "ai_data_foundations": {
+      "title": "AI & Data Foundations",
+      "description": "Evolve hybrid data platform to an Agentic Lakehouse platform with governed Data Products.",
+      "category": "policies_governance"
+    },
+    "model_automation_framework": {
+      "title": "Model Automation Framework",
+      "description": "Implement MLOps & FMOps practices for seamless AI model deployment and monitoring.",
+      "category": "policies_governance"
+    },
+    "data_readiness_review": {
+      "title": "Data Readiness Review",
+      "description": "Maintain enterprise view of Data Products to inform AI feasibility and enrichment opportunities.",
+      "category": "policies_governance"
+    },
+    "ai_leadership_program": {
+      "title": "AI Leadership Program",
+      "description": "Focused learning for leaders on AI potential, risk, and value realization.",
+      "category": "transformation_change"
+    },
+    "hands_on_ai_bootcamp": {
+      "title": "Hands-On AI Bootcamp",
+      "description": "Practical upskilling program for delivery teams to master AI tools.",
+      "category": "transformation_change"
+    },
+    "ai_co_creation_labs": {
+      "title": "AI Co-Creation Labs",
+      "description": "Collaborative spaces for end-users to shape AI-enabled workflows and processes.",
+      "category": "transformation_change"
+    },
+    "responsible_ai_framework": {
+      "title": "Responsible AI Framework",
+      "description": "Integrate responsible AI duties into leadership and expert roles.",
+      "category": "policies_governance"
+    },
+    "ai_governance_roadmap": {
+      "title": "AI Governance Roadmap",
+      "description": "Establish clear governance structures, roles, and processes for AI initiatives.",
+      "category": "policies_governance"
+    },
+    "ai_governance_board": {
+      "title": "AI Governance Board",
+      "description": "Cross-functional board to oversee AI strategy, risk management, and ethics.",
+      "category": "policies_governance"
+    },
+    "reusable_api_patterns": {
+      "title": "Reusable API Patterns",
+      "description": "Standardize API patterns for AI services to enable faster development.",
+      "category": "technology_partnerships"
+    },
+    "industrial_data_pipelines": {
+      "title": "Industrial Data Pipelines",
+      "description": "Build robust, scalable data pipelines to support AI workloads.",
+      "category": "technology_partnerships"
+    },
+    "privacy_by_design_data": {
+      "title": "Privacy by Design Data",
+      "description": "Implement privacy-first data practices to ensure compliance and build trust.",
+      "category": "policies_governance"
+    },
+    "talent_mobility_program": {
+      "title": "Talent Mobility Program",
+      "description": "Create programs to help employees transition into AI roles and develop new skills.",
+      "category": "transformation_change"
+    },
+    "business_ai_champions": {
+      "title": "Business AI Champions",
+      "description": "Identify and develop AI champions across business units to drive adoption.",
+      "category": "transformation_change"
+    },
+    "ai_storytelling_communication": {
+      "title": "AI Storytelling Communication",
+      "description": "Develop communication strategies to share AI success stories and build excitement.",
+      "category": "transformation_change"
+    },
+    "adoption_playbook": {
+      "title": "Adoption Playbook",
+      "description": "Create a comprehensive playbook for rolling out AI solutions across the organization.",
+      "category": "transformation_change"
+    },
+    "clear_ownership_accountability": {
+      "title": "Clear Ownership & Accountability",
+      "description": "Establish clear ownership structures and accountability frameworks for AI initiatives.",
+      "category": "policies_governance"
+    },
+    "local_ai_risk_management": {
+      "title": "Local AI Risk Management",
+      "description": "Implement localized risk management practices for AI deployments.",
+      "category": "policies_governance"
+    },
+    "trusted_partner_ecosystem": {
+      "title": "Trusted Partner Ecosystem",
+      "description": "Build a network of trusted AI partners to accelerate innovation and reduce risk.",
+      "category": "technology_partnerships"
+    },
+    "enterprise_ai_service_layer": {
+      "title": "Enterprise AI Service Layer",
+      "description": "Create a centralized service layer for AI capabilities across the organization.",
+      "category": "technology_partnerships"
+    },
+    "ai_collaboration_hub": {
+      "title": "AI Collaboration Hub",
+      "description": "Centralized platform for AI collaboration, knowledge sharing, and best practices.",
+      "category": "technology_partnerships"
+    },
+    "group_responsible_ai_awareness": {
+      "title": "Group Responsible AI Awareness",
+      "description": "Organization-wide responsible AI practices and awareness programs.",
+      "category": "policies_governance"
+    },
+    "early_career_pipeline_expert_retention": {
+      "title": "Early Career Pipeline & Expert Retention",
+      "description": "Develop talent pipelines and retention strategies for AI expertise.",
+      "category": "transformation_change"
+    },
+    "value_driven_governance": {
+      "title": "Value-Driven Governance",
+      "description": "Implement governance structures focused on maximizing AI value while managing risks.",
+      "category": "policies_governance"
+    },
+    "data_ai_academy": {
+      "title": "Data & AI Academy",
+      "description": "Comprehensive learning platform for data and AI skills development.",
+      "category": "transformation_change"
+    }
+  },
+  "use_cases": {
+    "automated_banners_generation": {
+      "title": "Automated Banners Generation",
+      "description": "AI-powered system to automatically generate marketing banners and promotional materials.",
+      "icon": "fas fa-image",
+      "category": "marketing"
+    },
+    "customer_email_classifier": {
+      "title": "Customer Email Classifier",
+      "description": "Intelligent email classification system to categorize and route customer inquiries.",
+      "icon": "fas fa-envelope",
+      "category": "customer_service"
+    },
+    "virtual_learning_coach_prototype": {
+      "title": "Virtual Learning Coach Prototype",
+      "description": "AI-powered learning assistant to provide personalized training and development.",
+      "icon": "fas fa-graduation-cap",
+      "category": "learning"
+    },
+    "supplier_risk_scoring": {
+      "title": "Supplier Risk Scoring",
+      "description": "AI system to assess and score supplier risks for better procurement decisions.",
+      "icon": "fas fa-shield-alt",
+      "category": "procurement"
+    },
+    "simulated_game_design": {
+      "title": "Simulated Game Design",
+      "description": "AI simulation tools to prototype and test game mechanics before development.",
+      "icon": "fas fa-gamepad",
+      "category": "game_development"
+    },
+    "predictive_maintenance_sandbox": {
+      "title": "Predictive Maintenance Sandbox",
+      "description": "AI-powered predictive maintenance system for infrastructure and equipment.",
+      "icon": "fas fa-tools",
+      "category": "operations"
+    }
+  },
+  "dashboard": {
+    "title": "Executive Dashboard",
+    "subtitle": "Track your AI transformation progress",
+    "categories": {
+      "technology_partnerships": {
+        "title": "Technology & Partnerships",
+        "description": "AI infrastructure, tools, and strategic partnerships"
+      },
+      "policies_governance": {
+        "title": "Policies & Governance",
+        "description": "Governance frameworks, policies, and compliance"
+      },
+      "transformation_change": {
+        "title": "Transformation & Change",
+        "description": "Change management, training, and adoption initiatives"
+      }
+    }
+  },
+  "score_messages": {
+    "phase5": {
+      "trusted_partner_ecosystem": {
+        "1": "By choosing \"Trusted Partner Ecosystem\", you earned 1 star out of three. A solid foundation for AI partnerships, but there's room for more comprehensive integration.",
+        "2": "By choosing \"Trusted Partner Ecosystem\", you earned 2 stars out of three. Excellent strategic partnerships that will accelerate your AI transformation.",
+        "3": "By choosing \"Trusted Partner Ecosystem\", you earned 3 stars out of three. Outstanding! You've built a world-class AI partner ecosystem that will drive innovation for years to come."
+      },
+      "group_responsible_ai_awareness": {
+        "1": "By choosing \"Group Responsible AI Awareness\", you earned 1 star out of three. Good start on responsible AI, but more comprehensive programs are needed.",
+        "2": "By choosing \"Group Responsible AI Awareness\", you earned 2 stars out of three. Strong responsible AI practices that build trust and ensure ethical deployment.",
+        "3": "By choosing \"Group Responsible AI Awareness\", you earned 3 stars out of three. Exceptional! You've created a culture of responsible AI that sets the industry standard."
+      },
+      "value_driven_governance": {
+        "1": "By choosing \"Value-Driven Governance\", you earned 1 star out of three. Basic governance in place, but more sophisticated value measurement is needed.",
+        "2": "By choosing \"Value-Driven Governance\", you earned 2 stars out of three. Well-structured governance that balances value creation with risk management.",
+        "3": "By choosing \"Value-Driven Governance\", you earned 3 stars out of three. Perfect! Your governance framework maximizes AI value while ensuring sustainable growth."
+      }
+    }
+  },
+  "characters": {
+    "protagonist": {
+      "name": "Sophie",
+      "role": "AI Director",
+      "description": "The Player"
+    },
+    "elena": {
+      "name": "Elena",
+      "role": "Strategy & Change Director",
+      "description": "The strategist"
+    },
+    "james": {
+      "name": "James",
+      "role": "CIO of PlayNext",
+      "description": "The technologist"
+    },
+    "amira": {
+      "name": "Amira",
+      "role": "Marketing & Player Experience Director",
+      "description": "The innovator"
+    },
+    "marcus": {
+      "name": "Marcus",
+      "role": "CEO",
+      "description": "The leader"
+    }
+  },
+  "ui_text": {
+    "buttons": {
+      "login": "Se connecter",
+      "start_game": "Start the Journey",
+      "continue": "Continue",
+      "join_teams": "Join Teams meeting",
+      "skip_video": "Skip Video",
+      "confirm_selection": "Confirm Selection",
+      "next_step": "Next Step"
+    },
+    "navigation": {
+      "back": "Back",
+      "next": "Next",
+      "home": "Home",
+      "dashboard": "Dashboard"
+    },
+    "messages": {
+      "loading": "Loading...",
+      "error": "An error occurred",
+      "success": "Success!",
+      "invalid_choice": "Invalid choice",
+      "budget_exceeded": "Budget exceeded"
+    }
+  },
+  "videos": {
+    "introduction": "Introduction.mp4",
+    "presentation": "presentation_serious_game.mp4",
+    "recap": "recap.mp4"
+  }
+}

@@ -249,7 +249,7 @@
     "strategic_vision_mapping": {
       "title": "Strategic Vision Mapping",
       "description": "Map AI transformation vision across organization",
-      "icon": "fas fa-brain",
+      "icon": "fas fa-space-shuttle",
       "category": "policies_practices"
     },
     "hr_function_diagnostic": {
