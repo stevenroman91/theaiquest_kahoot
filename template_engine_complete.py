@@ -34,7 +34,7 @@ class GameTemplateEngine:
                 "game_subtitle": "Leader Edition v1.9"
             },
             "terminology": {
-                "phase": "Phase",
+                "phase": "Step",
                 "enabler": "Enabler",
                 "choice": "Choice"
             },
