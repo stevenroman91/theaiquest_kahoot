@@ -104,11 +104,10 @@ class GameController {
     }
 
     initializeEventListeners() {
-        // Login form avec validation améliorée
-        document.getElementById('login-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleLoginAndStart();
-        });
+        // Bypass login: start immediately
+        const loginSection = document.getElementById('login-section');
+        if (loginSection) loginSection.style.display = 'none';
+        this.handleLoginAndStart();
         
         // Validation en temps réel pour login
         document.getElementById('username').addEventListener('input', () => {
@@ -436,50 +435,18 @@ class GameController {
     async handleLoginAndStart() {
         console.log('🔐 handleLoginAndStart called');
         
-        // Validation côté client
-        const isUsernameValid = this.validateUsernameField();
-        const isPasswordValid = this.validatePasswordField();
-        
-        console.log('✅ Validation:', { isUsernameValid, isPasswordValid });
-        
-        if (!isUsernameValid || !isPasswordValid) {
-            this.showLoginAlert('Please correct the errors in the form', 'warning');
-            return;
-        }
-        
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value;
-        
-        console.log('📝 Login attempt:', { username, passwordLength: password.length });
-        
+        // Skip form validation for guest flow
         this.setLoginLoading(true);
-        this.hideLoginAlert();
 
         try {
-            // Login
-            const loginResponse = await fetch('/api/login', {
+            // Directly start game (guest session is created server-side)
+            const startResponse = await fetch('/api/start_game', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: 'include',
-                body: JSON.stringify({ username, password })
+                credentials: 'include'
             });
-
-            const loginData = await loginResponse.json();
-            console.log('📡 Login response:', loginData);
-            
-            if (loginData.success) {
-                console.log('✅ Login successful, starting game...');
-                
-                // Start game
-                const startResponse = await fetch('/api/start_game', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include'
-                });
 
                 const startData = await startResponse.json();
                 console.log('🎮 Start game response:', startData);
@@ -502,10 +469,7 @@ class GameController {
                     console.log('❌ Error starting game');
                     this.showLoginAlert('Error starting the game', 'danger');
                 }
-            } else {
-                console.log('❌ Login failed:', loginData.message);
-                this.showLoginAlert(loginData.message, 'danger');
-            }
+            
         } catch (error) {
             console.error('Login error:', error);
             this.showLoginAlert('Server connection error', 'danger');

@@ -22,6 +22,15 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'ai_acceleration_secret_key_2024')
 
+@app.before_request
+def ensure_guest_session():
+    """Create a guest session so the game is accessible without login."""
+    if not session.get('logged_in'):
+        session['logged_in'] = True
+        session['user_id'] = session.get('user_id', 'guest')
+        session['username'] = session.get('username', 'guest')
+        session['user_role'] = session.get('user_role', 'user')
+
 # Instance globale du jeu (retour à la version simple qui fonctionnait)
 game_instance = None
 
