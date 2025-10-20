@@ -1045,20 +1045,37 @@ class GameController {
             },
             'amira': {
                 use_cases: [
-                    { id: 'automated_banners_generation', icon: 'fas fa-image', label: 'Automated Banners Generation' },
-                    { id: 'customer_email_classifier', icon: 'fas fa-envelope', label: 'Customer Email Classifier' },
-                    { id: 'virtual_learning_coach_prototype', icon: 'fas fa-graduation-cap', label: 'Virtual Learning Coach Prototype' },
-                    { id: 'supplier_risk_scoring', icon: 'fas fa-shield-alt', label: 'Supplier Risk Scoring' },
-                    { id: 'simulated_game_design', icon: 'fas fa-gamepad', label: 'Simulated Game Design' },
-                    { id: 'predictive_maintenance_sandbox', icon: 'fas fa-tools', label: 'Predictive Maintenance Sandbox' }
+                    { id: 'automated_banners_generation', icon: 'fas fa-image', label: 'Automated Banners\nGeneration' },
+                    { id: 'customer_email_classifier', icon: 'fas fa-envelope', label: 'Customer Email\nClassifier' },
+                    { id: 'virtual_learning_coach_prototype', icon: 'fas fa-graduation-cap', label: 'Virtual Learning\nCoach Prototype' },
+                    { id: 'supplier_risk_scoring', icon: 'fas fa-shield-alt', label: 'Supplier Risk\nScoring' },
+                    { id: 'simulated_game_design', icon: 'fas fa-gamepad', label: 'Simulated Game\nDesign' },
+                    { id: 'predictive_maintenance_sandbox', icon: 'fas fa-tools', label: 'Predictive Maintenance\nSandbox' }
                 ]
             }
         };
 
-        choices.forEach((choice, index) => {
-            const accordionItem = document.createElement('div');
-            accordionItem.className = 'accordion-choice';
-            accordionItem.dataset.choiceId = choice.id;
+        // Define custom descriptions with speaker names
+        const customDescriptions = {
+            'amira': '[Amira] From a market standpoint, speed is everything. Players\' expectations change weekly — if we hesitate, we lose them. We should empower our teams to experiment with AI tools right now: content generation, campaign optimization, player segmentation. Let them test, iterate, and learn fast.',
+            'james': '[James] We need solid foundations before scaling. Data security, governance frameworks, and robust architecture are non-negotiable. Let\'s build the infrastructure that will support our AI initiatives long-term, ensuring compliance and reliability.',
+            'elena': '[Elena] Success comes from understanding where AI truly creates value and aligning it with our company culture. We should map opportunities across all departments, identify quick wins, and ensure our AI strategy resonates with our organizational values.'
+        };
+        
+        // Reorder choices: Amira, James, Elena
+        const reorderedChoices = [];
+        const order = ['amira', 'james', 'elena'];
+        
+        order.forEach(id => {
+            const choice = choices.find(c => c.id === id);
+            if (choice) {
+                reorderedChoices.push(choice);
+            }
+        });
+        
+        reorderedChoices.forEach((choice, index) => {
+            const columnDiv = document.createElement('div');
+            columnDiv.className = 'col-md-4 col-sm-12';
             
             const details = choiceDetails[choice.id] || { enablers: [], use_cases: [], description: choice.description };
             
@@ -1067,47 +1084,58 @@ class GameController {
             if (details.enablers && details.enablers.length > 0) {
                 contentHtml = `
                     <div class="choice-enablers">
+                        <h5><i class="fas fa-cogs me-2"></i>Enablers Unlocked:</h5>
                         ${details.enablers.map(enabler => `
                             <div class="choice-enabler">
                                 <div class="enabler-icon ${enabler.category}">
                                     <i class="${enabler.icon}"></i>
-                                </div>
+                        </div>
                                 <div class="enabler-label">${enabler.label}</div>
-                            </div>
+                                    </div>
                         `).join('')}
                     </div>
                 `;
             } else if (details.use_cases && details.use_cases.length > 0) {
                 contentHtml = `
                     <div class="choice-use-cases">
+                        <h5><i class="fas fa-lightbulb me-2"></i>Use Cases Available:</h5>
                         ${details.use_cases.map(useCase => `
                             <div class="choice-use-case" data-use-case-id="${useCase.id}">
                                 <div class="use-case-icon">
                                     <i class="${useCase.icon}"></i>
                                 </div>
                                 <div class="use-case-label">${useCase.label}</div>
-                            </div>
-                        `).join('')}
-                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
                 `;
             }
             
-            accordionItem.innerHTML = `
-                <div class="accordion-header" onclick="gameController.toggleAccordion('${choice.id}')">
-                    <h4 class="accordion-title">${choice.title}</h4>
-                    <i class="fas fa-chevron-down accordion-arrow"></i>
-                        </div>
-                <div class="accordion-content">
-                    <div class="accordion-details">
-                        ${contentHtml}
+            // Define custom titles for each choice
+            const customTitles = {
+                'elena': '[Elena] Map where AI creates the most value and align with company culture',
+                'james': '[James] Build strong foundations: secure data, tools, and architecture first',
+                'amira': '[Amira] Act fast : democratize AI, let teams experiment immediately'
+            };
+            
+            const displayTitle = customTitles[choice.id] || choice.title;
+            const displayDescription = customDescriptions[choice.id] || choice.description;
+            
+            columnDiv.innerHTML = `
+                <div class="choice-column" data-choice-id="${choice.id}" onclick="gameController.selectChoice('${choice.id}')">
+                    <div class="choice-header">
+                        <h4 class="choice-title">${displayTitle}</h4>
+                    </div>
+                    <div class="choice-content">
                         <div class="choice-description">
-                            ${choice.description}
+                            ${displayDescription}
                         </div>
+                        ${contentHtml}
                     </div>
                 </div>
             `;
             
-            container.appendChild(accordionItem);
+            container.appendChild(columnDiv);
         });
 
         // Tooltips are now created directly in HTML
@@ -1191,18 +1219,16 @@ class GameController {
         });
     }
 
-    toggleAccordion(choiceId) {
-        const accordionItem = document.querySelector(`[data-choice-id="${choiceId}"]`);
-        const isExpanded = accordionItem.classList.contains('expanded');
-        
-        // Close all accordions
-        document.querySelectorAll('.accordion-choice').forEach(item => {
-            item.classList.remove('expanded');
+    selectChoice(choiceId) {
+        // Remove selection from all columns
+        document.querySelectorAll('.choice-column').forEach(column => {
+            column.classList.remove('selected');
         });
         
-        // Open clicked accordion if it wasn't expanded
-        if (!isExpanded) {
-            accordionItem.classList.add('expanded');
+        // Add selection to clicked column
+        const selectedColumn = document.querySelector(`[data-choice-id="${choiceId}"]`);
+        if (selectedColumn) {
+            selectedColumn.classList.add('selected');
             // Pré-sélectionner automatiquement cette option
             this.selectPhase1Choice(choiceId);
         }
@@ -1212,7 +1238,7 @@ class GameController {
         console.log('Phase 1 choice selected:', choiceId);
         
         // Update visual selection
-        document.querySelectorAll('.accordion-choice').forEach(item => {
+        document.querySelectorAll('.choice-column').forEach(item => {
             item.classList.remove('selected');
         });
         

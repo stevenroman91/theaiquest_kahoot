@@ -927,7 +927,220 @@ body.modal-open {
     }
 }
 
-/* Phase 1 Accordion Styles */
+/* Phase 1 Column Styles */
+.choice-column {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.choice-column:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+}
+
+.choice-column.selected {
+    border-color: #10b981;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.1) 100%);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    transform: translateY(-2px);
+}
+
+.choice-header {
+    padding: 20px;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.choice-column.selected .choice-header {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.15) 100%);
+}
+
+.choice-icon {
+    margin-bottom: 15px;
+}
+
+.choice-icon i {
+    font-size: 2.5rem;
+    color: var(--fdj-blue-primary);
+}
+
+.choice-title {
+    color: #1f2937;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.choice-content {
+    padding: 20px;
+    color: #374151;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.choice-description {
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #6b7280;
+}
+
+.choice-enablers h5,
+.choice-use-cases h5 {
+    color: #1f2937;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.choice-enablers {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 12px;
+    margin-top: 50px;
+}
+
+.choice-enabler {
+    display: flex;
+    align-items: center;
+    padding: 2px 6px;
+    background: #f8fafc;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.choice-enabler:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+}
+
+.enabler-icon {
+    margin-right: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.enabler-icon i {
+    font-size: 1.1rem;
+    color: white;
+}
+
+.enabler-icon.technology_partnerships {
+    background: #3b82f6;
+}
+
+.enabler-icon.transformation_change {
+    background: #10b981;
+}
+
+.enabler-icon.policies_governance {
+    background: #f59e0b;
+}
+
+.enabler-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.choice-use-cases {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    margin-top: 50px;
+}
+
+.choice-use-case {
+    display: flex;
+    align-items: flex-start;
+    padding: 3px 4px;
+    background: #fef3c7;
+    border-radius: 3px;
+    border: 1px solid #fbbf24;
+    transition: all 0.2s ease;
+    min-height: 32px;
+    width: calc(50% - 4px);
+    flex: 0 0 calc(50% - 4px);
+}
+
+.choice-use-case:hover {
+    background: #fde68a;
+    border-color: #f59e0b;
+}
+
+.use-case-icon {
+    margin-right: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    background-color: #6b7280;
+}
+
+.use-case-icon i {
+    font-size: 1rem;
+    color: white;
+}
+
+.use-case-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: #92400e;
+    line-height: 1.2;
+    word-wrap: break-word;
+    hyphens: auto;
+    white-space: pre-line;
+}
+
+/* Responsive design for columns */
+@media (max-width: 768px) {
+    .choice-column {
+        margin-bottom: 20px;
+    }
+    
+    .choice-header {
+        padding: 15px;
+    }
+    
+    .choice-content {
+        padding: 15px;
+    }
+    
+    .choice-icon i {
+        font-size: 2rem;
+    }
+    
+    .choice-title {
+        font-size: 1rem;
+    }
+}
+
+/* Phase 1 Accordion Styles (keeping for reference) */
 .accordion-container {
     max-width: 800px;
     margin: 0 auto;
@@ -1044,25 +1257,10 @@ body.modal-open {
     background: #007bff;
 }
 
-.choice-use-cases {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.choice-use-case {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    min-width: 120px;
-}
-
 .use-case-icon {
     width: 50px;
     height: 50px;
-    border-radius: 50%;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
