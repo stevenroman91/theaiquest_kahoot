@@ -1,0 +1,106 @@
+WEBVTT
+
+STYLE
+::cue {
+    color: white;
+    background-color: #383943A3;
+}
+
+00:00:00.899 --> 00:00:02.026
+Hey James — got a minute?
+
+00:00:02.176 --> 00:00:03.499
+I was actually looking for you.
+
+00:00:03.799 --> 00:00:04.960
+Sure, what's up?
+
+00:00:05.265 --> 00:00:07.332
+The pilots went better than we expected.
+
+00:00:07.482 --> 00:00:12.442
+The design team's assistant is saving them hours
+each week, and the player-journey model is already
+
+00:00:12.442 --> 00:00:13.554
+improving retention.
+
+00:00:13.865 --> 00:00:15.026
+Congratulations!
+
+00:00:15.176 --> 00:00:16.802
+Now the real work begins.
+
+00:00:17.099 --> 00:00:19.120
+That's exactly why I came to see you.
+
+00:00:19.270 --> 00:00:24.790
+The time has finally come to scale these solutions
+and implement real changes in how we operate systems,
+
+00:00:24.790 --> 00:00:25.980
+roles, and workflows.
+
+00:00:26.130 --> 00:00:29.427
+I've identified a few enablers that could help, but
+I'm not sure where to start.
+
+00:00:29.577 --> 00:00:30.286
+What about you?
+
+00:00:30.599 --> 00:00:34.129
+We need to better integrate AI with our existing
+platforms.
+
+00:00:34.279 --> 00:00:40.142
+There's also a lot to do on the business side — we
+need to make sure AI reaches more players, markets,
+
+00:00:40.142 --> 00:00:41.384
+and functions.
+
+00:00:41.534 --> 00:00:47.432
+Finally, we should strengthen our data pipelines
+and monitoring systems to track model performance.
+
+00:00:47.732 --> 00:00:48.359
+Got it!
+
+00:00:48.509 --> 00:00:52.840
+We're also looking at enablers to make this scale-up
+stick, but I'm not sure where to begin.
+
+00:00:53.132 --> 00:01:00.284
+Start with the foundations: APIs and data pipelines
+connecting our internal systems, proper access controls,
+
+00:01:00.284 --> 00:01:03.999
+and a production-ready environment to manage models
+and prompts.
+
+00:01:04.149 --> 00:01:10.430
+In parallel, prepare the rollout — clear use cases
+for each business area, a simple adoption plan, and
+
+00:01:10.430 --> 00:01:16.920
+transparent performance metrics: delivery speed, player
+satisfaction, and adoption by creative teams.
+
+00:01:17.232 --> 00:01:20.030
+Budget's tight, so we can't do everything at once.
+
+00:01:20.332 --> 00:01:21.958
+Welcome to my world Sophie !
+
+00:01:22.108 --> 00:01:23.315
+You'll have to phase it.
+
+00:01:23.599 --> 00:01:24.215
+Perfect.
+
+00:01:24.365 --> 00:01:29.473
+I'll draft the scale plan with owners and timelines
+and loop you in for the integration stream.
+
+00:01:29.765 --> 00:01:30.741
+Count me in.
