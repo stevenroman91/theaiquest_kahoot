@@ -52,9 +52,7 @@
     },
     "welcome_page": {
       "title": "Welcome !",
-      "subtitle": "You are the AI Transformation Leader at PlayNext",
-      "description": "a leading gaming company with 1 800 employees worldwide. Facing fast-moving competition and evolving player expectations, the company must reinvent how it creates, delivers, and scales innovation.",
-      "mission": "Your mission: define how AI can accelerate creativity and performance — without compromising the culture, values, and human spirit that make PlayNext unique.",
+      "rich_text": "You are the AI Transformation Leader at PlayForward, a leading online betting company with 1800 employees worldwide. Facing fast-moving competition and evolving player expectations, the company must reinvent how it creates, delivers, and scales innovation.<br><br>Your mission: define how AI can accelerate creativity and performance — without compromising the culture, values, and human spirit that make PlayForward unique.",
       "button_text": "Start the Journey"
     },
     "introduction_page": {

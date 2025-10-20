@@ -125,7 +125,7 @@
                             <i class="fas fa-forward me-2"></i>Skip Video
                         </button>
                         <button id="start-game-btn" class="btn btn-primary btn-lg" style="display: none;">
-                            <i class="fas fa-play me-2"></i>Start Game
+                            <i class="fas fa-play me-2"></i>{{ content.get_button_text('start_game') }}
                         </button>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                     <div id="intro-text" class="mb-4"></div>
                     <div class="text-center">
                         <button id="next-to-harnessing-btn" class="btn btn-primary btn-lg">
-                            <i class="fas fa-play me-2"></i>Start Game
+                            <i class="fas fa-play me-2"></i>{{ content.get_button_text('start_game') }}
                         </button>
                     </div>
                 </div>
@@ -354,14 +354,19 @@
             <div id="welcome-section" class="welcome-page" style="display: none;">
                 <div class="welcome-content">
                     <div class="welcome-frame">
-                        <h3><i class="fas fa-handshake"></i>Welcome!</h3>
+                        {% set welcome = content.get_welcome_content() %}
+                        <h3><i class="fas fa-handshake"></i>{{ welcome.get('title', 'Welcome!') }}</h3>
                         <p class="welcome-text">
-                            Welcome ! You are the AI Quest Leader at PlayForward, a leading gaming company with 1 800 employees worldwide. Facing fast-moving competition and evolving player expectations, the company must reinvent how it creates, delivers, and scales innovation.
-                            <br><br>
-                            Your mission: define how AI can accelerate creativity and performance — without compromising the culture, values, and human spirit that make PlayForward unique.
+                            {% if welcome.get('rich_text') %}
+                                {{ welcome.get('rich_text') | safe }}
+                            {% else %}
+                                {{ welcome.get('subtitle', '') }} {% if welcome.get('subtitle') and welcome.get('description') %}{% endif %}{{ welcome.get('description', '') }}
+                                <br><br>
+                                {{ welcome.get('mission', '') }}
+                            {% endif %}
                         </p>
-                        <button id="continue-welcome-btn" class="btn btn-light btn-lg">
-                            <i class="fas fa-arrow-right me-2"></i>Continue
+                        <button id="continue-welcome-btn" class="btn btn-primary btn-lg">
+                            <i class="fas fa-arrow-right me-2"></i>{{ welcome.get('button_text', content.get_button_text('continue')) }}
                         </button>
                     </div>
                 </div>
@@ -371,14 +376,17 @@
             <div id="pilot-phase-section" class="welcome-page" style="display: none;">
                 <div class="welcome-content">
                     <div class="welcome-frame">
-                        <h3><i class="fas fa-rocket"></i>Pilot Step</h3>
+                        {% set pilot = content.get_pilot_step_content() %}
+                        <h3><i class="fas fa-rocket"></i>{{ pilot.get('title', 'Pilot Step') }}</h3>
                         <p class="welcome-text" id="pilot-phase-text">
-                            The three selected projects — Smart Game Design Assistant, Player Journey Optimizer, and Fraud & Integrity Detection — are now moving into pilot phase. Each team has begun working with vendors, datasets, and internal champions.
-                            <br><br>
-                            Sophie's next challenge is to ensure that these pilots not only deliver results but also inspire adoption across the company. To do this, she must choose the right enablers — initiatives that accelerate transformation, build trust, and make change sustainable.
+                            {% if pilot.get('rich_text') %}
+                                {{ pilot.get('rich_text') | safe }}
+                            {% else %}
+                                {{ pilot.get('description', '') }}
+                            {% endif %}
                         </p>
                         <button id="continue-pilot-phase-btn" class="btn btn-light btn-lg">
-                            <i class="fas fa-arrow-right me-2"></i>Continue
+                            <i class="fas fa-arrow-right me-2"></i>{{ pilot.get('button_text', content.get_button_text('continue')) }}
                         </button>
                     </div>
                 </div>
@@ -388,16 +396,17 @@
             <div id="scaling-phase-section" class="welcome-page" style="display: none;">
                 <div class="welcome-content">
                     <div class="welcome-frame">
-                        <h3><i class="fas fa-building"></i>Enterprise Scaling</h3>
+                        {% set scaling = content.get_enterprise_scaling_content() %}
+                        <h3><i class="fas fa-building"></i>{{ scaling.get('title', 'Enterprise Scaling') }}</h3>
                         <p class="welcome-text" id="scaling-phase-text">
-                            After several months of scaling, AI and GenAI are now part of PlayNext's daily rhythm.
-                            <br><br>
-                            The company's success has caught the attention of the executive committee — who now want to accelerate even further, extending AI across all studios, markets, and business functions.
-                            <br><br>
-                            Sophie faces a new challenge: scaling not just systems, but capabilities — data, skills, governance, and partnerships — to make AI truly enterprise-wide.
+                            {% if scaling.get('rich_text') %}
+                                {{ scaling.get('rich_text') | safe }}
+                            {% else %}
+                                {{ scaling.get('description', '') }}
+                            {% endif %}
                         </p>
                         <button id="continue-scaling-phase-btn" class="btn btn-light btn-lg">
-                            <i class="fas fa-arrow-right me-2"></i>Continue
+                            <i class="fas fa-arrow-right me-2"></i>{{ scaling.get('button_text', content.get_button_text('continue')) }}
                         </button>
                     </div>
                 </div>
@@ -406,7 +415,7 @@
             <!-- Harnessing Video Section -->
             <div id="harnessing-video-section" class="card mb-4" style="display: none;">
                 <div class="card-header">
-                    <h3><i class="fas fa-video me-2"></i>Introduction</h3>
+                    <h3><i class="fas fa-video me-2"></i>{{ content.get_introduction_content().get('title', 'Introduction') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="video-container mb-4">
@@ -429,7 +438,7 @@
                             <i class="fas fa-forward me-2"></i>Continue
                         </button>
                         <button id="start-game-after-harnessing-btn" class="btn btn-primary" style="display: none;">
-                            <i class="fas fa-play me-2"></i>Start Game
+                            <i class="fas fa-play me-2"></i>{{ content.get_button_text('start_game') }}
                         </button>
                     </div>
                 </div>
@@ -439,12 +448,17 @@
             <div id="teams-meeting-section" class="welcome-page" style="display: none;">
                 <div class="welcome-content">
                     <div class="welcome-frame">
-                        <h3><i class="fas fa-users"></i>Teams Meeting</h3>
+                        {% set teams = content.get_teams_meeting_content() %}
+                        <h3><i class="fas fa-users"></i>{{ teams.get('title', 'Teams Meeting') }}</h3>
                         <p class="welcome-text">
-                            Sophie is now organizing a strategy workshop with three key stakeholders — the CIO, the Strategy & Change Director, and the Marketing & Player Experience Director — to define how AI should be integrated into the company's innovation and production model.
+                            {% if teams.get('rich_text') %}
+                                {{ teams.get('rich_text') | safe }}
+                            {% else %}
+                                {{ teams.get('description', '') }}
+                            {% endif %}
                         </p>
                         <button id="join-teams-meeting-btn" class="btn btn-primary btn-lg">
-                            <i class="fas fa-video me-2"></i>Join Teams meeting
+                            <i class="fas fa-video me-2"></i>{{ teams.get('button_text', content.get_teams_meeting_button_text()) }}
                         </button>
                     </div>
                 </div>
@@ -454,13 +468,17 @@
             <div id="step1-followup-section" class="welcome-page" style="display: none;">
                 <div class="welcome-content">
                     <div class="welcome-frame">
-                        <h3><i class="fas fa-chart-line"></i>Strategic Assessment Complete</h3>
+                        {% set step1fu = content.get_step1_followup_content() %}
+                        <h3><i class="fas fa-chart-line"></i>{{ step1fu.get('title', 'Strategic Assessment Complete') }}</h3>
                         <p class="welcome-text">
-                            Following the first strategic discussions, Sophie has chosen a value-driven approach with Elena. Over the past weeks, the AI team has assessed potential opportunities across production, marketing, operations, and player engagement.<br><br>
-                            Now Marcus expects Sophie to present the most promising use cases — the ones that deliver measurable impact quickly, with reasonable effort and manageable risk. Your objective is to prioritize where AI can create visible value while keeping complexity under control.
+                            {% if step1fu.get('rich_text') %}
+                                {{ step1fu.get('rich_text') | safe }}
+                            {% else %}
+                                {{ step1fu.get('description', '') }}
+                            {% endif %}
                         </p>
                         <button id="continue-to-step2-btn" class="btn btn-primary btn-lg">
-                            <i class="fas fa-arrow-right me-2"></i>Continue to Step 2
+                            <i class="fas fa-arrow-right me-2"></i>{{ step1fu.get('button_text', 'Continue to Step 2') }}
                         </button>
                     </div>
                 </div>

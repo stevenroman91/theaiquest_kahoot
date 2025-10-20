@@ -14,6 +14,7 @@ from datetime import datetime
 from ai_acceleration_game import AIAccelerationGame, GameState
 from user_manager import user_manager
 from template_engine_complete import get_template, GameTemplateEngine
+from game_content_manager import content_manager as content
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -87,7 +88,8 @@ def index():
                          company_name=template.get_company_name(),
                          teams_meeting_text=template.get_teams_meeting_text(),
                          teams_meeting_button_text=template.get_teams_meeting_button_text(),
-                         template=template)
+                         template=template,
+                         content=content)
 
 @app.route('/api/game_config')
 def api_game_config():

@@ -440,13 +440,13 @@ class GameController {
 
         try {
             // Directly start game (guest session is created server-side)
-            const startResponse = await fetch('/api/start_game', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include'
-            });
+                const startResponse = await fetch('/api/start_game', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include'
+                });
 
                 const startData = await startResponse.json();
                 console.log('🎮 Start game response:', startData);
