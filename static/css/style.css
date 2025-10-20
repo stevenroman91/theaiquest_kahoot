@@ -2901,6 +2901,36 @@ body {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
+/* --- Score Screen Alignment Fixes --- */
+.score-screen-content .score-header {
+    position: static;            /* reset absolute positioning */
+    top: auto;
+    left: auto;
+    text-align: center;
+    margin: 2rem auto 0;        /* consistent spacing from top */
+}
+
+.score-screen-content .moment-score-label,
+.score-screen-content .moment-title {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.score-screen-content .score-display-large {
+    align-items: center;         /* ensure stars/text are centered */
+}
+
+.score-screen-content .score-footer {
+    display: flex;
+    justify-content: center;     /* center the CTA button */
+    align-items: center;
+}
+
+.score-screen-content .score-footer .btn-primary {
+    margin: 0 auto;              /* keep button centered even if width changes */
+}
+
 /* Executive Dashboard Styles */
 .executive-dashboard {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
