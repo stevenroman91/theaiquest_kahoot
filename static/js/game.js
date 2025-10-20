@@ -480,9 +480,11 @@ class GameController {
 
     showSection(sectionId) {
         console.log('=== showSection called with:', sectionId, '===');
-        // Hide all sections
+        // Hide all sections except use-cases-section
         document.querySelectorAll('[id$="-section"]').forEach(section => {
-            section.style.display = 'none';
+            if (section.id !== 'use-cases-section') {
+                section.style.display = 'none';
+            }
         });
         
         // Show target section
@@ -2546,13 +2548,28 @@ class GameController {
                     this.updatePedagogicalCategories(dashboardData.pedagogical_data);
                     
                     // Mettre à jour les Use Cases
+                    console.log('🔍 CHECKING USE CASES DATA...');
+                    console.log('dashboardData:', dashboardData);
+                    console.log('dashboardData.use_cases_data:', dashboardData.use_cases_data);
+                    
                     if (dashboardData.use_cases_data) {
+                        console.log('✅ USE CASES DATA FOUND!');
                         console.log('use_cases_data:', dashboardData.use_cases_data);
+                        console.log('use_cases_data keys:', Object.keys(dashboardData.use_cases_data));
                         this.updateUseCases(dashboardData.use_cases_data);
+                    } else {
+                        console.log('❌ NO USE CASES DATA FOUND!');
+                        console.log('dashboardData keys:', Object.keys(dashboardData));
                     }
             
             // Mettre à jour le message d'impact
             document.getElementById('impact-message').innerHTML = `<p>${dashboardData.impact_message}</p>`;
+            
+            // S'assurer que la section Use Cases est visible
+            const useCasesSection = document.getElementById('use-cases-section');
+            if (useCasesSection) {
+                useCasesSection.style.display = 'block';
+            }
             
             // Afficher le dashboard
             const modal = new bootstrap.Modal(document.getElementById('executiveDashboardModal'));
@@ -2712,25 +2729,29 @@ class GameController {
     }
     
     updateUseCases(useCasesData) {
-        console.log('=== updateUseCases called ===');
+        console.log('🎯 updateUseCases CALLED!');
         console.log('useCasesData:', useCasesData);
         
         // Utiliser la section Use Cases existante dans le HTML
         const useCasesContainer = document.getElementById('use-cases-section');
         if (!useCasesContainer) {
-            console.error('Could not find use-cases-section in HTML');
+            console.error('❌ Could not find use-cases-section in HTML');
             return;
         }
         
-        // Toujours afficher la section Use Cases
-        useCasesContainer.style.display = 'block';
-        console.log('Use Cases section displayed');
+        console.log('✅ Use Cases section found:', useCasesContainer);
         
         const useCasesContent = document.getElementById('use-cases-content');
+        if (!useCasesContent) {
+            console.error('❌ Could not find use-cases-content in HTML');
+            return;
+        }
+        console.log('✅ Use Cases content found:', useCasesContent);
+        
         useCasesContent.innerHTML = '';
         
         // Traiter chaque phase avec des Use Cases (Step 2 en premier, puis Step 1)
-        console.log('Processing phases:', Object.keys(useCasesData));
+        console.log('📋 Processing phases:', Object.keys(useCasesData));
         
         // Trier les phases : phase2 en premier, puis phase1
         const sortedPhases = Object.entries(useCasesData).sort(([a], [b]) => {

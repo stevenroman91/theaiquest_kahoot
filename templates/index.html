@@ -945,15 +945,15 @@
                                     <div class="pedagogical-categories" id="pedagogical-categories">
                                         <!-- Pedagogical data will be populated here -->
                                     </div>
-                                    
-                                    <!-- Use Cases Section -->
-                                    <div id="use-cases-section" class="dashboard-section" style="display: none;">
-                                        <h3 class="dashboard-section-title">
-                                            <i class="fas fa-lightbulb me-2"></i>Use Cases
-                                        </h3>
-                                        <div id="use-cases-content" class="use-cases-content">
-                                            <!-- Use Cases will be populated here -->
-                                        </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Use Cases Section - Now Independent -->
+                            <div class="dashboard-bottom-section">
+                                <h2><i class="fas fa-lightbulb me-2"></i>Use Cases</h2>
+                                <div id="use-cases-section" class="dashboard-section">
+                                    <div id="use-cases-content" class="use-cases-content">
+                                        <!-- Use Cases will be populated here -->
                                     </div>
                                 </div>
                             </div>
@@ -962,7 +962,7 @@
                         <!-- Footer -->
                         <div class="dashboard-footer">
                             <button id="dashboard-next-button" class="btn btn-primary btn-lg">
-                                <i class="fas fa-forward me-2"></i>Go to Dashboard
+                                <i class="fas fa-forward me-2"></i>{{ template.get_navigation_text('next') }}
                             </button>
                         </div>
                     </div>

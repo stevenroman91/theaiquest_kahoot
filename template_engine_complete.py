@@ -694,6 +694,11 @@ class GameTemplateEngine:
         teams_config = self.config.get("ui_text", {}).get("teams_meeting", {})
         return teams_config.get("button_text", "Join the Teams meeting")
     
+    def get_navigation_text(self, key: str) -> str:
+        """Get navigation text from template"""
+        navigation = self.config.get("ui_text", {}).get("navigation", {})
+        return navigation.get(key, key)
+    
     def get_dashboard_title(self) -> str:
         """Get dashboard title"""
         dashboard_config = self.config.get("ui_text", {}).get("dashboard", {})
