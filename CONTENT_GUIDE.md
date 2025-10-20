@@ -121,7 +121,7 @@ Chaque page a sa propre section :
     },
     "navigation": {
       "back": "Back",                      ← Texte navigation retour
-      "next": "Next"                       ← Texte navigation suivant
+      "next": "Go to Dashboard"              ← Texte navigation suivant
     },
     "messages": {
       "loading": "Loading...",             ← Message de chargement
