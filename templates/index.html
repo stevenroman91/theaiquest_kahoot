@@ -116,6 +116,7 @@
                                 playsinline
                                 style="width: 100%; height: 100%; border-radius: 15px;">
                                 <source src="{{ url_for('static', filename='videos/presentation_serious_game.mp4') }}" type="video/mp4">
+                                <track kind="subtitles" src="{{ url_for('static', filename='videos/presentation_serious_game.vtt') }}" srclang="en" label="English" default>
                                 Votre navigateur ne supporte pas la lecture vidéo.
                             </video>
                         </div>
