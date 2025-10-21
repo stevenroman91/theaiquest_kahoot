@@ -10,7 +10,7 @@ from enum import Enum
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, field
 from user_manager import user_manager
-from template_engine_complete import get_template
+from game_content_manager import content_manager as template
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -80,14 +80,13 @@ class AIAccelerationGame:
             mot4_choices=[],
             mot5_choice=""
         )
+        self.template = template
         self.game_data = self._initialize_game_data()
         self.completed_paths = []
-        self.template = get_template()
         
     def _initialize_game_data(self) -> Dict:
         """Initialise toutes les données du jeu depuis le template"""
-        from template_engine_complete import get_template
-        template = get_template()
+        template = self.template
 
         # Phase 1 choices from template
         phase1_choices = {}
@@ -140,6 +139,7 @@ class AIAccelerationGame:
                 title=template.get_choice_title("phase4", choice_id),
                 description=template.get_choice_description("phase4", choice_id),
                 category=self._get_choice_category(choice_id),
+                unlocks_enablers=enablers,  # Ajouter unlocks_enablers comme Step 3
                 enablers_1_star=enablers,
                 enablers_2_stars=enablers,
                 enablers_3_stars=enablers
@@ -348,7 +348,7 @@ class AIAccelerationGame:
         }
 
         # Récupérer tous les choix de Phase 3 depuis le template
-        template = get_template()
+        template = self.template
         phase3_choices = template.get_phase_choices("phase3")
 
         for choice_id, choice_data in phase3_choices.items():
@@ -371,7 +371,28 @@ class AIAccelerationGame:
                     choices_by_category[enabler_category].append(choice)
 
         return choices_by_category
-    
+
+    def get_mot4_choices(self) -> List[Choice]:
+        """Retourne les choix disponibles pour MOT4"""
+        choices = []
+        template = self.template
+        phase4_choices = template.get_phase_choices('phase4')
+
+        for choice_id, choice_data in phase4_choices.items():
+            # Récupérer les enablers de ce choix
+            enablers = template.get_choice_enablers("phase4", choice_id)
+            if enablers:
+                choice = Choice(
+                    id=choice_id,
+                    title=choice_data['title'],
+                    description=choice_data['description'],
+                    unlocks_enablers=enablers,  # Utiliser unlocks_enablers comme Step 3
+                    cost=choice_data.get('cost', 5)
+                )
+                choices.append(choice)
+
+        return choices
+
     def make_mot3_choices(self, choices: Dict[str, str]) -> bool:
         """Effectue les choix MOT3 (1 par catégorie)"""
         required_categories = ["technology_partnerships", "transformation_change", "policies_governance"]
@@ -396,24 +417,6 @@ class AIAccelerationGame:
 
         return True
     
-    def get_mot4_choices(self) -> List[Choice]:
-        """Retourne les choix disponibles pour MOT4"""
-        choices = []
-
-        # Récupérer les choix depuis le template
-        phase4_choices = self.template.get_phase_choices('phase4')
-
-        for choice_id, choice_data in phase4_choices.items():
-            choice = Choice(
-                id=choice_id,
-                title=choice_data['title'],
-                description=choice_data['description'],
-                unlocks_enablers=choice_data.get('enablers', []),
-                cost=choice_data.get('cost', 5)  # Coût par défaut de 5 points
-            )
-            choices.append(choice)
-
-        return choices
     
     def make_mot4_choices(self, enabler_ids: List[str]) -> bool:
         """Effectue les choix MOT4 (budget entre 1 et 30 points)"""
@@ -631,7 +634,7 @@ class AIAccelerationGame:
             # Special handling for Amira (use cases instead of enablers)
             if self.current_path.mot1_choice == "amira":
                 # Get use cases from template
-                template = get_template()
+                template = self.template
                 use_cases = template.get_choice_use_cases("phase1", "amira")
                 logger.info(f"Phase 1 DEBUG: Amira choice, use_cases={use_cases}")
                 # Store use cases instead of enablers

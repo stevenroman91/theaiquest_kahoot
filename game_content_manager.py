@@ -131,20 +131,40 @@ class GameContentManager:
     
     def get_choice_icon(self, phase_id: str, choice_id: str) -> str:
         """Get choice icon"""
-        phase_choices = self.get_phase_choices(phase_id)
-        for choice in phase_choices:
-            if choice.get("id") == choice_id:
-                return choice.get("icon", "fas fa-cog")
-        return "fas fa-cog"
+        choices = self.get_phase_choices(phase_id)
+        return choices.get(choice_id, {}).get("icon", "fas fa-cog")
     
-    def get_phase_choices(self, phase_id: str) -> list:
+    def get_choice_title(self, phase_id: str, choice_id: str) -> str:
+        """Get title for a specific choice"""
+        choices = self.get_phase_choices(phase_id)
+        return choices.get(choice_id, {}).get("title", choice_id.replace("_", " ").title())
+    
+    def get_choice_description(self, phase_id: str, choice_id: str) -> str:
+        """Get description for a specific choice"""
+        choices = self.get_phase_choices(phase_id)
+        return choices.get(choice_id, {}).get("description", f"Description for {choice_id}")
+    
+    def get_choice_enablers(self, phase_id: str, choice_id: str) -> list:
+        """Get enablers for a specific choice"""
+        choices = self.get_phase_choices(phase_id)
+        choice_data = choices.get(choice_id, {})
+        
+        # Nouveau format avec enablers par score
+        if "enablers_1_star" in choice_data:
+            return choice_data.get("enablers_1_star", [])
+        
+        # Ancien format avec enablers simples
+        return choice_data.get("enablers", [])
+    
+    def get_choice_use_cases(self, phase_id: str, choice_id: str) -> list:
+        """Get use cases for a specific choice"""
+        choices = self.get_phase_choices(phase_id)
+        return choices.get(choice_id, {}).get("use_cases", [])
+    
+    def get_phase_choices(self, phase_id: str) -> Dict[str, Any]:
         """Get choices for a specific phase"""
-        phase_number = phase_id.replace('phase', '')
-        try:
-            step_number = int(phase_number)
-            return self.get_step_choices(step_number)
-        except ValueError:
-            return []
+        phases = self.content.get("phases", {})
+        return phases.get(phase_id, {}).get("choices", {})
     
     def get_step_choices(self, step_number: int) -> list:
         """Get choices for a specific step"""
@@ -162,33 +182,10 @@ class GameContentManager:
             })
         return choices
     
-    def get_choice_enablers(self, phase_id: str, choice_id: str) -> list:
-        """Get enablers for a specific choice"""
-        phase_number = phase_id.replace('phase', '')
-        try:
-            step_number = int(phase_number)
-            step_key = f"step{step_number}"
-            step_data = self.content.get("game_steps", {}).get(step_key, {})
-            choice_data = step_data.get("choices", {}).get(choice_id, {})
-            return choice_data.get("enablers", [])
-        except ValueError:
-            return []
-    
-    def get_enabler_category(self, enabler_id: str) -> str:
-        """Get enabler category"""
-        return self.content.get("enablers", {}).get(enabler_id, {}).get("category", "")
-    
     def get_choice_use_cases(self, phase_id: str, choice_id: str) -> list:
         """Get use cases for a specific choice"""
-        phase_number = phase_id.replace('phase', '')
-        try:
-            step_number = int(phase_number)
-            step_key = f"step{step_number}"
-            step_data = self.content.get("game_steps", {}).get(step_key, {})
-            choice_data = step_data.get("choices", {}).get(choice_id, {})
-            return choice_data.get("use_cases", [])
-        except ValueError:
-            return []
+        choices = self.get_phase_choices(phase_id)
+        return choices.get(choice_id, {}).get("use_cases", [])
     
     def get_use_case_title(self, use_case_id: str) -> str:
         """Get use case title"""
@@ -308,11 +305,6 @@ class GameContentManager:
     # PHASES AND CHOICES METHODS
     # ========================================
     
-    def get_phase_choices(self, phase_number: int) -> Dict[str, Any]:
-        """Get choices for a specific phase"""
-        phases = self.content.get("phases", {})
-        phase_key = f"phase{phase_number}"
-        return phases.get(phase_key, {}).get("choices", {})
     
     def get_phase_choice(self, phase_number: int, choice_id: str) -> Dict[str, Any]:
         """Get specific choice from a phase"""

@@ -13,7 +13,6 @@ import os
 from datetime import datetime
 from ai_acceleration_game import AIAccelerationGame, GameState
 from user_manager import user_manager
-from template_engine_complete import get_template, GameTemplateEngine
 from game_content_manager import content_manager as content
 
 # Configuration du logging
@@ -41,17 +40,15 @@ def ensure_guest_session():
         session['user_id'] = 'guest'
         session['username'] = 'guest'
         session['user_role'] = 'user'
-        game_instance = None
+        game_instance = None  # Reset le jeu global
         return
     
     # Créer un ID de session temporaire pour chaque refresh
     if not session.get('session_id'):
         import uuid
         session['session_id'] = str(uuid.uuid4())
-        # Seulement réinitialiser le jeu quand on crée un nouvel ID de session
-        game_instance = None
 
-# Instance globale du jeu (retour à la version simple qui fonctionnait)
+# Instance globale du jeu
 game_instance = None
 
 def initialize_default_users():
@@ -101,7 +98,7 @@ def get_game():
 @app.route('/')
 def index():
     """Page d'accueil"""
-    template = get_template()
+    template = content
     return render_template('index.html', 
                          game_title=template.get_game_title(),
                          company_name=template.get_company_name(),
@@ -114,7 +111,7 @@ def index():
 def api_game_config():
     """API pour obtenir la configuration du jeu depuis le template"""
     try:
-        template = get_template()
+        template = content
         
         config = {
             "game_info": {
@@ -372,7 +369,7 @@ def api_start_game():
     intro = game.start_game()
     
     # Get welcome message from template
-    template = get_template()
+    template = content
     welcome_message = template.get_welcome_message()
     
     return jsonify({
@@ -687,7 +684,7 @@ def api_phase5_choices():
     
     game = get_game()
     choices = game.get_mot5_choices()
-    template = GameTemplateEngine()
+    template = content
     
     return jsonify({
         'success': True,
@@ -811,7 +808,7 @@ def api_executive_dashboard():
     enablers_by_phase = game.current_path.enablers_by_phase
     
     # Utiliser le content manager pour tous les enablers (au lieu du template)
-    template = get_template()
+    template = content
     
     # Générer automatiquement les titres et descriptions depuis game_content.json
     enabler_titles = {}
@@ -858,7 +855,7 @@ def api_executive_dashboard():
     impact_message = generate_impact_message(current_score, formatted_enablers)
     
     # Récupérer TOUS les enablers disponibles par phase depuis le template
-    template = get_template()
+    template = content
     all_available_enablers_by_phase = {}
     
     # Pour chaque phase, récupérer tous les enablers disponibles
@@ -1183,7 +1180,7 @@ def generate_impact_message(score_data, enablers):
 
 def get_current_phase_title(game_state):
     """Retourne le titre de la phase actuelle"""
-    template = get_template()
+    template = content
     phase_titles = {
         "mot1_hr_approach_selection": template.get_phase_title('phase1'),
         "phase2_hr_portfolio_selection": template.get_phase_title('phase2'),
@@ -1203,4 +1200,10 @@ if __name__ == '__main__':
     # Configuration pour Railway
     port = int(os.environ.get('PORT', 5001))
     debug = os.environ.get('FLASK_ENV') != 'production'
+    
+    print("🚀 Starting Flask server...")
+    print(f"📍 Port: {port}")
+    print(f"🐛 Debug mode: {debug}")
+    print("=" * 50)
+    
     app.run(debug=debug, host='0.0.0.0', port=port)
