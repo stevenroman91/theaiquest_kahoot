@@ -148,15 +148,19 @@ class AIAccelerationGame:
         # Phase 5 choices from template
         phase5_choices = {}
         for choice_id, choice_data in template.get_phase_choices("phase5").items():
-            enablers = template.get_choice_enablers("phase5", choice_id)
+            # Récupérer les enablers selon le niveau depuis le JSON
+            enablers_1_star = choice_data.get("enablers_1_star", [])
+            enablers_2_stars = choice_data.get("enablers_2_stars", [])
+            enablers_3_stars = choice_data.get("enablers_3_stars", [])
+            
             phase5_choices[choice_id] = Choice(
                 id=choice_id,
                 title=template.get_choice_title("phase5", choice_id),
                 description=template.get_choice_description("phase5", choice_id),
                 category=self._get_choice_category(choice_id),
-                enablers_1_star=enablers,
-                enablers_2_stars=enablers,
-                enablers_3_stars=enablers
+                enablers_1_star=enablers_1_star,
+                enablers_2_stars=enablers_2_stars,
+                enablers_3_stars=enablers_3_stars
             )
 
         return {
@@ -392,7 +396,7 @@ class AIAccelerationGame:
                 choices.append(choice)
 
         return choices
-
+    
     def make_mot3_choices(self, choices: Dict[str, str]) -> bool:
         """Effectue les choix MOT3 (1 par catégorie)"""
         required_categories = ["technology_partnerships", "transformation_change", "policies_governance"]
@@ -729,26 +733,24 @@ class AIAccelerationGame:
         print(f"DEBUG _calculate_enablers Phase 4: Final phase4_enablers = {phase4_enablers}")
         enablers_by_phase["phase4"] = list(set(phase4_enablers))
 
-        # Phase 5 - HR Deployment choice
-        logger.info(f"Phase 5 DEBUG: mot5_choice={self.current_path.mot5_choice}")
+        # Phase 5 - HR Deployment choice (même logique que Step 1)
         if self.current_path.mot5_choice:
+            choice = self.game_data["mot5_hr_scaleup"][self.current_path.mot5_choice]
             phase5_score = self.calculate_mot_score(5)
-            phase_choices = self.template.get_phase_choices('phase5')
-            choice_data = phase_choices.get(self.current_path.mot5_choice, {})
-            choice_enablers = choice_data.get('enablers', [])
             
-            logger.info(f"Phase 5: Choice '{self.current_path.mot5_choice}' unlocks {choice_enablers}")
-            
-            for enabler_id in choice_enablers:
-                enabler_category = self.template.get_enabler_category(enabler_id)
-                logger.info(f"Phase 5: Enabler '{enabler_id}' has category '{enabler_category}'")
-                
-                if enabler_id not in enablers_by_category[enabler_category]:
-                    enablers_by_category[enabler_category].append(enabler_id)
-                    logger.info(f"Phase 5: Added '{enabler_id}' to category '{enabler_category}'")
-            
-            logger.info(f"Phase 5: Final phase5_enablers = {choice_enablers}")
-            enablers_by_phase["phase5"] = choice_enablers
+            phase_enablers = self._get_enablers_for_score(choice, phase5_score)
+            logger.info(f"Phase 5 DEBUG: choice={self.current_path.mot5_choice}, score={phase5_score}, enablers={phase_enablers}")
+
+            if phase_enablers:
+                logger.info(f"Phase 5 DEBUG: adding enablers={phase_enablers}")
+                # Ajouter chaque enabler dans sa propre catégorie selon le template
+                for enabler in phase_enablers:
+                    enabler_category = self.template.get_enabler_category(enabler)
+                    logger.info(f"Phase 5 DEBUG: enabler '{enabler}' has category '{enabler_category}'")
+                    if enabler not in enablers_by_category[enabler_category]:
+                        enablers_by_category[enabler_category].append(enabler)
+                # Mettre à jour la phase 5
+                enablers_by_phase["phase5"] = phase_enablers
 
         # Stocker les enablers débloqués par catégorie (sans doublons)
         for category in enablers_by_category:

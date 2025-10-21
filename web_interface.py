@@ -868,7 +868,16 @@ def api_executive_dashboard():
         
         for choice_id, choice_data in phase_choices.items():
             # Récupérer les enablers de ce choix
-            choice_enablers = template.get_choice_enablers(phase_id, choice_id)
+            if phase_id == 'phase5':
+                # Pour Step 5, récupérer tous les enablers possibles (1-star, 2-star, 3-star)
+                choice_enablers = []
+                choice_enablers.extend(choice_data.get('enablers_1_star', []))
+                choice_enablers.extend(choice_data.get('enablers_2_stars', []))
+                choice_enablers.extend(choice_data.get('enablers_3_stars', []))
+                choice_enablers = list(set(choice_enablers))  # Supprimer les doublons
+            else:
+                choice_enablers = template.get_choice_enablers(phase_id, choice_id)
+            
             print(f"DEBUG web_interface: phase_id={phase_id}, choice_id={choice_id}, choice_enablers={choice_enablers}")
             if choice_enablers:
                 print(f"DEBUG web_interface: Adding {choice_enablers} to phase {phase_id}")
@@ -908,9 +917,13 @@ def api_executive_dashboard():
                 all_available_enablers_by_phase_and_category[phase][enabler_category].append(enabler)
                 if phase == 'phase4':
                     print(f"DEBUG web_interface: Added enabler '{enabler}' to category '{enabler_category}' for phase4")
+                elif phase == 'phase5':
+                    print(f"DEBUG web_interface: Added enabler '{enabler}' to category '{enabler_category}' for phase5")
             else:
                 if phase == 'phase4':
                     print(f"DEBUG web_interface: Category '{enabler_category}' not found for enabler '{enabler}' in phase4")
+                elif phase == 'phase5':
+                    print(f"DEBUG web_interface: Category '{enabler_category}' not found for enabler '{enabler}' in phase5")
     
     # Formater les données pédagogiques par phase et catégorie (exclure Step 2 qui n'a pas d'enablers)
     pedagogical_data = {}

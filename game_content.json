@@ -438,33 +438,32 @@
       "description": "Deploy AI enterprise-wide",
       "video_file": "phase_5_1.mp4",
       "choices": {
-        "trusted_partner_ecosystem": {
-          "title": "Trusted Partner Ecosystem",
-          "description": "Build a network of trusted AI partners to accelerate innovation and reduce risk.",
-          "icon": "fas fa-handshake",
-          "enablers": [
-            "trusted_partner_ecosystem",
-            "enterprise_ai_service_layer",
-            "ai_collaboration_hub"
-          ]
+        "ai_for_all": {
+          "title": "AI for all: Turn AI into a company-wide service by communicating ethical standards and sharing tools across teams.",
+          "description": "Turn AI into a company-wide service by communicating ethical standards and sharing tools across teams.",
+          "icon": "fas fa-share-alt",
+          "cost": 10,
+          "enablers_1_star": ["trusted_partner_ecosystem"],
+          "enablers_2_stars": ["trusted_partner_ecosystem", "enterprise_ai_service_layer"],
+          "enablers_3_stars": ["trusted_partner_ecosystem", "enterprise_ai_service_layer", "ai_collaboration_hub"]
         },
-        "group_responsible_ai_awareness": {
-          "title": "Group Responsible AI Awareness",
-          "description": "Develop organization-wide responsible AI practices and awareness programs.",
-          "icon": "fas fa-eye",
-          "enablers": [
-            "group_responsible_ai_awareness",
-            "early_career_pipeline_expert_retention"
-          ]
+        "continuous_capability_building": {
+          "title": "Continuous capability building: Define a long-term roadmap for AI governance, develop preferred supplier partnerships, and expand the AI Academy to strengthen internal skills.",
+          "description": "Define a long-term roadmap for AI governance, develop preferred supplier partnerships, and expand the AI Academy to strengthen internal skills.",
+          "icon": "fas fa-graduation-cap",
+          "cost": 12,
+          "enablers_1_star": ["group_responsible_ai_awareness"],
+          "enablers_2_stars": ["group_responsible_ai_awareness", "early_career_pipeline_expert_retention"],
+          "enablers_3_stars": ["group_responsible_ai_awareness", "early_career_pipeline_expert_retention"]
         },
-        "value_driven_governance": {
-          "title": "Value-Driven Governance",
-          "description": "Implement governance structures focused on maximizing AI value while managing risks.",
-          "icon": "fas fa-chart-pie",
-          "enablers": [
-            "value_driven_governance",
-            "data_ai_academy"
-          ]
+        "full_speed_on_people": {
+          "title": "Full speed on people: Create a dedicated AI Hub, formalize partnerships, invest in recruiting top AI talents, and grow internal expertise through the AI Academy.",
+          "description": "Create a dedicated AI Hub, formalize partnerships, invest in recruiting top AI talents, and grow internal expertise through the AI Academy.",
+          "icon": "fas fa-users",
+          "cost": 15,
+          "enablers_1_star": ["value_driven_governance"],
+          "enablers_2_stars": ["value_driven_governance", "data_ai_academy"],
+          "enablers_3_stars": ["value_driven_governance", "data_ai_academy"]
         }
       }
     }
