@@ -104,6 +104,13 @@ class GameController {
     }
 
     initializeEventListeners() {
+        // Vérifier si c'est un hard refresh et ajouter reset=1
+        if (performance.navigation.type === 1) { // Hard refresh
+            const url = new URL(window.location);
+            url.searchParams.set('reset', '1');
+            window.history.replaceState({}, '', url);
+        }
+        
         // Bypass login: start immediately
         const loginSection = document.getElementById('login-section');
         if (loginSection) loginSection.style.display = 'none';

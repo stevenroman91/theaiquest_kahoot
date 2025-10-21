@@ -26,11 +26,30 @@ app.secret_key = os.environ.get('SECRET_KEY', 'ai_acceleration_secret_key_2024')
 @app.before_request
 def ensure_guest_session():
     """Create a guest session so the game is accessible without login."""
+    global game_instance
+    
     if not session.get('logged_in'):
         session['logged_in'] = True
         session['user_id'] = session.get('user_id', 'guest')
         session['username'] = session.get('username', 'guest')
         session['user_role'] = session.get('user_role', 'user')
+    
+    # Vérifier si c'est un refresh forcé (paramètre reset=1 dans l'URL)
+    if request.args.get('reset') == '1':
+        session.clear()  # Effacer complètement la session
+        session['logged_in'] = True
+        session['user_id'] = 'guest'
+        session['username'] = 'guest'
+        session['user_role'] = 'user'
+        game_instance = None
+        return
+    
+    # Créer un ID de session temporaire pour chaque refresh
+    if not session.get('session_id'):
+        import uuid
+        session['session_id'] = str(uuid.uuid4())
+        # Seulement réinitialiser le jeu quand on crée un nouvel ID de session
+        game_instance = None
 
 # Instance globale du jeu (retour à la version simple qui fonctionnait)
 game_instance = None
