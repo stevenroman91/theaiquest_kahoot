@@ -99,18 +99,18 @@
           "description": "Focus on high-impact, low-effort AI initiatives aligned with business value.",
           "icon": "fas fa-handshake",
           "cost": 0,
-          "enablers_1_star": ["ai_productivity_opportunities", "ai_landscape_scan"],
-          "enablers_2_stars": ["ai_productivity_opportunities", "ai_landscape_scan"],
-          "enablers_3_stars": ["ai_productivity_opportunities", "ai_landscape_scan"]
+          "enablers_1_star": ["ai_value_opportunities", "ai_benchmark_in_gaming"],
+          "enablers_2_stars": ["ai_value_opportunities", "ai_benchmark_in_gaming"],
+          "enablers_3_stars": ["ai_value_opportunities", "ai_benchmark_in_gaming"]
         },
         "james": {
           "title": "Technology-Driven Approach with James",
           "description": "Prioritize cutting-edge AI technologies and infrastructure upgrades.",
           "icon": "fas fa-microchip",
           "cost": 0,
-          "enablers_1_star": ["data_governance_framework", "cloud_ai_infrastructure"],
-          "enablers_2_stars": ["data_governance_framework", "cloud_ai_infrastructure"],
-          "enablers_3_stars": ["data_governance_framework", "cloud_ai_infrastructure"]
+          "enablers_1_star": ["ai_tech_strategic_partnership", "bulk_data_transfert"],
+          "enablers_2_stars": ["ai_tech_strategic_partnership", "bulk_data_transfert"],
+          "enablers_3_stars": ["ai_tech_strategic_partnership", "bulk_data_transfert"]
         },
         "amira": {
           "title": "Customer-Centric Approach with Amira",
@@ -151,7 +151,7 @@
   },
   "phases": {
     "phase1": {
-      "title": "STEP 1: Designing Your AI-Enhanced Business Strategy",
+      "title": "Get started with the right AI Strategy",
       "description": "You've heard three different approaches to launch your AI transformation. Which one will you choose?",
       "video_file": "phase_1.mp4",
       "choices": {
@@ -159,16 +159,16 @@
           "title": "Elena: Map where AI creates the most value and align with company culture",
           "description": "Transformation without structure leads to chaos. If we deploy AI too fast, we'll create silos, duplicated tools, and confusion. We need to start by mapping where AI adds the most value — identify the high-impact use cases and build around them.",
           "enablers": [
-            "ai_productivity_opportunities",
-            "ai_landscape_scan"
+            "ai_value_opportunities",
+            "ai_benchmark_in_gaming"
           ]
         },
         "james": {
           "title": "James: Build strong foundations: secure data, tools, and architecture first",
           "description": "Without solid data foundations, this won't scale. We'll soon face a surge in talent data and analytics needs. My recommendation: select a robust AI platform now. BusinessAI Pro is the market leader and offers great terms if we sign an exclusive deal. Without this, we risk chaos later.",
           "enablers": [
-            "strategic_tech_alliances",
-            "vendor_value_steering"
+            "ai_tech_strategic_partnership",
+            "bulk_data_transfert"
           ]
         },
         "amira": {
@@ -411,27 +411,29 @@
     }
   },
   "enablers": {
-    "ai_productivity_opportunities": {
-      "title": "AI Productivity Opportunities",
-      "description": "Identify and implement AI solutions that enhance internal productivity and operational efficiency.",
+    "ai_value_opportunities": {
+      "title": "AI Value Opportunities",
+      "description": "Map where AI creates the most value and identify productivity opportunities",
       "category": "transformation_change",
       "icon": "fas fa-chart-line"
     },
-    "ai_landscape_scan": {
-      "title": "AI Landscape Scan",
-      "description": "Regularly assess the evolving AI landscape to identify new technologies, trends, and potential partners.",
+    "ai_benchmark_in_gaming": {
+      "title": "AI Benchmark in Gaming",
+      "description": "Comprehensive scan of AI technologies and market landscape",
       "category": "technology_partnerships",
-      "icon": "fas fa-magnifying-glass"
+      "icon": "fas fa-search"
     },
-    "strategic_tech_alliances": {
-      "title": "Strategic Tech Alliances",
-      "description": "Build strategic partnerships with leading AI technology providers.",
-      "category": "technology_partnerships"
+    "ai_tech_strategic_partnership": {
+      "title": "AI-tech Strategic Partnership",
+      "description": "Build strategic partnerships with technology providers",
+      "category": "technology_partnerships",
+      "icon": "fas fa-handshake"
     },
-    "vendor_value_steering": {
-      "title": "Vendor Value Steering",
-      "description": "Optimize vendor relationships to maximize AI value and minimize costs.",
-      "category": "technology_partnerships"
+    "bulk_data_transfert": {
+      "title": "Bulk Data Transfert",
+      "description": "Enables the fast and secure movement of large datasets between environments to support AI experimentation or migration",
+      "category": "technology_partnerships",
+      "icon": "fas fa-balance-scale"
     },
     "Fraud & Integrity Detection": {
       "title": "Fraud & Integrity Detection",

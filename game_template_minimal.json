@@ -59,7 +59,7 @@
   
   "phases": {
     "phase1": {
-      "title": "Step 1 : Get started with the right AI Strategy",
+      "title": "Get started with the right AI Strategy",
       "description": "Define AI strategy and assess opportunities",
       "choices": {
         "elena": {

@@ -417,6 +417,31 @@ class GameContentManager:
         except Exception as e:
             print(f"Error saving content: {e}")
     
+    # Enabler methods - read from game_content.json
+    def get_all_enablers(self) -> Dict[str, Dict[str, Any]]:
+        """Get all enablers from game_content.json"""
+        return self.content.get("enablers", {})
+    
+    def get_enabler_title(self, enabler_id: str) -> str:
+        """Get enabler title from game_content.json"""
+        enablers = self.get_all_enablers()
+        return enablers.get(enabler_id, {}).get("title", enabler_id.replace("_", " ").title())
+    
+    def get_enabler_description(self, enabler_id: str) -> str:
+        """Get enabler description from game_content.json"""
+        enablers = self.get_all_enablers()
+        return enablers.get(enabler_id, {}).get("description", f"Capability: {enabler_id}")
+    
+    def get_enabler_icon(self, enabler_id: str) -> str:
+        """Get enabler icon from game_content.json"""
+        enablers = self.get_all_enablers()
+        return enablers.get(enabler_id, {}).get("icon", "fas fa-cog")
+    
+    def get_enabler_category(self, enabler_id: str) -> str:
+        """Get enabler category from game_content.json"""
+        enablers = self.get_all_enablers()
+        return enablers.get(enabler_id, {}).get("category", "technology_partnerships")
+    
     def reload_content(self) -> None:
         """Reload content from file"""
         self.content = self._load_content()
