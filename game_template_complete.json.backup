@@ -249,7 +249,7 @@
     "strategic_vision_mapping": {
       "title": "Strategic Vision Mapping",
       "description": "Map AI transformation vision across organization",
-      "icon": "fas fa-brain",
+      "icon": "fas fa-space-shuttle",
       "category": "policies_practices"
     },
     "hr_function_diagnostic": {
@@ -747,7 +747,7 @@
       "icon": "fas fa-university",
       "category": "transformation_change"
     }
-  },
+  }
   "ui_text": {
     "welcome_message": "🎯 Welcome to AI Acceleration EXEC - Smart Retail Group HR Managers Edition\n\nYou are leading a GenAI transformation in your HR department.\nYour mission: make the right strategic decisions to succeed in this HR transformation.\n\nThe game unfolds in 5 Moments of Truth (MOT) where you'll need to make crucial choices\nto integrate generative AI into your HR processes.\n\nEach decision influences your final score and the number of stars earned.\n\nLet's start with MOT 1: Choose your initial approach for GenAI HR transformation.",
     "teams_meeting": {

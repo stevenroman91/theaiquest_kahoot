@@ -999,14 +999,14 @@ class GameController {
         const choiceDetails = {
             'elena': {
                 enablers: [
-                    { id: 'ai_productivity_opportunities', icon: 'fas fa-chart-line', label: 'AI Productivity Opportunities', category: 'transformation_change' },
-                    { id: 'ai_landscape_scan', icon: 'fas fa-search', label: 'AI Landscape Scan', category: 'technology_partnerships' }
+                    { id: 'ai_value_opportunities', icon: 'fas fa-chart-line', label: 'AI Value Opportunities', category: 'transformation_change' },
+                    { id: 'ai_benchmark_in_gaming', icon: 'fas fa-search', label: 'AI Benchmark in Gaming', category: 'technology_partnerships' }
                 ]
             },
             'james': {
                 enablers: [
-                    { id: 'strategic_tech_alliances', icon: 'fas fa-handshake', label: 'Strategic Tech Alliances', category: 'technology_partnerships' },
-                    { id: 'vendor_value_steering', icon: 'fas fa-balance-scale', label: 'Vendor Value Steering', category: 'technology_partnerships' }
+                    { id: 'ai_tech_strategic_partnership', icon: 'fas fa-handshake', label: 'AI-tech Strategic Partnership', category: 'technology_partnerships' },
+                    { id: 'bulk_data_transfert', icon: 'fas fa-balance-scale', label: 'Bulk Data Transfert', category: 'technology_partnerships' }
                 ]
             },
             'amira': {

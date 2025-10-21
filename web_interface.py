@@ -791,15 +791,16 @@ def api_executive_dashboard():
     # Récupérer les ENABLERS par phase après calcul
     enablers_by_phase = game.current_path.enablers_by_phase
     
-    # Utiliser le template pour tous les enablers
+    # Utiliser le content manager pour tous les enablers (au lieu du template)
     template = get_template()
     
-    # Générer automatiquement les titres et descriptions depuis le template
+    # Générer automatiquement les titres et descriptions depuis game_content.json
     enabler_titles = {}
     enabler_descriptions = {}
     enabler_icons = {}
     
-    all_enablers = template.get_all_enablers()
+    # Utiliser content au lieu de template pour les enablers
+    all_enablers = content.get_all_enablers()
     for enabler_id, enabler_data in all_enablers.items():
         enabler_titles[enabler_id] = enabler_data.get("title", enabler_id.replace("_", " ").title())
         enabler_descriptions[enabler_id] = enabler_data.get("description", f"Capability: {enabler_id}")
@@ -885,7 +886,7 @@ def api_executive_dashboard():
                 }
                 enabler_category = enabler_to_category.get(enabler, 'transformation_change')
             else:
-                enabler_category = template.get_enabler_category(enabler)
+                enabler_category = content.get_enabler_category(enabler)
             
             if enabler_category in category_titles:
                 all_available_enablers_by_phase_and_category[phase][enabler_category].append(enabler)
