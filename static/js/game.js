@@ -1913,7 +1913,7 @@ class GameController {
         const container = document.getElementById('phase4-choices');
         container.innerHTML = '';
         
-        // Add grid class for uniform sizing
+        // Add grid class for uniform sizing (3x3 grid)
         container.className = 'matrix-choices-grid';
 
         // Define category colors (consistent with dashboard)
@@ -1936,7 +1936,7 @@ class GameController {
             'local_ai_risk_management': 'gover'
         };
 
-        // Create simple grid directly (no grouping by category)
+        // Create simple grid directly (3x3 matrix)
         choices.forEach(choice => {
             const choiceDiv = document.createElement('div');
             choiceDiv.className = 'matrix-choice';
@@ -1948,18 +1948,17 @@ class GameController {
             const categoryColor = categoryColors[category];
             const specificIcon = this.getEnablerIcon(choice.id);
             
-            // Convert underscores to hyphens for CSS classes (like Step 3)
-            const categoryClass = category.replace(/_/g, '-');
-            console.log(`DEBUG Step 4: choice.id=${choice.id}, category=${category}, categoryClass=${categoryClass}, categoryColor=${categoryColor}`);
-            
             choiceDiv.innerHTML = `
-                <div style="background-color: ${categoryColor}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                    <i class="${specificIcon}" style="color: white; font-size: 1rem;"></i>
-                        </div>
-                <div class="choice-title">${choice.title}</div>
+                <div class="choice-header">
+                    <div style="background-color: ${categoryColor}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <i class="${specificIcon}" style="color: white; font-size: 1rem;"></i>
+                    </div>
+                    <div class="choice-title">${choice.title}</div>
+                </div>
                 <div class="choice-description">${choice.description}</div>
-                <div class="choice-cost">${choice.cost}</div>
+                <div class="choice-cost">${choice.cost} points</div>
             `;
+            
             container.appendChild(choiceDiv);
         });
 
