@@ -4,29 +4,28 @@
     "mot2_choices": [],
     "mot3_choices": {},
     "mot4_choices": [],
-    "mot5_choice": "trusted_partner_ecosystem",
-    "total_score": 2,
+    "mot5_choice": "continuous_capability_building",
+    "total_score": 4,
     "stars": 1,
     "mot_scores": {
       "mot1": 0,
       "mot2": 0,
       "mot3": 1,
       "mot4": 1,
-      "mot5": 0
+      "mot5": 2
     },
     "unlocked_enablers": [
-      "ai_collaboration_hub",
-      "trusted_partner_ecosystem",
-      "enterprise_ai_service_layer"
+      "group_responsible_ai_awareness",
+      "early_career_pipeline_expert_retention"
     ],
     "unlocked_enablers_by_category": {
-      "technology_partnerships": [
-        "ai_collaboration_hub",
-        "trusted_partner_ecosystem",
-        "enterprise_ai_service_layer"
+      "technology_partnerships": [],
+      "policies_governance": [
+        "group_responsible_ai_awareness"
       ],
-      "policies_governance": [],
-      "transformation_change": []
+      "transformation_change": [
+        "early_career_pipeline_expert_retention"
+      ]
     },
     "enablers_by_phase": {
       "phase1": [],
@@ -34,9 +33,8 @@
       "phase3": [],
       "phase4": [],
       "phase5": [
-        "trusted_partner_ecosystem",
-        "enterprise_ai_service_layer",
-        "ai_collaboration_hub"
+        "group_responsible_ai_awareness",
+        "early_career_pipeline_expert_retention"
       ]
     }
   }

@@ -490,7 +490,7 @@ class GameController {
         // Hide all sections except use-cases-section
         document.querySelectorAll('[id$="-section"]').forEach(section => {
             if (section.id !== 'use-cases-section') {
-                section.style.display = 'none';
+            section.style.display = 'none';
             }
         });
         
