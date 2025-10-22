@@ -55,9 +55,9 @@ class GamePath:
     mot_scores: Dict[str, int] = field(default_factory=dict)
     unlocked_enablers: List[str] = field(default_factory=list)  # ENABLERS débloqués
     unlocked_enablers_by_category: Dict[str, List[str]] = field(default_factory=lambda: {
-        "technology_partnerships": [],
-        "policies_governance": [],
-        "transformation_change": []
+        "technology": [],
+        "gover": [],
+        "people": []
     })
     # Nouveaux champs pour suivre les ENABLERS par phase
     enablers_by_phase: Dict[str, List[str]] = field(default_factory=lambda: {
@@ -187,30 +187,30 @@ class AIAccelerationGame:
 
         # Phase 3 mappings
         elif choice_id in ["hr_ai_training", "hr_role_redefinition", "cultural_change"]:
-            return "transformation_change"
+            return "people"
         elif choice_id in ["system_integration", "tech_partnerships", "cloud_infrastructure"]:
-            return "technology_partnerships"
+            return "technology"
         elif choice_id in ["ai_ethics_charter", "data_governance", "performance_metrics"]:
-            return "policies_governance"
+            return "gover"
 
         # Phase 4 mappings
         elif choice_id in ["apis_hr_systems", "data_pipeline_automation", "data_strategy"]:
-            return "technology_partnerships"
+            return "technology"
         elif choice_id in ["ethics_oversight", "risk_management", "leadership_communication", "business_alignment"]:
-            return "policies_governance"
+            return "gover"
         elif choice_id in ["talent_retention", "change_adoption"]:
-            return "transformation_change"
+            return "people"
 
         # Phase 5 mappings
         elif choice_id == "genai_for_all":
-            return "transformation_change"
+            return "people"
         elif choice_id == "capability_building":
-            return "policies_governance"
+            return "gover"
         elif choice_id == "people_speed":
-            return "technology_partnerships"
+            return "technology"
 
         # Default fallback
-        return "transformation_change"
+        return "people"
 
 
     def login(self, username: str, password: str) -> Tuple[bool, str, Optional[Dict]]:
@@ -346,9 +346,9 @@ class AIAccelerationGame:
         """Retourne les choix disponibles pour MOT3 par catégorie"""
         # Organiser les choix par catégorie selon les nouveaux enablers
         choices_by_category = {
-            "technology_partnerships": [],
-            "transformation_change": [],
-            "policies_governance": []
+            "technology": [],
+            "people": [],
+            "gover": []
         }
 
         # Récupérer tous les choix de Phase 3 depuis le template
@@ -399,7 +399,7 @@ class AIAccelerationGame:
     
     def make_mot3_choices(self, choices: Dict[str, str]) -> bool:
         """Effectue les choix MOT3 (1 par catégorie)"""
-        required_categories = ["technology_partnerships", "transformation_change", "policies_governance"]
+        required_categories = ["technology", "people", "gover"]
         
         if set(choices.keys()) != set(required_categories):
             return False
@@ -612,9 +612,9 @@ class AIAccelerationGame:
         
         # Réinitialiser complètement les enablers par catégorie
         enablers_by_category = {
-            "technology_partnerships": [],
-            "policies_governance": [],
-            "transformation_change": []
+            "technology": [],
+            "gover": [],
+            "people": []
         }
 
         # Réinitialiser complètement les enablers par phase
@@ -811,37 +811,37 @@ class AIAccelerationGame:
         """Retourne le mapping des choix vers leurs catégories"""
         return {
             # Phase 1 - HR Approaches
-            "amira": "transformation_change",      # Operational approach
-            "james": "technology_partnerships", # Technology-first approach
-            "elena": "transformation_change",    # Strategic approach
+            "amira": "people",      # Operational approach
+            "james": "technology", # Technology-first approach
+            "elena": "people",    # Strategic approach
 
             # Phase 2 - HR Solutions
-            "intelligent_recruitment": "technology_partnerships",
-            "virtual_hr_assistant": "transformation_change",
-            "training_optimization": "transformation_change",
-            "sentiment_analysis": "policies_governance",
-            "hr_automation": "transformation_change",
+            "intelligent_recruitment": "technology",
+            "virtual_hr_assistant": "people",
+            "training_optimization": "people",
+            "sentiment_analysis": "gover",
+            "hr_automation": "people",
 
             # Phase 4 - Scaling enablers
-            "reusable_api_patterns": "technology_partnerships",
-            "industrial_data_pipelines": "technology_partnerships", 
-            "privacy_by_design_data": "technology_partnerships",
-            "talent_mobility_program": "transformation_change",
-            "business_ai_champions": "transformation_change",
-            "ai_storytelling_communication": "transformation_change",
-            "adoption_playbook": "transformation_change",
-            "clear_ownership_accountability": "policies_governance",
-            "local_ai_risk_management": "policies_governance",
-            "internal_mobility": "transformation_change",
-            "data_collection_strategy": "technology_partnerships", # Corrected: data strategy is platform
-            "ceo_video_series": "policies_governance", # Corrected: CEO communication is policies
-            "change_management": "transformation_change",
-            "business_sponsors": "transformation_change",
+            "reusable_api_patterns": "technology",
+            "industrial_data_pipelines": "technology", 
+            "privacy_by_design_data": "technology",
+            "talent_mobility_program": "people",
+            "business_ai_champions": "people",
+            "ai_storytelling_communication": "people",
+            "adoption_playbook": "people",
+            "clear_ownership_accountability": "gover",
+            "local_ai_risk_management": "gover",
+            "internal_mobility": "people",
+            "data_collection_strategy": "technology", # Corrected: data strategy is platform
+            "ceo_video_series": "gover", # Corrected: CEO communication is policies
+            "change_management": "people",
+            "business_sponsors": "people",
 
             # Phase 5 - HR Capabilities
-            "genai_for_all": "transformation_change",
-            "capability_building": "policies_governance", # Corrected: capability building is policies
-            "people_speed": "technology_partnerships" # Corrected: people speed is platform
+            "genai_for_all": "people",
+            "capability_building": "gover", # Corrected: capability building is policies
+            "people_speed": "technology" # Corrected: people speed is platform
         }
     
     def get_results(self) -> Dict:
@@ -895,29 +895,29 @@ class AIAccelerationGame:
         """Retourne tous les ENABLERS possibles organisés par phase et par catégorie pour l'affichage pédagogique"""
         all_enablers = {
             "phase1": {
-                "technology_partnerships": ["technical_foundation_setup", "genai_platform_partnership"],
-                "policies_governance": ["strategic_vision_mapping", "hr_function_diagnostic"],
-                "transformation_change": ["rapid_deployment", "bottom_up_innovation"]
+                "technology": ["technical_foundation_setup", "genai_platform_partnership"],
+                "gover": ["strategic_vision_mapping", "hr_function_diagnostic"],
+                "people": ["rapid_deployment", "bottom_up_innovation"]
             },
             "phase2": {
-                "technology_partnerships": ["candidate_matching"],
-                "policies_governance": ["sentiment_detection"],
-                "transformation_change": ["employee_support", "personalized_training", "process_automation"]
+                "technology": ["candidate_matching"],
+                "gover": ["sentiment_detection"],
+                "people": ["employee_support", "personalized_training", "process_automation"]
             },
             "phase3": {
-                "technology_partnerships": ["vendor_relationships", "system_connectivity", "cloud_migration"],
-                "policies_governance": ["ethical_framework", "kpi_definition", "data_protection"],
-                "transformation_change": ["hr_ai_competencies", "role_evolution", "change_communication"]
+                "technology": ["vendor_relationships", "system_connectivity", "cloud_migration"],
+                "gover": ["ethical_framework", "kpi_definition", "data_protection"],
+                "people": ["hr_ai_competencies", "role_evolution", "change_communication"]
             },
             "phase4": {
-                "technology_partnerships": ["api_connectivity", "data_pipeline_automation", "data_strategy"],
-                "policies_governance": ["ethics_oversight", "risk_management", "leadership_communication"],
-                "transformation_change": ["talent_retention", "change_adoption", "business_alignment"]
+                "technology": ["api_connectivity", "data_pipeline_automation", "data_strategy"],
+                "gover": ["ethics_oversight", "risk_management", "leadership_communication"],
+                "people": ["talent_retention", "change_adoption", "business_alignment"]
             },
             "phase5": {
-                "technology_partnerships": [],
-                "policies_governance": ["value_based_governance", "leadership_communication", "long_term_roadmap"],
-                "transformation_change": ["organization_wide_ai", "rapid_deployment", "hr_ai_training_academy", "talent_recruitment", "genai_hub"]
+                "technology": [],
+                "gover": ["value_based_governance", "leadership_communication", "long_term_roadmap"],
+                "people": ["organization_wide_ai", "rapid_deployment", "hr_ai_training_academy", "talent_recruitment", "genai_hub"]
             }
         }
         return all_enablers

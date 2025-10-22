@@ -1,41 +1,92 @@
 [
   {
-    "mot1_choice": "",
-    "mot2_choices": [],
-    "mot3_choices": {},
-    "mot4_choices": [],
+    "mot1_choice": "amira",
+    "mot2_choices": [
+      "fraud_integrity_detection",
+      "ai_storyline_generator",
+      "smart_game_design_assistant"
+    ],
+    "mot3_choices": {
+      "people": "ai_leadership_program",
+      "gover": "ai_governance_roadmap",
+      "technology": "data_readiness_review"
+    },
+    "mot4_choices": [
+      "local_ai_risk_management",
+      "industrial_data_pipelines",
+      "adoption_playbook"
+    ],
     "mot5_choice": "continuous_capability_building",
-    "total_score": 4,
+    "total_score": 8,
     "stars": 1,
     "mot_scores": {
-      "mot1": 0,
-      "mot2": 0,
+      "mot1": 1,
+      "mot2": 2,
       "mot3": 1,
-      "mot4": 1,
+      "mot4": 2,
       "mot5": 2
     },
     "unlocked_enablers": [
+      "Smart Game Design Assistant",
+      "adoption_playbook",
       "group_responsible_ai_awareness",
-      "early_career_pipeline_expert_retention"
+      "AI-Powered Storyline Generator",
+      "data_readiness_review",
+      "local_ai_risk_management",
+      "early_career_pipeline_expert_retention",
+      "ai_leadership_program",
+      "ai_governance_roadmap",
+      "industrial_data_pipelines",
+      "Fraud & Integrity Detection"
     ],
     "unlocked_enablers_by_category": {
-      "technology_partnerships": [],
-      "policies_governance": [
-        "group_responsible_ai_awareness"
+      "technology": [
+        "Smart Game Design Assistant",
+        "AI-Powered Storyline Generator",
+        "data_readiness_review",
+        "industrial_data_pipelines",
+        "Fraud & Integrity Detection"
       ],
-      "transformation_change": [
-        "early_career_pipeline_expert_retention"
+      "gover": [
+        "ai_governance_roadmap",
+        "group_responsible_ai_awareness",
+        "local_ai_risk_management"
+      ],
+      "people": [
+        "early_career_pipeline_expert_retention",
+        "ai_leadership_program",
+        "adoption_playbook"
       ]
     },
     "enablers_by_phase": {
-      "phase1": [],
-      "phase2": [],
-      "phase3": [],
-      "phase4": [],
+      "phase1": [
+        "automated_banners_generation",
+        "customer_email_classifier",
+        "virtual_learning_coach_prototype",
+        "supplier_risk_scoring",
+        "simulated_game_design",
+        "predictive_maintenance_sandbox"
+      ],
+      "phase2": [
+        "Fraud & Integrity Detection",
+        "AI-Powered Storyline Generator",
+        "Smart Game Design Assistant"
+      ],
+      "phase3": [
+        "ai_governance_roadmap",
+        "data_readiness_review",
+        "ai_leadership_program"
+      ],
+      "phase4": [
+        "adoption_playbook",
+        "industrial_data_pipelines",
+        "local_ai_risk_management"
+      ],
       "phase5": [
         "group_responsible_ai_awareness",
         "early_career_pipeline_expert_retention"
       ]
-    }
+    },
+    "mot4_score": 2
   }
 ]

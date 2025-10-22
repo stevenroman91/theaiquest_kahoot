@@ -825,9 +825,9 @@ def api_executive_dashboard():
     # Formater les ENABLERS par catégorie
     formatted_enablers_by_category = {}
     category_titles = {
-        "technology_partnerships": "Technology & Partnerships",
-        "transformation_change": "Transformation & Change",
-        "policies_governance": "Policies & Governance"
+        "technology": "Technologie",
+        "people": "People",
+        "gover": "Governance"
     }
     
     for category, enablers in unlocked_enablers_by_category.items():
@@ -899,17 +899,17 @@ def api_executive_dashboard():
             if phase == 'phase4':
                 # Mapping direct pour les enablers du Step 4
                 enabler_to_category = {
-                    'reusable_api_patterns': 'technology_partnerships',
-                    'industrial_data_pipelines': 'technology_partnerships', 
-                    'privacy_by_design_data': 'technology_partnerships',
-                    'talent_mobility_program': 'transformation_change',
-                    'business_ai_champions': 'transformation_change',
-                    'ai_storytelling_communication': 'transformation_change',
-                    'adoption_playbook': 'transformation_change',
-                    'clear_ownership_accountability': 'policies_governance',
-                    'local_ai_risk_management': 'policies_governance'
+                    'reusable_api_patterns': 'technology',
+                    'industrial_data_pipelines': 'technology', 
+                    'privacy_by_design_data': 'technology',
+                    'talent_mobility_program': 'people',
+                    'business_ai_champions': 'people',
+                    'ai_storytelling_communication': 'people',
+                    'adoption_playbook': 'people',
+                    'clear_ownership_accountability': 'gover',
+                    'local_ai_risk_management': 'gover'
                 }
-                enabler_category = enabler_to_category.get(enabler, 'transformation_change')
+                enabler_category = enabler_to_category.get(enabler, 'people')
             else:
                 enabler_category = content.get_enabler_category(enabler)
             

@@ -473,199 +473,199 @@
       "title": "AI Value Opportunities",
       "description": "Map where AI creates the most value and identify productivity opportunities",
       "icon": "fas fa-chart-line",
-      "category": "transformation_change"
+      "category": "people"
     },
     "ai_benchmark_in_gaming": {
       "title": "AI Benchmark in Gaming",
       "description": "Comprehensive scan of AI technologies and market landscape",
       "icon": "fas fa-search",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "ai_tech_strategic_partnership": {
       "title": "AI-tech Strategic Partnership",
       "description": "Build strategic partnerships with technology providers",
       "icon": "fas fa-handshake",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "bulk_data_transfert": {
       "title": "Bulk Data Transfert",
       "description": "Enables the fast and secure movement of large datasets between environments to support AI experimentation or migration",
       "icon": "fas fa-balance-scale",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "Fraud & Integrity Detection": {
       "title": "Fraud & Integrity Detection",
       "description": "Machine learning system that spots irregular in-game transactions and protects player trust.",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "AI-Powered Storyline Generator": {
       "title": "AI-Powered Storyline Generator",
       "description": "Supports writers by creating adaptive narratives based on player choices.",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "Smart Game Design Assistant": {
       "title": "Smart Game Design Assistant",
       "description": "Generative AI that helps designers create concept art and levels faster while keeping our art style.",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "Player Journey Optimizer": {
       "title": "Player Journey Optimizer",
       "description": "Predictive engine that analyzes player behavior and suggests personalized missions and rewards.",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "Talent Analytics Dashboard": {
       "title": "Talent Analytics Dashboard",
       "description": "Internal tool to track AI skills and training needs across teams.",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "ai_data_foundations": {
       "title": "AI & Data Foundations",
       "description": "Evolve hybrid data platform to an Agentic Lakehouse platform with governed Data Products.",
       "icon": "fas fa-database",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "model_automation_framework": {
       "title": "Model Automation Framework",
       "description": "Implement MLOps & FMOps practices for seamless AI model deployment and monitoring.",
       "icon": "fas fa-robot",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "data_readiness_review": {
       "title": "Data Readiness Review",
       "description": "Maintain enterprise view of Data Products to inform AI feasibility and enrichment opportunities.",
       "icon": "fas fa-clipboard-check",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "ai_leadership_program": {
       "title": "AI Leadership Program",
       "description": "Focused learning for leaders on AI potential, risk, and value realization.",
       "icon": "fas fa-graduation-cap",
-      "category": "transformation_change"
+      "category": "people"
     },
     "hands_on_ai_bootcamp": {
       "title": "Hands-On AI Bootcamp",
       "description": "Practical upskilling program for delivery teams to master AI tools.",
       "icon": "fas fa-code",
-      "category": "transformation_change"
+      "category": "people"
     },
     "ai_co_creation_labs": {
       "title": "AI Co-Creation Labs",
       "description": "Collaborative spaces for end-users to shape AI-enabled workflows and processes.",
       "icon": "fas fa-flask",
-      "category": "transformation_change"
+      "category": "people"
     },
     "responsible_ai_framework": {
       "title": "Responsible AI Framework",
       "description": "Integrate responsible AI duties into leadership and expert roles.",
       "icon": "fas fa-shield-alt",
-      "category": "policies_governance"
+      "category": "gover"
     },
     "ai_governance_roadmap": {
       "title": "AI Governance Roadmap",
       "description": "Establish clear governance structures, roles, and processes for AI initiatives.",
       "icon": "fas fa-route",
-      "category": "policies_governance"
+      "category": "gover"
     },
     "ai_governance_board": {
       "title": "AI Governance Board",
       "description": "Cross-functional board to oversee AI strategy, risk management, and ethics.",
       "icon": "fas fa-gavel",
-      "category": "policies_governance"
+      "category": "gover"
     },
     "reusable_api_patterns": {
       "title": "Reusable API Patterns",
       "description": "Standardize API patterns for AI services to enable faster development.",
       "icon": "fas fa-code",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "industrial_data_pipelines": {
       "title": "Industrial Data Pipelines",
       "description": "Build robust, scalable data pipelines to support AI workloads.",
       "icon": "fas fa-cogs",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "privacy_by_design_data": {
       "title": "Privacy by Design Data",
       "description": "Implement privacy-first data practices to ensure compliance and build trust.",
       "icon": "fas fa-shield-alt",
-      "category": "policies_governance"
+      "category": "gover"
     },
     "talent_mobility_program": {
       "title": "Talent Mobility Program",
       "description": "Create programs to help employees transition into AI roles and develop new skills.",
       "icon": "fas fa-users",
-      "category": "transformation_change"
+      "category": "people"
     },
     "business_ai_champions": {
       "title": "Business AI Champions",
       "description": "Identify and develop AI champions across business units to drive adoption.",
       "icon": "fas fa-trophy",
-      "category": "transformation_change"
+      "category": "people"
     },
     "ai_storytelling_communication": {
       "title": "AI Storytelling Communication",
       "description": "Develop communication strategies to share AI success stories and build excitement.",
       "icon": "fas fa-bullhorn",
-      "category": "transformation_change"
+      "category": "people"
     },
     "adoption_playbook": {
       "title": "Adoption Playbook",
       "description": "Create a comprehensive playbook for rolling out AI solutions across the organization.",
       "icon": "fas fa-book",
-      "category": "transformation_change"
+      "category": "people"
     },
     "clear_ownership_accountability": {
       "title": "Clear Ownership & Accountability",
       "description": "Establish clear ownership structures and accountability frameworks for AI initiatives.",
       "icon": "fas fa-clipboard-check",
-      "category": "policies_governance"
+      "category": "gover"
     },
     "local_ai_risk_management": {
       "title": "Local AI Risk Management",
       "description": "Implement localized risk management practices for AI deployments.",
       "icon": "fas fa-exclamation-triangle",
-      "category": "policies_governance"
+      "category": "gover"
     },
     "trusted_partner_ecosystem": {
       "title": "Trusted Partner Ecosystem",
       "description": "Build a network of trusted AI partners to accelerate innovation and reduce risk.",
       "icon": "fas fa-handshake",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "enterprise_ai_service_layer": {
       "title": "Enterprise AI Service Layer",
       "description": "Create a centralized service layer for AI capabilities across the organization.",
       "icon": "fas fa-layer-group",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "ai_collaboration_hub": {
       "title": "AI Collaboration Hub",
       "description": "Centralized platform for AI collaboration, knowledge sharing, and best practices.",
       "icon": "fas fa-users",
-      "category": "technology_partnerships"
+      "category": "technology"
     },
     "group_responsible_ai_awareness": {
       "title": "Group Responsible AI Awareness",
       "description": "Organization-wide responsible AI practices and awareness programs.",
       "icon": "fas fa-eye",
-      "category": "policies_governance"
+      "category": "gover"
     },
     "early_career_pipeline_expert_retention": {
       "title": "Early Career Pipeline & Expert Retention",
       "description": "Develop talent pipelines and retention strategies for AI expertise.",
       "icon": "fas fa-user-graduate",
-      "category": "transformation_change"
+      "category": "people"
     },
     "value_driven_governance": {
       "title": "Value-Driven Governance",
       "description": "Implement governance structures focused on maximizing AI value while managing risks.",
       "icon": "fas fa-chart-pie",
-      "category": "policies_governance"
+      "category": "gover"
     },
     "data_ai_academy": {
       "title": "Data & AI Academy",
       "description": "Comprehensive learning platform for data and AI skills development.",
-      "category": "transformation_change"
+      "category": "people"
     }
   },
   "use_cases": {
@@ -728,16 +728,16 @@
     "title": "Executive Dashboard",
     "subtitle": "Track your AI transformation progress",
     "categories": {
-      "technology_partnerships": {
-        "title": "Technology & Partnerships",
+      "technology": {
+        "title": "Technologie",
         "description": "AI infrastructure, tools, and strategic partnerships"
       },
-      "policies_governance": {
-        "title": "Policies & Governance",
-        "description": "Governance frameworks, policies, and compliance"
-      },
-      "transformation_change": {
-        "title": "Transformation & Change",
+        "gover": {
+          "title": "Governance",
+          "description": "Governance frameworks, policies, and compliance"
+        },
+      "people": {
+        "title": "People",
         "description": "Change management, training, and adoption initiatives"
       }
     }

@@ -336,11 +336,6 @@ class GameContentManager:
         enabler_info = self.get_enabler_info(enabler_id)
         return enabler_info.get("description", "")
     
-    def get_enabler_category(self, enabler_id: str) -> str:
-        """Get enabler category"""
-        enabler_info = self.get_enabler_info(enabler_id)
-        return enabler_info.get("category", "other")
-    
     def get_enablers_by_category(self, category: str) -> Dict[str, Dict[str, str]]:
         """Get all enablers in a specific category"""
         enablers = self.content.get("enablers", {})
@@ -432,7 +427,7 @@ class GameContentManager:
     def get_enabler_category(self, enabler_id: str) -> str:
         """Get enabler category from game_content.json"""
         enablers = self.get_all_enablers()
-        return enablers.get(enabler_id, {}).get("category", "technology_partnerships")
+        return enablers.get(enabler_id, {}).get("category", "technology")
     
     def reload_content(self) -> None:
         """Reload content from file"""

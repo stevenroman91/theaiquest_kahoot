@@ -1700,36 +1700,36 @@ class GameController {
 
         // Define category metadata
         const categoryMetadata = {
-            'transformation_change': {
-                title: 'Transformation & Change',
+            'people': {
+                title: 'People',
                 icon: 'fas fa-users',
-                class: 'transformation-change'
+                class: 'people'
             },
-            'technology_partnerships': {
-                title: 'Technology & Partnerships',
+            'technology': {
+                title: 'Technologie',
                 icon: 'fas fa-handshake',
-                class: 'technology-partnerships'
+                class: 'technology'
             },
-            'policies_governance': {
-                title: 'Policies & Governance',
+            'gover': {
+                title: 'Governance',
                 icon: 'fas fa-shield-alt',
-                class: 'policies-governance'
+                class: 'gover'
             }
         };
 
         // Define specific icons for each choice
         const choiceIcons = {
-            // Technology & Partnerships
+            // Technologie
             'ai_data_foundations': 'fas fa-database',
             'model_automation_framework': 'fas fa-robot',
             'data_readiness_review': 'fas fa-clipboard-check',
             
-            // Transformation & Change
+            // People
             'ai_leadership_program': 'fas fa-graduation-cap',
             'hands_on_ai_bootcamp': 'fas fa-laptop-code',
             'ai_co_creation_labs': 'fas fa-users',
             
-            // Policies & Governance
+            // Gover
             'responsible_ai_framework': 'fas fa-shield-alt',
             'ai_governance_roadmap': 'fas fa-route',
             'ai_governance_board': 'fas fa-gavel'
@@ -1749,7 +1749,7 @@ class GameController {
                     ${categoryChoices.map(choice => `
                     <div class="matrix-choice" data-choice-id="${choice.id}" data-category="${category}" onclick="gameController.selectMOT3Choice('${choice.id}', '${category}')">
                         <div class="choice-header">
-                            <div style="background-color: ${category === 'transformation_change' ? '#eab308' : category === 'technology_partnerships' ? '#8b5cf6' : '#3b82f6'}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                            <div style="background-color: ${category === 'people' ? '#eab308' : category === 'technology' ? '#8b5cf6' : '#3b82f6'}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
                                 <i class="${choiceIcons[choice.id] || 'fas fa-cog'}" style="color: white; font-size: 1rem;"></i>
                                     </div>
                         <div class="choice-title">${choice.title}</div>
@@ -1912,22 +1912,22 @@ class GameController {
 
         // Define category colors (consistent with dashboard)
         const categoryColors = {
-            'technology_partnerships': '#8b5cf6', // Purple
-            'policies_governance': '#3b82f6', // Blue
-            'transformation_change': '#eab308' // Yellow
+            'technology': '#8b5cf6', // Purple
+            'gover': '#3b82f6', // Blue
+            'people': '#eab308' // Yellow
         };
 
         // Map enabler IDs to categories
         const enablerCategories = {
-            'reusable_api_patterns': 'technology_partnerships',
-            'industrial_data_pipelines': 'technology_partnerships',
-            'privacy_by_design_data': 'technology_partnerships',
-            'talent_mobility_program': 'transformation_change',
-            'business_ai_champions': 'transformation_change',
-            'ai_storytelling_communication': 'transformation_change',
-            'adoption_playbook': 'transformation_change',
-            'clear_ownership_accountability': 'policies_governance',
-            'local_ai_risk_management': 'policies_governance'
+            'reusable_api_patterns': 'technology',
+            'industrial_data_pipelines': 'technology',
+            'privacy_by_design_data': 'technology',
+            'talent_mobility_program': 'people',
+            'business_ai_champions': 'people',
+            'ai_storytelling_communication': 'people',
+            'adoption_playbook': 'people',
+            'clear_ownership_accountability': 'gover',
+            'local_ai_risk_management': 'gover'
         };
 
         // Create simple grid directly (no grouping by category)
@@ -1938,7 +1938,7 @@ class GameController {
             choiceDiv.dataset.cost = choice.cost;
             choiceDiv.onclick = () => gameController.selectMOT4Choice(choice.id, choice.cost);
             
-            const category = enablerCategories[choice.id] || 'technology_partnerships';
+            const category = enablerCategories[choice.id] || 'technology';
             const categoryColor = categoryColors[category];
             const specificIcon = this.getEnablerIcon(choice.id);
             
@@ -1986,9 +1986,9 @@ class GameController {
 
     getCategoryTitle(category) {
         const categoryTitles = {
-            'technology_partnerships': 'Technology & Partnerships',
-            'policies_governance': 'Policies & Governance',
-            'transformation_change': 'Transformation & Change'
+            'technology': 'Technologie',
+            'gover': 'Governance',
+            'people': 'People'
         };
         return categoryTitles[category] || category;
     }
@@ -2676,9 +2676,9 @@ class GameController {
         };
         
         const categoryTitles = {
-            "technology_partnerships": "Technology & Partnerships",
-            "transformation_change": "Transformation & Change",
-            "policies_governance": "Policies & Governance"
+            "technology": "Technologie",
+            "people": "People",
+            "gover": "Governance"
         };
         
         // Créer une ligne pour chaque catégorie

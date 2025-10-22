@@ -535,7 +535,7 @@ body.modal-open {
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
-.category-header.transformation-change {
+.category-header.people {
     background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
     box-shadow: 0 2px 8px rgba(234, 179, 8, 0.3);
     min-height: 60px; /* Uniform height for all category headers */
@@ -544,7 +544,7 @@ body.modal-open {
     justify-content: center;
 }
 
-.category-header.technology-partnerships {
+.category-header.technology {
     background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
     box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
     min-height: 60px; /* Uniform height for all category headers */
@@ -553,7 +553,7 @@ body.modal-open {
     justify-content: center;
 }
 
-.category-header.policies-governance {
+.category-header.gover {
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
     min-height: 60px; /* Uniform height for all category headers */
@@ -1346,12 +1346,16 @@ body.modal-open {
     background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
 }
 
-.option-icon.transformation-change {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); /* Transformation & Change - Yellow */
+.option-icon.people {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); /* People - Yellow */
 }
 
-.option-icon.technology-partnerships {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); /* Technology & Partnerships - Purple */
+.option-icon.technology {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); /* Technology - Purple */
+}
+
+.option-icon.gover {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); /* Governance - Blue */
 }
 
 .option-icon.use-case {
@@ -3161,18 +3165,18 @@ body {
     flex-shrink: 0;
 }
 
-.enabler-category-title.platform-partnerships {
+.enabler-category-title.technology {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+}
+
+.enabler-category-title.gover {
     background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
 }
 
-.enabler-category-title.policies-practices {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-}
-
-.enabler-category-title.people-processes {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+.enabler-category-title.people {
+    background: linear-gradient(135deg, #eab308, #ca8a04);
     color: white;
 }
 
@@ -3431,34 +3435,19 @@ body {
 }
 
 /* Couleurs spécifiques pour chaque catégorie */
-.pedagogical-category-title.platform_partnerships {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    border-color: #3b82f6;
-}
-
-.pedagogical-category-title.policies_practices {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    border-color: #3b82f6;
-}
-
-.pedagogical-category-title.people_processes {
-    background: linear-gradient(135deg, #10b981, #059669);
-    border-color: #10b981;
-}
-
-.pedagogical-category-title.technology_partnerships {
+.pedagogical-category-title.technology {
     background: linear-gradient(135deg, #8b5cf6, #7c3aed);
     border-color: #8b5cf6;
 }
 
-.pedagogical-category-title.transformation_change {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    border-color: #f59e0b;
+.pedagogical-category-title.gover {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-color: #3b82f6;
 }
 
-.pedagogical-category-title.policies_governance {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    border-color: #3b82f6;
+.pedagogical-category-title.people {
+    background: linear-gradient(135deg, #eab308, #ca8a04);
+    border-color: #eab308;
 }
 
 .pedagogical-phase-column {
@@ -4105,81 +4094,87 @@ body {
 }
 
 /* Step 4 Category Colors for Icons Only */
-.budget-choice.technology-partnerships .choice-icon {
+.budget-choice.technology .choice-icon {
     background-color: #8b5cf6 !important;
 }
 
-.budget-choice.transformation-change .choice-icon {
+.budget-choice.people .choice-icon {
     background-color: #eab308 !important;
 }
 
-.budget-choice.policies-governance .choice-icon {
+.budget-choice.gover .choice-icon {
     background-color: #3b82f6 !important;
 }
 
 /* Step 4 Matrix Choice Icons - Force colors with high specificity */
-.matrix-choice .choice-icon.technology-partnerships,
-.matrix-choice .choice-icon[class*="technology-partnerships"] {
+.matrix-choice .choice-icon.technology,
+.matrix-choice .choice-icon[class*="technology"] {
     background-color: #8b5cf6 !important;
 }
 
-.matrix-choice .choice-icon.transformation-change,
-.matrix-choice .choice-icon[class*="transformation-change"] {
+.matrix-choice .choice-icon.people,
+.matrix-choice .choice-icon[class*="people"] {
     background-color: #eab308 !important;
 }
 
-.matrix-choice .choice-icon.policies-governance,
-.matrix-choice .choice-icon[class*="policies-governance"] {
+.matrix-choice .choice-icon.gover,
+.matrix-choice .choice-icon[class*="gover"] {
     background-color: #3b82f6 !important;
 }
 
-.matrix-choice .choice-icon.technology-partnerships i,
-.matrix-choice .choice-icon[class*="technology-partnerships"] i {
+.matrix-choice .choice-icon.technology i,
+.matrix-choice .choice-icon[class*="technology"] i {
     color: white !important;
     font-size: 1rem !important;
 }
 
-.matrix-choice .choice-icon.transformation-change i,
-.matrix-choice .choice-icon[class*="transformation-change"] i {
+.matrix-choice .choice-icon.people i,
+.matrix-choice .choice-icon[class*="people"] i {
+    color: white !important;
+    font-size: 1rem !important;
+}
+
+.matrix-choice .choice-icon.gover i,
+.matrix-choice .choice-icon[class*="gover"] i {
     color: white !important;
     font-size: 1rem !important;
 }
 
 /* Force Step 4 icon colors with maximum specificity */
-#phase4-choices .matrix-choice .choice-icon.technology-partnerships {
+#phase4-choices .matrix-choice .choice-icon.technology {
     background-color: #8b5cf6 !important;
 }
 
-#phase4-choices .matrix-choice .choice-icon.transformation-change {
+#phase4-choices .matrix-choice .choice-icon.people {
     background-color: #eab308 !important;
 }
 
-#phase4-choices .matrix-choice .choice-icon.policies-governance {
+#phase4-choices .matrix-choice .choice-icon.gover {
     background-color: #3b82f6 !important;
 }
 
-#phase4-choices .matrix-choice .choice-icon.technology-partnerships i {
+#phase4-choices .matrix-choice .choice-icon.technology i {
     color: white !important;
 }
 
-#phase4-choices .matrix-choice .choice-icon.transformation-change i {
+#phase4-choices .matrix-choice .choice-icon.people i {
     color: white !important;
 }
 
-#phase4-choices .matrix-choice .choice-icon.policies-governance i {
+#phase4-choices .matrix-choice .choice-icon.gover i {
     color: white !important;
 }
 
 /* ULTRA SPECIFIC Step 4 icon colors - Force with maximum specificity */
-#phase4-choices .matrix-choice .choice-icon.technology-partnerships[style*="background-color"] {
+#phase4-choices .matrix-choice .choice-icon.technology[style*="background-color"] {
     background-color: #8b5cf6 !important;
 }
 
-#phase4-choices .matrix-choice .choice-icon.transformation-change[style*="background-color"] {
+#phase4-choices .matrix-choice .choice-icon.people[style*="background-color"] {
     background-color: #eab308 !important;
 }
 
-#phase4-choices .matrix-choice .choice-icon.policies-governance[style*="background-color"] {
+#phase4-choices .matrix-choice .choice-icon.gover[style*="background-color"] {
     background-color: #3b82f6 !important;
 }
 
