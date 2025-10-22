@@ -1006,14 +1006,14 @@ class GameController {
         const choiceDetails = {
             'elena': {
                 enablers: [
-                    { id: 'ai_value_opportunities', icon: 'fas fa-chart-line', label: 'AI Value Opportunities', category: 'transformation_change' },
-                    { id: 'ai_benchmark_in_gaming', icon: 'fas fa-search', label: 'AI Benchmark in Gaming', category: 'technology_partnerships' }
+                    { id: 'ai_value_opportunities', icon: 'fas fa-chart-line', label: 'AI Value Opportunities', category: 'people' },
+                    { id: 'ai_benchmark_in_gaming', icon: 'fas fa-search', label: 'AI Benchmark in Gaming', category: 'technology' }
                 ]
             },
             'james': {
                 enablers: [
-                    { id: 'ai_tech_strategic_partnership', icon: 'fas fa-handshake', label: 'AI-tech Strategic Partnership', category: 'technology_partnerships' },
-                    { id: 'bulk_data_transfert', icon: 'fas fa-balance-scale', label: 'Bulk Data Transfert', category: 'technology_partnerships' }
+                    { id: 'ai_tech_strategic_partnership', icon: 'fas fa-handshake', label: 'AI-tech Strategic Partnership', category: 'technology' },
+                    { id: 'bulk_data_transfert', icon: 'fas fa-balance-scale', label: 'Bulk Data Transfert', category: 'technology' }
                 ]
             },
             'amira': {
@@ -1912,7 +1912,7 @@ class GameController {
     renderMOT4Choices(choices) {
         const container = document.getElementById('phase4-choices');
         container.innerHTML = '';
-        
+
         // Add grid class for uniform sizing (3x3 grid)
         container.className = 'matrix-choices-grid';
 
@@ -1952,8 +1952,8 @@ class GameController {
                 <div class="choice-header">
                     <div style="background-color: ${categoryColor}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
                         <i class="${specificIcon}" style="color: white; font-size: 1rem;"></i>
-                    </div>
-                    <div class="choice-title">${choice.title}</div>
+                        </div>
+                <div class="choice-title">${choice.title}</div>
                 </div>
                 <div class="choice-description">${choice.description}</div>
                 <div class="choice-cost">${choice.cost} points</div>
@@ -2188,21 +2188,21 @@ class GameController {
         const choiceDetails = {
             'ai_for_all': {
                 enablers: [
-                    { id: 'trusted_partner_ecosystem', icon: 'fas fa-handshake', label: 'Trusted Partner Ecosystem', category: 'technology_partnerships' },
-                    { id: 'enterprise_ai_service_layer', icon: 'fas fa-layer-group', label: 'Enterprise AI service layer', category: 'technology_partnerships' },
-                    { id: 'ai_collaboration_hub', icon: 'fas fa-project-diagram', label: 'AI Collaboration Hub', category: 'transformation_change' }
+                    { id: 'trusted_partner_ecosystem', icon: 'fas fa-handshake', label: 'Trusted Partner Ecosystem', category: 'technology' },
+                    { id: 'enterprise_ai_service_layer', icon: 'fas fa-layer-group', label: 'Enterprise AI service layer', category: 'technology' },
+                    { id: 'ai_collaboration_hub', icon: 'fas fa-project-diagram', label: 'AI Collaboration Hub', category: 'technology' }
                 ]
             },
             'continuous_capability_building': {
                 enablers: [
-                    { id: 'group_responsible_ai_awareness', icon: 'fas fa-shield-alt', label: 'Group Responsible AI awareness', category: 'policies_governance' },
-                    { id: 'early_career_pipeline_expert_retention', icon: 'fas fa-graduation-cap', label: 'Early‑career pipeline & expert retention', category: 'transformation_change' }
+                    { id: 'group_responsible_ai_awareness', icon: 'fas fa-shield-alt', label: 'Group Responsible AI awareness', category: 'gover' },
+                    { id: 'early_career_pipeline_expert_retention', icon: 'fas fa-graduation-cap', label: 'Early‑career pipeline & expert retention', category: 'people' }
                 ]
             },
             'full_speed_on_people': {
                 enablers: [
-                    { id: 'value_driven_governance', icon: 'fas fa-chart-line', label: 'Value-Driven Governance', category: 'transformation_change' },
-                    { id: 'data_ai_academy', icon: 'fas fa-university', label: 'Data & AI Academy', category: 'transformation_change' }
+                    { id: 'value_driven_governance', icon: 'fas fa-chart-line', label: 'Value-Driven Governance', category: 'gover' },
+                    { id: 'data_ai_academy', icon: 'fas fa-university', label: 'Data & AI Academy', category: 'people' }
                 ]
             }
         };
@@ -2634,7 +2634,7 @@ class GameController {
         
         // Définir tous les ENABLERS possibles avec leurs icônes
         const allEnablersByCategory = {
-            "technology_partnerships": [
+            "technology": [
                 { id: "genai_platform_partnership", title: "GenAI Platform Partnership", description: "Partenariat avec une plateforme GenAI", icon: "fas fa-handshake" },
                 { id: "technical_foundation_setup", title: "Technical Foundation Setup", description: "Mise en place des fondations techniques", icon: "fas fa-cogs" },
                 { id: "candidate_matching", title: "Candidate Matching", description: "Correspondance candidats-posts", icon: "fas fa-user-check" },
@@ -2646,7 +2646,7 @@ class GameController {
                 { id: "cloud_migration", title: "Cloud Migration", description: "Migration vers le cloud", icon: "fas fa-cloud-upload-alt" },
                 { id: "data_strategy", title: "Data Strategy", description: "Stratégie de données", icon: "fas fa-database" }
             ],
-            "policies_governance": [
+            "gover": [
                 { id: "strategic_vision_mapping", title: "Strategic Vision Mapping", description: "Cartographie de la vision stratégique", icon: "fas fa-space-shuttle" },
                 { id: "hr_function_diagnostic", title: "HR Function Diagnostic", description: "Diagnostic des fonctions RH", icon: "fas fa-search" },
                 { id: "sentiment_detection", title: "Sentiment Detection", description: "Détection de sentiment", icon: "fas fa-heart" },

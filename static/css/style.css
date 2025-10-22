@@ -1225,15 +1225,15 @@ body.modal-open {
     color: white;
 }
 
-.enabler-icon.technology_partnerships {
+.enabler-icon.technology {
     background: #3b82f6;
 }
 
-.enabler-icon.transformation_change {
+.enabler-icon.people {
     background: #10b981;
 }
 
-.enabler-icon.policies_governance {
+.enabler-icon.gover {
     background: #f59e0b;
 }
 
@@ -1424,16 +1424,16 @@ body.modal-open {
     color: white;
 }
 
-.enabler-icon.technology_partnerships {
+.enabler-icon.technology {
     background: #6f42c1;
 }
 
-.enabler-icon.transformation_change {
+.enabler-icon.people {
     background: #ffc107;
     color: #333;
 }
 
-.enabler-icon.policies_governance {
+.enabler-icon.gover {
     background: #007bff;
 }
 

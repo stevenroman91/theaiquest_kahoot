@@ -443,27 +443,21 @@
           "description": "Turn AI into a company-wide service by communicating ethical standards and sharing tools across teams.",
           "icon": "fas fa-share-alt",
           "cost": 10,
-          "enablers_1_star": ["trusted_partner_ecosystem"],
-          "enablers_2_stars": ["trusted_partner_ecosystem", "enterprise_ai_service_layer"],
-          "enablers_3_stars": ["trusted_partner_ecosystem", "enterprise_ai_service_layer", "ai_collaboration_hub"]
+          "enablers": ["trusted_partner_ecosystem", "enterprise_ai_service_layer", "ai_collaboration_hub"]
         },
         "continuous_capability_building": {
           "title": "Continuous capability building: Define a long-term roadmap for AI governance, develop preferred supplier partnerships, and expand the AI Academy to strengthen internal skills.",
           "description": "Define a long-term roadmap for AI governance, develop preferred supplier partnerships, and expand the AI Academy to strengthen internal skills.",
           "icon": "fas fa-graduation-cap",
           "cost": 12,
-          "enablers_1_star": ["group_responsible_ai_awareness"],
-          "enablers_2_stars": ["group_responsible_ai_awareness", "early_career_pipeline_expert_retention"],
-          "enablers_3_stars": ["group_responsible_ai_awareness", "early_career_pipeline_expert_retention"]
+          "enablers": ["group_responsible_ai_awareness", "early_career_pipeline_expert_retention"]
         },
         "full_speed_on_people": {
           "title": "Full speed on people: Create a dedicated AI Hub, formalize partnerships, invest in recruiting top AI talents, and grow internal expertise through the AI Academy.",
           "description": "Create a dedicated AI Hub, formalize partnerships, invest in recruiting top AI talents, and grow internal expertise through the AI Academy.",
           "icon": "fas fa-users",
           "cost": 15,
-          "enablers_1_star": ["value_driven_governance"],
-          "enablers_2_stars": ["value_driven_governance", "data_ai_academy"],
-          "enablers_3_stars": ["value_driven_governance", "data_ai_academy"]
+          "enablers": ["value_driven_governance", "data_ai_academy"]
         }
       }
     }

@@ -869,12 +869,8 @@ def api_executive_dashboard():
         for choice_id, choice_data in phase_choices.items():
             # Récupérer les enablers de ce choix
             if phase_id == 'phase5':
-                # Pour Step 5, récupérer tous les enablers possibles (1-star, 2-star, 3-star)
-                choice_enablers = []
-                choice_enablers.extend(choice_data.get('enablers_1_star', []))
-                choice_enablers.extend(choice_data.get('enablers_2_stars', []))
-                choice_enablers.extend(choice_data.get('enablers_3_stars', []))
-                choice_enablers = list(set(choice_enablers))  # Supprimer les doublons
+                # Pour Step 5, utiliser le nouveau système avec le champ 'enablers'
+                choice_enablers = choice_data.get('enablers', [])
             else:
                 choice_enablers = template.get_choice_enablers(phase_id, choice_id)
             
