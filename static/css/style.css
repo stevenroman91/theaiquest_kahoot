@@ -3532,7 +3532,7 @@ body {
 
 .phase-headers {
     display: grid;
-    grid-template-columns: 200px repeat(5, 1fr);
+    grid-template-columns: 200px repeat(4, 1fr);
     gap: 15px;
     margin-bottom: 20px;
     border-bottom: 2px solid rgba(255, 255, 255, 0.3);
@@ -3586,7 +3586,7 @@ body {
 
 .pedagogical-category-row {
     display: grid;
-    grid-template-columns: 200px repeat(5, 1fr);
+    grid-template-columns: 200px repeat(4, 1fr);
     gap: 15px;
     align-items: center;
     padding: 15px 0;
@@ -3637,16 +3637,24 @@ body {
 .pedagogical-phase-column {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
     justify-content: center;
-    align-items: center;
-    min-height: 80px; /* Hauteur minimale = taille d'une case avec 1 enabler */
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
+    align-items: flex-start;
+    min-height: 150px; /* Hauteur minimale = taille d'une case avec 1 enabler + texte */
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     position: relative;
     box-sizing: border-box;
+}
+
+.pedagogical-phase-column.hidden {
+    display: none;
+}
+
+.pedagogical-phase-column.visible {
+    display: flex;
 }
 
 .pedagogical-phase-column::before {
@@ -3691,9 +3699,9 @@ body {
 }
 
 .pedagogical-enabler-icon {
-    width: 85px;
-    height: 70px;
-    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -3703,26 +3711,36 @@ body {
     transition: all 0.3s ease;
     position: relative;
     border: 2px solid;
-    padding: 4px;
+    padding: 0;
     text-align: center;
     box-sizing: border-box;
+    margin: 4px;
 }
 
-.enabler-icon-container {
-    margin-bottom: 2px;
+.pedagogical-enabler-icon i {
+    font-size: 1rem;
+    color: white;
+    margin-bottom: 0;
 }
 
 .enabler-title {
-    font-size: 0.65rem;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.6rem;
     font-weight: 600;
     line-height: 1.1;
     text-align: center;
+    color: white;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    hyphens: auto;
-    white-space: normal;
+    hyphens: none;
     overflow: visible;
     display: block;
+    margin-top: 8px;
+    white-space: normal;
+    max-width: 120px;
 }
 
 .pedagogical-enabler-icon.unlocked {
@@ -3803,7 +3821,7 @@ body {
 @media (max-width: 1200px) {
     .phase-headers,
     .pedagogical-category-row {
-        grid-template-columns: 150px repeat(5, 1fr);
+        grid-template-columns: 150px repeat(4, 1fr);
     }
     
     .pedagogical-category-title {
@@ -3823,7 +3841,7 @@ body {
     
     .phase-headers,
     .pedagogical-category-row {
-        grid-template-columns: 120px repeat(5, 1fr);
+        grid-template-columns: 120px repeat(4, 1fr);
         gap: 10px;
     }
     
@@ -3839,17 +3857,22 @@ body {
     }
     
     .pedagogical-enabler-icon {
-        width: 65px;
-        height: 55px;
+        width: 50px;
+        height: 50px;
         font-size: 0.9rem;
     }
     
+    .pedagogical-enabler-icon i {
+        font-size: 1rem;
+    }
+    
     .enabler-title {
-        font-size: 0.6rem;
+        font-size: 0.5rem;
+        max-width: 100px;
     }
     
     .pedagogical-phase-column {
-        min-height: 60px; /* Hauteur minimale pour mobile */
+        min-height: 130px; /* Hauteur minimale pour mobile - augmentée pour contenir le texte */
         padding: 8px;
     }
 }

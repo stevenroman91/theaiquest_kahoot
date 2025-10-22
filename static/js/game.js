@@ -2657,7 +2657,7 @@ class GameController {
                 { id: "ai_ethics_charter", title: "AI Ethics Charter", description: "Charte éthique IA", icon: "fas fa-scroll" },
                 { id: "leadership_communication", title: "Leadership Communication", description: "Communication du leadership", icon: "fas fa-bullhorn" }
             ],
-            "transformation_change": [
+            "people": [
                 { id: "rapid_deployment", title: "Rapid Deployment", description: "Déploiement rapide", icon: "fas fa-rocket" },
                 { id: "bottom_up_innovation", title: "Bottom-up Innovation", description: "Innovation bottom-up", icon: "fas fa-lightbulb" },
                 { id: "personalized_training", title: "Personalized Training", description: "Formation personnalisée", icon: "fas fa-graduation-cap" },
@@ -2697,8 +2697,8 @@ class GameController {
             categoryTitleDiv.textContent = categoryTitle;
             categoryRow.appendChild(categoryTitleDiv);
             
-            // Colonnes pour chaque phase (seulement celles complétées, sauf Step 2 qui n'a pas d'enablers)
-            const phases = ['phase1', 'phase3', 'phase4', 'phase5']; // Exclure phase2 car elle n'a pas d'enablers
+            // Colonnes pour chaque phase (toutes les phases avec enablers, masquées si non complétées)
+            const phases = ['phase1', 'phase3', 'phase4', 'phase5'];
             phases.forEach((phaseKey, index) => {
                 const phaseNumber = phaseKey === 'phase1' ? 1 : (phaseKey === 'phase3' ? 3 : (phaseKey === 'phase4' ? 4 : 5));
                 const phaseColumn = document.createElement('div');
