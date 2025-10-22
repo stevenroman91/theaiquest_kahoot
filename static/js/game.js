@@ -1697,6 +1697,9 @@ class GameController {
     renderMOT3Choices(choices) {
         const container = document.getElementById('phase3-choices');
         container.innerHTML = '';
+        
+        // Remove grid class - keep original category structure
+        container.className = '';
 
         // Define category metadata
         const categoryMetadata = {
@@ -1735,7 +1738,7 @@ class GameController {
             'ai_governance_board': 'fas fa-gavel'
         };
 
-        // Create matrix structure
+        // Create matrix structure - Original category columns
         Object.entries(choices).forEach(([category, categoryChoices]) => {
             const categoryDiv = document.createElement('div');
             categoryDiv.className = 'matrix-category';
@@ -1909,6 +1912,9 @@ class GameController {
     renderMOT4Choices(choices) {
         const container = document.getElementById('phase4-choices');
         container.innerHTML = '';
+        
+        // Add grid class for uniform sizing
+        container.className = 'matrix-choices-grid';
 
         // Define category colors (consistent with dashboard)
         const categoryColors = {

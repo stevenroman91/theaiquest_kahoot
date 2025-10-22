@@ -570,10 +570,11 @@ body.modal-open {
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    min-height: 120px;
+    min-height: 200px; /* Hauteur minimale au lieu de fixe */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    overflow: visible; /* Permet au contenu de s'afficher */
 }
 
 .matrix-choice:hover {
@@ -640,12 +641,14 @@ body.modal-open {
 }
 
 .choice-title {
-    font-size: 1rem;
+    font-size: 0.85rem; /* Réduit pour tenir sur 2 lignes max */
     font-weight: 600;
     color: #1f2937;
     margin-bottom: 8px;
-    line-height: 1.3;
+    line-height: 1.2; /* Réduit pour plus de compacité */
     flex: 1; /* Take remaining space when in choice-header */
+    word-wrap: break-word; /* Casse les mots longs */
+    hyphens: auto; /* Césure automatique */
 }
 
 .choice-description {
@@ -653,6 +656,9 @@ body.modal-open {
     color: #6b7280;
     line-height: 1.1 !important;
     flex-grow: 1;
+    font-style: normal !important; /* Changé d'italique à normal */
+    word-wrap: break-word; /* Casse les mots longs */
+    hyphens: auto; /* Césure automatique */
 }
 
 .choice-icon {
@@ -761,15 +767,16 @@ body.modal-open {
     
     .matrix-choice {
         padding: 15px;
-        min-height: 100px;
+        min-height: 180px; /* Hauteur minimale pour mobile */
     }
     
     .choice-title {
-        font-size: 0.9rem;
+        font-size: 0.8rem; /* Réduit pour mobile aussi */
     }
     
     .choice-description {
-        font-size: 0.8rem;
+        font-size: 0.75rem; /* Légèrement plus grand sur mobile */
+        font-style: normal !important; /* Normal au lieu d'italique */
     }
     
     .progress-sidebar {
@@ -884,13 +891,106 @@ body.modal-open {
     color: white;
 }
 
+/* Grid layout pour Step 4 seulement - Matrix choices uniformes */
+.matrix-choices-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 2rem;
+    align-items: stretch; /* Toutes les cartes ont la même hauteur */
+}
+
+/* Step 3 - Structure par catégories avec 3 colonnes */
+.matrix-category {
+    margin-bottom: 2rem;
+    display: inline-block;
+    width: 32%; /* 3 colonnes égales */
+    vertical-align: top;
+    margin-right: 1%;
+}
+
+.matrix-category:last-child {
+    margin-right: 0;
+}
+
+.matrix-category .matrix-choice {
+    margin-bottom: 15px;
+    margin-top: 10px; /* Espace entre header et première carte */
+    height: 220px; /* Hauteur fixe pour uniformité */
+    overflow: visible; /* Permet au contenu de s'afficher */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Supprimer les coupures de texte pour Step 3 */
+.matrix-category .choice-title {
+    font-size: 0.8rem;
+    line-height: 1.2;
+    overflow: visible !important;
+    word-wrap: break-word;
+    hyphens: auto;
+    max-height: none !important;
+    -webkit-line-clamp: none !important;
+    display: block !important;
+}
+
+.matrix-category .choice-description {
+    font-size: 0.65rem;
+    line-height: 1.1;
+    font-style: normal !important;
+    overflow: visible !important;
+    word-wrap: break-word;
+    hyphens: auto;
+    max-height: none !important;
+    -webkit-line-clamp: none !important;
+    display: block !important;
+    flex-grow: 1;
+}
+
+.matrix-choices-grid .matrix-choice {
+    min-height: 200px; /* Hauteur minimale */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: visible; /* Permet au contenu de s'afficher */
+}
+
+.matrix-choices-grid .choice-title {
+    font-size: 0.8rem; /* Taille spécifique pour la grille */
+    line-height: 1.2;
+    overflow: visible; /* Pas de coupure */
+    word-wrap: break-word; /* Casse les mots longs */
+    hyphens: auto; /* Césure automatique */
+}
+
+.matrix-choices-grid .choice-description {
+    font-size: 0.65rem;
+    line-height: 1.1;
+    font-style: normal !important;
+    overflow: visible; /* Pas de coupure */
+    word-wrap: break-word; /* Casse les mots longs */
+    hyphens: auto; /* Césure automatique */
+    flex-grow: 1;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    .matrix-choices-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .matrix-category {
+        display: block;
+        width: 100%; /* Une colonne sur mobile */
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+}
+
 /* Matrix choice with cost styling */
 .matrix-choice .choice-cost {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: white;
     padding: 4px 8px;
     border-radius: 6px;
     font-size: 0.8rem;
