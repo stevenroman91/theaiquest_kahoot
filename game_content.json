@@ -107,20 +107,20 @@
       "button_text": "Join Teams meeting"
     },
     "step1_followup_page": {
-      "title": "Strategic Assessment Complete",
+      "title": "STEP 2: Building Your AI Use Case Portfolio",
       "subtitle": "Step 1 Follow-up",
       "description": "Following the first strategic discussions, Sophie has chosen a value-driven approach with Elena. Over the past weeks, the AI team has assessed potential opportunities across production, marketing, operations, and player engagement. Now Marcus expects Sophie to present the most promising use cases — the ones that deliver measurable impact quickly, with reasonable effort and manageable risk.",
       "objective": "Your objective is to prioritize where AI can create visible value while keeping complexity under control.",
       "button_text": "Continue to Step 2"
     },
     "pilot_step_page": {
-      "title": "Pilot Step",
+      "title": "STEP 3: Launching Your Priority AI Pilots",
       "subtitle": "Launching Your Priority AI Pilots",
       "description": "After several months of scaling, AI and GenAI are now part of PlayNext's daily rhythm.",
       "button_text": "Continue"
     },
     "enterprise_scaling_page": {
-      "title": "Enterprise Scaling",
+      "title": "STEP 5: Deploying AI Across the Organization",
       "subtitle": "Scaling Your AI and GenAI Solutions",
       "description": "After several months of scaling, AI and GenAI are now part of PlayNext's daily rhythm.",
       "button_text": "Continue"
