@@ -2719,13 +2719,17 @@ class GameController {
                     // Utiliser l'icône fournie par l'API (cohérence garantie)
                     const iconClass = enabler.icon || 'fas fa-question';
                     
-                    enablerIcon.innerHTML = `<i class="${iconClass}"></i>`;
+                    enablerIcon.innerHTML = `
+                        <div class="enabler-icon-container">
+                            <i class="${iconClass}"></i>
+                        </div>
+                        <div class="enabler-title">${enabler.title}</div>
+                    `;
                     
-                    // Ajouter le tooltip
+                    // Ajouter le tooltip avec seulement la description
                     const tooltip = document.createElement('div');
                     tooltip.className = 'pedagogical-enabler-tooltip';
                     tooltip.innerHTML = `
-                        <div class="pedagogical-tooltip-title">${enabler.title}</div>
                         <div class="pedagogical-tooltip-description">${enabler.description}</div>
                     `;
                     enablerIcon.appendChild(tooltip);
