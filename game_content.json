@@ -128,7 +128,7 @@
   },
   "game_steps": {
     "step1": {
-      "title": "STEP 1: Designing Your AI-Enhanced Business Strategy",
+      "title": "STEP 1: Get Started With The Right AI Strategy",
       "description": "You've heard three different approaches to launch your AI transformation. Which one will you choose?",
       "video": "phase_1.mp4",
       "choices": {
@@ -207,7 +207,7 @@
   },
   "phases": {
     "phase1": {
-      "title": "Step 1 : Get started with the right AI Strategy",
+      "title": "STEP 1: Get Started With The Right AI Strategy",
       "description": "Define AI strategy and assess opportunities",
       "video_file": "phase_1.mp4",
       "choices": {
