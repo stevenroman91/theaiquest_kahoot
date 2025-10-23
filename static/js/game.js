@@ -3438,7 +3438,9 @@ class GameController {
         // Stop all videos first
         this.stopAllVideos();
         
-        this.currentState = 'login';
+        // Reset game state to initial state
+        this.currentState = 'intro';
+        this.currentPhaseNumber = 0;
         this.selectedChoices = {
             mot1: null,
             mot2: [],
@@ -3448,15 +3450,21 @@ class GameController {
         };
         this.budget = 0;
         
-        // Reset UI
-        document.getElementById('login-section').style.display = 'block';
+        // Reset UI - go back to introduction video
+        document.getElementById('login-section').style.display = 'none';
         document.getElementById('results-section').style.display = 'none';
         document.getElementById('progress-card').style.display = 'none';
         
-        // Reset form
-        document.getElementById('username').value = '';
+        // Show introduction section
+        this.showSection('video-intro-section');
         
-        this.updateProgress(0, 'Ready to start again');
+        // Reset progress
+        this.updateProgress(0, 'Starting new game...');
+        
+        // Start the introduction video
+        initializeIntroVideo();
+        
+        console.log('Game reset - starting from Introduction Video');
     }
 
     showLoading(show) {
