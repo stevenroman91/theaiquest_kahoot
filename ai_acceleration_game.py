@@ -148,15 +148,15 @@ class AIAccelerationGame:
         # Phase 5 choices from template
         phase5_choices = {}
         for choice_id, choice_data in template.get_phase_choices("phase5").items():
-            # Pour Step 5, utiliser le nouveau système avec le champ 'enablers'
-            enablers = choice_data.get("enablers", [])
-            
+            enablers = template.get_choice_enablers("phase5", choice_id)
             phase5_choices[choice_id] = Choice(
                 id=choice_id,
                 title=template.get_choice_title("phase5", choice_id),
                 description=template.get_choice_description("phase5", choice_id),
                 category=self._get_choice_category(choice_id),
-                unlocks_enablers=enablers  # Utiliser unlocks_enablers pour Step 5
+                enablers_1_star=enablers,
+                enablers_2_stars=enablers,
+                enablers_3_stars=enablers
             )
 
         return {

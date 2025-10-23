@@ -4,97 +4,81 @@
     "mot2_choices": [
       "fraud_integrity_detection",
       "smart_game_design_assistant",
-      "talent_analytics_dashboard"
+      "player_journey_optimizer"
     ],
     "mot3_choices": {
       "technology": "ai_data_foundations",
-      "people": "hands_on_ai_bootcamp",
+      "people": "ai_co_creation_labs",
       "gover": "ai_governance_board"
     },
     "mot4_choices": [
-      "privacy_by_design_data",
-      "ai_storytelling_communication",
-      "business_ai_champions",
-      "talent_mobility_program",
-      "adoption_playbook"
+      "business_ai_champions"
     ],
     "mot5_choice": "ai_for_all",
-    "total_score": 8,
-    "stars": 1,
+    "total_score": 10,
+    "stars": 2,
     "mot_scores": {
       "mot1": 2,
-      "mot2": 2,
-      "mot3": 2,
+      "mot2": 3,
+      "mot3": 3,
       "mot4": 1,
       "mot5": 1
     },
     "unlocked_enablers": [
-      "enterprise_ai_service_layer",
       "Smart Game Design Assistant",
-      "ai_governance_board",
-      "ai_tech_strategic_partnership",
-      "Talent Analytics Dashboard",
+      "enterprise_ai_service_layer",
       "trusted_partner_ecosystem",
+      "ai_governance_board",
       "business_ai_champions",
-      "adoption_playbook",
-      "privacy_by_design_data",
-      "hands_on_ai_bootcamp",
-      "ai_storytelling_communication",
       "ai_collaboration_hub",
-      "talent_mobility_program",
-      "ai_data_foundations",
+      "Player Journey Optimizer",
+      "ai_co_creation_labs",
+      "Fraud & Integrity Detection",
       "bulk_data_transfert",
-      "Fraud & Integrity Detection"
+      "ai_data_foundations",
+      "ai_tech_strategic_partnership"
     ],
     "unlocked_enablers_by_category": {
       "technology": [
-        "enterprise_ai_service_layer",
         "Smart Game Design Assistant",
-        "Talent Analytics Dashboard",
-        "ai_tech_strategic_partnership",
+        "enterprise_ai_service_layer",
         "trusted_partner_ecosystem",
+        "Player Journey Optimizer",
         "ai_collaboration_hub",
-        "ai_data_foundations",
+        "Fraud & Integrity Detection",
         "bulk_data_transfert",
-        "Fraud & Integrity Detection"
+        "ai_data_foundations",
+        "ai_tech_strategic_partnership"
       ],
       "gover": [
-        "ai_governance_board",
-        "privacy_by_design_data"
+        "ai_governance_board"
       ],
       "people": [
         "business_ai_champions",
-        "adoption_playbook",
-        "hands_on_ai_bootcamp",
-        "ai_storytelling_communication",
-        "talent_mobility_program"
+        "ai_co_creation_labs"
       ]
     },
     "enablers_by_phase": {
       "phase1": [
-        "bulk_data_transfert",
-        "ai_tech_strategic_partnership"
+        "ai_tech_strategic_partnership",
+        "bulk_data_transfert"
       ],
       "phase2": [
-        "Smart Game Design Assistant",
+        "Player Journey Optimizer",
         "Fraud & Integrity Detection",
-        "Talent Analytics Dashboard"
+        "Smart Game Design Assistant"
       ],
       "phase3": [
         "ai_data_foundations",
         "ai_governance_board",
-        "hands_on_ai_bootcamp"
+        "ai_co_creation_labs"
       ],
       "phase4": [
-        "business_ai_champions",
-        "adoption_playbook",
-        "privacy_by_design_data",
-        "ai_storytelling_communication",
-        "talent_mobility_program"
+        "business_ai_champions"
       ],
       "phase5": [
-        "trusted_partner_ecosystem",
         "enterprise_ai_service_layer",
+        "trusted_partner_ecosystem",
         "ai_collaboration_hub"
       ]
     },

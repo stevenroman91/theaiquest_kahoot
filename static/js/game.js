@@ -1202,8 +1202,14 @@ class GameController {
         const selectedColumn = document.querySelector(`[data-choice-id="${choiceId}"]`);
         if (selectedColumn) {
             selectedColumn.classList.add('selected');
-            // Pré-sélectionner automatiquement cette option
-            this.selectPhase1Choice(choiceId);
+            
+            // Detect which phase is currently active and call the appropriate function
+            if (document.getElementById('phase1-section').style.display !== 'none') {
+                this.selectPhase1Choice(choiceId);
+            } else if (document.getElementById('phase5-section').style.display !== 'none') {
+                this.selectMOT5Choice(choiceId);
+            }
+            // Add other phases as needed
         }
     }
 
@@ -2208,69 +2214,52 @@ class GameController {
         };
 
         choices.forEach((choice, index) => {
-            const accordionItem = document.createElement('div');
-            accordionItem.className = 'accordion-choice';
-            accordionItem.dataset.choiceId = choice.id;
+            const columnDiv = document.createElement('div');
+            columnDiv.className = 'col-md-4 col-sm-12';
             
             const details = choiceDetails[choice.id] || { enablers: [], description: choice.description };
             
-            accordionItem.innerHTML = `
-                <div class="accordion-header" onclick="gameController.togglePhase5Accordion('${choice.id}')">
-                    <h4 class="accordion-title">${choice.title}</h4>
-                    <i class="fas fa-chevron-down accordion-arrow"></i>
-                        </div>
-                <div class="accordion-content">
-                    <div class="accordion-details">
-                        <div class="choice-enablers">
-                            ${details.enablers.map(enabler => `
-                                <div class="choice-enabler">
-                                    <div class="enabler-icon ${enabler.category}">
-                                        <i class="${enabler.icon}"></i>
-                                    </div>
-                                    <div class="enabler-label">${enabler.label}</div>
+            // Générer le contenu pour les enablers
+            let contentHtml = '';
+            if (details.enablers && details.enablers.length > 0) {
+                contentHtml = `
+                    <div class="choice-enablers">
+                        <h5><i class="fas fa-cogs me-2"></i>Enablers Unlocked:</h5>
+                        ${details.enablers.map(enabler => `
+                            <div class="choice-enabler">
+                                <div class="enabler-icon ${enabler.category}">
+                                    <i class="${enabler.icon}"></i>
                                 </div>
-                            `).join('')}
-                        </div>
+                                <div class="enabler-label">${enabler.label}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            columnDiv.innerHTML = `
+                <div class="choice-column" data-choice-id="${choice.id}" onclick="gameController.selectChoice('${choice.id}')">
+                    <div class="choice-header">
+                        <h4 class="choice-title">${choice.title}</h4>
+                    </div>
+                    <div class="choice-content">
                         <div class="choice-description">
                             ${choice.description}
                         </div>
+                        ${contentHtml}
                     </div>
                 </div>
             `;
-            container.appendChild(accordionItem);
+            
+            container.appendChild(columnDiv);
         });
-
-        // Initialize accordion functionality for Phase 5
-        this.initializePhase5Accordion();
-    }
-
-    initializePhase5Accordion() {
-        // Phase 5 accordion uses the same system as Phase 1
-        // No additional initialization needed - togglePhase5Accordion handles everything
-    }
-
-    togglePhase5Accordion(choiceId) {
-        const accordionItem = document.querySelector(`[data-choice-id="${choiceId}"]`);
-        const isExpanded = accordionItem.classList.contains('expanded');
-        
-        // Close all accordions
-        document.querySelectorAll('.accordion-choice').forEach(item => {
-            item.classList.remove('expanded');
-        });
-        
-        // Open clicked accordion if it wasn't expanded
-        if (!isExpanded) {
-            accordionItem.classList.add('expanded');
-            // Pré-sélectionner automatiquement cette option
-            this.selectMOT5Choice(choiceId);
-        }
     }
 
     async selectMOT5Choice(choiceId) {
         console.log('Phase 5 choice selected:', choiceId);
         
         // Update visual selection
-        document.querySelectorAll('.accordion-choice').forEach(item => {
+        document.querySelectorAll('.choice-column').forEach(item => {
             item.classList.remove('selected');
         });
         

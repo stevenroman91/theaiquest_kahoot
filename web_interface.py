@@ -868,11 +868,7 @@ def api_executive_dashboard():
         
         for choice_id, choice_data in phase_choices.items():
             # Récupérer les enablers de ce choix
-            if phase_id == 'phase5':
-                # Pour Step 5, utiliser le nouveau système avec le champ 'enablers'
-                choice_enablers = choice_data.get('enablers', [])
-            else:
-                choice_enablers = template.get_choice_enablers(phase_id, choice_id)
+            choice_enablers = template.get_choice_enablers(phase_id, choice_id)
             
             print(f"DEBUG web_interface: phase_id={phase_id}, choice_id={choice_id}, choice_enablers={choice_enablers}")
             if choice_enablers:
