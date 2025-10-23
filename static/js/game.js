@@ -2914,6 +2914,7 @@ class GameController {
                 // Special case: After Phase 5, show final results with Recap video
                 if (phaseNumber === 5) {
                     console.log('Phase 5 completed - showing final results with Recap video');
+                    console.log('DEBUG: data.score received:', data.score);
                     this.showFinalResults(data.score);
                 } else {
                 this.showGlobalScoreRecap(phaseNumber, data.score);
@@ -2926,6 +2927,13 @@ class GameController {
             console.error('Error getting current scores:', error);
             this.showAlert('Erreur lors de la récupération des scores', 'danger');
         }
+    }
+
+    // New scoring system: 14-15 = 3/3, 11-13 = 2/3, 0-10 = 1/3
+    calculateNewScore(totalScore) {
+        if (totalScore >= 14) return 3;
+        if (totalScore >= 11) return 2;
+        return 1;
     }
 
     showGlobalScoreRecap(phaseNumber, scoreData) {
@@ -2957,7 +2965,7 @@ class GameController {
                                 <div class="global-score-display mb-3">
                                     <div class="global-score-badge" style="background: linear-gradient(135deg, #ffffff, #f8fafc); color: #1e40af; padding: 1rem; border-radius: 10px; box-shadow: 0 0 15px rgba(30, 64, 175, 0.3); border: 2px solid #60a5fa; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
                                         <h1 class="display-1 mb-1" id="global-score-total" style="font-weight: 800; font-size: 2.5rem; line-height: 1; overflow: visible;">0</h1>
-                                        <p class="lead mb-0" style="font-size: 1rem; text-transform: uppercase;">Score Global</p>
+                                        <p class="lead mb-0" style="font-size: 1rem; text-transform: uppercase;">Score Final</p>
                                     </div>
                                 </div>
                                 
@@ -2985,8 +2993,11 @@ class GameController {
                                     </div>
                                 </div>
                                 
-                                <!-- Continue Button -->
-                                <div class="continue-section">
+                                <!-- Action Buttons -->
+                                <div class="action-buttons d-flex gap-3 justify-content-center">
+                                    <button id="pedagogical-summary-btn" class="btn btn-outline-light" style="border: 2px solid #ffffff; border-radius: 10px; color: #ffffff; background: rgba(255, 255, 255, 0.1); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; padding: 12px 25px; text-transform: uppercase; transition: all 0.3s ease;">
+                                        <i class="fas fa-graduation-cap me-2"></i>Pedagogical Summary
+                                    </button>
                                     <button id="global-continue-btn" class="NeonButton" style="border: 3px solid #08efff; border-radius: 10px; color: #08efff; background: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; padding: 12px 30px; text-transform: uppercase; filter: drop-shadow(0 0 5px #08EFFF); transition: all 0.3s ease;">
                                         Continue
                                     </button>
@@ -3006,6 +3017,113 @@ class GameController {
             modal.hide();
             this.proceedToActualNextMOT(this.currentPhaseNumber);
         });
+
+        // Add event listener for pedagogical summary button
+        document.getElementById('pedagogical-summary-btn').addEventListener('click', () => {
+            this.showPedagogicalSummary();
+        });
+    }
+
+    showPedagogicalSummary() {
+        console.log('DEBUG: showPedagogicalSummary() called');
+        const modalHTML = `
+            <div class="modal fade" id="pedagogicalSummaryModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%); border: none;">
+                        <div class="modal-header" style="border-bottom: 2px solid rgba(255, 255, 255, 0.2);">
+                            <h5 class="modal-title text-white" style="font-weight: 600;">
+                                <i class="fas fa-graduation-cap me-2"></i>Pedagogical Summary
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                            <div class="text-white" style="line-height: 1.6;">
+                                <div class="mb-4">
+                                    <h6 class="text-warning mb-3" style="font-weight: 600; text-transform: uppercase;">Objective achieved:</h6>
+                                    <p class="mb-3">Leaders and managers now understand how to embed AI and GenAI within their organization — not as a technology project, but as a true business transformation.</p>
+                                    <p class="mb-3">Through The AI Quest, they discovered how to combine innovation, scalability, and responsibility to create lasting impact across the gaming and entertainment ecosystem.</p>
+                                    <p class="mb-4"><strong>Estimated duration:</strong> ≈ 45 minutes (around 9 minutes per phase)</p>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h6 class="text-warning mb-3" style="font-weight: 600; text-transform: uppercase;">Key learnings:</h6>
+                                    <div class="mb-3">
+                                        <strong>1️⃣ Experience-focused strategy</strong><br>
+                                        AI transformation starts with people and purpose. Participants learned how to design an AI strategy that aligns innovation with culture and long-term vision.
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>2️⃣ Portfolio thinking and prioritization</strong><br>
+                                        Not every use case is equal. Choosing where AI creates the most value — balancing impact, feasibility, and cultural fit — is key to generating momentum and credibility.
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>3️⃣ Enablers for acceleration</strong><br>
+                                        Scaling success requires more than pilots. Participants identified the practical enablers — in Transformation & Change, Technology & Partnerships, and Policies & Governance — that turn experiments into sustainable operations.
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>4️⃣ From pilots to scale</strong><br>
+                                        True scaling means changing roles, systems, and ways of working. Leaders explored how to embed AI in production, connect it to real processes, and maintain trust and alignment as adoption grows.
+                                    </div>
+                                    <div class="mb-4">
+                                        <strong>5️⃣ Enterprise-wide expansion</strong><br>
+                                        The final phase emphasized sustainability. AI becomes part of the company's DNA when it's supported by continuous learning, clear governance, and empowered people — across all studios, markets, and teams.
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h6 class="text-warning mb-3" style="font-weight: 600; text-transform: uppercase;">Learning outcomes</h6>
+                                    <p class="mb-3">After completing The AI Quest, participants are able to:</p>
+                                    <ul class="mb-3">
+                                        <li>Identify the stages of a successful AI transformation — from vision to scale.</li>
+                                        <li>Recognize the balance between technology, people, and governance.</li>
+                                        <li>Understand how to prioritize use cases and structure enablers for sustainable growth.</li>
+                                        <li>Apply responsible AI principles to ensure trust, transparency, and ethical use.</li>
+                                        <li>Lead with confidence, creativity, and purpose in an AI-augmented organization.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h6 class="text-warning mb-3" style="font-weight: 600; text-transform: uppercase;">Practical application and call to action</h6>
+                                    <p class="mb-3">Managers leave the simulation with a clear roadmap:</p>
+                                    <p class="mb-3">They can now identify key stakeholders, define priorities, and launch their first AI enablers within their teams.</p>
+                                    <p class="mb-3">They understand that AI success is not about tools — it's about collaboration, curiosity, and continuous learning.</p>
+                                    <p class="mb-3"><strong>The next move is theirs: Integrate. Scale. Inspire.</strong></p>
+                                    <p class="mb-0">Because at PlayNext — as in every organization — the future of AI is already in play.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="border-top: 2px solid rgba(255, 255, 255, 0.2);">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                <i class="fas fa-check me-2"></i>Understood
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Remove existing modal if it exists
+        const existingModal = document.getElementById('pedagogicalSummaryModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Show the modal
+        console.log('DEBUG: About to show pedagogical summary modal');
+        const modalElement = document.getElementById('pedagogicalSummaryModal');
+        console.log('DEBUG: Modal element:', modalElement);
+        
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+            console.log('DEBUG: Modal shown successfully');
+        } else {
+            console.error('DEBUG: Bootstrap Modal not available');
+            // Fallback: show modal manually
+            modalElement.style.display = 'block';
+            modalElement.classList.add('show');
+        }
     }
 
     updateGlobalScoreRecapContent(phaseNumber, scoreData) {
@@ -3013,20 +3131,22 @@ class GameController {
         console.log('phaseNumber:', phaseNumber);
         console.log('scoreData:', scoreData);
         
-        // Update global score total
+        // Update global score total with new scoring system
         const totalElement = document.getElementById('global-score-total');
         console.log('global-score-total element:', totalElement);
         if (totalElement) {
-            totalElement.textContent = scoreData.total;
-            console.log('Updated global score total to:', scoreData.total);
+            const newScore = this.calculateNewScore(scoreData.total);
+            totalElement.textContent = `${newScore}/3`;
+            console.log('Updated global score total to:', `${newScore}/3 (from ${scoreData.total})`);
         } else {
             console.error('global-score-total element not found!');
         }
         
-        // Update progress bar
-        const progressPercentage = (scoreData.total / 15) * 100;
+        // Update progress bar with new scoring system
+        const newScore = this.calculateNewScore(scoreData.total);
+        const progressPercentage = (newScore / 3) * 100;
         document.getElementById('global-progress-bar').style.width = `${progressPercentage}%`;
-        document.getElementById('global-progress-text').textContent = `Progress: ${scoreData.total}/15`;
+        document.getElementById('global-progress-text').textContent = `Score: ${newScore}/3 (${scoreData.total} points)`;
         
         // Update score breakdown with original game style
         const breakdownContainer = document.getElementById('global-score-breakdown');
@@ -3195,25 +3315,34 @@ class GameController {
     }
 
     showFinalResults(scoreData) {
+        console.log('DEBUG: showFinalResults called with scoreData:', scoreData);
+        const newScore = this.calculateNewScore(scoreData.total);
+        console.log('DEBUG: calculateNewScore result:', newScore, 'for total:', scoreData.total);
+        
         // Format the score data for the results screen
         const results = {
             total: scoreData.total,
-            stars: this.calculateStars(scoreData.total),
+            stars: newScore,
             scores: scoreData.scores
         };
         
+        console.log('DEBUG: Final results object:', results);
         this.showResults(results);
     }
 
     calculateStars(totalScore) {
-        if (totalScore >= 15) return 3;
-        if (totalScore >= 10) return 2;
+        if (totalScore >= 14) return 3;
+        if (totalScore >= 11) return 2;
         return 1;
     }
 
     showFinalResults() {
         console.log('Showing final results...');
         if (this.finalResults) {
+            console.log('DEBUG: this.finalResults before update:', this.finalResults);
+            // Recalculate stars with new system
+            this.finalResults.stars = this.calculateNewScore(this.finalResults.total);
+            console.log('DEBUG: this.finalResults after update:', this.finalResults);
             this.showResults(this.finalResults);
             this.updateProgress(100, 'Game completed!');
         } else {
@@ -3223,6 +3352,10 @@ class GameController {
     }
 
     showResults(results) {
+        console.log('DEBUG: showResults called with results:', results);
+        console.log('DEBUG: results.stars value:', results.stars);
+        console.log('DEBUG: Star calculation:', '★'.repeat(results.stars) + '☆'.repeat(3 - results.stars));
+        
         const container = document.getElementById('results-content');
         container.innerHTML = `
             <div class="text-center" style="font-size: 0.8rem; padding: 10px;">
@@ -3270,6 +3403,13 @@ class GameController {
                     <h6 class="mb-1" style="font-size: 0.8rem !important; margin-bottom: 0.25rem !important;">Votre Performance</h6>
                     <p class="mb-0" style="font-size: 0.7rem !important;">${this.getPerformanceMessage(results.stars)}</p>
                 </div>
+                
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2 justify-content-center mt-2">
+                    <button id="pedagogical-summary-final-btn" class="btn btn-outline-primary btn-sm" style="font-size: 0.7rem !important; padding: 0.4rem 0.8rem;" onclick="window.gameController.showPedagogicalSummary()">
+                        <i class="fas fa-graduation-cap me-1"></i>Pedagogical Summary
+                    </button>
+                </div>
             </div>
         `;
         
@@ -3277,7 +3417,7 @@ class GameController {
         
         // Initialize Recap video after the content is loaded
         setTimeout(() => {
-            this.initializeRecapVideoResults();
+            initializeRecapVideoResults();
         }, 100);
     }
 

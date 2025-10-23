@@ -1,67 +1,74 @@
 [
   {
-    "mot1_choice": "james",
+    "mot1_choice": "elena",
     "mot2_choices": [
       "fraud_integrity_detection",
       "smart_game_design_assistant",
       "player_journey_optimizer"
     ],
     "mot3_choices": {
-      "technology": "ai_data_foundations",
+      "gover": "ai_governance_board",
       "people": "ai_co_creation_labs",
-      "gover": "ai_governance_board"
+      "technology": "ai_data_foundations"
     },
     "mot4_choices": [
-      "business_ai_champions"
+      "industrial_data_pipelines",
+      "business_ai_champions",
+      "adoption_playbook",
+      "local_ai_risk_management"
     ],
-    "mot5_choice": "ai_for_all",
-    "total_score": 10,
+    "mot5_choice": "continuous_capability_building",
+    "total_score": 14,
     "stars": 2,
     "mot_scores": {
-      "mot1": 2,
+      "mot1": 3,
       "mot2": 3,
       "mot3": 3,
-      "mot4": 1,
-      "mot5": 1
+      "mot4": 3,
+      "mot5": 2
     },
     "unlocked_enablers": [
+      "local_ai_risk_management",
+      "early_career_pipeline_expert_retention",
+      "adoption_playbook",
       "Smart Game Design Assistant",
-      "enterprise_ai_service_layer",
-      "trusted_partner_ecosystem",
+      "group_responsible_ai_awareness",
+      "industrial_data_pipelines",
       "ai_governance_board",
+      "ai_benchmark_in_gaming",
       "business_ai_champions",
-      "ai_collaboration_hub",
       "Player Journey Optimizer",
+      "ai_value_opportunities",
       "ai_co_creation_labs",
       "Fraud & Integrity Detection",
-      "bulk_data_transfert",
-      "ai_data_foundations",
-      "ai_tech_strategic_partnership"
+      "ai_data_foundations"
     ],
     "unlocked_enablers_by_category": {
       "technology": [
         "Smart Game Design Assistant",
-        "enterprise_ai_service_layer",
-        "trusted_partner_ecosystem",
+        "industrial_data_pipelines",
+        "ai_benchmark_in_gaming",
         "Player Journey Optimizer",
-        "ai_collaboration_hub",
         "Fraud & Integrity Detection",
-        "bulk_data_transfert",
-        "ai_data_foundations",
-        "ai_tech_strategic_partnership"
+        "ai_data_foundations"
       ],
       "gover": [
-        "ai_governance_board"
+        "group_responsible_ai_awareness",
+        "ai_governance_board",
+        "local_ai_risk_management"
       ],
       "people": [
+        "early_career_pipeline_expert_retention",
+        "adoption_playbook",
         "business_ai_champions",
+        "ai_value_opportunities",
         "ai_co_creation_labs"
       ]
     },
     "enablers_by_phase": {
       "phase1": [
-        "ai_tech_strategic_partnership",
-        "bulk_data_transfert"
+        "ai_benchmark_in_gaming",
+        "ai_value_opportunities"
       ],
       "phase2": [
         "Player Journey Optimizer",
@@ -74,14 +81,16 @@
         "ai_co_creation_labs"
       ],
       "phase4": [
-        "business_ai_champions"
+        "industrial_data_pipelines",
+        "local_ai_risk_management",
+        "business_ai_champions",
+        "adoption_playbook"
       ],
       "phase5": [
-        "enterprise_ai_service_layer",
-        "trusted_partner_ecosystem",
-        "ai_collaboration_hub"
+        "group_responsible_ai_awareness",
+        "early_career_pipeline_expert_retention"
       ]
     },
-    "mot4_score": 1
+    "mot4_score": 3
   }
 ]
