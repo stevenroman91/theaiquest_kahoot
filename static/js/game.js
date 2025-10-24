@@ -1087,7 +1087,7 @@ class GameController {
             // Define custom titles for each choice with photos
             const customTitles = {
                 'elena': '<img src="/static/images/Elena_photo.png" alt="Elena" class="character-photo me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">Map where AI creates the most value and align with company culture',
-                'james': '<img src="/static/images/James_photo.png" alt="James" class="character-photo me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">Build strong foundations: secure data, tools, and architecture first',
+                'james': '<img src="/static/images/James_photo.png" alt="James" class="character-photo me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">Build strong foundations:<br>secure data, tools,<br>and architecture first',
                 'amira': '<img src="/static/images/Amira_photo.png" alt="Amira" class="character-photo me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">Act fast - democratize AI,<br>let teams experiment immediately'
             };
             
