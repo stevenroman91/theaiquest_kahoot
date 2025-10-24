@@ -1,0 +1,110 @@
+WEBVTT
+
+STYLE
+::cue {
+    color: white;
+    background-color: #383943A3;
+}
+
+00:00:00.899 --> 00:00:01.828
+Hey James — got a minute?
+
+00:00:01.978 --> 00:00:03.337
+I was actually looking for you.
+
+00:00:03.632 --> 00:00:04.747
+Sure, what's up?
+
+00:00:05.192 --> 00:00:07.296
+The pilots went better than we expected.
+
+00:00:07.446 --> 00:00:13.526
+The design team's assistant is saving them hours
+each week, and the player-journey model is already
+
+00:00:13.526 --> 00:00:14.749
+improving retention.
+
+00:00:15.032 --> 00:00:16.193
+Congratulations!
+
+00:00:16.343 --> 00:00:17.922
+Now the real work begins.
+
+00:00:18.232 --> 00:00:20.183
+That's exactly why I came to see you.
+
+00:00:20.333 --> 00:00:25.773
+The time has finally come to scale these solutions
+and implement real changes in how we operate systems,
+
+00:00:25.773 --> 00:00:26.927
+roles, and workflows.
+
+00:00:27.077 --> 00:00:30.920
+I've identified a few enablers that could help, but
+I'm not sure where to start.
+
+00:00:31.070 --> 00:00:31.941
+What about you?
+
+00:00:32.232 --> 00:00:35.855
+We need to better integrate AI with our existing
+platforms.
+
+00:00:36.005 --> 00:00:42.007
+There's also a lot to do on the business side — we
+need to make sure AI reaches more players, markets,
+
+00:00:42.007 --> 00:00:43.157
+and functions.
+
+00:00:43.307 --> 00:00:49.297
+Finally, we should strengthen our data pipelines
+and monitoring systems to track model performance.
+
+00:00:49.599 --> 00:00:50.052
+Got it!
+
+00:00:50.202 --> 00:00:54.881
+We're also looking at enablers to make this scale-up
+stick, but I'm not sure where to begin.
+
+00:00:55.165 --> 00:01:01.632
+Start with the foundations to make AI work: APIs
+and data pipelines connecting our internal systems,
+
+00:01:01.632 --> 00:01:06.683
+proper access controls, and a production-ready environment
+to manage models and prompts.
+
+00:01:06.833 --> 00:01:13.439
+In parallel, prepare the rollout — a simple adoption
+plan, and transparent performance metrics: delivery
+
+00:01:13.439 --> 00:01:17.282
+speed, player satisfaction, and adoption by the teams.
+
+00:01:17.565 --> 00:01:19.725
+Alright, there is a lot on our plate.
+
+00:01:19.875 --> 00:01:23.811
+Timing matters and budget is tight, so we can't do
+everything at once.
+
+00:01:24.099 --> 00:01:25.864
+Welcome to my world Sophie !
+
+00:01:26.014 --> 00:01:29.915
+You'll have to phase it and decide which initiatives
+matter most now.
+
+00:01:30.359 --> 00:01:30.943
+Perfect.
+
+00:01:31.093 --> 00:01:35.725
+Let me think about the top priority enablers and
+loop you in for the integration stream.
+
+00:01:36.032 --> 00:01:37.008
+Count me in.
