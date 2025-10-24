@@ -2449,11 +2449,11 @@ class GameController {
             console.log('DEBUG Phase 4:', { motNumber, score, scoreData });
             console.log('motNumber === 4:', motNumber === 4);
             if (score === 3) {
-                description = "By selecting Industrial Data Pipelines, Local AI Risk Management, Business AI Champions plus the Adoption Playbook you achieved the perfect balance — adoption, scalability, and trust.\n\nYou earned 3 stars out of 3.\nPlayNext is now ready to move from pilot success to enterprise-wide impact.";
+                description = "Excellent! Perfect balance! You earned 3 stars out of 3. You've mastered the art of scaling: solid foundations, empowered teams, and responsible governance. Your organization can now replicate success across markets while maintaining speed, reliability, and trust. PlayForward moves from pilot success to enterprise transformation — AI is now part of the company's daily rhythm.";
             } else if (score === 2) {
-                description = "You earned 2 stars out of 3 for your scaling enabler selection. While you've chosen solid foundations for scaling, you may have missed some key elements that ensure both technical robustness and organizational readiness. Consider balancing infrastructure investments with change management and governance to accelerate enterprise-wide adoption.";
+                description = "Good Choice! You focused on impactful enablers, but your portfolio could be better balanced between People, Technology, and Governance. Operational efficiency will increase, yet adoption or risk management might lag behind. Your scaling is on track, but true industrialization still lies ahead.";
             } else if (score === 1) {
-                description = "You earned 1 star out of 3 for your scaling enabler selection. Your choices show some strategic thinking, but may lack the comprehensive approach needed for successful enterprise-wide scaling. Focus on creating both technical foundations and human-centered change management to ensure your AI initiatives scale effectively across the organization.";
+                description = "Interesting Attempt! You activated useful levers, yet missed the full triad of enablers that turn pilots into sustainable impact. Without strong data pipelines or structured adoption support, your AI initiatives risk becoming fragmented or over-dependent on a few champions.";
             } else {
                 description = `Congratulations! You earned ${score} stars for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`;
             }
@@ -2485,8 +2485,8 @@ class GameController {
             description = descriptions[score] || descriptions[1];
         }
         
-        // Set description with Steven's photo for Phase 1, 2, and 3
-        if (motNumber === 1 || motNumber === 2 || motNumber === 3) {
+        // Set description with Steven's photo for Phase 1, 2, 3, and 4
+        if (motNumber === 1 || motNumber === 2 || motNumber === 3 || motNumber === 4) {
             const descriptionElement = document.getElementById('score-description');
             descriptionElement.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 20px;">

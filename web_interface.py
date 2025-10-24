@@ -1100,11 +1100,11 @@ def get_personalized_step_message(mot_key, choice, score):
     
     elif mot_key == 'mot4':
         if score == 3:
-            return "By selecting Industrial Data Pipelines, Local AI Risk Management, Business AI Champions plus the Adoption Playbook you achieved the perfect balance — adoption, scalability, and trust. You earned 3 stars out of 3. PlayNext is now ready to move from pilot success to enterprise-wide impact."
+            return "Excellent! Perfect balance! You earned 3 stars out of 3. You've mastered the art of scaling: solid foundations, empowered teams, and responsible governance. Your organization can now replicate success across markets while maintaining speed, reliability, and trust. PlayForward moves from pilot success to enterprise transformation — AI is now part of the company's daily rhythm."
         elif score == 2:
-            return "You earned 2 stars out of 3 for your scaling enabler selection. While you've chosen solid foundations for scaling, you may have missed some key elements that ensure both technical robustness and organizational readiness. Consider balancing infrastructure investments with change management and governance to accelerate enterprise-wide adoption."
+            return "Good Choice! You focused on impactful enablers, but your portfolio could be better balanced between People, Technology, and Governance. Operational efficiency will increase, yet adoption or risk management might lag behind. Your scaling is on track, but true industrialization still lies ahead."
         elif score == 1:
-            return "You earned 1 star out of 3 for your scaling enabler selection. Your choices show some strategic thinking, but may lack the comprehensive approach needed for successful enterprise-wide scaling. Focus on creating both technical foundations and human-centered change management to ensure your AI initiatives scale effectively across the organization."
+            return "Interesting Attempt! You activated useful levers, yet missed the full triad of enablers that turn pilots into sustainable impact. Without strong data pipelines or structured adoption support, your AI initiatives risk becoming fragmented or over-dependent on a few champions."
     
     elif mot_key == 'mot5':
         if choice == 'full_speed_on_people' and score == 3:
