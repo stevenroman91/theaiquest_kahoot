@@ -785,7 +785,7 @@ class GameController {
         // Lancer la vidéo avec le son
         this.playVideo('phase2-video');
         
-        this.updateProgress(45, 'STEP 2: Building Your AI Use Case Portfolio');
+        this.updateProgress(45, 'STEP 2: Building Your AI Use Cases Portfolio');
         
         // Initialize Phase2 video
         initializePhase2Video();
