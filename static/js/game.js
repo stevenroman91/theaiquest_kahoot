@@ -2415,11 +2415,11 @@ class GameController {
             console.log('DEBUG Phase 3:', { motNumber, score, scoreData });
             console.log('motNumber === 3:', motNumber === 3);
             if (score === 3) {
-                description = "By choosing the AI Co-Creation Labs, AI & Data Foundations & AI Governance board you earned 3 stars out of 3. This choice focuses on people and collaboration — the most powerful accelerators of real adoption. Your teams now share ownership of the AI journey, turning experimentation into collective learning.";
+                description = "Excellent! By selecting the good three, you earned 3 stars out of 3. You focused on what truly accelerates adoption: leadership ownership, solid data foundations, and clear governance. Your teams are now empowered, aligned, and ready to transform early pilots into sustainable business value. PlayForward is now ready to move from vision to action — with focus, purpose, and measurable results.";
             } else if (score === 2) {
-                description = "You earned 2 stars out of 3 for your enabler selection. While you've chosen solid foundations, you may have missed opportunities to fully engage your teams in the AI transformation. Consider balancing technical infrastructure with people-focused initiatives to accelerate adoption and build lasting change.";
+                description = "Good Choice! You made strong decisions. However, your choices could be more cohesive across the three domains. To amplify impact, ensure your enablers connect leaders, tech, and governance together — so adoption grows hand-in-hand with structure and trust. Your pilots will show value, but scaling may take longer than expected.";
             } else if (score === 1) {
-                description = "You earned 1 star out of 3 for your enabler selection. Your choices show some strategic thinking, but may lack the comprehensive approach needed for sustainable AI adoption. Focus on creating both technical foundations and human-centered change to ensure your AI initiatives succeed long-term.";
+                description = "Interesting Attempt! Some key foundations are missing. Without clear governance or a strong data backbone, pilots may succeed locally yet fail to scale globally. Time to refocus on alignment before moving to scale.";
             } else {
                 description = `Congratulations! You earned ${score} stars for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`;
             }
@@ -2465,8 +2465,8 @@ class GameController {
             description = descriptions[score] || descriptions[1];
         }
         
-        // Set description with Steven's photo for Phase 1 and 2
-        if (motNumber === 1 || motNumber === 2) {
+        // Set description with Steven's photo for Phase 1, 2, and 3
+        if (motNumber === 1 || motNumber === 2 || motNumber === 3) {
             const descriptionElement = document.getElementById('score-description');
             descriptionElement.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 20px;">
