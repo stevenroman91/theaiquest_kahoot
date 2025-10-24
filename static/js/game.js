@@ -2389,11 +2389,11 @@ class GameController {
             console.log('DEBUG showScoreScreen:', { motNumber, score, currentChoice, scoreDataChoice: scoreData.choice, currentPath: this.currentPath });
             
             if (currentChoice === 'elena' && score === 3) {
-                description = "By choosing Elena's approach, you earned 3 stars out of 3. This value-driven and culture-aligned strategy ensures you'll build a sustainable AI roadmap that inspires creativity, empowers teams, and delivers measurable business impact.";
+                description = "Excellent! By choosing Elena's approach, you earned 3 stars out of 3. This value-driven and culture-aligned strategy ensures you'll build a sustainable AI roadmap that inspires creativity, empowers teams, and delivers measurable business impact.";
             } else if (currentChoice === 'james' && score === 2) {
-                description = "By choosing James's approach, you earned 2 stars out of 3. While this technology-first strategy builds solid foundations, it may miss opportunities for immediate value creation and team engagement that could accelerate your AI transformation.";
+                description = "Good Choice! By selecting James's approach, you earned 2 stars out of 3. You chose a prudent and structured path, focusing on data, technology, and architecture — a wise move for long-term scalability. However, the risk is that your transformation could lose momentum before delivering visible value to business teams.";
             } else if (currentChoice === 'amira' && score === 1) {
-                description = "By choosing Amira's approach, you earned 1 star out of 3. While this rapid experimentation strategy enables quick learning, it lacks strategic alignment and foundational structure, potentially leading to fragmented AI initiatives and missed long-term opportunities.";
+                description = "Interesting Attempt! By following Amira's approach, you earned 1 star out of 3. Your choice shows boldness and a desire to move fast — essential qualities for innovation. But without clear governance or foundations, you risk creating fragmented initiatives and limited long-term impact. Your teams may learn quickly, but results will stay local and unsustainable.";
             } else {
                 // Fallback for other cases
                 console.log('Using fallback message for Phase 1');
@@ -2465,7 +2465,18 @@ class GameController {
             description = descriptions[score] || descriptions[1];
         }
         
-        document.getElementById('score-description').textContent = description;
+        // Set description with Steven's photo for Phase 1
+        if (motNumber === 1) {
+            const descriptionElement = document.getElementById('score-description');
+            descriptionElement.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <img src="/static/images/Steven_photo.png" alt="Steven" style="width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 3px solid #007bff; flex-shrink: 0;">
+                    <div style="flex: 1;">"${description}"</div>
+                </div>
+            `;
+        } else {
+            document.getElementById('score-description').textContent = description;
+        }
         
         // Update progress squares (only if element exists)
         const progressSquares = document.getElementById('progress-squares');
@@ -2942,17 +2953,34 @@ class GameController {
     }
 
     showGlobalScoreRecap(phaseNumber, scoreData) {
+        console.log('=== showGlobalScoreRecap called ===');
+        console.log('phaseNumber:', phaseNumber);
+        console.log('scoreData:', scoreData);
+        
         // Create global score recap modal if it doesn't exist
         if (!document.getElementById('globalScoreRecapModal')) {
+            console.log('Creating globalScoreRecapModal...');
             this.createGlobalScoreRecapModal();
+        } else {
+            console.log('globalScoreRecapModal already exists');
         }
         
         // Update the content
+        console.log('Updating modal content...');
         this.updateGlobalScoreRecapContent(phaseNumber, scoreData);
         
         // Show the modal
-        const modal = new bootstrap.Modal(document.getElementById('globalScoreRecapModal'));
-        modal.show();
+        console.log('Showing modal...');
+        const modalElement = document.getElementById('globalScoreRecapModal');
+        console.log('Modal element:', modalElement);
+        
+        if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+            console.log('Modal shown successfully');
+        } else {
+            console.error('Modal element not found!');
+        }
         
         // Version 1.4: No auto-close - user must click continue button
         // Store current Phase number for continue button
@@ -2966,6 +2994,20 @@ class GameController {
                     <div class="modal-content" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%); border: none;">
                         <div class="modal-body p-0" style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                             <div class="text-center" style="max-width: 1200px; width: 90%;">
+                                <!-- Steven's Feedback Section -->
+                                <div class="steven-feedback-section mb-4" id="steven-feedback-section" style="display: none;">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3 text-center">
+                                            <img src="/static/images/Steven_photo.png" alt="Steven" class="steven-photo" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #08efff; box-shadow: 0 0 20px rgba(8, 239, 255, 0.5);">
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="steven-message" id="steven-message" style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 15px; border-left: 4px solid #08efff; backdrop-filter: blur(10px);">
+                                                <!-- Steven's message will be populated here -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Global Score Display - Compact -->
                                 <div class="global-score-display mb-3">
                                     <div class="global-score-badge" style="background: linear-gradient(135deg, #ffffff, #f8fafc); color: #1e40af; padding: 1rem; border-radius: 10px; box-shadow: 0 0 15px rgba(30, 64, 175, 0.3); border: 2px solid #60a5fa; min-height: 80px; display: flex; flex-direction: column; justify-content: center;">
@@ -3135,6 +3177,49 @@ class GameController {
         console.log('=== updateGlobalScoreRecapContent called ===');
         console.log('phaseNumber:', phaseNumber);
         console.log('scoreData:', scoreData);
+        
+        // Show Steven's feedback for Phase 1 only
+        const stevenSection = document.getElementById('steven-feedback-section');
+        const stevenMessage = document.getElementById('steven-message');
+        
+        if (phaseNumber === 1 && stevenSection && stevenMessage) {
+            stevenSection.style.display = 'block';
+            
+            // Get the choice made in Phase 1
+            const phase1Choice = this.selectedChoices.mot1;
+            console.log('Phase 1 choice:', phase1Choice);
+            
+            let message = '';
+            if (phase1Choice === 'elena') {
+                message = `
+                    <h4 style="color: #08efff; margin-bottom: 1rem; font-weight: 600;">Excellent!</h4>
+                    <p style="color: #ffffff; font-size: 1.1rem; line-height: 1.6; margin-bottom: 0;">
+                        By choosing Elena's approach, you earned 3 stars out of 3.<br>
+                        This value-driven and culture-aligned strategy ensures you'll build a sustainable AI roadmap that inspires creativity, empowers teams, and delivers measurable business impact.
+                    </p>
+                `;
+            } else if (phase1Choice === 'james') {
+                message = `
+                    <h4 style="color: #08efff; margin-bottom: 1rem; font-weight: 600;">Good Choice!</h4>
+                    <p style="color: #ffffff; font-size: 1.1rem; line-height: 1.6; margin-bottom: 0;">
+                        By selecting James's approach, you earned 2 stars out of 3. You chose a prudent and structured path, focusing on data, technology, and architecture — a wise move for long-term scalability.<br>
+                        However, the risk is that your transformation could lose momentum before delivering visible value to business teams.
+                    </p>
+                `;
+            } else if (phase1Choice === 'amira') {
+                message = `
+                    <h4 style="color: #08efff; margin-bottom: 1rem; font-weight: 600;">Interesting Attempt!</h4>
+                    <p style="color: #ffffff; font-size: 1.1rem; line-height: 1.6; margin-bottom: 0;">
+                        By following Amira's approach, you earned 1 star out of 3. Your choice shows boldness and a desire to move fast — essential qualities for innovation. But without clear governance or foundations, you risk creating fragmented initiatives and limited long-term impact.<br>
+                        Your teams may learn quickly, but results will stay local and unsustainable.
+                    </p>
+                `;
+            }
+            
+            stevenMessage.innerHTML = message;
+        } else if (stevenSection) {
+            stevenSection.style.display = 'none';
+        }
         
         // Update global score total with new scoring system
         const totalElement = document.getElementById('global-score-total');

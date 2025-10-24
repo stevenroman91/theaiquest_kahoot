@@ -1076,11 +1076,11 @@ def get_personalized_step_message(mot_key, choice, score):
     """Génère un message personnalisé selon le choix et le score pour chaque étape"""
     if mot_key == 'mot1':
         if choice == 'elena' and score == 3:
-            return "By choosing Elena's approach, you earned 3 stars out of 3. This value-driven and culture-aligned strategy ensures you'll build a sustainable AI roadmap that inspires creativity, empowers teams, and delivers measurable business impact."
+            return "Excellent! By choosing Elena's approach, you earned 3 stars out of 3. This value-driven and culture-aligned strategy ensures you'll build a sustainable AI roadmap that inspires creativity, empowers teams, and delivers measurable business impact."
         elif choice == 'james' and score == 2:
-            return "By choosing James's approach, you earned 2 stars out of 3. While this technology-first strategy builds solid foundations, it may miss opportunities for immediate value creation and team engagement that could accelerate your AI transformation."
+            return "Good Choice! By selecting James's approach, you earned 2 stars out of 3. You chose a prudent and structured path, focusing on data, technology, and architecture — a wise move for long-term scalability. However, the risk is that your transformation could lose momentum before delivering visible value to business teams."
         elif choice == 'amira' and score == 1:
-            return "By choosing Amira's approach, you earned 1 star out of 3. While this rapid experimentation strategy enables quick learning, it lacks strategic alignment and foundational structure, potentially leading to fragmented AI initiatives and missed long-term opportunities."
+            return "Interesting Attempt! By following Amira's approach, you earned 1 star out of 3. Your choice shows boldness and a desire to move fast — essential qualities for innovation. But without clear governance or foundations, you risk creating fragmented initiatives and limited long-term impact. Your teams may learn quickly, but results will stay local and unsustainable."
     
     elif mot_key == 'mot2':
         if score == 3:

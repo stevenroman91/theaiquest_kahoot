@@ -96,8 +96,8 @@
     "introduction_page": {
       "title": "Introduction",
       "subtitle": "Strategic Assessment Complete",
-      "description": "Following the first strategic discussions, Sophie has chosen a value-driven approach with Elena. Over the past weeks, the AI team has assessed potential opportunities across production, marketing, operations, and player engagement. Now Marcus expects Sophie to present the most promising use cases — the ones that deliver measurable impact quickly, with reasonable effort and manageable risk.",
-      "objective": "Your objective is to prioritize where AI can create visible value while keeping complexity under control.",
+      "description": "Following the first strategic discussions, Sophie – the AI Director – decided to go with the value-driven approach of Elena. Over the past weeks, the AI team assessed potential AI opportunities across production, marketing, operations, and player engagement. Now, Marcus – the CEO – expects Sophie to present a synthesis of the most promising use cases — the ones that deliver measurable impact quickly, with reasonable effort and manageable risk.",
+      "objective": "Your objective is now to prioritize where AI can create visible value while keeping complexity under control. Which AI use cases will you launch?",
       "button_text": "Continue"
     },
     "teams_meeting_page": {
@@ -109,8 +109,8 @@
     "step1_followup_page": {
       "title": "STEP 2: Building Your AI Use Case Portfolio",
       "subtitle": "Step 1 Follow-up",
-      "description": "Following the first strategic discussions, Sophie has chosen a value-driven approach with Elena. Over the past weeks, the AI team has assessed potential opportunities across production, marketing, operations, and player engagement. Now Marcus expects Sophie to present the most promising use cases — the ones that deliver measurable impact quickly, with reasonable effort and manageable risk.",
-      "objective": "Your objective is to prioritize where AI can create visible value while keeping complexity under control.",
+      "description": "Following the first strategic discussions, Sophie – the AI Director – decided to go with the value-driven approach of Elena. Over the past weeks, the AI team assessed potential AI opportunities across production, marketing, operations, and player engagement. Now, Marcus – the CEO – expects Sophie to present a synthesis of the most promising use cases — the ones that deliver measurable impact quickly, with reasonable effort and manageable risk.",
+      "objective": "Your objective is now to prioritize where AI can create visible value while keeping complexity under control. Which AI use cases will you launch?",
       "button_text": "Continue to Step 2"
     },
     "pilot_step_page": {
@@ -186,7 +186,7 @@
     },
     "step2": {
       "title": "STEP 2: Building Your AI Use Case Portfolio",
-      "description": "Now that you've defined your strategic approach, it's time to identify the most promising AI use cases.",
+      "description": "Following the first strategic discussions, Sophie – the AI Director– decided to go with the value-driven approach of Elena. Over the past weeks, the AI team assessed potential AI opportunities across production, marketing, operations, and player engagement. Now ,Marcus – the CEO– expects Sophie to present a synthesis of the most promising use cases — the ones that deliver measurable impact quickly, with reasonable effort and manageable risk. Your objective is now to prioritize where AI can create visible value while keeping complexity under control. Which AI use cases will you launch?",
       "video": "phase_2.mp4"
     },
     "step3": {
