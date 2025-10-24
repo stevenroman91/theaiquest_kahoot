@@ -1717,7 +1717,7 @@ class GameController {
                 class: 'people'
             },
             'technology': {
-                title: 'Technologie',
+                title: 'Technology',
                 icon: 'fas fa-handshake',
                 class: 'technology'
             },
@@ -1730,7 +1730,7 @@ class GameController {
 
         // Define specific icons for each choice
         const choiceIcons = {
-            // Technologie
+            // Technology
             'ai_data_foundations': 'fas fa-database',
             'model_automation_framework': 'fas fa-robot',
             'data_readiness_review': 'fas fa-clipboard-check',
@@ -1931,8 +1931,8 @@ class GameController {
             'people': '#eab308' // Yellow
         };
 
-        // Map enabler IDs to categories
-        const enablerCategories = {
+        // Map enabler IDs to pillars
+        const enablerPillars = {
             'reusable_api_patterns': 'technology',
             'industrial_data_pipelines': 'technology',
             'privacy_by_design_data': 'technology',
@@ -1952,8 +1952,8 @@ class GameController {
             choiceDiv.dataset.cost = choice.cost;
             choiceDiv.onclick = () => gameController.selectMOT4Choice(choice.id, choice.cost);
             
-            const category = enablerCategories[choice.id] || 'technology';
-            const categoryColor = categoryColors[category];
+            const pillar = enablerPillars[choice.id] || 'technology';
+            const categoryColor = categoryColors[pillar];
             const specificIcon = this.getEnablerIcon(choice.id);
             
             choiceDiv.innerHTML = `
@@ -1999,7 +1999,7 @@ class GameController {
 
     getCategoryTitle(category) {
         const categoryTitles = {
-            'technology': 'Technologie',
+            'technology': 'Technology',
             'gover': 'Governance',
             'people': 'People'
         };
@@ -2548,7 +2548,7 @@ class GameController {
                     
                     // Mettre à jour les ENABLERS par catégorie avec la nouvelle interface pédagogique
                     console.log('pedagogical_data:', dashboardData.pedagogical_data);
-                    this.updatePedagogicalCategories(dashboardData.pedagogical_data);
+                    this.updatePedagogicalPillars(dashboardData.pedagogical_data);
                     
                     // Mettre à jour les Use Cases
                     console.log('🔍 CHECKING USE CASES DATA...');
@@ -2612,9 +2612,9 @@ class GameController {
         });
     }
     
-    updatePedagogicalCategories(pedagogicalData) {
-        const pedagogicalCategories = document.getElementById('pedagogical-categories');
-        pedagogicalCategories.innerHTML = '';
+    updatePedagogicalPillars(pedagogicalData) {
+        const pedagogicalPillars = document.getElementById('pedagogical-pillars');
+        pedagogicalPillars.innerHTML = '';
         
         // Déterminer quelles phases sont complétées pour afficher seulement leurs colonnes
         const completedPhases = this.getCompletedPhases();
@@ -2672,7 +2672,7 @@ class GameController {
         };
         
         const categoryTitles = {
-            "technology": "Technologie",
+            "technology": "Technology",
             "people": "People",
             "gover": "Governance"
         };
@@ -2731,7 +2731,7 @@ class GameController {
                 categoryRow.appendChild(phaseColumn);
             });
             
-            pedagogicalCategories.appendChild(categoryRow);
+            pedagogicalPillars.appendChild(categoryRow);
         });
     }
     

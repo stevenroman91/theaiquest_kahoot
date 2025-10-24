@@ -157,7 +157,7 @@ def api_game_config():
                 },
                 "phase4": {
                     "title": template.get_phase_title("phase4"),
-                    "description": "You now have a better idea of what needs to be done to scale AI solutions. It's time to make a decision.\nSelect the most impactful and timely enablers within your 30-point budget that will allow you to successfully scale your AI solutions to continue accelerating value delivery. Don't forget you need to balance between different categories."
+                    "description": "You now have a better idea of what needs to be done to scale AI solutions. It's time to make a decision.\nSelect the most impactful and timely enablers within your 30-point budget that will allow you to successfully scale your AI solutions to continue accelerating value delivery. Don't forget you need to balance between different pillars."
                 },
                 "phase5": {
                     "title": template.get_phase_title("phase5"),
@@ -609,8 +609,8 @@ def api_phase4_choices():
     game = get_game()
     choices = game.get_mot4_choices()
     
-    # Define category for each choice (corrected IDs and categories)
-    choice_categories = {
+    # Define pillar for each choice (corrected IDs and pillars)
+    choice_pillars = {
         'apis_hr_systems': 'platform_partnerships',
         'tech_stack_data_pipelines': 'platform_partnerships',
         'ai_ethics_officer': 'policies_practices',
@@ -643,7 +643,7 @@ def api_phase4_choices():
                 'title': choice.title,
                 'description': choice.description,
                 'cost': choice.cost,
-                'category': choice_categories.get(choice.id, 'people_processes'),
+                'pillar': choice_pillars.get(choice.id, 'people_processes'),
                 'enabler_id': choice_enablers.get(choice.id, 'unknown')
             }
             for choice in choices
@@ -825,7 +825,7 @@ def api_executive_dashboard():
     # Formater les ENABLERS par catégorie
     formatted_enablers_by_category = {}
     category_titles = {
-        "technology": "Technologie",
+        "technology": "Technology",
         "people": "People",
         "gover": "Governance"
     }
@@ -1068,7 +1068,8 @@ def api_executive_dashboard():
             'use_cases_data': use_cases_data,
             'impact_message': impact_message,
             'phase_title': get_current_phase_title(game.current_state)
-        }
+        },
+        'dashboard_pillars': template.get_dashboard_pillars()
     })
 
 def get_personalized_step_message(mot_key, choice, score):

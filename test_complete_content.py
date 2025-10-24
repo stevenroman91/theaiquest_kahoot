@@ -38,8 +38,8 @@ def test_all_features():
     print(f"  Titre: {dashboard_title}")
     print(f"  Sous-titre: {dashboard_subtitle}")
     
-    categories = content_manager.get_dashboard_categories()
-    for cat_id, cat_info in categories.items():
+    pillars = content_manager.get_dashboard_pillars()
+    for cat_id, cat_info in pillars.items():
         print(f"  - {cat_id}: {cat_info.get('title', 'Sans titre')}")
     
     # Test des messages de score

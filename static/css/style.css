@@ -3328,8 +3328,8 @@ body {
     gap: 15px;
 }
 
-/* ENABLERS Categories Layout */
-.enablers-categories {
+/* ENABLERS Pillars Layout */
+.enablers-pillars {
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -3592,7 +3592,7 @@ body {
     }
 }
 
-.pedagogical-categories {
+.pedagogical-pillars {
     display: flex;
     flex-direction: column;
     gap: 20px;

@@ -754,9 +754,9 @@
   "dashboard": {
     "title": "Executive Dashboard",
     "subtitle": "Track your AI transformation progress",
-    "categories": {
+    "pillars": {
       "technology": {
-        "title": "Technologie",
+        "title": "Technology",
         "description": "AI infrastructure, tools, and strategic partnerships"
       },
         "gover": {

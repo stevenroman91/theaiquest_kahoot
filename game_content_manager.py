@@ -360,10 +360,10 @@ class GameContentManager:
         dashboard = self.get_dashboard_info()
         return dashboard.get("subtitle", "Track your AI transformation progress")
     
-    def get_dashboard_categories(self) -> Dict[str, Dict[str, str]]:
-        """Get dashboard categories"""
+    def get_dashboard_pillars(self) -> Dict[str, Dict[str, str]]:
+        """Get dashboard pillars"""
         dashboard = self.get_dashboard_info()
-        return dashboard.get("categories", {})
+        return dashboard.get("pillars", {})
     
     # ========================================
     # SCORE MESSAGES METHODS

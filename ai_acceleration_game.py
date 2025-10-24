@@ -395,9 +395,9 @@ class AIAccelerationGame:
     
     def make_mot3_choices(self, choices: Dict[str, str]) -> bool:
         """Effectue les choix MOT3 (1 par catégorie)"""
-        required_categories = ["technology", "people", "gover"]
+        required_pillars = ["technology", "people", "gover"]
         
-        if set(choices.keys()) != set(required_categories):
+        if set(choices.keys()) != set(required_pillars):
             return False
             
         # Vérifier que chaque choix existe dans sa catégorie
@@ -623,7 +623,7 @@ class AIAccelerationGame:
         }
 
         # Mapping des choix vers leurs catégories
-        choice_categories = self._get_choice_categories()
+        choice_pillars = self._get_choice_pillars()
 
         # Phase 1 - HR Approach choice
         if self.current_path.mot1_choice:
@@ -803,7 +803,7 @@ class AIAccelerationGame:
         logger.info(f"Final enablers for choice {choice.id}: {result}")
         return result
 
-    def _get_choice_categories(self) -> Dict[str, str]:
+    def _get_choice_pillars(self) -> Dict[str, str]:
         """Retourne le mapping des choix vers leurs catégories"""
         return {
             # Phase 1 - HR Approaches
