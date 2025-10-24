@@ -161,7 +161,7 @@ def api_game_config():
                 },
                 "phase5": {
                     "title": template.get_phase_title("phase5"),
-                    "description": "It's time to launch and scale more solutions at the enterprise level. Let's decide what actions to take!\nSelect the option that will maximize your chances of bringing the most new scaled solutions to market. Consider what you need most at this stage of transformation to scale effectively."
+                    "description": "After several months of scaling, AI and GenAI are now part of PlayForward's daily rhythm.\nThe company's success has caught the attention of the executive committee — who now want to accelerate even further, extending AI across all studios, markets, and business functions.\nSophie faces a new challenge: scaling not just systems, but capabilities — data, skills, governance, and partnerships — to make AI truly enterprise-wide."
                 }
             },
             "ui_text": {
