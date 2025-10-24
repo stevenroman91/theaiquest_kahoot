@@ -99,3 +99,4 @@ if __name__ == "__main__":
         print("Vous pouvez maintenant supprimer game_template_complete.json en toute sécurité.")
     else:
         print("\n❌ Migration échouée!")
+
