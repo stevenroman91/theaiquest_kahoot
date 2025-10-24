@@ -1112,7 +1112,7 @@ body.modal-open {
     background: white;
     border: 2px solid #e5e7eb;
     border-radius: 12px;
-    overflow: hidden;
+    overflow: visible;
     transition: all 0.3s ease;
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -1461,25 +1461,31 @@ body.modal-open {
 
 .enabler-tooltip {
     position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.9);
     color: white;
-    padding: 12px;
+    padding: 10px;
     border-radius: 8px;
-    font-size: 0.85rem;
-    width: 300px;
-    max-width: 300px;
-    z-index: 99999;
+    font-size: 0.8rem;
+    width: 200px;
+    max-width: 200px;
+    z-index: 999999;
     display: none;
     pointer-events: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     word-wrap: break-word;
     overflow-wrap: break-word;
+    margin-bottom: 8px;
 }
 
 .tooltip-title {
     font-weight: 600;
     margin-bottom: 6px;
     color: #fff;
+    white-space: normal;
+    line-height: 1.3;
 }
 
 .tooltip-description {
@@ -1499,6 +1505,7 @@ body.modal-open {
 
 .choice-enabler {
     position: relative;
+    overflow: visible;
 }
 
 .option-icon {

@@ -1006,14 +1006,14 @@ class GameController {
         const choiceDetails = {
             'elena': {
                 enablers: [
-                    { id: 'ai_value_opportunities', icon: 'fas fa-chart-line', label: 'AI Value Opportunities', category: 'people' },
-                    { id: 'ai_benchmark_in_gaming', icon: 'fas fa-search', label: 'AI Benchmark in Gaming', category: 'technology' }
+                    { id: 'ai_value_opportunities_gaming', icon: 'fas fa-chart-line', label: 'AI Value Opportunities in gaming', category: 'gover' },
+                    { id: 'ai_tech_benchmark', icon: 'fas fa-search', label: 'AI Tech benchmark', category: 'technology' }
                 ]
             },
             'james': {
                 enablers: [
-                    { id: 'ai_tech_strategic_partnership', icon: 'fas fa-handshake', label: 'AI-tech Strategic Partnership', category: 'technology' },
-                    { id: 'bulk_data_transfert', icon: 'fas fa-balance-scale', label: 'Bulk Data Transfert', category: 'technology' }
+                    { id: 'sourcing_ai_tech', icon: 'fas fa-shopping-cart', label: 'Sourcing of an AI-tech Platform', category: 'technology' },
+                    { id: 'bulk_data_migration', icon: 'fas fa-exchange-alt', label: 'Bulk Data Migration', category: 'technology' }
                 ]
             },
             'amira': {
@@ -1030,9 +1030,7 @@ class GameController {
 
         // Define custom descriptions with speaker names
         const customDescriptions = {
-            'amira': 'Amira: "From a market standpoint, speed is everything. Players\' expectations change weekly — if we hesitate, we lose them. We should empower our teams to experiment with AI tools right now: content generation, campaign optimization, player segmentation. Let them test, iterate, and learn fast."',
-            'james': 'James: "We need solid foundations before scaling. Data security, governance frameworks, and robust architecture are non-negotiable. Let\'s build the infrastructure that will support our AI initiatives long-term, ensuring compliance and reliability."',
-            'elena': 'Elena: "Success comes from understanding where AI truly creates value and aligning it with our company culture. We should map opportunities across all departments, identify quick wins, and ensure our AI strategy resonates with our organizational values."'
+            // Descriptions supprimées comme demandé
         };
         
         // Reorder choices: Amira, James, Elena
@@ -1057,9 +1055,9 @@ class GameController {
             if (details.enablers && details.enablers.length > 0) {
                 contentHtml = `
                     <div class="choice-enablers">
-                        <h5><i class="fas fa-cogs me-2"></i>Enablers Unlocked:</h5>
+                        <h5><i class="fas fa-cogs me-2"></i>Launch 2 Enablers immediately</h5>
                         ${details.enablers.map(enabler => `
-                            <div class="choice-enabler">
+                            <div class="choice-enabler" data-enabler-id="${enabler.id}">
                                 <div class="enabler-icon ${enabler.category}">
                                     <i class="${enabler.icon}"></i>
                         </div>
@@ -1071,7 +1069,7 @@ class GameController {
             } else if (details.use_cases && details.use_cases.length > 0) {
                 contentHtml = `
                     <div class="choice-use-cases">
-                        <h5><i class="fas fa-lightbulb me-2"></i>Use Cases Available:</h5>
+                        <h5><i class="fas fa-lightbulb me-2"></i>Launch 6 use case pilots immediately</h5>
                         ${details.use_cases.map(useCase => {
                             return `
                             <div class="choice-use-case" data-use-case-id="${useCase.id}">
@@ -1094,7 +1092,7 @@ class GameController {
             };
             
             const displayTitle = customTitles[choice.id] || choice.title;
-            const displayDescription = customDescriptions[choice.id] || choice.description;
+            const displayDescription = customDescriptions[choice.id] || '';
             
             columnDiv.innerHTML = `
                 <div class="choice-column" data-choice-id="${choice.id}" onclick="gameController.selectChoice('${choice.id}')">
@@ -1102,9 +1100,7 @@ class GameController {
                         <h4 class="choice-title" style="display: flex; align-items: center;">${displayTitle}</h4>
                     </div>
                     <div class="choice-content">
-                        <div class="choice-description">
-                            ${displayDescription}
-                        </div>
+                        ${displayDescription ? `<div class="choice-description">${displayDescription}</div>` : ''}
                         ${contentHtml}
                     </div>
                 </div>
@@ -1113,8 +1109,8 @@ class GameController {
             container.appendChild(columnDiv);
         });
 
-        // Tooltips are now created directly in HTML
         // Load descriptions from API and update tooltips
+        this.loadEnablerDescriptions();
     }
 
     async loadEnablerDescriptions() {
@@ -1140,16 +1136,20 @@ class GameController {
                     const enablerData = data.enablers[enablerId];
                     
                     if (enablerData) {
-                        console.log(`✅ Updating tooltip for ${enablerId}:`, enablerData);
-                        // Mettre à jour le tooltip existant
-                        const tooltip = enablerEl.querySelector('.enabler-tooltip');
-                        if (tooltip) {
-                            tooltip.innerHTML = `
-                                <div class="tooltip-title">${enablerData.title}</div>
-                                <div class="tooltip-description">${enablerData.description}</div>
-                            `;
-                            console.log(`✅ Tooltip updated for ${enablerId}`);
+                        console.log(`✅ Creating/updating tooltip for ${enablerId}:`, enablerData);
+                        // Créer ou mettre à jour le tooltip
+                        let tooltip = enablerEl.querySelector('.enabler-tooltip');
+                        if (!tooltip) {
+                            // Créer le tooltip s'il n'existe pas
+                            tooltip = document.createElement('div');
+                            tooltip.className = 'enabler-tooltip';
+                            enablerEl.appendChild(tooltip);
                         }
+                        tooltip.innerHTML = `
+                            <div class="tooltip-title">${enablerData.title}</div>
+                            <div class="tooltip-description">${enablerData.description}</div>
+                        `;
+                        console.log(`✅ Tooltip created/updated for ${enablerId}`);
                     } else {
                         console.log(`❌ No data found for enabler: ${enablerId}`);
                     }
@@ -2226,9 +2226,9 @@ class GameController {
             if (details.enablers && details.enablers.length > 0) {
                 contentHtml = `
                     <div class="choice-enablers">
-                        <h5><i class="fas fa-cogs me-2"></i>Enablers Unlocked:</h5>
+                        <h5><i class="fas fa-cogs me-2"></i>Launch 2 Enablers immediately</h5>
                         ${details.enablers.map(enabler => `
-                            <div class="choice-enabler">
+                            <div class="choice-enabler" data-enabler-id="${enabler.id}">
                                 <div class="enabler-icon ${enabler.category}">
                                     <i class="${enabler.icon}"></i>
                                 </div>
@@ -2255,6 +2255,9 @@ class GameController {
             
             container.appendChild(columnDiv);
         });
+
+        // Load descriptions from API and update tooltips
+        this.loadEnablerDescriptions();
     }
 
     async selectMOT5Choice(choiceId) {

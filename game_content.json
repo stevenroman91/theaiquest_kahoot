@@ -213,23 +213,20 @@
       "choices": {
         "elena": {
           "title": "Map where AI creates the most value and align with company culture",
-          "description": "Transformation without structure leads to chaos. If we deploy AI too fast, we'll create silos, duplicated tools, and confusion. We need to start by mapping where AI adds the most value — identify the high-impact use cases and build around them.",
           "enablers": [
-            "ai_value_opportunities",
-            "ai_benchmark_in_gaming"
+            "ai_value_opportunities_gaming",
+            "ai_tech_benchmark"
           ]
         },
         "james": {
           "title": "Build strong foundations: secure data, tools, and architecture first",
-          "description": "Without solid data foundations, this won't scale. We'll soon face a surge in talent data and analytics needs. My recommendation: select a robust AI platform now. BusinessAI Pro is the market leader and offers great terms if we sign an exclusive deal. Without this, we risk chaos later.",
           "enablers": [
-            "ai_tech_strategic_partnership",
-            "bulk_data_transfert"
+            "sourcing_ai_tech",
+            "bulk_data_migration"
           ]
         },
         "amira": {
           "title": "Act fast - democratize AI, let teams experiment immediately",
-          "description": "From a market standpoint, speed is everything. Players' expectations change weekly — if we hesitate, we lose them. We should empower our teams to experiment with AI tools right now: content generation, campaign optimization, player segmentation. Let them test, iterate, and learn fast.",
           "use_cases": [
             "automated_banners_generation",
             "customer_email_classifier",
@@ -518,6 +515,30 @@
       "title": "Bulk Data Transfert",
       "description": "Enables the fast and secure movement of large datasets between environments to support AI experimentation or migration",
       "icon": "fas fa-balance-scale",
+      "category": "technology"
+    },
+    "ai_value_opportunities_gaming": {
+      "title": "AI Value Opportunities in gaming",
+      "description": "Quantify and assess where augmentation and automation bring the most impact across teams (game design, customer support, engineering, corporate functions), using pilot evidence and value notes.",
+      "icon": "fas fa-chart-line",
+      "category": "gover"
+    },
+    "ai_tech_benchmark": {
+      "title": "AI Tech benchmark",
+      "description": "Systematically benchmark AI/GenAI and data solutions, documenting value, TCO, integration complexity, and fit with our reference",
+      "icon": "fas fa-search",
+      "category": "technology"
+    },
+    "sourcing_ai_tech": {
+      "title": "Sourcing of an AI-tech",
+      "description": "Purchase licences for a small set of core partners (ScaleAI Pro, Mistral, Leonardo.ai, Footovision, ...), organize roadshows across Bus and functions and train the first 100",
+      "icon": "fas fa-shopping-cart",
+      "category": "technology"
+    },
+    "bulk_data_migration": {
+      "title": "Bulk Data Migration",
+      "description": "Extract, transform and load massively all the key datasets from core systems (ERP, CRM, ...) to the AI tech platform.",
+      "icon": "fas fa-exchange-alt",
       "category": "technology"
     },
     "Fraud & Integrity Detection": {
