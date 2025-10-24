@@ -1780,7 +1780,7 @@ class GameController {
                     ${categoryChoices.map(choice => `
                     <div class="matrix-choice" data-choice-id="${choice.id}" data-category="${category}" onclick="gameController.selectMOT3Choice('${choice.id}', '${category}')">
                         <div class="choice-header">
-                            <div style="background-color: ${category === 'people' ? '#eab308' : category === 'technology' ? '#8b5cf6' : '#3b82f6'}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                            <div style="background-color: ${category === 'people' ? '#f97316' : category === 'technology' ? '#8b5cf6' : '#3b82f6'}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
                                 <i class="${choiceIcons[choice.id] || 'fas fa-cog'}" style="color: white; font-size: 1rem;"></i>
                                     </div>
                         <div class="choice-title">${choice.title}</div>
@@ -1948,20 +1948,20 @@ class GameController {
         const categoryColors = {
             'technology': '#8b5cf6', // Purple
             'gover': '#3b82f6', // Blue
-            'people': '#eab308' // Yellow
+            'people': '#f97316' // Orange
         };
 
         // Map enabler IDs to pillars
         const enablerPillars = {
-            'reusable_api_patterns': 'technology',
-            'industrial_data_pipelines': 'technology',
-            'privacy_by_design_data': 'technology',
-            'talent_mobility_program': 'people',
-            'business_ai_champions': 'people',
-            'ai_storytelling_communication': 'people',
             'adoption_playbook': 'people',
-            'clear_ownership_accountability': 'gover',
-            'local_ai_risk_management': 'gover'
+            'ai_storytelling_communication': 'people',
+            'ai_product_teams_setup': 'people',
+            'talent_mobility_program': 'people',
+            'industrialized_data_pipelines': 'technology',
+            'api_platform': 'technology',
+            'privacy_by_design_data': 'technology',
+            'role_responsibility_matrix': 'gover',
+            'country_level_ai_deployment': 'gover'
         };
 
         // Create simple grid directly (3x3 matrix)
@@ -1996,15 +1996,15 @@ class GameController {
 
     getEnablerIcon(enablerId) {
         const iconMap = {
-            'reusable_api_patterns': 'fas fa-code',
-            'industrial_data_pipelines': 'fas fa-database',
-            'privacy_by_design_data': 'fas fa-shield-alt',
-            'talent_mobility_program': 'fas fa-users',
-            'business_ai_champions': 'fas fa-trophy',
-            'ai_storytelling_communication': 'fas fa-bullhorn',
             'adoption_playbook': 'fas fa-book',
-            'clear_ownership_accountability': 'fas fa-clipboard-check',
-            'local_ai_risk_management': 'fas fa-exclamation-triangle',
+            'ai_storytelling_communication': 'fas fa-bullhorn',
+            'ai_product_teams_setup': 'fas fa-users',
+            'talent_mobility_program': 'fas fa-exchange-alt',
+            'industrialized_data_pipelines': 'fas fa-cogs',
+            'api_platform': 'fas fa-code',
+            'privacy_by_design_data': 'fas fa-shield-alt',
+            'role_responsibility_matrix': 'fas fa-clipboard-check',
+            'country_level_ai_deployment': 'fas fa-globe',
             // Phase 5 enablers
             'trusted_partner_ecosystem': 'fas fa-handshake',
             'enterprise_ai_service_layer': 'fas fa-layer-group',

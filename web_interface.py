@@ -891,15 +891,15 @@ def api_executive_dashboard():
             if phase == 'phase4':
                 # Mapping direct pour les enablers du Step 4
                 enabler_to_category = {
-                    'reusable_api_patterns': 'technology',
-                    'industrial_data_pipelines': 'technology', 
-                    'privacy_by_design_data': 'technology',
-                    'talent_mobility_program': 'people',
-                    'business_ai_champions': 'people',
-                    'ai_storytelling_communication': 'people',
                     'adoption_playbook': 'people',
-                    'clear_ownership_accountability': 'gover',
-                    'local_ai_risk_management': 'gover'
+                    'ai_storytelling_communication': 'people',
+                    'ai_product_teams_setup': 'people',
+                    'talent_mobility_program': 'people',
+                    'industrialized_data_pipelines': 'technology',
+                    'api_platform': 'technology',
+                    'privacy_by_design_data': 'technology',
+                    'role_responsibility_matrix': 'gover',
+                    'country_level_ai_deployment': 'gover'
                 }
                 enabler_category = enabler_to_category.get(enabler, 'people')
             else:

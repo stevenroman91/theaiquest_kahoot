@@ -536,7 +536,7 @@ body.modal-open {
 }
 
 .category-header.people {
-    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
     box-shadow: 0 2px 8px rgba(234, 179, 8, 0.3);
     min-height: 60px; /* Uniform height for all category headers */
     display: flex;
@@ -1062,8 +1062,8 @@ body.modal-open {
 }
 
 .legend-color.people {
-    background: linear-gradient(135deg, #eab308, #d97706);
-    box-shadow: 0 2px 4px rgba(234, 179, 8, 0.3);
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    box-shadow: 0 2px 4px rgba(249, 115, 22, 0.3);
 }
 
 .legend-color.gover {
@@ -1521,7 +1521,7 @@ body.modal-open {
 }
 
 .option-icon.workforce {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
 }
 
 .option-icon.tech {
@@ -1543,7 +1543,7 @@ body.modal-open {
 }
 
 .option-icon.people {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); /* People - Yellow */
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); /* People - Yellow */
 }
 
 .option-icon.technology {
@@ -1872,7 +1872,7 @@ body {
 
 /* Couleurs des fonds d'icônes selon les catégories */
 .choice-icon.transformation_change {
-    background-color: #eab308 !important;
+    background-color: #f97316 !important;
     border-radius: 50% !important;
     width: 40px !important;
     height: 40px !important;
@@ -2039,7 +2039,7 @@ body {
 }
 
 .btn-warning {
-    background: linear-gradient(135deg, var(--fdj-warning) 0%, #d97706 100%);
+    background: linear-gradient(135deg, var(--fdj-warning) 0%, #ea580c 100%);
     color: white;
     box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
 }
@@ -2516,7 +2516,7 @@ body {
 }
 
 .score-2 .score-circle {
-    background: linear-gradient(135deg, var(--fdj-warning) 0%, #d97706 100%);
+    background: linear-gradient(135deg, var(--fdj-warning) 0%, #ea580c 100%);
 }
 
 .score-1 .score-circle {
@@ -3381,7 +3381,7 @@ body {
 }
 
 .enabler-category-title.people {
-    background: linear-gradient(135deg, #eab308, #ca8a04);
+    background: linear-gradient(135deg, #f97316, #ea580c);
     color: white;
 }
 
@@ -3652,8 +3652,8 @@ body {
 }
 
 .pedagogical-category-title.people {
-    background: linear-gradient(135deg, #eab308, #ca8a04);
-    border-color: #eab308;
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    border-color: #f97316;
 }
 
 .pedagogical-phase-column {
@@ -3957,7 +3957,7 @@ body {
 }
 
 .alert-warning {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, #f97316, #ea580c);
     color: white;
 }
 
@@ -4178,7 +4178,7 @@ body {
 /* Styles spécifiques pour Step 3 - Forcer les couleurs d'icônes */
 .mot3-section .choice-icon.transformation_change,
 .choice-icon.transformation_change {
-    background-color: #eab308 !important;
+    background-color: #f97316 !important;
     border-radius: 50% !important;
     width: 40px !important;
     height: 40px !important;
@@ -4235,8 +4235,8 @@ body {
 }
 
 .matrix-choice .choice-icon.transformation_change {
-    --category-color: #eab308 !important;
-    background-color: #eab308 !important;
+    --category-color: #f97316 !important;
+    background-color: #f97316 !important;
 }
 
 .matrix-choice .choice-icon.technology_partnerships {
@@ -4376,7 +4376,7 @@ body {
 }
 
 .budget-choice.people .choice-icon {
-    background-color: #eab308 !important;
+    background-color: #f97316 !important;
 }
 
 .budget-choice.gover .choice-icon {
@@ -4391,7 +4391,7 @@ body {
 
 .matrix-choice .choice-icon.people,
 .matrix-choice .choice-icon[class*="people"] {
-    background-color: #eab308 !important;
+    background-color: #f97316 !important;
 }
 
 .matrix-choice .choice-icon.gover,
@@ -4423,7 +4423,7 @@ body {
 }
 
 #phase4-choices .matrix-choice .choice-icon.people {
-    background-color: #eab308 !important;
+    background-color: #f97316 !important;
 }
 
 #phase4-choices .matrix-choice .choice-icon.gover {
@@ -4448,7 +4448,7 @@ body {
 }
 
 #phase4-choices .matrix-choice .choice-icon.people[style*="background-color"] {
-    background-color: #eab308 !important;
+    background-color: #f97316 !important;
 }
 
 #phase4-choices .matrix-choice .choice-icon.gover[style*="background-color"] {

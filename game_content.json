@@ -362,77 +362,77 @@
       "video_file": "phase_4.mp4",
       "budget": 30,
       "choices": {
-        "reusable_api_patterns": {
-          "title": "Reusable API Patterns",
-          "description": "Standardize API patterns for AI services to enable faster development and better integration.",
+        "adoption_playbook": {
+          "title": "Adoption Playbook",
+          "description": "Apply structured change management (personas, champions, enablement, measurement) from day one of delivery, not after go-live.",
           "cost": 5,
-          "enablers_1_star": ["reusable_api_patterns"],
-          "enablers_2_stars": ["reusable_api_patterns"],
-          "enablers_3_stars": ["reusable_api_patterns"]
-        },
-        "industrial_data_pipelines": {
-          "title": "Industrial Data Pipelines",
-          "description": "Build robust, scalable data pipelines to support AI workloads across the organization.",
-          "cost": 10,
-          "enablers_1_star": ["industrial_data_pipelines"],
-          "enablers_2_stars": ["industrial_data_pipelines"],
-          "enablers_3_stars": ["industrial_data_pipelines"]
-        },
-        "privacy_by_design_data": {
-          "title": "Privacy by Design Data",
-          "description": "Implement privacy-first data practices to ensure compliance and build trust.",
-          "cost": 5,
-          "enablers_1_star": ["privacy_by_design_data"],
-          "enablers_2_stars": ["privacy_by_design_data"],
-          "enablers_3_stars": ["privacy_by_design_data"]
-        },
-        "talent_mobility_program": {
-          "title": "Talent Mobility Program",
-          "description": "Create programs to help employees transition into AI roles and develop new skills.",
-          "cost": 5,
-          "enablers_1_star": ["talent_mobility_program"],
-          "enablers_2_stars": ["talent_mobility_program"],
-          "enablers_3_stars": ["talent_mobility_program"]
-        },
-        "business_ai_champions": {
-          "title": "Business AI Champions",
-          "description": "Identify and develop AI champions across business units to drive adoption.",
-          "cost": 5,
-          "enablers_1_star": ["business_ai_champions"],
-          "enablers_2_stars": ["business_ai_champions"],
-          "enablers_3_stars": ["business_ai_champions"]
+          "enablers_1_star": ["adoption_playbook"],
+          "enablers_2_stars": ["adoption_playbook"],
+          "enablers_3_stars": ["adoption_playbook"]
         },
         "ai_storytelling_communication": {
-          "title": "AI Storytelling Communication",
-          "description": "Develop communication strategies to share AI success stories and build excitement.",
+          "title": "AI Storytelling & Communication",
+          "description": "Share practical wins and expectations via internal channels (newsletters, townhalls, short videos) to build momentum and clarity.",
           "cost": 5,
           "enablers_1_star": ["ai_storytelling_communication"],
           "enablers_2_stars": ["ai_storytelling_communication"],
           "enablers_3_stars": ["ai_storytelling_communication"]
         },
-        "adoption_playbook": {
-          "title": "Adoption Playbook",
-          "description": "Create a comprehensive playbook for rolling out AI solutions across the organization.",
+        "ai_product_teams_setup": {
+          "title": "AI Product teams setup",
+          "description": "Reorganise ways of working and collocate our Business, Data & Tech teams to collaboratively build prototypes.",
           "cost": 10,
-          "enablers_1_star": ["adoption_playbook"],
-          "enablers_2_stars": ["adoption_playbook"],
-          "enablers_3_stars": ["adoption_playbook"]
+          "enablers_1_star": ["ai_product_teams_setup"],
+          "enablers_2_stars": ["ai_product_teams_setup"],
+          "enablers_3_stars": ["ai_product_teams_setup"]
         },
-        "clear_ownership_accountability": {
-          "title": "Clear Ownership & Accountability",
-          "description": "Establish clear ownership structures and accountability frameworks for AI initiatives.",
+        "talent_mobility_program": {
+          "title": "Talent mobility program",
+          "description": "Encourage internal moves and communities of practice for AI/data roles; complement with early-career rotations to develop multi-disciplinary skills.",
           "cost": 5,
-          "enablers_1_star": ["clear_ownership_accountability"],
-          "enablers_2_stars": ["clear_ownership_accountability"],
-          "enablers_3_stars": ["clear_ownership_accountability"]
+          "enablers_1_star": ["talent_mobility_program"],
+          "enablers_2_stars": ["talent_mobility_program"],
+          "enablers_3_stars": ["talent_mobility_program"]
         },
-        "local_ai_risk_management": {
-          "title": "Local AI Risk Management",
-          "description": "Implement localized risk management practices for AI deployments.",
+        "industrialized_data_pipelines": {
+          "title": "Industrialized Data Pipelines",
+          "description": "Provide a standardized toolbox (ingestion, transformation, orchestration, observability) aligned to our lakehouse and cloud roadmaps for repeatable, auditable pipelines.",
+          "cost": 10,
+          "enablers_1_star": ["industrialized_data_pipelines"],
+          "enablers_2_stars": ["industrialized_data_pipelines"],
+          "enablers_3_stars": ["industrialized_data_pipelines"]
+        },
+        "api_platform": {
+          "title": "API Platform",
+          "description": "Deploy API/event standards and platform so that data and models flow reliably across internal platforms and trusted third parties.",
           "cost": 5,
-          "enablers_1_star": ["local_ai_risk_management"],
-          "enablers_2_stars": ["local_ai_risk_management"],
-          "enablers_3_stars": ["local_ai_risk_management"]
+          "enablers_1_star": ["api_platform"],
+          "enablers_2_stars": ["api_platform"],
+          "enablers_3_stars": ["api_platform"]
+        },
+        "privacy_by_design_data": {
+          "title": "Privacy-by-design data for AI",
+          "description": "Codify data collection, masking, and synthetic-data practices that respect AI-regulation expectations (fairness, transparency, privacy) from design to operation.",
+          "cost": 5,
+          "enablers_1_star": ["privacy_by_design_data"],
+          "enablers_2_stars": ["privacy_by_design_data"],
+          "enablers_3_stars": ["privacy_by_design_data"]
+        },
+        "role_responsibility_matrix": {
+          "title": "Role and responsibility matrix",
+          "description": "Clarify roles across data, IT, legal, security, and business risk for policy upkeep, approvals, monitoring, and incident handling.",
+          "cost": 5,
+          "enablers_1_star": ["role_responsibility_matrix"],
+          "enablers_2_stars": ["role_responsibility_matrix"],
+          "enablers_3_stars": ["role_responsibility_matrix"]
+        },
+        "country_level_ai_deployment": {
+          "title": "Country-level AI deployment plan",
+          "description": "Assess regulatory, privacy, and ethical risks for each deployment geography and define clear mitigation, escalation, and compliance protocols before go-live.",
+          "cost": 5,
+          "enablers_1_star": ["country_level_ai_deployment"],
+          "enablers_2_stars": ["country_level_ai_deployment"],
+          "enablers_3_stars": ["country_level_ai_deployment"]
         }
       }
     },
@@ -626,58 +626,58 @@
       "icon": "fas fa-gavel",
       "category": "gover"
     },
-    "reusable_api_patterns": {
-      "title": "Reusable API Patterns",
-      "description": "Standardize API patterns for AI services to enable faster development.",
-      "icon": "fas fa-code",
-      "category": "technology"
-    },
-    "industrial_data_pipelines": {
-      "title": "Industrial Data Pipelines",
-      "description": "Build robust, scalable data pipelines to support AI workloads.",
-      "icon": "fas fa-cogs",
-      "category": "technology"
-    },
-    "privacy_by_design_data": {
-      "title": "Privacy by Design Data",
-      "description": "Implement privacy-first data practices to ensure compliance and build trust.",
-      "icon": "fas fa-shield-alt",
-      "category": "gover"
-    },
-    "talent_mobility_program": {
-      "title": "Talent Mobility Program",
-      "description": "Create programs to help employees transition into AI roles and develop new skills.",
-      "icon": "fas fa-users",
-      "category": "people"
-    },
-    "business_ai_champions": {
-      "title": "Business AI Champions",
-      "description": "Identify and develop AI champions across business units to drive adoption.",
-      "icon": "fas fa-trophy",
-      "category": "people"
-    },
-    "ai_storytelling_communication": {
-      "title": "AI Storytelling Communication",
-      "description": "Develop communication strategies to share AI success stories and build excitement.",
-      "icon": "fas fa-bullhorn",
-      "category": "people"
-    },
     "adoption_playbook": {
       "title": "Adoption Playbook",
-      "description": "Create a comprehensive playbook for rolling out AI solutions across the organization.",
+      "description": "Apply structured change management (personas, champions, enablement, measurement) from day one of delivery, not after go-live.",
       "icon": "fas fa-book",
       "category": "people"
     },
-    "clear_ownership_accountability": {
-      "title": "Clear Ownership & Accountability",
-      "description": "Establish clear ownership structures and accountability frameworks for AI initiatives.",
+    "ai_storytelling_communication": {
+      "title": "AI Storytelling & Communication",
+      "description": "Share practical wins and expectations via internal channels (newsletters, townhalls, short videos) to build momentum and clarity.",
+      "icon": "fas fa-bullhorn",
+      "category": "people"
+    },
+    "ai_product_teams_setup": {
+      "title": "AI Product teams setup",
+      "description": "Reorganise ways of working and collocate our Business, Data & Tech teams to collaboratively build prototypes.",
+      "icon": "fas fa-users",
+      "category": "people"
+    },
+    "talent_mobility_program": {
+      "title": "Talent mobility program",
+      "description": "Encourage internal moves and communities of practice for AI/data roles; complement with early-career rotations to develop multi-disciplinary skills.",
+      "icon": "fas fa-exchange-alt",
+      "category": "people"
+    },
+    "industrialized_data_pipelines": {
+      "title": "Industrialized Data Pipelines",
+      "description": "Provide a standardized toolbox (ingestion, transformation, orchestration, observability) aligned to our lakehouse and cloud roadmaps for repeatable, auditable pipelines.",
+      "icon": "fas fa-cogs",
+      "category": "technology"
+    },
+    "api_platform": {
+      "title": "API Platform",
+      "description": "Deploy API/event standards and platform so that data and models flow reliably across internal platforms and trusted third parties.",
+      "icon": "fas fa-code",
+      "category": "technology"
+    },
+    "privacy_by_design_data": {
+      "title": "Privacy-by-design data for AI",
+      "description": "Codify data collection, masking, and synthetic-data practices that respect AI-regulation expectations (fairness, transparency, privacy) from design to operation.",
+      "icon": "fas fa-shield-alt",
+      "category": "technology"
+    },
+    "role_responsibility_matrix": {
+      "title": "Role and responsibility matrix",
+      "description": "Clarify roles across data, IT, legal, security, and business risk for policy upkeep, approvals, monitoring, and incident handling.",
       "icon": "fas fa-clipboard-check",
       "category": "gover"
     },
-    "local_ai_risk_management": {
-      "title": "Local AI Risk Management",
-      "description": "Implement localized risk management practices for AI deployments.",
-      "icon": "fas fa-exclamation-triangle",
+    "country_level_ai_deployment": {
+      "title": "Country-level AI deployment plan",
+      "description": "Assess regulatory, privacy, and ethical risks for each deployment geography and define clear mitigation, escalation, and compliance protocols before go-live.",
+      "icon": "fas fa-globe",
       "category": "gover"
     },
     "trusted_partner_ecosystem": {

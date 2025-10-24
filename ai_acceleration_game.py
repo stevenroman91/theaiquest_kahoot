@@ -441,10 +441,10 @@ class AIAccelerationGame:
 
         # Calculer le score basé sur les bonnes réponses
         good_choices = {
-            'industrial_data_pipelines',
-            'business_ai_champions', 
-            'adoption_playbook',
-            'local_ai_risk_management'
+            'industrialized_data_pipelines',
+            'ai_product_teams_setup', 
+            'ai_storytelling_communication',
+            'country_level_ai_deployment'
         }
 
         correct_choices = set(enabler_ids) & good_choices
@@ -557,14 +557,16 @@ class AIAccelerationGame:
                 return 1  # Minimum 1 étoile même si aucun bon choix
         
         elif mot_number == 4:
-            # MOT4: Industrial Data Pipelines + Business AI Champions + Adoption Playbook + Local AI Risk Management = 3/3
-            optimal_enablers = {"industrial_data_pipelines", "business_ai_champions", "adoption_playbook", "local_ai_risk_management"}
+            # MOT4: Les bons choix sont Industrialized Data Pipelines, AI Product teams setup, AI Storytelling & Communication, et Country-level AI deployment plan
+            optimal_enablers = {"industrialized_data_pipelines", "ai_product_teams_setup", "ai_storytelling_communication", "country_level_ai_deployment"}
             selected_enablers = set(self.current_path.mot4_choices)
             matches = len(optimal_enablers.intersection(selected_enablers))
             
             if matches == 4:
                 return 3
             elif matches == 3:
+                return 2
+            elif matches == 2:
                 return 2
             else:
                 return 1
@@ -819,15 +821,15 @@ class AIAccelerationGame:
             "hr_automation": "people",
 
             # Phase 4 - Scaling enablers
-            "reusable_api_patterns": "technology",
-            "industrial_data_pipelines": "technology", 
-            "privacy_by_design_data": "technology",
-            "talent_mobility_program": "people",
-            "business_ai_champions": "people",
-            "ai_storytelling_communication": "people",
             "adoption_playbook": "people",
-            "clear_ownership_accountability": "gover",
-            "local_ai_risk_management": "gover",
+            "ai_storytelling_communication": "people",
+            "ai_product_teams_setup": "people",
+            "talent_mobility_program": "people",
+            "industrialized_data_pipelines": "technology",
+            "api_platform": "technology",
+            "privacy_by_design_data": "technology",
+            "role_responsibility_matrix": "gover",
+            "country_level_ai_deployment": "gover",
             "internal_mobility": "people",
             "data_collection_strategy": "technology", # Corrected: data strategy is platform
             "ceo_video_series": "gover", # Corrected: CEO communication is policies
