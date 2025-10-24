@@ -119,6 +119,12 @@
       "description": "The selected projects are now moving into pilot phase. Each team has started working with vendors, datasets, and internal champions. Sophie's next challenge is to ensure that these pilots not only deliver results but also that the teams invest on the right enablers that accelerate transformation, build trust, and make change sustainable. Which enablers will you choose?",
       "button_text": "Continue"
     },
+    "step4_transition_page": {
+      "title": "STEP 4: Scaling Your AI and GenAI Solutions",
+      "subtitle": "Scaling Your AI and GenAI Solutions",
+      "description": "The first pilots have delivered measurable results: faster creation cycles, better player engagement, and higher satisfaction. Now, Sophie faces her biggest challenge yet — scaling success across the whole company.",
+      "button_text": "Continue to Step 4"
+    },
     "enterprise_scaling_page": {
       "title": "STEP 5: Deploying AI Across the Organization",
       "subtitle": "Scaling Your AI and GenAI Solutions",

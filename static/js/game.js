@@ -165,6 +165,9 @@ class GameController {
             } else if (phaseNumber === 2) {
                 // After Step 2, show Pilot Phase transition screen
                 this.showPilotPhaseScreen();
+            } else if (phaseNumber === 3) {
+                // After Step 3, show Step 4 transition screen
+                this.showStep4TransitionScreen();
             } else if (phaseNumber === 4) {
                 // After Step 4, show Enterprise Scaling transition screen
                 this.showScalingPhaseScreen();
@@ -294,6 +297,15 @@ class GameController {
             continuePilotPhaseBtn.addEventListener('click', () => {
                 console.log('Continue Pilot Phase button clicked!');
                 this.proceedToNextMOT(2); // Proceed to Phase 3 after Step 2
+            });
+        }
+
+        // Continue to Step 4 button
+        const continueToStep4Btn = document.getElementById('continue-to-step4-btn');
+        if (continueToStep4Btn) {
+            continueToStep4Btn.addEventListener('click', () => {
+                console.log('Continue to Step 4 button clicked!');
+                this.proceedToNextMOT(3); // Proceed to Phase 4 after Step 3
             });
         }
 
@@ -738,6 +750,14 @@ class GameController {
         // Show Step 1 follow-up section
         this.showSection('step1-followup-section');
         this.updateProgress(40, 'Strategic Assessment Complete');
+    }
+
+    showStep4TransitionScreen() {
+        console.log('📈 showStep4TransitionScreen() called');
+        
+        // Show Step 4 transition section
+        this.showSection('step4-transition-section');
+        this.updateProgress(70, 'STEP 4: Scaling Your AI and GenAI Solutions');
     }
 
     showScalingPhaseScreen() {

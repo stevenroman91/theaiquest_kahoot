@@ -420,6 +420,26 @@
                 </div>
             </div>
 
+            <!-- Step 4 Transition Section -->
+            <div id="step4-transition-section" class="welcome-page" style="display: none;">
+                <div class="welcome-content">
+                    <div class="welcome-frame">
+                        {% set step4trans = content.get_step4_transition_content() %}
+                        <h3><i class="fas fa-chart-line"></i>{{ step4trans.get('title', 'STEP 4: Scaling Your AI and GenAI Solutions') }}</h3>
+                        <p class="welcome-text" id="step4-transition-text">
+                            {% if step4trans.get('rich_text') %}
+                                {{ step4trans.get('rich_text') | safe }}
+                            {% else %}
+                                {{ step4trans.get('description', '') }}
+                            {% endif %}
+                        </p>
+                        <button id="continue-to-step4-btn" class="btn btn-primary btn-lg">
+                            <i class="fas fa-arrow-right me-2"></i>{{ step4trans.get('button_text', 'Continue to Step 4') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Harnessing Video Section -->
             <div id="harnessing-video-section" class="card mb-4" style="display: none;">
                 <div class="card-header">

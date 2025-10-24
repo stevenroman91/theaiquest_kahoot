@@ -228,6 +228,10 @@ class GameContentManager:
         """Get pilot step page content"""
         return self.get_page_content("pilot_step_page")
     
+    def get_step4_transition_content(self) -> Dict[str, str]:
+        """Get step 4 transition page content"""
+        return self.get_page_content("step4_transition_page")
+    
     def get_enterprise_scaling_content(self) -> Dict[str, str]:
         """Get enterprise scaling page content"""
         return self.get_page_content("enterprise_scaling_page")
