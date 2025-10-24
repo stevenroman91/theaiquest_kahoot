@@ -534,8 +534,8 @@ class AIAccelerationGame:
                 return 0
         
         elif mot_number == 3:
-            # MOT3: Les bons choix sont AI Governance Board, AI Co-Creation Labs et AI & Data Foundations
-            good_choices = {"ai_governance_board", "ai_co_creation_labs", "ai_data_foundations"}
+            # MOT3: Les bons choix sont AI Governance board, AI & Data platform modernization et AI leadership program
+            good_choices = {"ai_governance_board", "ai_data_platform_modernization", "ai_leadership_program"}
 
             # Compter combien de bons choix ont été sélectionnés
             selected_choices = set()

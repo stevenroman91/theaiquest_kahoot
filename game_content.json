@@ -285,65 +285,65 @@
       "description": "Build AI capabilities and teams",
       "video_file": "phase_3.mp4",
       "choices": {
-        "ai_data_foundations": {
-          "title": "AI & Data Foundations",
-          "description": "Evolve hybrid data platform (warehouse + lakehouse) to an Agentic Lakehouse platform, model registry and secure model hosting, with governed Data Products exposed through the Data Marketplace.",
+        "ai_data_platform_modernization": {
+          "title": "AI & Data platform modernization",
+          "description": "Evolve hybrid data platform (warehouse + lakehouse) to a modern Lakehouse platform, model registry and secure model hosting, with governed Data Products exposed through the Data Marketplace.",
           "enablers": [
-            "ai_data_foundations"
+            "ai_data_platform_modernization"
           ]
         },
-        "model_automation_framework": {
-          "title": "Model Automation Framework",
+        "automation_ai_models_deployment": {
+          "title": "Automation of AI models deployment",
           "description": "Implement automated and standardized practices (MLOps & FMOps) to seamlessly deploy, monitor, and maintain AI and foundational models in production, ensuring scalability, reliability, and faster time-to-value.",
           "enablers": [
-            "model_automation_framework"
+            "automation_ai_models_deployment"
           ]
         },
-        "data_readiness_review": {
-          "title": "Data Readiness Review",
-          "description": "Maintain an enterprise view of Data Products (availability, quality, lineage, ownership) to inform AI feasibility and enrichment opportunities.",
+        "data_quality_tooling": {
+          "title": "Data Quality tooling",
+          "description": "Implement automated tools to monitor and improve data quality across all sources. Ensure reliable, consistent and traceable data feed into AI models and business dashboards.",
           "enablers": [
-            "data_readiness_review"
+            "data_quality_tooling"
           ]
         },
         "ai_leadership_program": {
-          "title": "AI Leadership Program",
+          "title": "AI leadership program",
           "description": "Run focused learning for leaders on AI potential, risk, and value realization, anchored in company use cases and leadership toolkits (ethics, governance, talent).",
           "enablers": [
             "ai_leadership_program"
           ]
         },
         "hands_on_ai_bootcamp": {
-          "title": "Hands-On AI Bootcamp for Teams",
-          "description": "A practical upskilling program for delivery teams (designers, analysts, and operators) to master generative and predictive AI tools.",
+          "title": "Hands-On AI Bootcamp for teams",
+          "description": "A practical upskilling program for delivery teams — designers, analysts, and operators — to master generative and predictive AI tools.",
           "enablers": [
             "hands_on_ai_bootcamp"
           ]
         },
-        "ai_co_creation_labs": {
-          "title": "AI Co-Creation Labs",
-          "description": "Bring together representative end‑users to collaboratively shape future workflows, prototype AI‑enabled processes, and run in‑context tests to confirm usability and business fit before scaling.",
+        "business_ai_champions": {
+          "title": "Business AI Champions",
+          "description": "Assign accountable sponsors in each line of business to steer adoption, ROI, and alignment of AI initiatives to strategic goals.",
           "enablers": [
-            "ai_co_creation_labs"
+            "business_ai_champions"
           ]
         },
-        "responsible_ai_framework": {
-          "title": "Responsible AI Framework",
-          "description": "Integrating responsible AI duties into leadership and expert roles to make ethics part of daily decision-making.",
+        "responsible_ai_guidelines": {
+          "title": "Responsible AI guidelines",
+          "description": "Integrating responsible AI duties (carbon cost, GDPR, …) into leadership and expert roles to make ethics part of daily decision-making.",
           "enablers": [
-            "responsible_ai_framework"
+            "responsible_ai_guidelines"
           ]
         },
         "ai_governance_roadmap": {
           "title": "AI Governance Roadmap",
-          "description": "Establish clear governance structures, roles, and processes to ensure AI initiatives align with business objectives and regulatory requirements.",
+          "description": "Define milestones for methods, tooling, controls, and reporting aligned with EU AI Act and internal ethics/security baselines.",
           "enablers": [
             "ai_governance_roadmap"
           ]
         },
         "ai_governance_board": {
-          "title": "AI Governance Board",
-          "description": "Create a cross-functional board to oversee AI strategy, risk management, and ethical considerations.",
+          "title": "AI Governance board",
+          "description": "Run a first‑line review board for AI initiatives, enforce good‑practice guides, and schedule periodic audits over lifecycle.",
           "enablers": [
             "ai_governance_board"
           ]
@@ -566,57 +566,57 @@
       "description": "Internal tool to track AI skills and training needs across teams.",
       "category": "technology"
     },
-    "ai_data_foundations": {
-      "title": "AI & Data Foundations",
-      "description": "Evolve hybrid data platform to an Agentic Lakehouse platform with governed Data Products.",
+    "ai_data_platform_modernization": {
+      "title": "AI & Data platform modernization",
+      "description": "Evolve hybrid data platform (warehouse + lakehouse) to a modern Lakehouse platform, model registry and secure model hosting, with governed Data Products exposed through the Data Marketplace.",
       "icon": "fas fa-database",
       "category": "technology"
     },
-    "model_automation_framework": {
-      "title": "Model Automation Framework",
-      "description": "Implement MLOps & FMOps practices for seamless AI model deployment and monitoring.",
+    "automation_ai_models_deployment": {
+      "title": "Automation of AI models deployment",
+      "description": "Implement automated and standardized practices (MLOps & FMOps) to seamlessly deploy, monitor, and maintain AI and foundational models in production, ensuring scalability, reliability, and faster time-to-value.",
       "icon": "fas fa-robot",
       "category": "technology"
     },
-    "data_readiness_review": {
-      "title": "Data Readiness Review",
-      "description": "Maintain enterprise view of Data Products to inform AI feasibility and enrichment opportunities.",
+    "data_quality_tooling": {
+      "title": "Data Quality tooling",
+      "description": "Implement automated tools to monitor and improve data quality across all sources. Ensure reliable, consistent and traceable data feed into AI models and business dashboards.",
       "icon": "fas fa-clipboard-check",
       "category": "technology"
     },
     "ai_leadership_program": {
-      "title": "AI Leadership Program",
-      "description": "Focused learning for leaders on AI potential, risk, and value realization.",
+      "title": "AI leadership program",
+      "description": "Run focused learning for leaders on AI potential, risk, and value realization, anchored in company use cases and leadership toolkits (ethics, governance, talent).",
       "icon": "fas fa-graduation-cap",
       "category": "people"
     },
     "hands_on_ai_bootcamp": {
-      "title": "Hands-On AI Bootcamp",
-      "description": "Practical upskilling program for delivery teams to master AI tools.",
+      "title": "Hands-On AI Bootcamp for teams",
+      "description": "A practical upskilling program for delivery teams — designers, analysts, and operators — to master generative and predictive AI tools.",
       "icon": "fas fa-code",
       "category": "people"
     },
-    "ai_co_creation_labs": {
-      "title": "AI Co-Creation Labs",
-      "description": "Collaborative spaces for end-users to shape AI-enabled workflows and processes.",
-      "icon": "fas fa-flask",
+    "business_ai_champions": {
+      "title": "Business AI Champions",
+      "description": "Assign accountable sponsors in each line of business to steer adoption, ROI, and alignment of AI initiatives to strategic goals.",
+      "icon": "fas fa-trophy",
       "category": "people"
     },
-    "responsible_ai_framework": {
-      "title": "Responsible AI Framework",
-      "description": "Integrate responsible AI duties into leadership and expert roles.",
+    "responsible_ai_guidelines": {
+      "title": "Responsible AI guidelines",
+      "description": "Integrating responsible AI duties (carbon cost, GDPR, …) into leadership and expert roles to make ethics part of daily decision-making.",
       "icon": "fas fa-shield-alt",
       "category": "gover"
     },
     "ai_governance_roadmap": {
       "title": "AI Governance Roadmap",
-      "description": "Establish clear governance structures, roles, and processes for AI initiatives.",
+      "description": "Define milestones for methods, tooling, controls, and reporting aligned with EU AI Act and internal ethics/security baselines.",
       "icon": "fas fa-route",
       "category": "gover"
     },
     "ai_governance_board": {
-      "title": "AI Governance Board",
-      "description": "Cross-functional board to oversee AI strategy, risk management, and ethics.",
+      "title": "AI Governance board",
+      "description": "Run a first‑line review board for AI initiatives, enforce good‑practice guides, and schedule periodic audits over lifecycle.",
       "icon": "fas fa-gavel",
       "category": "gover"
     },
