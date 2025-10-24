@@ -439,7 +439,7 @@
       "video_file": "phase_5_1.mp4",
       "choices": {
         "ai_for_all": {
-          "title": "AI for all: Turn AI into a company-wide service by communicating ethical standards and sharing tools across teams.",
+          "title": "AI for all",
           "description": "Turn AI into a company-wide service by communicating ethical standards and sharing tools across teams.",
           "icon": "fas fa-share-alt",
           "enablers_1_star": [
@@ -459,7 +459,7 @@
           ]
         },
         "continuous_capability_building": {
-          "title": "Continuous capability building: Define a long-term roadmap for AI governance, develop preferred supplier partnerships, and expand the AI Academy to strengthen internal skills.",
+          "title": "Continuous capability building",
           "description": "Define a long-term roadmap for AI governance, develop preferred supplier partnerships, and expand the AI Academy to strengthen internal skills.",
           "icon": "fas fa-graduation-cap",
           "enablers_1_star": [
@@ -476,7 +476,7 @@
           ]
         },
         "full_speed_on_people": {
-          "title": "Full speed on people: Create a dedicated AI Hub, formalize partnerships, invest in recruiting top AI talents, and grow internal expertise through the AI Academy.",
+          "title": "Full speed on people",
           "description": "Create a dedicated AI Hub, formalize partnerships, invest in recruiting top AI talents, and grow internal expertise through the AI Academy.",
           "icon": "fas fa-users",
           "enablers_1_star": [
