@@ -2280,8 +2280,8 @@ body {
 
 .score-star {
     font-size: 4rem;
-    color: #FFD700;
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    color: #000000;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
     animation: scoreAppear 0.6s ease-out forwards;
     opacity: 0;
     transform: scale(0);
@@ -2926,7 +2926,7 @@ body {
 .mot-square .stars {
     font-size: 0.8rem;
     margin-top: 0.1rem;
-    color: #FFD700;
+    color: #000000;
 }
 
 .total-badge {
@@ -3021,8 +3021,8 @@ body {
 
 .score-star {
     font-size: 4rem;
-    color: #FFD700;
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    color: #000000;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
     animation: scoreAppear 0.6s ease-out forwards;
     opacity: 0;
     transform: scale(0);
