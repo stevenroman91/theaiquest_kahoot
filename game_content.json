@@ -699,7 +699,7 @@
     "automated_banners_generation": {
       "title": "Automated Banners Generation",
       "description": "AI-powered system that creates personalized marketing banners for different player segments.",
-      "icon": "fas fa-image"
+      "icon": "fas fa-paint-brush"
     },
     "customer_email_classifier": {
       "title": "Customer Email Classifier",

@@ -1030,9 +1030,9 @@ class GameController {
 
         // Define custom descriptions with speaker names
         const customDescriptions = {
-            'amira': '[Amira] From a market standpoint, speed is everything. Players\' expectations change weekly — if we hesitate, we lose them. We should empower our teams to experiment with AI tools right now: content generation, campaign optimization, player segmentation. Let them test, iterate, and learn fast.',
-            'james': '[James] We need solid foundations before scaling. Data security, governance frameworks, and robust architecture are non-negotiable. Let\'s build the infrastructure that will support our AI initiatives long-term, ensuring compliance and reliability.',
-            'elena': '[Elena] Success comes from understanding where AI truly creates value and aligning it with our company culture. We should map opportunities across all departments, identify quick wins, and ensure our AI strategy resonates with our organizational values.'
+            'amira': 'Amira: "From a market standpoint, speed is everything. Players\' expectations change weekly — if we hesitate, we lose them. We should empower our teams to experiment with AI tools right now: content generation, campaign optimization, player segmentation. Let them test, iterate, and learn fast."',
+            'james': 'James: "We need solid foundations before scaling. Data security, governance frameworks, and robust architecture are non-negotiable. Let\'s build the infrastructure that will support our AI initiatives long-term, ensuring compliance and reliability."',
+            'elena': 'Elena: "Success comes from understanding where AI truly creates value and aligning it with our company culture. We should map opportunities across all departments, identify quick wins, and ensure our AI strategy resonates with our organizational values."'
         };
         
         // Reorder choices: Amira, James, Elena
@@ -1072,14 +1072,16 @@ class GameController {
                 contentHtml = `
                     <div class="choice-use-cases">
                         <h5><i class="fas fa-lightbulb me-2"></i>Use Cases Available:</h5>
-                        ${details.use_cases.map(useCase => `
+                        ${details.use_cases.map(useCase => {
+                            return `
                             <div class="choice-use-case" data-use-case-id="${useCase.id}">
                                 <div class="use-case-icon">
                                     <i class="${useCase.icon}"></i>
                                 </div>
                                 <div class="use-case-label">${useCase.label}</div>
                                 </div>
-                            `).join('')}
+                            `;
+                        }).join('')}
                         </div>
                 `;
             }
