@@ -1084,11 +1084,11 @@ def get_personalized_step_message(mot_key, choice, score):
     
     elif mot_key == 'mot2':
         if score == 3:
-            return "By selecting the first three — Smart Game Design Assistant, Player Journey Optimizer, and Fraud & Integrity Detection — you earned 3 stars out of 3. You chose solutions that deliver immediate player impact while nurturing creativity and future-ready skills. PlayNext is now ready to move from vision to action."
+            return "Excellent! By selecting the good three — Smart Game Design Assistant, Player Journey Optimizer, and Fraud & Integrity Detection — you earned 3 stars out of 3. These initiatives deliver a good balance of visible impact for both players and internal teams, while laying the groundwork for long-term scalability. Additionally, your decisions show a clear understanding of what matters most: combining innovation, player value, and responsibility. PlayForward is now ready to move from vision to action — with focus, purpose, and measurable results."
         elif score == 2:
-            return "You earned 2 stars out of 3 for your portfolio selection. While you've chosen some strong solutions, consider balancing immediate player impact with long-term strategic value. The optimal mix combines creative tools, player experience optimization, and security measures to build a comprehensive AI foundation."
+            return "Good Choice! Your portfolio includes some high-impact initiatives, but could have been even more optimized to balance value and feasibility. To strengthen your transformation, focus on alignment and execution speed."
         elif score == 1:
-            return "You earned 1 star out of 3 for your portfolio selection. Your choices show potential, but may lack the strategic balance needed for sustainable growth. Consider selecting solutions that work together to create both immediate player value and long-term competitive advantage."
+            return "Interesting Attempt! Your selection shows curiosity and experimentation but lacks strategic coherence. Some of these initiatives may deliver insights, yet they won't create the momentum or credibility needed to drive company-wide transformation. To succeed, narrow your scope — choose higher-impact projects and link them directly to measurable business outcomes."
     
     elif mot_key == 'mot3':
         if score == 3:

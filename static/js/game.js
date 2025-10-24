@@ -2402,11 +2402,11 @@ class GameController {
         } else if (motNumber === 2) {
             // Phase 2 specific messages based on score
             if (score === 3) {
-                description = "By selecting the first three — Smart Game Design Assistant, Player Journey Optimizer, and Fraud & Integrity Detection — you earned 3 stars out of 3. You chose solutions that deliver immediate player impact while nurturing creativity and future-ready skills. PlayNext is now ready to move from vision to action.";
+                description = "Excellent! By selecting the good three — Smart Game Design Assistant, Player Journey Optimizer, and Fraud & Integrity Detection — you earned 3 stars out of 3. These initiatives deliver a good balance of visible impact for both players and internal teams, while laying the groundwork for long-term scalability. Additionally, your decisions show a clear understanding of what matters most: combining innovation, player value, and responsibility. PlayForward is now ready to move from vision to action — with focus, purpose, and measurable results.";
             } else if (score === 2) {
-                description = "You earned 2 stars out of 3 for your portfolio selection. While you've chosen some strong solutions, consider balancing immediate player impact with long-term strategic value. The optimal mix combines creative tools, player experience optimization, and security measures to build a comprehensive AI foundation.";
+                description = "Good Choice! Your portfolio includes some high-impact initiatives, but could have been even more optimized to balance value and feasibility. To strengthen your transformation, focus on alignment and execution speed.";
             } else if (score === 1) {
-                description = "You earned 1 star out of 3 for your portfolio selection. Your choices show potential, but may lack the strategic balance needed for sustainable growth. Consider selecting solutions that work together to create both immediate player value and long-term competitive advantage.";
+                description = "Interesting Attempt! Your selection shows curiosity and experimentation but lacks strategic coherence. Some of these initiatives may deliver insights, yet they won't create the momentum or credibility needed to drive company-wide transformation. To succeed, narrow your scope — choose higher-impact projects and link them directly to measurable business outcomes.";
             } else {
                 description = `Congratulations! You earned ${score} stars for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`;
             }
@@ -2465,8 +2465,8 @@ class GameController {
             description = descriptions[score] || descriptions[1];
         }
         
-        // Set description with Steven's photo for Phase 1
-        if (motNumber === 1) {
+        // Set description with Steven's photo for Phase 1 and 2
+        if (motNumber === 1 || motNumber === 2) {
             const descriptionElement = document.getElementById('score-description');
             descriptionElement.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 20px;">
