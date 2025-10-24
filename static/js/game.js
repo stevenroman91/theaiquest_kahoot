@@ -725,9 +725,9 @@ class GameController {
         const pilotPhaseText = document.getElementById('pilot-phase-text');
         if (pilotPhaseText) {
             pilotPhaseText.innerHTML = `
-                ${projectsText} Each team has begun working with vendors, datasets, and internal champions.
+                The selected projects are now moving into pilot phase. Each team has started working with vendors, datasets, and internal champions.
                 <br><br>
-                Sophie's next challenge is to ensure that these pilots not only deliver results but also inspire adoption across the company. To do this, she must choose the right enablers — initiatives that accelerate transformation, build trust, and make change sustainable.
+                Sophie's next challenge is to ensure that these pilots not only deliver results but also that the teams invest on the right enablers that accelerate transformation, build trust, and make change sustainable. Which enablers will you choose?
             `;
         }
     }
