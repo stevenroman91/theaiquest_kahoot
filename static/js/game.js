@@ -3666,12 +3666,9 @@ function initializeHarnessingVideo() {
             window.gameController.stopAllVideos();
         }
         
-        // Quand la vidéo se termine, passer directement à la page Teams Meeting
+        // Quand la vidéo se termine, juste cacher les boutons (ne pas passer automatiquement à Teams Meeting)
         harnessingVideoElement.addEventListener('ended', function() {
-            document.getElementById('skip-harnessing-btn').style.display = 'none';
-            if (window.gameController) {
-                window.gameController.showTeamsMeetingSection();
-            }
+            // Ne rien faire - le bouton "Continue" reste visible et fonctionnel
         });
         
         // Démarrer la vidéo automatiquement
