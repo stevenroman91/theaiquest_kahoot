@@ -107,26 +107,26 @@
       "button_text": "Join Teams meeting"
     },
     "step1_followup_page": {
-      "title": "Building your AI use cases portfolio",
+      "title": "STEP 2: Building your AI use cases portfolio",
       "subtitle": "Step 1 Follow-up",
       "description": "Following the first strategic discussions, Sophie – the AI Director – decided to go with the value-driven approach of Elena. Over the past weeks, the AI team assessed potential AI opportunities across production, marketing, operations, and player engagement. Now, Marcus – the CEO – expects Sophie to present a synthesis of the most promising use cases — the ones that deliver measurable impact quickly, with reasonable effort and manageable risk.",
       "objective": "Your objective is now to prioritize where AI can create visible value while keeping complexity under control. Which AI use cases will you launch?",
       "button_text": "Continue to Step 2"
     },
     "pilot_step_page": {
-      "title": "Launching your priority AI pilots",
+      "title": "STEP 3: Launching your priority AI pilots",
       "subtitle": "Launching Your Priority AI Pilots",
       "description": "The selected projects are now moving into pilot phase. Each team has started working with vendors, datasets, and internal champions. Sophie's next challenge is to ensure that these pilots not only deliver results but also that the teams invest on the right enablers that accelerate transformation, build trust, and make change sustainable. Which enablers will you choose?",
       "button_text": "Continue"
     },
     "step4_transition_page": {
-      "title": "Scaling your AI and GenAI solutions",
+      "title": "STEP 4: Scaling your AI and GenAI solutions",
       "subtitle": "Scaling Your AI and GenAI Solutions",
       "description": "The first pilots have delivered measurable results: faster creation cycles, better player engagement, and higher satisfaction. Now, Sophie faces her biggest challenge yet — scaling success across the whole company.",
       "button_text": "Continue to Step 4"
     },
     "enterprise_scaling_page": {
-      "title": "Deploying AI across the organization",
+      "title": "STEP 5: Deploying AI across the organization",
       "subtitle": "Scaling Your AI and GenAI Solutions",
       "description": "After several months of scaling, AI and GenAI are now part of PlayForward's daily rhythm.\nThe company's success has caught the attention of the executive committee — who now want to accelerate even further, extending AI across all studios, markets, and business functions.\nSophie faces a new challenge: scaling not just systems, but capabilities — data, skills, governance, and partnerships — to make AI truly enterprise-wide.",
       "button_text": "Continue"
@@ -134,7 +134,7 @@
   },
   "game_steps": {
     "step1": {
-      "title": "Get started with the right AI strategy",
+      "title": "STEP 1: Get started with the right AI strategy",
       "description": "You've heard three different approaches to launch your AI transformation. Which one will you choose?",
       "video": "phase_1.mp4",
       "choices": {
@@ -191,29 +191,29 @@
       }
     },
     "step2": {
-      "title": "Building your AI use cases portfolio",
+      "title": "STEP 2: Building your AI use cases portfolio",
       "description": "Among the five AI solutions highlighted on the matrix, which three will you select and implement first?",
       "video": "phase_2.mp4"
     },
     "step3": {
-      "title": "Launching your priority AI pilots",
+      "title": "STEP 3: Launching your priority AI pilots",
       "description": "With your use cases identified, it's time to launch your first AI pilots.",
       "video": "phase_3.mp4"
     },
     "step4": {
-      "title": "Scaling your AI and GenAI solutions",
+      "title": "STEP 4: Scaling your AI and GenAI solutions",
       "description": "Your pilots are successful! Now it's time to scale across the organization.",
       "video": "phase_4.mp4"
     },
     "step5": {
-      "title": "Deploying AI across the organization",
+      "title": "STEP 5: Deploying AI across the organization",
       "description": "The final step: deploying AI across the entire organization.",
       "video": "phase_5_1.mp4"
     }
   },
   "phases": {
     "phase1": {
-      "title": "Get started with the right AI strategy",
+      "title": "STEP 1: Get started with the right AI strategy",
       "description": "You've heard three different approaches to launch your AI transformation. Which one will you choose?",
       "video_file": "phase_1.mp4",
       "choices": {
