@@ -129,7 +129,7 @@ class GameController {
 
         // Play again button
         document.getElementById('play-again-btn').addEventListener('click', () => {
-            this.resetGame();
+            window.location.href = '/?reset=1';
         });
 
         // Score screen next button
