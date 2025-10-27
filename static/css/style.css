@@ -1627,11 +1627,7 @@ body.modal-open {
     line-height: 1.1 !important;
     color: #374151;
     font-style: italic;
-    background: #f8fafc;
-}
-    padding: 15px;
-    border-radius: 8px;
-    border-left: 4px solid #3b82f6;
+    background: transparent;
 }
 
 .choice-tools {
