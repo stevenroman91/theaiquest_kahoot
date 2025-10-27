@@ -1075,7 +1075,6 @@ class GameController {
             if (details.enablers && details.enablers.length > 0) {
                 contentHtml = `
                     <div class="choice-enablers">
-                        <h5><i class="fas fa-cogs me-2"></i>Launch 2 Enablers immediately</h5>
                         ${details.enablers.map(enabler => `
                             <div class="choice-enabler" data-enabler-id="${enabler.id}">
                                 <div class="enabler-icon ${enabler.category}">
@@ -1751,18 +1750,18 @@ class GameController {
         // Define specific icons for each choice
         const choiceIcons = {
             // Technology
-            'ai_data_foundations': 'fas fa-database',
-            'model_automation_framework': 'fas fa-robot',
-            'data_readiness_review': 'fas fa-clipboard-check',
+            'ai_data_platform_modernization': 'fas fa-database',
+            'automation_ai_models_deployment': 'fas fa-robot',
+            'data_quality_tooling': 'fas fa-clipboard-check',
             
             // People
             'ai_leadership_program': 'fas fa-graduation-cap',
-            'hands_on_ai_bootcamp': 'fas fa-laptop-code',
-            'ai_co_creation_labs': 'fas fa-users',
+            'hands_on_ai_bootcamp': 'fas fa-code',
+            'business_ai_champions': 'fas fa-trophy',
             
-            // Gover
-            'responsible_ai_framework': 'fas fa-shield-alt',
-            'ai_governance_roadmap': 'fas fa-route',
+            // Governance
+            'responsible_ai_guidelines': 'fas fa-shield-alt',
+            'ai_governance_roadmap': 'fas fa-map-signs',
             'ai_governance_board': 'fas fa-gavel'
         };
 
@@ -1961,7 +1960,16 @@ class GameController {
             'api_platform': 'technology',
             'privacy_by_design_data': 'technology',
             'role_responsibility_matrix': 'gover',
-            'country_level_ai_deployment': 'gover'
+            'country_level_ai_deployment': 'gover',
+            // Step 5 enablers
+            'self_service_ai_tools': 'technology',
+            'data_ai_academy': 'people',
+            'ai_collaboration_hub': 'people',
+            'attractive_ai_career_tracks': 'people',
+            'responsible_ai_awareness': 'gover',
+            'trusted_tech_partners': 'technology',
+            'ai_governance_roadmap': 'gover',
+            'ai_value_office': 'gover'
         };
 
         // Create simple grid directly (3x3 matrix)
@@ -1996,6 +2004,17 @@ class GameController {
 
     getEnablerIcon(enablerId) {
         const iconMap = {
+            // Phase 3 enablers
+            'ai_data_platform_modernization': 'fas fa-database',
+            'automation_ai_models_deployment': 'fas fa-robot',
+            'data_quality_tooling': 'fas fa-clipboard-check',
+            'ai_leadership_program': 'fas fa-graduation-cap',
+            'hands_on_ai_bootcamp': 'fas fa-code',
+            'business_ai_champions': 'fas fa-trophy',
+            'responsible_ai_guidelines': 'fas fa-shield-alt',
+            'ai_governance_roadmap': 'fas fa-map-signs',
+            'ai_governance_board': 'fas fa-gavel',
+            // Phase 4 enablers
             'adoption_playbook': 'fas fa-book',
             'ai_storytelling_communication': 'fas fa-bullhorn',
             'ai_product_teams_setup': 'fas fa-users',
@@ -2006,13 +2025,14 @@ class GameController {
             'role_responsibility_matrix': 'fas fa-clipboard-check',
             'country_level_ai_deployment': 'fas fa-globe',
             // Phase 5 enablers
-            'trusted_partner_ecosystem': 'fas fa-handshake',
-            'enterprise_ai_service_layer': 'fas fa-layer-group',
+            'self_service_ai_tools': 'fas fa-tools',
+            'data_ai_academy': 'fas fa-book-open',
             'ai_collaboration_hub': 'fas fa-project-diagram',
-            'group_responsible_ai_awareness': 'fas fa-shield-alt',
-            'early_career_pipeline_expert_retention': 'fas fa-graduation-cap',
-            'value_driven_governance': 'fas fa-chart-line',
-            'data_ai_academy': 'fas fa-university'
+            'attractive_ai_career_tracks': 'fas fa-user-tie',
+            'responsible_ai_awareness': 'fas fa-shield-alt',
+            'trusted_tech_partners': 'fas fa-handshake',
+            'ai_governance_roadmap': 'fas fa-map-signs',
+            'ai_value_office': 'fas fa-chart-line'
         };
         return iconMap[enablerId] || 'fas fa-cog';
     }
@@ -2214,23 +2234,31 @@ class GameController {
 
         // Define choice details based on the template
         const choiceDetails = {
-            'ai_for_all': {
+            'boost_self_service_ai': {
                 enablers: [
-                    { id: 'trusted_partner_ecosystem', icon: 'fas fa-handshake', label: 'Trusted Partner Ecosystem', category: 'technology' },
-                    { id: 'enterprise_ai_service_layer', icon: 'fas fa-layer-group', label: 'Enterprise AI service layer', category: 'technology' },
-                    { id: 'ai_collaboration_hub', icon: 'fas fa-project-diagram', label: 'AI Collaboration Hub', category: 'technology' }
+                    { id: 'self_service_ai_tools', icon: 'fas fa-tools', label: 'Self-service AI tools', category: 'technology' },
+                    { id: 'data_ai_academy', icon: 'fas fa-book-open', label: 'Data & AI Academy', category: 'people' },
+                    { id: 'ai_collaboration_hub', icon: 'fas fa-project-diagram', label: 'AI Collaboration Hub', category: 'people' },
+                    { id: 'attractive_ai_career_tracks', icon: 'fas fa-user-tie', label: 'Attractive AI career tracks', category: 'people' },
+                    { id: 'responsible_ai_awareness', icon: 'fas fa-shield-alt', label: 'Responsible AI awareness', category: 'gover' }
                 ]
             },
-            'continuous_capability_building': {
+            'build_to_scale': {
                 enablers: [
-                    { id: 'group_responsible_ai_awareness', icon: 'fas fa-shield-alt', label: 'Group Responsible AI awareness', category: 'gover' },
-                    { id: 'early_career_pipeline_expert_retention', icon: 'fas fa-graduation-cap', label: 'Early‑career pipeline & expert retention', category: 'people' }
+                    { id: 'trusted_tech_partners', icon: 'fas fa-handshake', label: 'Trusted tech partners', category: 'technology' },
+                    { id: 'ai_collaboration_hub', icon: 'fas fa-project-diagram', label: 'AI Collaboration Hub', category: 'people' },
+                    { id: 'attractive_ai_career_tracks', icon: 'fas fa-user-tie', label: 'Attractive AI career tracks', category: 'people' },
+                    { id: 'ai_governance_roadmap', icon: 'fas fa-map-signs', label: 'AI Governance Roadmap', category: 'gover' },
+                    { id: 'responsible_ai_awareness', icon: 'fas fa-shield-alt', label: 'Responsible AI awareness', category: 'gover' }
                 ]
             },
-            'full_speed_on_people': {
+            'empower_people_amplify_impact': {
                 enablers: [
-                    { id: 'value_driven_governance', icon: 'fas fa-chart-line', label: 'Value-Driven Governance', category: 'gover' },
-                    { id: 'data_ai_academy', icon: 'fas fa-university', label: 'Data & AI Academy', category: 'people' }
+                    { id: 'trusted_tech_partners', icon: 'fas fa-handshake', label: 'Trusted tech partners', category: 'technology' },
+                    { id: 'data_ai_academy', icon: 'fas fa-book-open', label: 'Data & AI Academy', category: 'people' },
+                    { id: 'attractive_ai_career_tracks', icon: 'fas fa-user-tie', label: 'Attractive AI career tracks', category: 'people' },
+                    { id: 'ai_value_office', icon: 'fas fa-chart-line', label: 'AI Value Office', category: 'gover' },
+                    { id: 'ai_governance_roadmap', icon: 'fas fa-map-signs', label: 'AI Governance Roadmap', category: 'gover' }
                 ]
             }
         };
@@ -2246,7 +2274,6 @@ class GameController {
             if (details.enablers && details.enablers.length > 0) {
                 contentHtml = `
                     <div class="choice-enablers">
-                        <h5><i class="fas fa-cogs me-2"></i>Launch 2 Enablers immediately</h5>
                         ${details.enablers.map(enabler => `
                             <div class="choice-enabler" data-enabler-id="${enabler.id}">
                                 <div class="enabler-icon ${enabler.category}">
@@ -2463,12 +2490,12 @@ class GameController {
             const currentChoice = this.selectedChoices.mot5;
             console.log('DEBUG Phase 5:', { motNumber, score, currentChoice, scoreData });
             
-            if (currentChoice === 'full_speed_on_people' && score === 3) {
-                description = "By choosing \"Full Speed on People,\" you earned three stars out of three. You focused on what matters most — people, skills, and collaboration. This approach maximizes the impact of PlayNext's AI strategy while ensuring a sustainable, human-centered transformation.";
-            } else if (currentChoice === 'continuous_capability_building' && score === 2) {
-                description = "By choosing \"Continuous Capability Building,\" you earned two stars out of three. While this approach builds solid foundations for long-term AI governance and skill development, it may miss opportunities for immediate impact and rapid scaling that could accelerate your transformation journey.";
-            } else if (currentChoice === 'ai_for_all' && score === 1) {
-                description = "By choosing \"AI for All,\" you earned one star out of three. While this approach aims to democratize AI across the company, it may lack the strategic focus and foundational structure needed for sustainable transformation. Consider balancing broad access with targeted capability building and governance.";
+            if (currentChoice === 'empower_people_amplify_impact' && score === 3) {
+                description = "By choosing \"Empower People, Amplify Impact,\" you earned three stars out of three. You focused on what matters most — creating a strong value office, formalizing partnerships, and investing in top AI talent. This approach maximizes the impact of PlayForward's AI strategy while ensuring sustainable, human-centered transformation.";
+            } else if (currentChoice === 'build_to_scale' && score === 2) {
+                description = "By choosing \"Build to Scale,\" you earned two stars out of three. While this approach builds solid foundations for long-term AI development and tech partnerships, it may miss opportunities for immediate impact and rapid scaling that could accelerate your transformation journey.";
+            } else if (currentChoice === 'boost_self_service_ai' && score === 1) {
+                description = "By choosing \"Boost self-service AI,\" you earned one star out of three. While this approach aims to democratize AI across the company, it may lack the strategic focus and foundational structure needed for sustainable transformation. Consider balancing broad access with targeted capability building and governance.";
             } else {
                 description = `Congratulations! You earned ${score} stars for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`;
             }

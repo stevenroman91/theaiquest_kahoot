@@ -441,58 +441,82 @@
       "description": "Deploy AI enterprise-wide",
       "video_file": "phase_5_1.mp4",
       "choices": {
-        "ai_for_all": {
-          "title": "AI for all",
-          "description": "Turn AI into a company-wide service by communicating ethical standards and sharing tools across teams.",
+        "boost_self_service_ai": {
+          "title": "Boost self-service AI",
+          "description": "Turn AI into a company-wide movement by communicating ethical standards, sharing use cases, training and providing broad access to AI tools and self-service agentic platform.",
           "icon": "fas fa-share-alt",
           "enablers_1_star": [
-            "trusted_partner_ecosystem",
-            "enterprise_ai_service_layer",
-            "ai_collaboration_hub"
+            "self_service_ai_tools",
+            "data_ai_academy",
+            "ai_collaboration_hub",
+            "attractive_ai_career_tracks",
+            "responsible_ai_awareness"
           ],
           "enablers_2_stars": [
-            "trusted_partner_ecosystem",
-            "enterprise_ai_service_layer",
-            "ai_collaboration_hub"
+            "self_service_ai_tools",
+            "data_ai_academy",
+            "ai_collaboration_hub",
+            "attractive_ai_career_tracks",
+            "responsible_ai_awareness"
           ],
           "enablers_3_stars": [
-            "trusted_partner_ecosystem",
-            "enterprise_ai_service_layer",
-            "ai_collaboration_hub"
+            "self_service_ai_tools",
+            "data_ai_academy",
+            "ai_collaboration_hub",
+            "attractive_ai_career_tracks",
+            "responsible_ai_awareness"
           ]
         },
-        "continuous_capability_building": {
-          "title": "Continuous capability building",
-          "description": "Define a long-term roadmap for AI governance, develop preferred supplier partnerships, and expand the AI Academy to strengthen internal skills.",
+        "build_to_scale": {
+          "title": "Build to Scale",
+          "description": "Define a long-term roadmap for AI, develop preferred tech partnerships, and build up tech expert bench and delivery hub.",
           "icon": "fas fa-graduation-cap",
           "enablers_1_star": [
-            "group_responsible_ai_awareness",
-            "early_career_pipeline_expert_retention"
+            "trusted_tech_partners",
+            "ai_collaboration_hub",
+            "attractive_ai_career_tracks",
+            "ai_governance_roadmap",
+            "responsible_ai_awareness"
           ],
           "enablers_2_stars": [
-            "group_responsible_ai_awareness",
-            "early_career_pipeline_expert_retention"
+            "trusted_tech_partners",
+            "ai_collaboration_hub",
+            "attractive_ai_career_tracks",
+            "ai_governance_roadmap",
+            "responsible_ai_awareness"
           ],
           "enablers_3_stars": [
-            "group_responsible_ai_awareness",
-            "early_career_pipeline_expert_retention"
+            "trusted_tech_partners",
+            "ai_collaboration_hub",
+            "attractive_ai_career_tracks",
+            "ai_governance_roadmap",
+            "responsible_ai_awareness"
           ]
         },
-        "full_speed_on_people": {
-          "title": "Full speed on people",
-          "description": "Create a dedicated AI Hub, formalize partnerships, invest in recruiting top AI talents, and grow internal expertise through the AI Academy.",
+        "empower_people_amplify_impact": {
+          "title": "Empower People, Amplify Impact",
+          "description": "Create a strong value office to steer ROI and overall AI portfolio, formalize partnerships, invest in recruiting top AI talents, and grow internal expertise through the AI Academy.",
           "icon": "fas fa-users",
           "enablers_1_star": [
-            "value_driven_governance",
-            "data_ai_academy"
+            "trusted_tech_partners",
+            "data_ai_academy",
+            "attractive_ai_career_tracks",
+            "ai_value_office",
+            "ai_governance_roadmap"
           ],
           "enablers_2_stars": [
-            "value_driven_governance",
-            "data_ai_academy"
+            "trusted_tech_partners",
+            "data_ai_academy",
+            "attractive_ai_career_tracks",
+            "ai_value_office",
+            "ai_governance_roadmap"
           ],
           "enablers_3_stars": [
-            "value_driven_governance",
-            "data_ai_academy"
+            "trusted_tech_partners",
+            "data_ai_academy",
+            "attractive_ai_career_tracks",
+            "ai_value_office",
+            "ai_governance_roadmap"
           ]
         }
       }
@@ -692,12 +716,6 @@
       "icon": "fas fa-layer-group",
       "category": "technology"
     },
-    "ai_collaboration_hub": {
-      "title": "AI Collaboration Hub",
-      "description": "Centralized platform for AI collaboration, knowledge sharing, and best practices.",
-      "icon": "fas fa-users",
-      "category": "technology"
-    },
     "group_responsible_ai_awareness": {
       "title": "Group Responsible AI Awareness",
       "description": "Organization-wide responsible AI practices and awareness programs.",
@@ -720,6 +738,48 @@
       "title": "Data & AI Academy",
       "description": "Comprehensive learning platform for data and AI skills development.",
       "category": "people"
+    },
+    "self_service_ai_tools": {
+      "title": "Self-service AI tools",
+      "description": "Provide approved AI self-service platform, enabling every employee to experiment, prototype, and automate tasks without technical support.",
+      "icon": "fas fa-tools",
+      "category": "technology"
+    },
+    "ai_collaboration_hub": {
+      "title": "AI Collaboration Hub",
+      "description": "Host a light, shared space (physical + virtual) to experiment, document re-usable patterns, and disseminate standard agents/workflows under governance.",
+      "icon": "fas fa-project-diagram",
+      "category": "people"
+    },
+    "attractive_ai_career_tracks": {
+      "title": "Attractive AI career tracks",
+      "description": "Set up a selective rotational program in data/AI/business and reinforce recognition paths to retain key experts.",
+      "icon": "fas fa-user-tie",
+      "category": "people"
+    },
+    "responsible_ai_awareness": {
+      "title": "Responsible AI awareness",
+      "description": "Make \"Responsible Data & AI\" modules mandatory, with simple guidance on dos/don'ts and where to ask for help or report issues.",
+      "icon": "fas fa-shield-alt",
+      "category": "gover"
+    },
+    "trusted_tech_partners": {
+      "title": "Trusted tech partners",
+      "description": "Keep a curated bench of consulting and technology partners, selected per scope (marketing, platform, governance, change) with measurable outcomes and exit criteria.",
+      "icon": "fas fa-handshake",
+      "category": "technology"
+    },
+    "ai_governance_roadmap": {
+      "title": "AI Governance Roadmap",
+      "description": "Define milestones for methods, tooling, controls, and reporting aligned with EU AI Act and internal ethics/security baselines.",
+      "icon": "fas fa-map-signs",
+      "category": "gover"
+    },
+    "ai_value_office": {
+      "title": "AI Value Office",
+      "description": "Prioritize and fund AI initiatives based on transparent value cases, capacity, and risk, with regular performance reviews and stop/go criteria.",
+      "icon": "fas fa-chart-line",
+      "category": "gover"
     }
   },
   "use_cases": {
@@ -771,11 +831,6 @@
       "title": "Player Behavior Analytics",
       "description": "Advanced analytics to understand player patterns and preferences.",
       "icon": "fas fa-chart-bar"
-    },
-    "dynamic_pricing": {
-      "title": "Dynamic Pricing",
-      "description": "Real-time pricing optimization based on market conditions.",
-      "icon": "fas fa-tags"
     }
   },
   "dashboard": {

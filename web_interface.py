@@ -867,6 +867,11 @@ def api_executive_dashboard():
             print(f"DEBUG web_interface: phase4 phase_choices type={type(phase_choices)}, len={len(phase_choices) if phase_choices else 'None'}")
         
         for choice_id, choice_data in phase_choices.items():
+            # Pour la phase 5, ne charger que les enablers du choix réel fait par le joueur
+            if phase_id == 'phase5' and game.current_path.mot5_choice and choice_id != game.current_path.mot5_choice:
+                print(f"DEBUG web_interface: Skipping choice {choice_id} (player chose {game.current_path.mot5_choice})")
+                continue
+            
             # Récupérer les enablers de ce choix
             choice_enablers = template.get_choice_enablers(phase_id, choice_id)
             
@@ -887,7 +892,7 @@ def api_executive_dashboard():
         
         for enabler in enablers:
             # Déterminer la catégorie de cet enabler
-            # Pour les enablers du Step 4, utiliser le mapping direct car les IDs des choix et enablers sont identiques
+            # Pour les enablers du Step 4 et 5, utiliser le mapping direct car les IDs des choix et enablers sont identiques
             if phase == 'phase4':
                 # Mapping direct pour les enablers du Step 4
                 enabler_to_category = {
@@ -900,6 +905,19 @@ def api_executive_dashboard():
                     'privacy_by_design_data': 'technology',
                     'role_responsibility_matrix': 'gover',
                     'country_level_ai_deployment': 'gover'
+                }
+                enabler_category = enabler_to_category.get(enabler, 'people')
+            elif phase == 'phase5':
+                # Mapping direct pour les enablers du Step 5
+                enabler_to_category = {
+                    'self_service_ai_tools': 'technology',
+                    'data_ai_academy': 'people',
+                    'ai_collaboration_hub': 'people',
+                    'attractive_ai_career_tracks': 'people',
+                    'responsible_ai_awareness': 'gover',
+                    'trusted_tech_partners': 'technology',
+                    'ai_governance_roadmap': 'gover',
+                    'ai_value_office': 'gover'
                 }
                 enabler_category = enabler_to_category.get(enabler, 'people')
             else:
@@ -1107,12 +1125,12 @@ def get_personalized_step_message(mot_key, choice, score):
             return "Interesting Attempt! You activated useful levers, yet missed the full triad of enablers that turn pilots into sustainable impact. Without strong data pipelines or structured adoption support, your AI initiatives risk becoming fragmented or over-dependent on a few champions."
     
     elif mot_key == 'mot5':
-        if choice == 'full_speed_on_people' and score == 3:
-            return "By choosing \"Full Speed on People,\" you earned three stars out of three. You focused on what matters most — people, skills, and collaboration. This approach maximizes the impact of PlayNext's AI strategy while ensuring a sustainable, human-centered transformation."
-        elif choice == 'continuous_capability_building' and score == 2:
-            return "By choosing \"Continuous Capability Building,\" you earned two stars out of three. While this approach builds solid foundations for long-term AI governance and skill development, it may miss opportunities for immediate impact and rapid scaling that could accelerate your transformation journey."
-        elif choice == 'ai_for_all' and score == 1:
-            return "By choosing \"AI for All,\" you earned one star out of three. While this approach aims to democratize AI across the company, it may lack the strategic focus and foundational structure needed for sustainable transformation. Consider balancing broad access with targeted capability building and governance."
+        if choice == 'empower_people_amplify_impact' and score == 3:
+            return "By choosing \"Empower People, Amplify Impact,\" you earned three stars out of three. You focused on what matters most — creating a strong value office, formalizing partnerships, and investing in top AI talent. This approach maximizes the impact of PlayForward's AI strategy while ensuring sustainable, human-centered transformation."
+        elif choice == 'build_to_scale' and score == 2:
+            return "By choosing \"Build to Scale,\" you earned two stars out of three. While this approach builds solid foundations for long-term AI development and tech partnerships, it may miss opportunities for immediate impact and rapid scaling that could accelerate your transformation journey."
+        elif choice == 'boost_self_service_ai' and score == 1:
+            return "By choosing \"Boost self-service AI,\" you earned one star out of three. While this approach aims to democratize AI across the company, it may lack the strategic focus and foundational structure needed for sustainable transformation. Consider balancing broad access with targeted capability building and governance."
     
     # Messages génériques pour les autres phases
     return f"Congratulations! You earned {score} star{'s' if score > 1 else ''} for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game."
