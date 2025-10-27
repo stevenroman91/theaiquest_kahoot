@@ -1053,9 +1053,9 @@ class GameController {
             // Descriptions supprimées comme demandé
         };
         
-        // Reorder choices: Amira, James, Elena
+        // Reorder choices: Amira, Elena, James
         const reorderedChoices = [];
-        const order = ['amira', 'james', 'elena'];
+        const order = ['amira', 'elena', 'james'];
         
         order.forEach(id => {
             const choice = choices.find(c => c.id === id);
