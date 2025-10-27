@@ -2949,13 +2949,15 @@ body {
     color: #000000 !important;
 }
 
-/* Star colors: filled = yellow, empty = black */
+/* Star colors: filled = yellow, empty = black outline */
 .progress-section .mot-square .star-filled {
     color: #FFD700 !important;
 }
 
 .progress-section .mot-square .star-empty {
     color: #000000 !important;
+    -webkit-text-stroke: 1px #000000;
+    -webkit-text-fill-color: #000000;
 }
 
 .total-badge {
