@@ -1,70 +1,80 @@
 [
   {
-    "mot1_choice": "james",
+    "mot1_choice": "elena",
     "mot2_choices": [
       "fraud_integrity_detection",
       "smart_game_design_assistant",
       "player_journey_optimizer"
     ],
     "mot3_choices": {
-      "technology": "data_readiness_review",
-      "people": "ai_co_creation_labs",
+      "technology": "ai_data_platform_modernization",
+      "people": "ai_leadership_program",
       "gover": "ai_governance_board"
     },
     "mot4_choices": [
-      "local_ai_risk_management",
-      "clear_ownership_accountability"
+      "ai_storytelling_communication",
+      "adoption_playbook",
+      "ai_product_teams_setup",
+      "industrialized_data_pipelines"
     ],
-    "mot5_choice": "ai_for_all",
-    "total_score": 9,
-    "stars": 1,
+    "mot5_choice": "empower_people_amplify_impact",
+    "total_score": 14,
+    "stars": 2,
     "mot_scores": {
-      "mot1": 2,
+      "mot1": 3,
       "mot2": 3,
-      "mot3": 2,
-      "mot4": 1,
-      "mot5": 1
+      "mot3": 3,
+      "mot4": 2,
+      "mot5": 3
     },
     "unlocked_enablers": [
-      "trusted_partner_ecosystem",
-      "Smart Game Design Assistant",
-      "local_ai_risk_management",
-      "data_readiness_review",
       "Player Journey Optimizer",
-      "clear_ownership_accountability",
-      "ai_collaboration_hub",
+      "ai_data_platform_modernization",
+      "ai_governance_roadmap",
+      "ai_leadership_program",
+      "ai_value_office",
+      "industrialized_data_pipelines",
       "Fraud & Integrity Detection",
-      "ai_tech_strategic_partnership",
+      "adoption_playbook",
+      "ai_product_teams_setup",
+      "trusted_tech_partners",
       "ai_governance_board",
-      "ai_co_creation_labs",
-      "bulk_data_transfert",
-      "enterprise_ai_service_layer"
+      "attractive_ai_career_tracks",
+      "data_ai_academy",
+      "Smart Game Design Assistant",
+      "ai_value_opportunities_gaming",
+      "ai_storytelling_communication",
+      "ai_tech_benchmark"
     ],
     "unlocked_enablers_by_category": {
       "technology": [
-        "trusted_partner_ecosystem",
-        "Smart Game Design Assistant",
         "Player Journey Optimizer",
-        "data_readiness_review",
-        "ai_collaboration_hub",
+        "ai_data_platform_modernization",
+        "industrialized_data_pipelines",
         "Fraud & Integrity Detection",
-        "ai_tech_strategic_partnership",
-        "bulk_data_transfert",
-        "enterprise_ai_service_layer"
+        "trusted_tech_partners",
+        "Smart Game Design Assistant",
+        "ai_tech_benchmark"
       ],
       "gover": [
-        "clear_ownership_accountability",
-        "local_ai_risk_management",
-        "ai_governance_board"
+        "ai_value_opportunities_gaming",
+        "ai_governance_board",
+        "ai_governance_roadmap",
+        "ai_value_office"
       ],
       "people": [
-        "ai_co_creation_labs"
+        "ai_leadership_program",
+        "adoption_playbook",
+        "ai_product_teams_setup",
+        "attractive_ai_career_tracks",
+        "data_ai_academy",
+        "ai_storytelling_communication"
       ]
     },
     "enablers_by_phase": {
       "phase1": [
-        "ai_tech_strategic_partnership",
-        "bulk_data_transfert"
+        "ai_value_opportunities_gaming",
+        "ai_tech_benchmark"
       ],
       "phase2": [
         "Player Journey Optimizer",
@@ -72,20 +82,24 @@
         "Smart Game Design Assistant"
       ],
       "phase3": [
-        "data_readiness_review",
-        "ai_governance_board",
-        "ai_co_creation_labs"
+        "ai_data_platform_modernization",
+        "ai_leadership_program",
+        "ai_governance_board"
       ],
       "phase4": [
-        "clear_ownership_accountability",
-        "local_ai_risk_management"
+        "ai_product_teams_setup",
+        "industrialized_data_pipelines",
+        "ai_storytelling_communication",
+        "adoption_playbook"
       ],
       "phase5": [
-        "trusted_partner_ecosystem",
-        "enterprise_ai_service_layer",
-        "ai_collaboration_hub"
+        "ai_governance_roadmap",
+        "ai_value_office",
+        "trusted_tech_partners",
+        "attractive_ai_career_tracks",
+        "data_ai_academy"
       ]
     },
-    "mot4_score": 1
+    "mot4_score": 2
   }
 ]

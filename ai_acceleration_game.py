@@ -572,8 +572,8 @@ class AIAccelerationGame:
                 return 1
         
         elif mot_number == 5:
-            # MOT5: full_speed_on_people=3, continuous_capability_building=2, ai_for_all=1
-            mot5_scores = {"full_speed_on_people": 3, "continuous_capability_building": 2, "ai_for_all": 1}
+            # MOT5: empower_people_amplify_impact=3, build_to_scale=2, boost_self_service_ai=1
+            mot5_scores = {"empower_people_amplify_impact": 3, "build_to_scale": 2, "boost_self_service_ai": 1}
             return mot5_scores.get(self.current_path.mot5_choice, 0)
         
         return 0
