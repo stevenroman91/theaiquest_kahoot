@@ -3150,13 +3150,13 @@ class GameController {
                                     </div>
                                     <div class="mb-3">
                                         <strong>3️⃣ Enablers for acceleration</strong><br>
-                                        Scaling success requires more than pilots. Participants identified the practical enablers — in Transformation & Change, Technology & Partnerships, and Policies & Governance — that turn experiments into sustainable operations.
+                                        Scaling success requires more than pilots. Participants identified the practical enablers — in People, Technology, and Governance — that turn experiments into sustainable operations.
                                     </div>
                                     <div class="mb-3">
                                         <strong>4️⃣ From pilots to scale</strong><br>
                                         True scaling means changing roles, systems, and ways of working. Leaders explored how to embed AI in production, connect it to real processes, and maintain trust and alignment as adoption grows.
                                     </div>
-                                    <div class="mb-4">
+                                    <div class="mb-3">
                                         <strong>5️⃣ Enterprise-wide expansion</strong><br>
                                         The final phase emphasized sustainability. AI becomes part of the company's DNA when it's supported by continuous learning, clear governance, and empowered people — across all studios, markets, and teams.
                                     </div>
@@ -3180,7 +3180,7 @@ class GameController {
                                     <p class="mb-3">They can now identify key stakeholders, define priorities, and launch their first AI enablers within their teams.</p>
                                     <p class="mb-3">They understand that AI success is not about tools — it's about collaboration, curiosity, and continuous learning.</p>
                                     <p class="mb-3"><strong>The next move is theirs: Integrate. Scale. Inspire.</strong></p>
-                                    <p class="mb-0">Because at PlayNext — as in every organization — the future of AI is already in play.</p>
+                                    <p class="mb-0">Because at PlayForward — as in every organization — the future of AI is already in play.</p>
                                 </div>
                             </div>
                         </div>
@@ -3492,14 +3492,28 @@ class GameController {
         console.log('DEBUG: results.stars value:', results.stars);
         console.log('DEBUG: Star calculation:', '★'.repeat(results.stars) + '☆'.repeat(3 - results.stars));
         
+        // Determine the congratulations message based on score
+        let congratulationMessage = '';
+        let congratulationIcon = '';
+        if (results.stars === 3) {
+            congratulationMessage = 'Excellent!';
+            congratulationIcon = '🎯';
+        } else if (results.stars === 2) {
+            congratulationMessage = 'Well done!';
+            congratulationIcon = '👍';
+        } else {
+            congratulationMessage = 'Let\'s try again!';
+            congratulationIcon = '💪';
+        }
+        
         const container = document.getElementById('results-content');
         container.innerHTML = `
             <div class="text-center" style="font-size: 0.8rem; padding: 10px;">
-                <h3 class="mb-2" style="font-size: 1.2rem !important; margin-bottom: 0.5rem !important;">🎉 Félicitations !</h3>
+                <h3 class="mb-2" style="font-size: 1.2rem !important; margin-bottom: 0.5rem !important;">${congratulationIcon} ${congratulationMessage}</h3>
                 
                 <!-- Recap Video Section -->
                 <div class="mb-2" style="margin-bottom: 0.5rem !important;">
-                    <h5 class="mb-1" style="font-size: 0.9rem !important; margin-bottom: 0.25rem !important;"><i class="fas fa-video me-1"></i>Game Recap</h5>
+                    <h3><i class="fas fa-video me-2"></i>Game Recap</h3>
                     <div class="video-container mb-2" style="margin-bottom: 0.5rem !important;">
                         <div class="embed-responsive embed-responsive-16by9" style="max-height: 150px !important;">
                             <video 
@@ -3534,10 +3548,6 @@ class GameController {
                             <div class="mb-1" style="font-size: 0.75rem !important; margin-bottom: 0.25rem !important;">${this.gameConfig?.phases?.phase5?.title || 'Step 5 - Accelerating the transformation'}: <span class="score-badge">${results.scores.mot5}/3</span></div>
                         </div>
                     </div>
-                </div>
-                <div class="alert alert-info" style="font-size: 0.75rem !important; padding: 0.5rem !important;">
-                    <h6 class="mb-1" style="font-size: 0.8rem !important; margin-bottom: 0.25rem !important;">Votre Performance</h6>
-                    <p class="mb-0" style="font-size: 0.7rem !important;">${this.getPerformanceMessage(results.stars)}</p>
                 </div>
                 
                 <!-- Action Buttons -->
