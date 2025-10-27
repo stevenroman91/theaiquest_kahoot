@@ -2991,10 +2991,10 @@ class GameController {
         }
     }
 
-    // New scoring system: 14-15 = 3/3, 11-13 = 2/3, 0-10 = 1/3
+    // New scoring system: 14-15 = 3/3, 10-13 = 2/3, 0-9 = 1/3
     calculateNewScore(totalScore) {
         if (totalScore >= 14) return 3;
-        if (totalScore >= 11) return 2;
+        if (totalScore >= 10) return 2;
         return 1;
     }
 
