@@ -2486,16 +2486,15 @@ class GameController {
             }
             console.log('Phase 4 description selected:', description);
         } else if (motNumber === 5) {
-            // Phase 5 specific messages based on choice and score
-            const currentChoice = this.selectedChoices.mot5;
-            console.log('DEBUG Phase 5:', { motNumber, score, currentChoice, scoreData });
+            // Phase 5 specific messages based on score
+            console.log('DEBUG Phase 5:', { motNumber, score, scoreData });
             
-            if (currentChoice === 'empower_people_amplify_impact' && score === 3) {
-                description = "By choosing \"Empower People, Amplify Impact,\" you earned three stars out of three. You focused on what matters most — creating a strong value office, formalizing partnerships, and investing in top AI talent. This approach maximizes the impact of PlayForward's AI strategy while ensuring sustainable, human-centered transformation.";
-            } else if (currentChoice === 'build_to_scale' && score === 2) {
-                description = "By choosing \"Build to Scale,\" you earned two stars out of three. While this approach builds solid foundations for long-term AI development and tech partnerships, it may miss opportunities for immediate impact and rapid scaling that could accelerate your transformation journey.";
-            } else if (currentChoice === 'boost_self_service_ai' && score === 1) {
-                description = "By choosing \"Boost self-service AI,\" you earned one star out of three. While this approach aims to democratize AI across the company, it may lack the strategic focus and foundational structure needed for sustainable transformation. Consider balancing broad access with targeted capability building and governance.";
+            if (score === 3) {
+                description = "Excellent! You invested where it truly matters: people and ecosystem. You built an engine for continuous innovation and strengthened your AI delivery capabilities. AI has become part of the company's DNA: human, creative, and sustainable.";
+            } else if (score === 2) {
+                description = "Good Choice! You built a solid foundation for sustainable AI adoption: clear governance, reliable partners, and growing internal expertise. The organization can now scale in a controlled way, though acceleration will remain gradual because of adequately train collaborators. Also, true enterprise-wide AI impact still lies ahead and you lack the means to truly control the ROI on AI you promised to your Board of Directors.";
+            } else if (score === 1) {
+                description = "Interesting Attempt! You focused on responsible AI alignment, training and self-service, essential for trust and adoption. However, without deeper skills, governance and tech foundations, the transformation risks stalling once enthusiasm fades. The company has made AI visible, but not yet scalable.";
             } else {
                 description = `Congratulations! You earned ${score} stars for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game.`;
             }
@@ -2512,8 +2511,8 @@ class GameController {
             description = descriptions[score] || descriptions[1];
         }
         
-        // Set description with Steven's photo for Phase 1, 2, 3, and 4
-        if (motNumber === 1 || motNumber === 2 || motNumber === 3 || motNumber === 4) {
+        // Set description with Steven's photo for Phase 1, 2, 3, 4, and 5
+        if (motNumber === 1 || motNumber === 2 || motNumber === 3 || motNumber === 4 || motNumber === 5) {
             const descriptionElement = document.getElementById('score-description');
             descriptionElement.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 20px;">

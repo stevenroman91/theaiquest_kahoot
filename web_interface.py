@@ -1125,12 +1125,12 @@ def get_personalized_step_message(mot_key, choice, score):
             return "Interesting Attempt! You activated useful levers, yet missed the full triad of enablers that turn pilots into sustainable impact. Without strong data pipelines or structured adoption support, your AI initiatives risk becoming fragmented or over-dependent on a few champions."
     
     elif mot_key == 'mot5':
-        if choice == 'empower_people_amplify_impact' and score == 3:
-            return "By choosing \"Empower People, Amplify Impact,\" you earned three stars out of three. You focused on what matters most — creating a strong value office, formalizing partnerships, and investing in top AI talent. This approach maximizes the impact of PlayForward's AI strategy while ensuring sustainable, human-centered transformation."
-        elif choice == 'build_to_scale' and score == 2:
-            return "By choosing \"Build to Scale,\" you earned two stars out of three. While this approach builds solid foundations for long-term AI development and tech partnerships, it may miss opportunities for immediate impact and rapid scaling that could accelerate your transformation journey."
-        elif choice == 'boost_self_service_ai' and score == 1:
-            return "By choosing \"Boost self-service AI,\" you earned one star out of three. While this approach aims to democratize AI across the company, it may lack the strategic focus and foundational structure needed for sustainable transformation. Consider balancing broad access with targeted capability building and governance."
+        if score == 3:
+            return "Excellent! You invested where it truly matters: people and ecosystem. You built an engine for continuous innovation and strengthened your AI delivery capabilities. AI has become part of the company's DNA: human, creative, and sustainable."
+        elif score == 2:
+            return "Good Choice! You built a solid foundation for sustainable AI adoption: clear governance, reliable partners, and growing internal expertise. The organization can now scale in a controlled way, though acceleration will remain gradual because of adequately train collaborators. Also, true enterprise-wide AI impact still lies ahead and you lack the means to truly control the ROI on AI you promised to your Board of Directors."
+        elif score == 1:
+            return "Interesting Attempt! You focused on responsible AI alignment, training and self-service, essential for trust and adoption. However, without deeper skills, governance and tech foundations, the transformation risks stalling once enthusiasm fades. The company has made AI visible, but not yet scalable."
     
     # Messages génériques pour les autres phases
     return f"Congratulations! You earned {score} star{'s' if score > 1 else ''} for this step. These stars will be a quick visual cue of your overall success throughout the rest of the game."
