@@ -3527,7 +3527,8 @@ class GameController {
                                 autoplay
                                 playsinline
                                 style="width: 100%; height: 100%; border-radius: 8px;">
-                                <source src="/static/videos/recap.mp4" type="video/mp4">
+                                <source src="/static/videos/recap_${results.stars}.mp4" type="video/mp4">
+                                <track kind="subtitles" src="/static/videos/recap_${results.stars}.vtt" srclang="en" label="English" default>
                                 Votre navigateur ne supporte pas la lecture vidéo.
                             </video>
                         </div>
