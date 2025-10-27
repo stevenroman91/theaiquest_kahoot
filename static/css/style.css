@@ -2949,6 +2949,15 @@ body {
     color: #000000 !important;
 }
 
+/* Star colors: filled = yellow, empty = black */
+.progress-section .mot-square .star-filled {
+    color: #FFD700 !important;
+}
+
+.progress-section .mot-square .star-empty {
+    color: #000000 !important;
+}
+
 .total-badge {
     background: rgba(255, 255, 255, 0.15);
     border: 2px solid rgba(255, 255, 255, 0.4);
