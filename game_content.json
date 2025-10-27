@@ -214,7 +214,7 @@
   "phases": {
     "phase1": {
       "title": "STEP 1: Get Started With The Right AI Strategy",
-      "description": "Define AI strategy and assess opportunities",
+      "description": "You've heard three different approaches to launch your AI transformation. Which one will you choose?",
       "video_file": "phase_1.mp4",
       "choices": {
         "elena": {
@@ -246,7 +246,7 @@
     },
     "phase2": {
       "title": "Pilot Projects",
-      "description": "Launch pilot AI projects",
+      "description": "Among the five AI solutions highlighted on the matrix, which three will you select and implement first?",
       "video_file": "phase_2.mp4",
       "choices": {
         "fraud_integrity_detection": {
@@ -358,7 +358,7 @@
     },
     "phase4": {
       "title": "Scaling",
-      "description": "You now have a better idea of what needs to be done to scale AI solutions. It's time to make a decision.<br>Select the most impactful and timely enablers. You have a 30-point budget, not more ! Each enabler costs either 5 or 10 points. Don't forget you need to balance across pillars.",
+      "description": "You now have a better idea of what needs to be done to scale AI solutions. It's time to make a decision.<br>Select the most impactful and timely enablers. You have a 30-point budget, not more! Each enabler costs either 5 or 10 points. Don't forget to balance across pillars.",
       "video_file": "phase_4.mp4",
       "budget": 30,
       "choices": {
@@ -438,7 +438,7 @@
     },
     "phase5": {
       "title": "Enterprise Deployment",
-      "description": "It's time to launch and scale more solutions at the enterprise level. Let's decide what actions to take!<br>Select the option that will maximize your chances of bringing the most new fully-scaled solutions to market. Consider what you need most at this stage of the transformation to scale effectively.",
+      "description": "It's time to launch and scale more solutions at the enterprise level. Let's decide what actions to take!<br>Select the option that will maximize your chances of bringing the newest fully-scaled solutions to market. Consider what you need most at this stage of the transformation to scale effectively.",
       "video_file": "phase_5_1.mp4",
       "choices": {
         "boost_self_service_ai": {
