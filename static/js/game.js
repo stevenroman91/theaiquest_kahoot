@@ -3666,10 +3666,12 @@ function initializeHarnessingVideo() {
             window.gameController.stopAllVideos();
         }
         
-        // Quand la vidéo se termine, afficher le bouton "Démarrer le Jeu"
+        // Quand la vidéo se termine, passer directement à la page Teams Meeting
         harnessingVideoElement.addEventListener('ended', function() {
             document.getElementById('skip-harnessing-btn').style.display = 'none';
-            document.getElementById('start-game-after-harnessing-btn').style.display = 'inline-block';
+            if (window.gameController) {
+                window.gameController.showTeamsMeetingSection();
+            }
         });
         
         // Démarrer la vidéo automatiquement
