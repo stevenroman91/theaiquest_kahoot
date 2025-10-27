@@ -523,9 +523,9 @@
                 <div class="card-body">
                     <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
                         <div class="d-flex align-items-start">
-                            <i class="fas fa-info-circle me-3 mt-1" style="color: #0dcaf0; font-size: 1.2rem;"></i>
+                            <img src="{{ url_for('static', filename='images/Steven_photo.png') }}" alt="Steven" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; margin-right: 1rem; flex-shrink: 0;">
                             <div>
-                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
+                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Steven's Briefing</h5>
                                 <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
                                     {{ template.get_phase_description('phase1') }}
                                 </p>
@@ -553,9 +553,9 @@
                 <div class="card-body">
                     <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
                         <div class="d-flex align-items-start">
-                            <i class="fas fa-info-circle me-3 mt-1" style="color: #0dcaf0; font-size: 1.2rem;"></i>
+                            <img src="{{ url_for('static', filename='images/Steven_photo.png') }}" alt="Steven" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; margin-right: 1rem; flex-shrink: 0;">
                             <div>
-                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
+                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Steven's Briefing</h5>
                                 <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
                                     {{ template.get_phase_description('phase2') }}
                                 </p>
@@ -622,11 +622,11 @@
                 <div class="card-body">
                     <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
                         <div class="d-flex align-items-start">
-                            <i class="fas fa-info-circle me-3 mt-1" style="color: #0dcaf0; font-size: 1.2rem;"></i>
+                            <img src="{{ url_for('static', filename='images/Steven_photo.png') }}" alt="Steven" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; margin-right: 1rem; flex-shrink: 0;">
                             <div>
-                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
+                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Steven's Briefing</h5>
                                 <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
-                                    You can only activate one enabler per pillar to maximize impact and adoption. Which ones will you choose?
+                                    {{ template.get_phase_description('phase3') | safe }}
                                 </p>
                             </div>
                         </div>
@@ -679,12 +679,11 @@
                 <div class="card-body">
                     <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
                         <div class="d-flex align-items-start">
-                            <i class="fas fa-info-circle me-3 mt-1" style="color: #0dcaf0; font-size: 1.2rem;"></i>
+                            <img src="{{ url_for('static', filename='images/Steven_photo.png') }}" alt="Steven" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; margin-right: 1rem; flex-shrink: 0;">
                             <div>
-                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
+                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Steven's Briefing</h5>
                                 <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
-                                    You now have a better idea of what needs to be done to scale AI solutions. It's time to make a decision.<br>
-                                    Select the most impactful and timely enablers. You have a 30-point budget, not more ! Each enabler costs either 5 or 10 points. Don't forget you need to balance across pillars.
+                                    {{ template.get_phase_description('phase4') | safe }}
                                 </p>
                             </div>
                         </div>
@@ -754,12 +753,11 @@
                 <div class="card-body">
                     <div class="alert alert-info mb-4" style="background: rgba(13, 202, 240, 0.1); border: 1px solid rgba(13, 202, 240, 0.3); border-radius: 12px;">
                         <div class="d-flex align-items-start">
-                            <i class="fas fa-info-circle me-3 mt-1" style="color: #0dcaf0; font-size: 1.2rem;"></i>
+                            <img src="{{ url_for('static', filename='images/Steven_photo.png') }}" alt="Steven" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; margin-right: 1rem; flex-shrink: 0;">
                             <div>
-                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Briefing</h5>
+                                <h5 class="alert-heading mb-2" style="color: #0dcaf0;">Steven's Briefing</h5>
                                 <p class="mb-0" style="color: #0a58ca; font-size: 1.1rem; line-height: 1.5;">
-                                    It's time to launch and scale more solutions at the enterprise level. Let's decide what actions to take!<br>
-                                    Select the option that will maximize your chances of bringing the most new fully-scaled solutions to market. Consider what you need most at this stage of the transformation to scale effectively.
+                                    {{ template.get_phase_description('phase5') | safe }}
                                 </p>
                             </div>
                         </div>

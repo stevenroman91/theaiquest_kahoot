@@ -83,6 +83,12 @@ class GameContentManager:
     
     def get_phase_description(self, phase_key: str) -> str:
         """Get phase description by phase key"""
+        # Check if it's a phase (phase1-phase5) and get description from phases
+        phases = self.content.get("phases", {})
+        if phase_key in phases:
+            return phases[phase_key].get("description", "")
+        
+        # Fallback to old step system
         phase_number = phase_key.replace('phase', '')
         try:
             step_number = int(phase_number)

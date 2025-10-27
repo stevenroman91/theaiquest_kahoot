@@ -288,7 +288,7 @@
     },
     "phase3": {
       "title": "Team Building",
-      "description": "Build AI capabilities and teams",
+      "description": "You can only activate one enabler per pillar to maximize impact and adoption. Which ones will you choose?",
       "video_file": "phase_3.mp4",
       "choices": {
         "ai_data_platform_modernization": {
@@ -358,7 +358,7 @@
     },
     "phase4": {
       "title": "Scaling",
-      "description": "Scale AI across the organization",
+      "description": "You now have a better idea of what needs to be done to scale AI solutions. It's time to make a decision.<br>Select the most impactful and timely enablers. You have a 30-point budget, not more ! Each enabler costs either 5 or 10 points. Don't forget you need to balance across pillars.",
       "video_file": "phase_4.mp4",
       "budget": 30,
       "choices": {
@@ -438,7 +438,7 @@
     },
     "phase5": {
       "title": "Enterprise Deployment",
-      "description": "Deploy AI enterprise-wide",
+      "description": "It's time to launch and scale more solutions at the enterprise level. Let's decide what actions to take!<br>Select the option that will maximize your chances of bringing the most new fully-scaled solutions to market. Consider what you need most at this stage of the transformation to scale effectively.",
       "video_file": "phase_5_1.mp4",
       "choices": {
         "boost_self_service_ai": {
