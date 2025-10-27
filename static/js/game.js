@@ -2666,7 +2666,7 @@ class GameController {
             
             // Clear existing content and add number
             const filledStars = '★'.repeat(score);
-            const emptyStars = '☆'.repeat(3 - score);
+            const emptyStars = '★'.repeat(3 - score);
             square.innerHTML = `
                 <div style="font-weight: bold; font-size: 1.2rem;">${index + 1}</div>
                 <div class="stars"><span class="star-filled">${filledStars}</span><span class="star-empty">${emptyStars}</span></div>
@@ -3343,7 +3343,7 @@ class GameController {
             }
             
             const filledStars = '★'.repeat(score);
-            const emptyStars = '☆'.repeat(3 - score);
+            const emptyStars = '★'.repeat(3 - score);
             square.innerHTML = `
                 <div style="font-weight: bold; font-size: 1.2rem;">${i}</div>
                 <div style="font-size: 0.8rem; margin-top: 0.1rem;"><span class="star-filled">${filledStars}</span><span class="star-empty">${emptyStars}</span></div>
