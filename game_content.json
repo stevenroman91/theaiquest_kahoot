@@ -192,7 +192,7 @@
     },
     "step2": {
       "title": "STEP 2: Building your AI use cases portfolio",
-      "description": "Among the five AI solutions highlighted on the matrix, which three will you select and implement first?",
+      "description": "Among the five AI use cases highlighted on the matrix, which three will you select and implement first?",
       "video": "phase_2.mp4"
     },
     "step3": {
@@ -246,7 +246,7 @@
     },
     "phase2": {
       "title": "Pilot Projects",
-      "description": "Among the five AI solutions highlighted on the matrix, which three will you select and implement first?",
+      "description": "Among the five AI use cases highlighted on the matrix, which three will you select and implement first?",
       "video_file": "phase_2.mp4",
       "choices": {
         "fraud_integrity_detection": {
