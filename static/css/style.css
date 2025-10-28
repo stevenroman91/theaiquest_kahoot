@@ -271,6 +271,20 @@ body.modal-open {
     border-bottom-right-radius: 15px;
 }
 
+.matrix-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.matrix-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
 /* SVG pour les vraies flèches des axes */
 .matrix-axes-svg {
     position: absolute;

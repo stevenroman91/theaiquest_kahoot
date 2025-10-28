@@ -1331,8 +1331,7 @@ class GameController {
     }
 
     renderMOT2Choices(choices) {
-        // First, render the Impact/Feasibility matrix
-        this.renderImpactFeasibilityMatrix();
+        // Matrix is now a static image, no need to render it dynamically
         
         const container = document.getElementById('phase2-choices');
         container.innerHTML = '';
@@ -3920,7 +3919,7 @@ function initializePhase1Video() {
     if (mot1VideoElement) {
         // Utiliser la nouvelle méthode pour lancer la vidéo avec le son
         if (window.gameController) {
-            window.gameController.playVideoWithSound('phase1-video');
+            window.gameController.playVideo('phase1-video');
         }
     }
 }
@@ -3930,7 +3929,7 @@ function initializePhase2Video() {
     if (phase2VideoElement) {
         // Utiliser la nouvelle méthode pour lancer la vidéo avec le son
         if (window.gameController) {
-            window.gameController.playVideoWithSound('phase2-video');
+            window.gameController.playVideo('phase2-video');
         }
     }
 }
@@ -3940,7 +3939,7 @@ function initializePhase3Video() {
     if (phase3VideoElement) {
         // Utiliser la nouvelle méthode pour lancer la vidéo avec le son
         if (window.gameController) {
-            window.gameController.playVideoWithSound('phase3-video');
+            window.gameController.playVideo('phase3-video');
         }
     }
 }
@@ -3950,7 +3949,7 @@ function initializePhase4Video() {
     if (phase4VideoElement) {
         // Utiliser la nouvelle méthode pour lancer la vidéo avec le son
         if (window.gameController) {
-            window.gameController.playVideoWithSound('phase4-video');
+            window.gameController.playVideo('phase4-video');
         }
     }
 }
@@ -3960,7 +3959,7 @@ function initializePhase5_1Video() {
     if (phase5_1VideoElement) {
         // Utiliser la nouvelle méthode pour lancer la vidéo avec le son
         if (window.gameController) {
-            window.gameController.playVideoWithSound('phase5-1-video');
+            window.gameController.playVideo('phase5-1-video');
         }
     }
 }
@@ -3970,7 +3969,7 @@ function initializePhase5_2Video() {
     if (phase5_2VideoElement) {
         // Utiliser la nouvelle méthode pour lancer la vidéo avec le son
         if (window.gameController) {
-            window.gameController.playVideoWithSound('phase5-2-video');
+            window.gameController.playVideo('phase5-2-video');
         }
     }
 }
@@ -3980,7 +3979,7 @@ function initializeRecapVideo() {
     if (recapVideoElement) {
         // Utiliser la nouvelle méthode pour lancer la vidéo avec le son
         if (window.gameController) {
-            window.gameController.playVideoWithSound('recap-video');
+            window.gameController.playVideo('recap-video');
         }
     }
 }
@@ -3990,7 +3989,7 @@ function initializeRecapVideoResults() {
     if (recapVideoElement) {
         // Utiliser la nouvelle méthode pour lancer la vidéo avec le son
         if (window.gameController) {
-            window.gameController.playVideoWithSound('recap-video-results');
+            window.gameController.playVideo('recap-video-results');
         }
     }
 }
