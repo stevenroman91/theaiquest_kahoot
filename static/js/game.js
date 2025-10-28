@@ -757,7 +757,7 @@ class GameController {
         
         // Show Step 4 transition section
         this.showSection('step4-transition-section');
-        this.updateProgress(70, 'STEP 4: Scaling Your AI and GenAI Solutions');
+        this.updateProgress(70, 'STEP 4: Scaling your AI and GenAI solutions');
     }
 
     showScalingPhaseScreen() {
@@ -805,7 +805,7 @@ class GameController {
         // Lancer la vidéo avec le son
         this.playVideo('phase2-video');
         
-        this.updateProgress(45, 'STEP 2: Building Your AI Use Cases Portfolio');
+        this.updateProgress(45, 'STEP 2: Building your AI use cases portfolio');
         
         // Initialize Phase2 video
         initializePhase2Video();
@@ -822,7 +822,7 @@ class GameController {
         // Lancer la vidéo avec le son
         this.playVideo('phase3-video');
         
-        this.updateProgress(60, 'STEP 3: Launching Your Priority AI Pilots');
+        this.updateProgress(60, 'STEP 3: Launching your priority AI pilots');
         
         // Initialize Phase3 video
         initializePhase3Video();
@@ -839,7 +839,7 @@ class GameController {
         // Lancer la vidéo avec le son
         this.playVideo('phase4-video');
         
-        this.updateProgress(70, 'STEP 4: Scaling Your Priority AI and GenAI Solutions');
+        this.updateProgress(70, 'STEP 4: Scaling your AI and GenAI solutions');
         
         // Initialize Phase4 video
         initializePhase4Video();
@@ -856,7 +856,7 @@ class GameController {
         // Lancer la vidéo avec le son
         this.playVideo('phase5-1-video');
         
-        this.updateProgress(80, 'STEP 5: Deploying AI Across the Organization');
+        this.updateProgress(80, 'STEP 5: Deploying AI across the organization');
         
         // Initialize Phase5-1 video
         initializePhase5_1Video();
@@ -872,7 +872,7 @@ class GameController {
         // Lancer la vidéo avec le son
         this.playVideo('phase5-2-video');
         
-        this.updateProgress(85, 'STEP 5: Deploying AI Across the Organization');
+        this.updateProgress(85, 'STEP 5: Deploying AI across the organization');
         
         // Initialize Phase5-2 video
         initializePhase5_2Video();
