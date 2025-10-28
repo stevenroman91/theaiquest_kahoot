@@ -2597,41 +2597,19 @@ class GameController {
             const dashboardData = data.dashboard_data;
             console.log('Dashboard data received:', dashboardData);
             
-            // Mettre à jour le titre de la phase
-            document.getElementById('current-phase-title').textContent = dashboardData.phase_title || dashboardData.current_phase;
+            // Mettre à jour le score total
+            const scoreElement = document.getElementById('dashboard-total-score');
+            if (scoreElement) {
+                scoreElement.textContent = dashboardData.current_score.total;
+            }
             
-                    // Mettre à jour le score total
-                    document.getElementById('dashboard-total-score').textContent = dashboardData.current_score.total;
-                    
-                    // Mettre à jour les carrés de phases
-                    this.updateMOTSquares(dashboardData.current_score.scores, dashboardData.current_score.total);
-                    
-                    // Mettre à jour les ENABLERS par catégorie avec la nouvelle interface pédagogique
-                    console.log('pedagogical_data:', dashboardData.pedagogical_data);
-                    this.updatePedagogicalPillars(dashboardData.pedagogical_data);
-                    
-                    // Mettre à jour les Use Cases
-                    console.log('🔍 CHECKING USE CASES DATA...');
-                    console.log('dashboardData:', dashboardData);
-                    console.log('dashboardData.use_cases_data:', dashboardData.use_cases_data);
-                    
-                    if (dashboardData.use_cases_data) {
-                        console.log('✅ USE CASES DATA FOUND!');
-                        console.log('use_cases_data:', dashboardData.use_cases_data);
-                        console.log('use_cases_data keys:', Object.keys(dashboardData.use_cases_data));
-                        this.updateUseCases(dashboardData.use_cases_data);
-                    } else {
-                        console.log('❌ NO USE CASES DATA FOUND!');
-                        console.log('dashboardData keys:', Object.keys(dashboardData));
-                    }
+            // Mettre à jour la timeline et les steps
+            this.updateDashboardNew(dashboardData.current_score.scores, dashboardData.current_score.total, motNumber);
             
             // Mettre à jour le message d'impact
-            document.getElementById('impact-message').innerHTML = `<p>${dashboardData.impact_message}</p>`;
-            
-            // S'assurer que la section Use Cases est visible
-            const useCasesSection = document.getElementById('use-cases-section');
-            if (useCasesSection) {
-                useCasesSection.style.display = 'block';
+            const impactElement = document.getElementById('impact-message');
+            if (impactElement) {
+                impactElement.innerHTML = `<p>${dashboardData.impact_message}</p>`;
             }
             
             // Afficher le dashboard
@@ -2648,12 +2626,246 @@ class GameController {
         }
     }
     
+    updateDashboardNew(scores, totalScore, currentPhase) {
+        // Update timeline
+        for (let i = 1; i <= 5; i++) {
+            const step = document.querySelector(`.timeline-step[data-step="${i}"]`);
+            if (!step) continue;
+            
+            const scoreValue = scores[`mot${i}`] || 0;
+            step.classList.remove('completed', 'current');
+            
+            if (i < currentPhase) {
+                step.classList.add('completed');
+            } else if (i === currentPhase) {
+                step.classList.add('current');
+            }
+            
+            // Update status dot
+            const statusDot = step.querySelector('.timeline-status');
+            if (statusDot) {
+                if (scoreValue > 0) {
+                    statusDot.style.background = '#10b981';
+                } else if (i === currentPhase) {
+                    statusDot.style.background = '#f59e0b';
+                } else {
+                    statusDot.style.background = '#d1d5db';
+                }
+            }
+        }
+        
+        // Update steps boxes on the right
+        const stepBoxes = ['phase1-square', 'phase2-square', 'phase3-square', 'phase4-square', 'phase5-square'];
+        const motKeys = ['mot1', 'mot2', 'mot3', 'mot4', 'mot5'];
+        
+        stepBoxes.forEach((boxId, index) => {
+            const box = document.getElementById(boxId);
+            if (!box) return;
+            
+            const score = scores[motKeys[index]] || 0;
+            box.classList.remove('completed');
+            
+            if (score > 0) {
+                box.classList.add('completed');
+            }
+            
+            // Update stars
+            const starsEl = box.querySelector('.step-stars');
+            if (starsEl) {
+                const filledStars = '★'.repeat(score);
+                const emptyStars = '★'.repeat(3 - score);
+                starsEl.innerHTML = `<span style="color: #FFD700;">${filledStars}</span><span style="color: #d1d5db;">${emptyStars}</span>`;
+            }
+        });
+        
+        // Add click listeners to step boxes
+        this.attachStepClickListeners();
+    }
+    
+    attachStepClickListeners() {
+        // Add click listener to each step box
+        for (let i = 1; i <= 5; i++) {
+            const stepBox = document.getElementById(`phase${i}-square`);
+            if (stepBox) {
+                stepBox.addEventListener('click', () => {
+                    if (stepBox.classList.contains('completed')) {
+                        this.showStepDetails(i);
+                    }
+                });
+            }
+        }
+    }
+    
+    showStepDetails(stepNumber) {
+        console.log('Showing details for step', stepNumber);
+        
+        // Fetch dashboard data to get step details
+        fetch('/api/executive_dashboard')
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    console.error('Error fetching dashboard data');
+                    return;
+                }
+                
+                const dashboardData = data.dashboard_data;
+                const scores = dashboardData.current_score.scores;
+                const scoreValue = scores[`mot${stepNumber}`] || 0;
+                
+                // Update modal title
+                const stepTitles = {
+                    1: 'STEP 1: Get started with the right AI strategy',
+                    2: 'STEP 2: Building your AI use cases portfolio',
+                    3: 'STEP 3: Launching your priority AI pilots',
+                    4: 'STEP 4: Scaling your AI and GenAI solutions',
+                    5: 'STEP 5: Deploying AI across the organization'
+                };
+                
+                document.getElementById('step-details-title').textContent = stepTitles[stepNumber] || `Step ${stepNumber}`;
+                
+                // Update stars with proper classes
+                const filledStars = '<span class="star-filled">★</span>'.repeat(scoreValue);
+                const emptyStars = '<span class="star-empty">★</span>'.repeat(3 - scoreValue);
+                document.getElementById('step-details-stars').innerHTML = filledStars + emptyStars;
+                document.getElementById('step-details-points').textContent = `${scoreValue}/3`;
+                
+                const pedagogicalData = dashboardData.pedagogical_data || {};
+                const useCasesData = dashboardData.use_cases_data || {};
+                
+                // Check if this step has use cases
+                const stepUseCases = useCasesData[`phase${stepNumber}`]?.use_cases || [];
+                const hasUseCases = stepUseCases.length > 0;
+                
+                console.log(`Step ${stepNumber} use cases:`, stepUseCases);
+                
+                if (hasUseCases) {
+                    // Display use cases
+                    this.displayStepUseCases(stepUseCases);
+                    
+                    // Hide enablers for steps with use cases
+                    document.getElementById('step-details-enablers-grid').innerHTML = '<p class="text-muted">No enablers for this step.</p>';
+                } else {
+                    // Display enablers
+                    const enablersByPhase = pedagogicalData.enablers_by_phase || {};
+                    const phaseKey = `phase${stepNumber}`;
+                    const stepEnablers = enablersByPhase[phaseKey] || {};
+                    
+                    console.log('Modal data:', {
+                        stepNumber,
+                        phaseKey,
+                        stepEnablers,
+                        pedagogicalData
+                    });
+                    
+                    // Display enablers with their data from pedagogical_data
+                    this.displayStepEnablers(stepEnablers, pedagogicalData.all_enablers || {});
+                    
+                    // No use cases for this step
+                    document.getElementById('step-details-use-cases-list').innerHTML = '<p class="text-muted">No use cases for this step.</p>';
+                }
+                
+                // Show modal
+                const modal = new bootstrap.Modal(document.getElementById('stepDetailsModal'));
+                modal.show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                this.showAlert('Error loading step details', 'danger');
+            });
+    }
+    
+    displayStepEnablers(enablersByCategory, allEnablersData) {
+        const grid = document.getElementById('step-details-enablers-grid');
+        if (!grid) return;
+        
+        console.log('displayStepEnablers called with:', { enablersByCategory, allEnablersData });
+        
+        if (!enablersByCategory || Object.keys(enablersByCategory).length === 0) {
+            grid.innerHTML = '<p class="text-muted">No enablers unlocked yet.</p>';
+            return;
+        }
+        
+        let html = '';
+        const categories = ['technology', 'people', 'gover'];
+        
+        categories.forEach(category => {
+            const enablers = enablersByCategory[category] || [];
+            console.log(`Category ${category}:`, enablers);
+            
+            if (enablers.length > 0) {
+                enablers.forEach(enablerId => {
+                    // Get enabler data from all_enablers to also get the actual category
+                    const enablerData = allEnablersData[enablerId];
+                    const title = enablerData?.title || enablerId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    const description = enablerData?.description || '';
+                    const icon = enablerData?.icon || 'fas fa-cog';
+                    const actualCategory = enablerData?.category || category;
+                    
+                    console.log(`Enabler ${enablerId}: category=${category}, actualCategory=${actualCategory}`);
+                    
+                    html += `
+                        <div class="enabler-card">
+                            <div class="enabler-header">
+                                <div class="enabler-icon ${actualCategory}">
+                                    <i class="${icon}"></i>
+                                </div>
+                                <div class="enabler-title">${title}</div>
+                            </div>
+                            ${description ? `<div class="enabler-description">${description}</div>` : ''}
+                        </div>
+                    `;
+                });
+            }
+        });
+        
+        grid.innerHTML = html || '<p class="text-muted">No enablers unlocked yet.</p>';
+    }
+    
+    displayStepUseCases(useCases) {
+        const container = document.getElementById('step-details-use-cases-list');
+        if (!container) return;
+        
+        if (!useCases || useCases.length === 0) {
+            container.innerHTML = '<p class="text-muted">No use cases activated.</p>';
+            return;
+        }
+        
+        // Show all use cases, but with different styling for locked ones
+        if (useCases.length === 0) {
+            container.innerHTML = '<p class="text-muted">No use cases activated.</p>';
+            return;
+        }
+        
+        let html = '';
+        useCases.forEach(useCase => {
+            const isUnlocked = useCase.unlocked !== false;
+            // Use case can be either a string or an object
+            const title = typeof useCase === 'string' ? useCase : useCase.title || useCase.id;
+            const icon = useCase.icon || 'fas fa-lightbulb';
+            const description = useCase.description || '';
+            
+            html += `
+                <div class="use-case-badge ${isUnlocked ? 'use-case-unlocked' : 'use-case-locked'}">
+                    <div class="use-case-header">
+                        <i class="${icon}"></i>
+                        <div class="use-case-title">${title}</div>
+                    </div>
+                    ${description ? `<div class="use-case-description">${description}</div>` : ''}
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+    
     updateMOTSquares(scores, totalScore) {
         const motSquares = ['phase1-square', 'phase2-square', 'phase3-square', 'phase4-square', 'phase5-square'];
         const motKeys = ['mot1', 'mot2', 'mot3', 'mot4', 'mot5'];
         
         motSquares.forEach((squareId, index) => {
             const square = document.getElementById(squareId);
+            if (!square) return;
+            
             const score = scores[motKeys[index]] || 0;
             
             // Reset classes

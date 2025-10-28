@@ -1,10 +1,10 @@
 [
   {
-    "mot1_choice": "elena",
+    "mot1_choice": "amira",
     "mot2_choices": [
       "fraud_integrity_detection",
-      "smart_game_design_assistant",
-      "player_journey_optimizer"
+      "ai_storyline_generator",
+      "smart_game_design_assistant"
     ],
     "mot3_choices": {
       "technology": "ai_data_platform_modernization",
@@ -12,92 +12,92 @@
       "gover": "ai_governance_board"
     },
     "mot4_choices": [
-      "ai_storytelling_communication",
-      "adoption_playbook",
-      "ai_product_teams_setup",
-      "industrialized_data_pipelines"
+      "industrialized_data_pipelines",
+      "country_level_ai_deployment",
+      "privacy_by_design_data",
+      "ai_product_teams_setup"
     ],
-    "mot5_choice": "empower_people_amplify_impact",
-    "total_score": 14,
-    "stars": 2,
+    "mot5_choice": "boost_self_service_ai",
+    "total_score": 9,
+    "stars": 1,
     "mot_scores": {
-      "mot1": 3,
-      "mot2": 3,
+      "mot1": 1,
+      "mot2": 2,
       "mot3": 3,
       "mot4": 2,
-      "mot5": 3
+      "mot5": 1
     },
     "unlocked_enablers": [
-      "Player Journey Optimizer",
-      "ai_data_platform_modernization",
-      "ai_governance_roadmap",
-      "ai_leadership_program",
-      "ai_value_office",
-      "industrialized_data_pipelines",
-      "Fraud & Integrity Detection",
-      "adoption_playbook",
       "ai_product_teams_setup",
-      "trusted_tech_partners",
+      "AI-Powered Storyline Generator",
+      "self_service_ai_tools",
+      "responsible_ai_awareness",
+      "country_level_ai_deployment",
+      "industrialized_data_pipelines",
+      "ai_collaboration_hub",
       "ai_governance_board",
-      "attractive_ai_career_tracks",
       "data_ai_academy",
+      "Fraud & Integrity Detection",
+      "ai_leadership_program",
+      "attractive_ai_career_tracks",
       "Smart Game Design Assistant",
-      "ai_value_opportunities_gaming",
-      "ai_storytelling_communication",
-      "ai_tech_benchmark"
+      "ai_data_platform_modernization",
+      "privacy_by_design_data"
     ],
     "unlocked_enablers_by_category": {
       "technology": [
-        "Player Journey Optimizer",
-        "ai_data_platform_modernization",
+        "AI-Powered Storyline Generator",
+        "self_service_ai_tools",
         "industrialized_data_pipelines",
         "Fraud & Integrity Detection",
-        "trusted_tech_partners",
         "Smart Game Design Assistant",
-        "ai_tech_benchmark"
+        "ai_data_platform_modernization",
+        "privacy_by_design_data"
       ],
       "gover": [
-        "ai_value_opportunities_gaming",
         "ai_governance_board",
-        "ai_governance_roadmap",
-        "ai_value_office"
+        "responsible_ai_awareness",
+        "country_level_ai_deployment"
       ],
       "people": [
-        "ai_leadership_program",
-        "adoption_playbook",
         "ai_product_teams_setup",
-        "attractive_ai_career_tracks",
+        "ai_collaboration_hub",
         "data_ai_academy",
-        "ai_storytelling_communication"
+        "ai_leadership_program",
+        "attractive_ai_career_tracks"
       ]
     },
     "enablers_by_phase": {
       "phase1": [
-        "ai_value_opportunities_gaming",
-        "ai_tech_benchmark"
+        "automated_banners_generation",
+        "customer_email_classifier",
+        "virtual_learning_coach_prototype",
+        "supplier_risk_scoring",
+        "simulated_game_design",
+        "predictive_maintenance_sandbox"
       ],
       "phase2": [
-        "Player Journey Optimizer",
-        "Fraud & Integrity Detection",
-        "Smart Game Design Assistant"
+        "AI-Powered Storyline Generator",
+        "Smart Game Design Assistant",
+        "Fraud & Integrity Detection"
       ],
       "phase3": [
-        "ai_data_platform_modernization",
+        "ai_governance_board",
         "ai_leadership_program",
-        "ai_governance_board"
+        "ai_data_platform_modernization"
       ],
       "phase4": [
+        "privacy_by_design_data",
         "ai_product_teams_setup",
-        "industrialized_data_pipelines",
-        "ai_storytelling_communication",
-        "adoption_playbook"
+        "country_level_ai_deployment",
+        "industrialized_data_pipelines"
       ],
       "phase5": [
-        "ai_governance_roadmap",
-        "ai_value_office",
-        "trusted_tech_partners",
-        "attractive_ai_career_tracks",
-        "data_ai_academy"
+        "responsible_ai_awareness",
+        "self_service_ai_tools",
+        "ai_collaboration_hub",
+        "data_ai_academy",
+        "attractive_ai_career_tracks"
       ]
     },
     "mot4_score": 2

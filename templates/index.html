@@ -908,90 +908,112 @@
             <div class="modal-content">
                 <div class="modal-body p-0">
                     <div class="executive-dashboard">
-                        <!-- Header -->
-                        <div class="dashboard-header">
-                                    <div class="dashboard-title">
-                                        <h1><i class="fas fa-chart-line me-3"></i>{{ template.get_dashboard_title() }}</h1>
-                                        <p class="dashboard-subtitle">{{ template.get_dashboard_subtitle() }}</p>
-                                    </div>
-                            <div class="current-phase-info">
-                                <div class="phase-label" id="current-phase-label">STEP SCORE</div>
-                                <div class="phase-title" id="current-phase-title">AI HR Transformation</div>
+                        <!-- Top Timeline: Journey Overview -->
+                        <div class="dashboard-timeline">
+                            <div class="timeline-container">
+                                <div class="timeline-step" data-step="1">
+                                    <div class="timeline-icon"><i class="fas fa-bullseye"></i></div>
+                                    <div class="timeline-label">Strategy</div>
+                                    <div class="timeline-status" id="timeline-1"></div>
+                                </div>
+                                <div class="timeline-line"></div>
+                                <div class="timeline-step" data-step="2">
+                                    <div class="timeline-icon"><i class="fas fa-lightbulb"></i></div>
+                                    <div class="timeline-label">Use Cases</div>
+                                    <div class="timeline-status" id="timeline-2"></div>
+                                </div>
+                                <div class="timeline-line"></div>
+                                <div class="timeline-step" data-step="3">
+                                    <div class="timeline-icon"><i class="fas fa-rocket"></i></div>
+                                    <div class="timeline-label">Pilots</div>
+                                    <div class="timeline-status" id="timeline-3"></div>
+                                </div>
+                                <div class="timeline-line"></div>
+                                <div class="timeline-step" data-step="4">
+                                    <div class="timeline-icon"><i class="fas fa-chart-line"></i></div>
+                                    <div class="timeline-label">Scaling</div>
+                                    <div class="timeline-status" id="timeline-4"></div>
+                                </div>
+                                <div class="timeline-line"></div>
+                                <div class="timeline-step" data-step="5">
+                                    <div class="timeline-icon"><i class="fas fa-building"></i></div>
+                                    <div class="timeline-label">Enterprise</div>
+                                    <div class="timeline-status" id="timeline-5"></div>
+                                </div>
                             </div>
                         </div>
-                        
-                        <!-- Main Dashboard Content -->
-                        <div class="dashboard-content">
-                            <!-- Top Section: Score, Progress, Impact -->
-                            <div class="dashboard-top-section">
-                                <div class="row g-4">
-                                    <!-- Current Score -->
-                                    <div class="col-md-2">
-                                        <div class="score-section">
-                                            <h2><i class="fas fa-star me-2"></i>Current Score</h2>
-                                            <div class="score-display">
-                                                <div class="score-total">
-                                                    <span class="score-number" id="dashboard-total-score">0</span>
-                                                    <span class="score-max">/15</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Step Progress -->
-                                    <div class="col-md-4">
-                                        <div class="progress-section">
-                                            <h3><i class="fas fa-tasks me-2"></i>Game Progress</h3>
-                                            <div class="mot-squares" id="mot-squares">
-                                                <div class="mot-square" id="phase1-square">1</div>
-                                                <div class="mot-square" id="phase2-square">2</div>
-                                                <div class="mot-square" id="phase3-square">3</div>
-                                                <div class="mot-square" id="phase4-square">4</div>
-                                                <div class="mot-square" id="phase5-square">5</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Steven's Feedback -->
-                                    <div class="col-md-6">
-                                        <div class="impact-section">
-                                            <h3><img src="{{ url_for('static', filename='images/Steven_photo.png') }}" alt="Steven" class="steven-photo me-2" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">Steven's Feedback</h3>
-                                            <div class="impact-message" id="impact-message">
-                                                <!-- Impact message will be populated here -->
-                                            </div>
+
+                        <!-- Main Content: No Scroll -->
+                        <div class="dashboard-content-new">
+                            <!-- Left: Score -->
+                            <div class="dashboard-left-section">
+                                <div class="score-card">
+                                    <h3>Your Score</h3>
+                                    <div class="score-display-large">
+                                        <div class="score-total-large">
+                                            <span class="score-number-large" id="dashboard-total-score">0</span>
+                                            <span class="score-max-large">/15</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Bottom Section: ENABLERS by Step and Category -->
-                            <div class="dashboard-bottom-section">
-                                <h2><i class="fas fa-cogs me-2"></i>ENABLERS Progress by Step</h2>
-                                <div class="pedagogical-grid">
-                    <!-- Step Headers -->
-                    <div class="phase-headers">
-                        <div class="category-header" style="visibility: hidden;"></div>
-                        <div class="phase-header phase-header-1">{{ template.get_terminology('phase') }} 1</div>
-                        <div class="phase-header phase-header-3">{{ template.get_terminology('phase') }} 3</div>
-                        <div class="phase-header phase-header-4">{{ template.get_terminology('phase') }} 4</div>
-                        <div class="phase-header phase-header-5">{{ template.get_terminology('phase') }} 5</div>
-                    </div>
-                                    
-                                    <!-- Category Rows -->
-                                    <div class="pedagogical-pillars" id="pedagogical-pillars">
-                                        <!-- Pedagogical data will be populated here -->
+
+                            <!-- Center: Steven's Feedback -->
+                            <div class="dashboard-center-section">
+                                <div class="feedback-card">
+                                    <div class="feedback-header">
+                                        <img src="{{ url_for('static', filename='images/Steven_photo.png') }}" alt="Steven" class="steven-photo-small">
+                                        <div>
+                                            <h3>Steven's Feedback</h3>
+                                            <p class="feedback-subtitle">Your transformation advisor</p>
+                                        </div>
+                                    </div>
+                                    <div class="feedback-message" id="impact-message"></div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Quick Progress -->
+                            <div class="dashboard-right-section">
+                                <div class="progress-card">
+                                    <h3>Steps Completed</h3>
+                                    <div class="steps-grid" id="mot-squares">
+                                        <div class="step-box" id="phase1-square">
+                                            <div class="step-number">1</div>
+                                            <div class="step-title">Get started with the right AI strategy</div>
+                                            <div class="step-stars" id="stars-1"></div>
+                                        </div>
+                                        <div class="step-box" id="phase2-square">
+                                            <div class="step-number">2</div>
+                                            <div class="step-title">Building your AI use cases portfolio</div>
+                                            <div class="step-stars" id="stars-2"></div>
+                                        </div>
+                                        <div class="step-box" id="phase3-square">
+                                            <div class="step-number">3</div>
+                                            <div class="step-title">Launching your priority AI pilots</div>
+                                            <div class="step-stars" id="stars-3"></div>
+                                        </div>
+                                        <div class="step-box" id="phase4-square">
+                                            <div class="step-number">4</div>
+                                            <div class="step-title">Scaling your AI and GenAI solutions</div>
+                                            <div class="step-stars" id="stars-4"></div>
+                                        </div>
+                                        <div class="step-box" id="phase5-square">
+                                            <div class="step-number">5</div>
+                                            <div class="step-title">Deploying AI across the organization</div>
+                                            <div class="step-stars" id="stars-5"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Use Cases Section - Now Independent -->
-                            <div class="dashboard-bottom-section">
-                                <h2><i class="fas fa-lightbulb me-2"></i>Use Cases</h2>
-                                <div id="use-cases-section" class="dashboard-section">
-                                    <div id="use-cases-content" class="use-cases-content">
-                                        <!-- Use Cases will be populated here -->
-                                    </div>
-                                </div>
+                        </div>
+
+                        <!-- Bottom: Compact Enablers Overview (Hidden for now) -->
+                        <div class="dashboard-summary-section" style="display: none;">
+                            <div class="summary-title">
+                                <i class="fas fa-cogs me-2"></i>Your AI Journey
+                            </div>
+                            <div class="summary-content" id="summary-content">
+                                <!-- Compact summary of progress -->
                             </div>
                         </div>
                         
@@ -1009,6 +1031,49 @@
 
     <!-- Alert Container -->
     <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+
+    <!-- Step Details Modal -->
+    <div class="modal fade" id="stepDetailsModal" tabindex="-1" aria-labelledby="stepDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="stepDetailsModalLabel">
+                        <span id="step-details-title">Step 1</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="step-details-content">
+                        <!-- Score section -->
+                        <div class="step-details-score">
+                            <h6>Your Score</h6>
+                            <div class="step-score-display">
+                                <span id="step-details-stars"></span>
+                                <span id="step-details-points" class="step-points"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Use Cases section -->
+                        <div class="step-details-use-cases">
+                            <h6><i class="fas fa-lightbulb me-2"></i>Use Cases Activated</h6>
+                            <div id="step-details-use-cases-list" class="use-cases-list"></div>
+                        </div>
+                        
+                        <!-- Enablers section -->
+                        <div class="step-details-enablers">
+                            <h6><i class="fas fa-cogs me-2"></i>Enablers Unlocked</h6>
+                            <div class="enablers-grid" id="step-details-enablers-grid">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="{{ url_for('static', filename='js/game.js') }}?v=2.77&t={{ range(1000000, 9999999) | random }}"></script>

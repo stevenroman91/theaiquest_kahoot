@@ -1002,7 +1002,7 @@ def api_executive_dashboard():
             use_case_description = template.get_use_case_description(use_case_id)
             use_case_icon = template.get_use_case_icon(use_case_id)
             
-            # Automated Banners Generation est activé, les autres sont désactivés
+            # Only Automated Banners Generation is unlocked for Amira
             is_unlocked = use_case_id == 'automated_banners_generation'
             
             use_cases_data['phase1']['use_cases'].append({
@@ -1076,6 +1076,32 @@ def api_executive_dashboard():
     else:
         print(f"DEBUG: Not creating Step 2 Use Cases, current_step = {current_step}")
 
+    # Add all_enablers data to pedagogical_data for modal display
+    pedagogical_data['all_enablers'] = {}
+    for enabler_id in enabler_titles.keys():
+        # Get the actual category for this enabler
+        enabler_category = content.get_enabler_category(enabler_id)
+        
+        pedagogical_data['all_enablers'][enabler_id] = {
+            'title': enabler_titles.get(enabler_id, enabler_id.replace("_", " ").title()),
+            'description': enabler_descriptions.get(enabler_id, f"Capability: {enabler_id}"),
+            'icon': enabler_icons.get(enabler_id, "fas fa-cog"),
+            'category': enabler_category
+        }
+    
+    # Also add enablers_by_phase data structure for easier access (only unlocked enablers)
+    pedagogical_data['enablers_by_phase'] = {}
+    for phase in ['phase1', 'phase2', 'phase3', 'phase4', 'phase5']:
+        if phase in pedagogical_data:
+            pedagogical_data['enablers_by_phase'][phase] = {}
+            for category, data in pedagogical_data[phase].items():
+                if category != 'title':
+                    if category not in pedagogical_data['enablers_by_phase'][phase]:
+                        pedagogical_data['enablers_by_phase'][phase][category] = []
+                    # Only include unlocked enablers
+                    unlocked = [e['id'] for e in data.get('enablers', []) if e.get('unlocked', False)]
+                    pedagogical_data['enablers_by_phase'][phase][category] = unlocked
+    
     return jsonify({
         'success': True,
         'dashboard_data': {
