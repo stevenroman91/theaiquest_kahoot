@@ -871,21 +871,8 @@ class KahootMode {
                 
                 const row = document.createElement('tr');
                 
-                // Highlight top 3
-                if (rank <= 3) {
-                    row.classList.add('top-three');
-                }
-                
-                // Add rank class for medal display
-                if (rank === 1) {
-                    row.classList.add('rank-1');
-                } else if (rank === 2) {
-                    row.classList.add('rank-2');
-                } else if (rank === 3) {
-                    row.classList.add('rank-3');
-                }
-                
-                // Highlight current user
+                // Removed top-3 styling - all players displayed equally
+                // Only highlight current user
                 if (username === currentUsername) {
                     row.classList.add('user-row');
                 }
