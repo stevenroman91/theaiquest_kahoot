@@ -143,18 +143,25 @@ class GameController {
         });
 
         // Score screen next button
+        // In Kahoot mode, this is handled by kahoot-mode.js, so skip it here
         const scoreNextBtn = document.getElementById('score-next-btn');
         if (scoreNextBtn) {
-            scoreNextBtn.addEventListener('click', () => {
-                console.log('=== SCORE SCREEN NEXT BUTTON CLICKED ===');
-                // Hide score modal
-                const scoreModal = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
-                if (scoreModal) {
-                    scoreModal.hide();
-                }
-                // Show executive dashboard
-                this.showExecutiveDashboard(this.currentPhaseNumber, this.currentScoreData.scores[this.currentPhaseNumber], this.currentScoreData);
-            });
+            // Check if we're in Kahoot mode - if so, don't add the default listener
+            const isKahootMode = document.getElementById('login-section') && 
+                                 document.getElementById('login-section').style.display !== 'none';
+            
+            if (!isKahootMode) {
+                scoreNextBtn.addEventListener('click', () => {
+                    console.log('=== SCORE SCREEN NEXT BUTTON CLICKED ===');
+                    // Hide score modal
+                    const scoreModal = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
+                    if (scoreModal) {
+                        scoreModal.hide();
+                    }
+                    // Show executive dashboard
+                    this.showExecutiveDashboard(this.currentPhaseNumber, this.currentScoreData.scores[this.currentPhaseNumber], this.currentScoreData);
+                });
+            }
         }
 
         // Next button in executive dashboard

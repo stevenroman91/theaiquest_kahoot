@@ -970,63 +970,45 @@ function hookScoreModal() {
                             
                             console.log(`🎮 Kahoot mode: Completed Step ${completedStep}, proceeding to Step ${nextStep}`);
                             
-                            // Go directly to next step (skip videos and dashboard)
-                            // Wait for GameController to be available if needed
-                            let retryCount = 0;
-                            const maxRetries = 50; // Maximum 5 seconds (50 * 100ms)
+                            // Go directly to next step using GameController methods
+                            // GameController should be available as it's initialized before kahoot-mode.js
+                            console.log('🎮 Proceeding to Step', nextStep, '- GameController available:', !!window.gameController);
                             
-                            const proceedToNextStep = () => {
-                                if (window.gameController) {
-                                    // Call the appropriate method directly
+                            if (window.gameController) {
+                                // Small delay to ensure modal is closed
+                                setTimeout(() => {
+                                    // Use existing GameController methods directly
                                     switch(nextStep) {
                                         case 2:
-                                            // Go to Step 2 - use existing GameController methods
                                             if (window.gameController.loadMOT2Choices) {
                                                 window.gameController.loadMOT2Choices();
-                                            } else if (window.gameController.startPhase2Game) {
-                                                window.gameController.startPhase2Game();
                                             }
                                             break;
                                         case 3:
-                                            // Go to Step 3
                                             if (window.gameController.loadMOT3Choices) {
                                                 window.gameController.loadMOT3Choices();
-                                            } else if (window.gameController.startPhase3Game) {
-                                                window.gameController.startPhase3Game();
                                             }
                                             break;
                                         case 4:
-                                            // Go to Step 4
                                             if (window.gameController.loadMOT4Choices) {
                                                 window.gameController.loadMOT4Choices();
-                                            } else if (window.gameController.startPhase4Game) {
-                                                window.gameController.startPhase4Game();
                                             }
                                             break;
                                         case 5:
-                                            // Go to Step 5
                                             if (window.gameController.loadMOT5Choices) {
                                                 window.gameController.loadMOT5Choices();
-                                            } else if (window.gameController.startPhase5Game) {
-                                                window.gameController.startPhase5Game();
                                             }
                                             break;
                                         default:
                                             console.error('Unknown next step number:', nextStep);
                                     }
-                                } else if (retryCount < maxRetries) {
-                                    // GameController not available yet - wait and retry
-                                    retryCount++;
-                                    setTimeout(proceedToNextStep, 100);
-                                } else {
-                                    // Max retries reached - GameController still not available
-                                    console.error('❌ GameController not available after', maxRetries, 'retries. Unable to proceed to Step', nextStep);
-                                    alert('Erreur: Impossible de charger l\'étape suivante. Veuillez rafraîchir la page.');
-                                }
-                            };
-                            
-                            // Small delay to ensure modal is closed, then proceed
-                            setTimeout(proceedToNextStep, 200);
+                                }, 200);
+                            } else {
+                                // GameController should be available - log error for debugging
+                                console.error('❌ GameController not available. This should not happen. game.js should load before kahoot-mode.js');
+                                console.error('Available window objects:', Object.keys(window).filter(k => k.includes('game') || k.includes('Game')));
+                                alert('Erreur: GameController non disponible. Veuillez rafraîchir la page.');
+                            }
                         }
                     }
                 } catch (error) {
