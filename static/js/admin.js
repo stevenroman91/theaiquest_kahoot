@@ -103,19 +103,55 @@ class AdminPanel {
 
                 // Générer le QR code
                 qrcodeContainer.innerHTML = '';
-                QRCode.toCanvas(qrcodeContainer, joinUrl, {
-                    width: 256,
-                    margin: 2,
-                    color: {
-                        dark: '#1e40af',  // FDJ blue
-                        light: '#ffffff'
-                    }
-                }, (error) => {
-                    if (error) {
-                        console.error('Error generating QR code:', error);
-                        qrcodeContainer.innerHTML = '<p class="text-danger">Erreur lors de la génération du QR code</p>';
-                    }
-                });
+                
+                // Vérifier que QRCode est disponible
+                if (typeof QRCode === 'undefined') {
+                    console.error('QRCode library not loaded');
+                    qrcodeContainer.innerHTML = '<p class="text-danger">Bibliothèque QR Code non chargée. Veuillez rafraîchir la page.</p>';
+                } else {
+                    // Utiliser toDataURL avec un img comme alternative plus fiable
+                    QRCode.toDataURL(joinUrl, {
+                        width: 256,
+                        margin: 2,
+                        color: {
+                            dark: '#1e40af',  // FDJ blue
+                            light: '#ffffff'
+                        }
+                    }, (error, url) => {
+                        if (error) {
+                            console.error('Error generating QR code:', error);
+                            // Fallback: essayer toCanvas
+                            try {
+                                const canvas = document.createElement('canvas');
+                                qrcodeContainer.appendChild(canvas);
+                                QRCode.toCanvas(canvas, joinUrl, {
+                                    width: 256,
+                                    margin: 2,
+                                    color: {
+                                        dark: '#1e40af',
+                                        light: '#ffffff'
+                                    }
+                                }, (canvasError) => {
+                                    if (canvasError) {
+                                        console.error('Canvas error:', canvasError);
+                                        qrcodeContainer.innerHTML = '<p class="text-danger">Erreur lors de la génération du QR code</p>';
+                                    }
+                                });
+                            } catch (e) {
+                                console.error('Fallback error:', e);
+                                qrcodeContainer.innerHTML = '<p class="text-danger">Erreur lors de la génération du QR code</p>';
+                            }
+                        } else {
+                            // Afficher l'image du QR code
+                            const img = document.createElement('img');
+                            img.src = url;
+                            img.alt = 'QR Code';
+                            img.style.maxWidth = '256px';
+                            img.style.height = 'auto';
+                            qrcodeContainer.appendChild(img);
+                        }
+                    });
+                }
 
                 // Afficher la section résultat
                 resultDiv.style.display = 'block';
