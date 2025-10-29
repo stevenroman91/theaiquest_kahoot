@@ -500,7 +500,7 @@ class KahootMode {
                                 window.gameController.showScore(scoreData);
                             } else {
                                 // Fallback : afficher l'écran de score manuellement sans recharger
-                                showScoreScreenManually(1, data);
+                                showScoreScreenManuallyLocal(1, data);
                             }
                         } else {
                             console.error('❌ Error confirming choice:', data.message);
@@ -542,7 +542,8 @@ class KahootMode {
                 };
                 
                 // Helper function pour afficher l'écran de score manuellement (fallback si GameController n'est pas disponible)
-                const showScoreScreenManually = (phaseNumber, apiData) => {
+                // Note: Cette fonction est aussi définie au niveau global ci-dessous pour être accessible partout
+                const showScoreScreenManuallyLocal = (phaseNumber, apiData) => {
                     console.log('📊 Showing score screen manually for phase', phaseNumber, apiData);
                     
                     const scoreData = apiData.score || apiData.score_info || {};
@@ -900,6 +901,90 @@ window.fetch = function(...args) {
     return originalFetch.apply(this, args);
 };
 
+// Global function to show score screen manually (fallback if GameController not available)
+// This is used by Step 2 and other steps that don't have access to the local function
+function showScoreScreenManually(phaseNumber, apiData) {
+    console.log('📊 Showing score screen manually for phase', phaseNumber, apiData);
+    
+    const scoreData = apiData.score || apiData.score_info || {};
+    let motScore = 0;
+    
+    // Get score for the specific phase
+    if (scoreData.scores) {
+        motScore = scoreData.scores[`mot${phaseNumber}`] || scoreData.scores.mot1 || 0;
+    } else {
+        motScore = scoreData[`mot${phaseNumber}`] || scoreData.mot1 || 0;
+    }
+    
+    // Hide the current phase section
+    const phaseSection = document.getElementById(`phase${phaseNumber}-section`);
+    if (phaseSection) {
+        phaseSection.style.display = 'none';
+    }
+    
+    // Find score modal and populate it
+    const scoreModal = document.getElementById('scoreModal');
+    if (scoreModal) {
+        // Populate score data
+        const scoreTitle = scoreModal.querySelector('#score-phase-title');
+        const scoreValue = scoreModal.querySelector('#score-value');
+        const scoreDescription = scoreModal.querySelector('#score-description');
+        const starsContainer = scoreModal.querySelector('#score-stars-container');
+        
+        if (scoreTitle) {
+            scoreTitle.textContent = `Step ${phaseNumber}`;
+        }
+        if (scoreValue) {
+            scoreValue.textContent = `${motScore}/3`;
+        }
+        
+        // Generate visual stars
+        if (starsContainer) {
+            starsContainer.innerHTML = '';
+            for (let i = 1; i <= 3; i++) {
+                const star = document.createElement('span');
+                star.className = 'score-star';
+                star.textContent = i <= motScore ? '★' : '☆';
+                starsContainer.appendChild(star);
+            }
+            console.log(`⭐ Generated ${motScore} stars for phase ${phaseNumber}`);
+        }
+        
+        if (scoreDescription) {
+            // Generic description based on score
+            let description = '';
+            if (apiData.choice_id || scoreData.choice) {
+                const choiceId = apiData.choice_id || scoreData.choice;
+                if (choiceId === 'elena' && motScore === 3) {
+                    description = "Excellent! By choosing Elena's approach, you earned 3 stars out of 3. This value-driven and culture-aligned strategy ensures you'll build a sustainable AI roadmap.";
+                } else if (choiceId === 'james' && motScore === 2) {
+                    description = "Good Choice! By selecting James's approach, you earned 2 stars out of 3. You chose a prudent and structured path, focusing on data, technology, and architecture.";
+                } else if (choiceId === 'amira' && motScore === 1) {
+                    description = "Interesting Choice! By selecting Amira's approach, you earned 1 star out of 3. This fast-paced, experimentation-focused strategy can deliver quick wins.";
+                } else {
+                    description = `You earned ${motScore} star${motScore > 1 ? 's' : ''} out of 3 for Step ${phaseNumber}.`;
+                }
+            } else {
+                description = `You earned ${motScore} star${motScore > 1 ? 's' : ''} out of 3 for Step ${phaseNumber}.`;
+            }
+            scoreDescription.textContent = description;
+        }
+        
+        // Show modal with Bootstrap
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const modalInstance = new bootstrap.Modal(scoreModal);
+            modalInstance.show();
+        } else {
+            // Fallback if Bootstrap not available
+            scoreModal.style.display = 'block';
+            scoreModal.classList.add('show');
+        }
+    } else {
+        console.error('❌ Score modal not found');
+        alert(`Score: ${motScore}/3`);
+    }
+}
+
 // Helper functions to load steps directly (fallback if GameController not available)
 function loadStep2Directly() {
     console.log('📥 Loading Step 2 directly via API...');
@@ -1082,7 +1167,7 @@ function renderMOT2ChoicesFull(choices) {
                         <div class="fw-bold">${titleText}</div>
                         <div class="text-muted small">${descText}</div>
                     </div>
-                    <button class="btn btn-sm btn-outline-danger remove-priority-btn" data-choice-id="${choiceId}">
+                    <button class="btn btn-sm btn-outline-danger remove-priority-btn" data-choice-id="${choiceId}" type="button">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
