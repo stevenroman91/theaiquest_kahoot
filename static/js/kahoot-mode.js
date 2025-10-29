@@ -791,57 +791,8 @@ class KahootMode {
         }
 
         // Populate table
-        leaderboard.forEach((entry, index) => {
-            console.log(`  Adding player ${index + 1}: ${entry.username} (Rank ${entry.rank}, Score ${entry.total_score})`);
-            const row = document.createElement('tr');
-            
-            // Highlight top 3
-            if (entry.rank <= 3) {
-                row.classList.add('top-three');
-            }
-            
-            // Add rank class for medal display
-            if (entry.rank === 1) {
-                row.classList.add('rank-1');
-            } else if (entry.rank === 2) {
-                row.classList.add('rank-2');
-            } else if (entry.rank === 3) {
-                row.classList.add('rank-3');
-            }
-            
-            // Highlight current user
-            if (entry.username === currentUsername) {
-                row.classList.add('user-row');
-            }
-
-            // Create stars display
-            const starsHTML = this.createStarsDisplay(entry.stars);
-
-            // Add rank class to rank column for medal emojis
-            const rankClass = entry.rank <= 3 ? `rank-col rank-${entry.rank}` : 'rank-col';
-            const rankDisplay = entry.rank <= 3 ? '' : entry.rank; // Empty for top 3 (shown via ::before)
-
-            row.innerHTML = `
-                <td class="${rankClass}">${rankDisplay}</td>
-                <td class="name-col">${this.escapeHtml(entry.username)}</td>
-                <td class="score-col">${entry.total_score}/15</td>
-                <td class="stars-col">${starsHTML}</td>
-            `;
-
-            tbody.appendChild(row);
-        });
-
-        console.log(`✅ Leaderboard populated: ${tbody.children.length} rows created`);
-
-        // Scroll to top to ensure first player is visible
-        if (tableContainer) {
-            setTimeout(() => {
-                tableContainer.scrollTop = 0;
-            }, 100);
-        }
-
-        // If leaderboard is empty
-        if (leaderboard.length === 0) {
+        if (!leaderboard || leaderboard.length === 0) {
+            console.warn('⚠️ Leaderboard is empty, showing empty message');
             tbody.innerHTML = `
                 <tr>
                     <td colspan="4" class="text-center py-5">
@@ -849,6 +800,77 @@ class KahootMode {
                     </td>
                 </tr>
             `;
+            return;
+        }
+        
+        leaderboard.forEach((entry, index) => {
+            try {
+                console.log(`  Adding player ${index + 1}: ${entry.username} (Rank ${entry.rank}, Score ${entry.total_score}, Stars ${entry.stars})`);
+                
+                // Validate entry data
+                if (!entry || !entry.username) {
+                    console.error('⚠️ Invalid entry at index', index, ':', entry);
+                    return;
+                }
+                
+                const row = document.createElement('tr');
+                
+                // Highlight top 3
+                if (entry.rank <= 3) {
+                    row.classList.add('top-three');
+                }
+                
+                // Add rank class for medal display
+                if (entry.rank === 1) {
+                    row.classList.add('rank-1');
+                } else if (entry.rank === 2) {
+                    row.classList.add('rank-2');
+                } else if (entry.rank === 3) {
+                    row.classList.add('rank-3');
+                }
+                
+                // Highlight current user
+                if (entry.username === currentUsername) {
+                    row.classList.add('user-row');
+                }
+
+                // Create stars display (handle missing stars property)
+                const starsCount = entry.stars || 0;
+                const starsHTML = this.createStarsDisplay(starsCount);
+
+                // Add rank class to rank column for medal emojis
+                const rankClass = entry.rank <= 3 ? `rank-col rank-${entry.rank}` : 'rank-col';
+                const rankDisplay = entry.rank <= 3 ? '' : entry.rank; // Empty for top 3 (shown via ::before)
+
+                // Ensure total_score exists
+                const totalScore = entry.total_score || 0;
+
+                row.innerHTML = `
+                    <td class="${rankClass}">${rankDisplay}</td>
+                    <td class="name-col">${this.escapeHtml(entry.username)}</td>
+                    <td class="score-col">${totalScore}/15</td>
+                    <td class="stars-col">${starsHTML}</td>
+                `;
+
+                tbody.appendChild(row);
+                console.log(`    ✅ Row added to DOM`);
+            } catch (err) {
+                console.error(`❌ Error adding player ${index + 1}:`, err, entry);
+            }
+        });
+
+        const rowsCreated = tbody.children.length;
+        console.log(`✅ Leaderboard populated: ${rowsCreated} rows created (expected ${leaderboard.length})`);
+        
+        if (rowsCreated === 0 && leaderboard.length > 0) {
+            console.error('❌ CRITICAL: No rows created despite having leaderboard data!');
+        }
+
+        // Scroll to top to ensure first player is visible
+        if (tableContainer) {
+            setTimeout(() => {
+                tableContainer.scrollTop = 0;
+            }, 100);
         }
     }
 
