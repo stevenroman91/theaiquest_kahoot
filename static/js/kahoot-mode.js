@@ -9,61 +9,175 @@ class KahootMode {
 
     init() {
         console.log('🎮 Kahoot Mode initialized');
-        this.setupLoginToggle();
-        this.setupLoginForm();
+        this.initializeEventListeners();
         this.setupLeaderboardButtons();
     }
 
-    setupLoginToggle() {
-        const toggleBtn = document.getElementById('toggle-password-mode');
-        const passwordContainer = document.getElementById('password-container');
+    initializeEventListeners() {
+        // Setup mode toggle buttons
+        const playerModeBtn = document.getElementById('player-mode-btn');
+        const adminModeBtn = document.getElementById('admin-mode-btn');
         
-        if (toggleBtn && passwordContainer) {
-            toggleBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const isVisible = passwordContainer.style.display !== 'none';
-                passwordContainer.style.display = isVisible ? 'none' : 'block';
-                toggleBtn.innerHTML = isVisible 
-                    ? '<small><i class="fas fa-key me-1"></i>Need password? Click here</small>'
-                    : '<small><i class="fas fa-user me-1"></i>Kahoot mode (no password)? Click here</small>';
-            });
+        if (playerModeBtn && adminModeBtn) {
+            playerModeBtn.addEventListener('click', () => this.switchToPlayerMode());
+            adminModeBtn.addEventListener('click', () => this.switchToAdminMode());
         }
-    }
 
-    setupLoginForm() {
+        // Hook login form submission
         const loginForm = document.getElementById('login-form');
         if (loginForm) {
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                await this.handleKahootLogin();
+                const isAdminMode = adminModeBtn && adminModeBtn.classList.contains('active');
+                if (isAdminMode) {
+                    await this.handleAdminLogin();
+                } else {
+                    await this.handleKahootLogin();
+                }
             });
+        }
+    }
+
+    switchToPlayerMode() {
+        const playerModeBtn = document.getElementById('player-mode-btn');
+        const adminModeBtn = document.getElementById('admin-mode-btn');
+        const playerFields = document.getElementById('player-mode-fields');
+        const adminFields = document.getElementById('admin-mode-fields');
+        const loginBtnText = document.getElementById('login-btn-text-content');
+
+        if (playerModeBtn) playerModeBtn.classList.add('active');
+        if (adminModeBtn) adminModeBtn.classList.remove('active');
+        if (playerFields) playerFields.style.display = 'block';
+        if (adminFields) adminFields.style.display = 'none';
+        if (loginBtnText) loginBtnText.textContent = 'Start Game';
+        
+        // Reset form validation
+        const form = document.getElementById('login-form');
+        if (form) form.reset();
+    }
+
+    switchToAdminMode() {
+        const playerModeBtn = document.getElementById('player-mode-btn');
+        const adminModeBtn = document.getElementById('admin-mode-btn');
+        const playerFields = document.getElementById('player-mode-fields');
+        const adminFields = document.getElementById('admin-mode-fields');
+        const loginBtnText = document.getElementById('login-btn-text-content');
+
+        if (adminModeBtn) adminModeBtn.classList.add('active');
+        if (playerModeBtn) playerModeBtn.classList.remove('active');
+        if (playerFields) playerFields.style.display = 'none';
+        if (adminFields) adminFields.style.display = 'block';
+        if (loginBtnText) loginBtnText.textContent = 'Login Admin';
+        
+        // Reset form validation
+        const form = document.getElementById('login-form');
+        if (form) form.reset();
+    }
+
+    async handleAdminLogin() {
+        const username = document.getElementById('admin-username');
+        const password = document.getElementById('admin-password');
+        const loginBtn = document.getElementById('login-submit-btn');
+        const loginBtnText = document.getElementById('login-btn-text');
+        const loginBtnLoading = document.getElementById('login-btn-loading');
+
+        if (!username || !password) {
+            this.showLoginAlert('Erreur: champs manquants', 'danger');
+            return;
+        }
+
+        const usernameValue = username.value.trim();
+        const passwordValue = password.value;
+
+        // Validation
+        if (!usernameValue || usernameValue.length < 2) {
+            this.showLoginAlert('Username must be at least 2 characters', 'danger');
+            return;
+        }
+
+        if (!passwordValue || passwordValue.length < 6) {
+            this.showLoginAlert('Password must be at least 6 characters', 'danger');
+            return;
+        }
+
+        // Show loading
+        loginBtn.disabled = true;
+        loginBtnText.style.display = 'none';
+        loginBtnLoading.style.display = 'inline';
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    username: usernameValue,
+                    password: passwordValue
+                    // Pas de session_code pour admin
+                })
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                // Afficher l'erreur
+                this.showLoginAlert(data.message || 'Erreur de connexion', 'danger');
+                loginBtn.disabled = false;
+                loginBtnText.style.display = 'inline';
+                loginBtnLoading.style.display = 'none';
+                return;
+            }
+
+            if (data.success) {
+                console.log('✅ Admin login successful:', data);
+                
+                // Store username
+                if (data.user_info && data.user_info.username) {
+                    this.setCurrentUsername(data.user_info.username);
+                }
+                
+                // Hide login section
+                const loginSection = document.getElementById('login-section');
+                if (loginSection) loginSection.style.display = 'none';
+                
+                // Admin ne joue pas, il gère juste les sessions
+                // Recharger la page pour voir le panneau admin
+                if (data.user_info && data.user_info.role === 'admin') {
+                    window.location.reload();
+                }
+            }
+        } catch (error) {
+            console.error('Admin login error:', error);
+            this.showLoginAlert('Erreur de connexion au serveur', 'danger');
+            loginBtn.disabled = false;
+            loginBtnText.style.display = 'inline';
+            loginBtnLoading.style.display = 'none';
         }
     }
 
     async handleKahootLogin() {
         const sessionCodeInput = document.getElementById('session-code');
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value;
+        const usernameInput = document.getElementById('username');
         const loginBtn = document.getElementById('login-submit-btn');
         const loginBtnText = document.getElementById('login-btn-text');
         const loginBtnLoading = document.getElementById('login-btn-loading');
         
-        // Get and validate session code
-        let sessionCode = sessionCodeInput ? sessionCodeInput.value.trim().toUpperCase() : '';
+        if (!sessionCodeInput || !usernameInput) {
+            this.showLoginAlert('Erreur: champs manquants', 'danger');
+            return;
+        }
         
-        // Vérifier si c'est un admin (admin peut se connecter sans code)
-        const isAdminUser = username.toLowerCase() === 'admin' || username.toLowerCase() === 'trainer';
+        // Get and validate session code (obligatoire pour joueurs)
+        let sessionCode = sessionCodeInput.value.trim().toUpperCase();
+        const username = usernameInput.value.trim();
         
-        // Validation (code requis sauf pour admin en mode Kahoot)
-        if (!password && !isAdminUser) {
-            // Mode Kahoot sans password et non-admin: code de session requis
-            if (!sessionCode || sessionCode.length !== 6) {
-                this.showLoginAlert('Code de session requis (6 caractères)', 'danger');
-                if (sessionCodeInput) {
-                    sessionCodeInput.focus();
-                }
-                return;
-            }
+        // Validation
+        if (!sessionCode || sessionCode.length !== 6) {
+            this.showLoginAlert('Code de session requis (6 caractères)', 'danger');
+            sessionCodeInput.focus();
+            return;
         }
         
         if (!username || username.length < 2) {
@@ -85,8 +199,8 @@ class KahootMode {
                 credentials: 'include',
                 body: JSON.stringify({
                     session_code: sessionCode,
-                    username: username,
-                    password: password || undefined // Only send if provided
+                    username: username
+                    // Pas de password en mode joueur
                 })
             });
 
@@ -595,10 +709,12 @@ function initializeKahootMode() {
         if (codeToUse) {
             sessionCodeInput.value = codeToUse.toUpperCase();
             // Basculer automatiquement en mode joueur si code présent
-            const playerModeBtn = document.getElementById('player-mode-btn');
-            if (playerModeBtn && window.kahootMode) {
-                window.kahootMode.switchToPlayerMode();
-            }
+            // Doit être fait après la création de l'instance
+            setTimeout(() => {
+                if (window.kahootMode) {
+                    window.kahootMode.switchToPlayerMode();
+                }
+            }, 100);
         }
         
         // Forcer les majuscules lors de la saisie
