@@ -478,18 +478,26 @@ class KahootMode {
                             'Content-Type': 'application/json',
                         },
                         credentials: 'include',
-                        body: JSON.stringify({ choice_id: choiceId })
+                        body: JSON.stringify({ character_id: choiceId })  // API attend 'character_id', pas 'choice_id'
                     })
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
                             console.log('✅ Phase 1 choice confirmed:', choiceId);
+                            console.log('📊 Score data received:', data);
+                            
                             // Aller à l'écran de score
-                            if (window.gameController && window.gameController.showScore) {
-                                window.gameController.showScore(data.score_data);
+                            if (window.gameController && window.gameController.showScoreScreen) {
+                                // Utiliser showScoreScreen si disponible (avec les bons paramètres)
+                                const score = data.score || data.score_info || {};
+                                const mot1Score = score.scores ? score.scores.mot1 : (score.mot1 || 0);
+                                window.gameController.showScoreScreen(1, mot1Score, score);
+                            } else if (window.gameController && window.gameController.showScore) {
+                                window.gameController.showScore(data.score || data.score_info);
                             } else {
-                                // Rediriger vers le score manuellement
-                                window.location.href = '/?step=score&phase=1';
+                                // Fallback : utiliser l'API pour charger l'écran de score
+                                // ou rediriger vers une page de score
+                                window.location.reload(); // Le backend devrait afficher le score
                             }
                         } else {
                             console.error('❌ Error confirming choice:', data.message);
