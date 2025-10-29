@@ -383,13 +383,13 @@ class KahootMode {
                     }
                 };
                 
-                // Wait for GameController and use its loadMOT1Choices method
-                // which handles the full visual rendering with photos
-                let retryCount = 0;
-                const maxRetries = 30; // Maximum 30 tentatives (6 secondes) pour être sûr
-                
-                const startStep1 = () => {
-                    if (window.gameController) {
+                // Wait for GameController to be fully initialized
+                // We'll listen for when it's ready instead of polling
+                const waitForGameController = () => {
+                    // Vérifier si GameController est disponible
+                    if (window.gameController && typeof window.gameController.loadMOT1Choices === 'function') {
+                        console.log('✅ GameController found, loading Step 1 with full visual render');
+                        
                         // Stop all videos first
                         if (window.gameController.stopAllVideos) {
                             window.gameController.stopAllVideos();
@@ -409,32 +409,23 @@ class KahootMode {
                         });
                         
                         // Utiliser loadMOT1Choices qui charge l'API ET rend avec le style complet
-                        if (window.gameController.loadMOT1Choices) {
-                            window.gameController.loadMOT1Choices();
-                            console.log('✅ Loaded Step 1 via GameController.loadMOT1Choices (full visual render)');
-                        } else if (window.gameController.startMOT1Game) {
-                            // Fallback to startMOT1Game if loadMOT1Choices doesn't exist
-                            window.gameController.startMOT1Game();
-                            console.log('✅ Started Step 1 via startMOT1Game (Kahoot mode)');
-                        } else {
-                            console.error('Cannot find method to start Step 1');
-                            // Last resort: show phase1-section directly
-                            showPhase1Directly();
-                        }
-                    } else if (retryCount < maxRetries) {
-                        retryCount++;
-                        console.log(`⏳ GameController not found, retrying... (${retryCount}/${maxRetries})`);
-                        setTimeout(startStep1, 200);
+                        window.gameController.loadMOT1Choices();
                     } else {
-                        console.warn('⚠️ GameController not found after max retries, showing Step 1 directly');
-                        // Fallback: show phase1-section directly
-                        showPhase1Directly();
+                        // Si GameController n'est pas encore disponible, réessayer
+                        // Utiliser requestAnimationFrame pour une meilleure synchronisation
+                        requestAnimationFrame(waitForGameController);
                     }
                 };
                 
-                
-                // Start after a short delay to ensure everything is initialized
-                setTimeout(startStep1, 500);
+                // Start waiting for GameController immediately
+                // Using requestAnimationFrame ensures we wait for the DOM and scripts to be ready
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        setTimeout(waitForGameController, 100);
+                    });
+                } else {
+                    setTimeout(waitForGameController, 100);
+                }
             } else {
                 this.showLoginAlert(data.message || 'Login failed', 'danger');
                 loginBtn.disabled = false;
