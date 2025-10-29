@@ -1611,7 +1611,9 @@ function renderMOT2ChoicesFull(choices) {
         `;
         
         // Add click handler for remove button
-        priorityItem.querySelector('.remove-priority-btn').addEventListener('click', () => {
+        priorityItem.querySelector('.remove-priority-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             removeFromPrioritySlot(choiceId);
         });
         
@@ -2056,15 +2058,17 @@ function renderMOT4ChoicesFull(choices) {
         const categoryColor = categoryColors[pillar];
         const specificIcon = iconMap[choice.id] || 'fas fa-cog';
         
+        // Simplified: only header with icon, title and cost badge
         choiceDiv.innerHTML = `
-            <div class="choice-header">
-                <div style="background-color: ${categoryColor}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                    <i class="${specificIcon}" style="color: white; font-size: 1rem;"></i>
+            <div class="choice-header d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center" style="flex: 1;">
+                    <div style="background-color: ${categoryColor}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 10px;">
+                        <i class="${specificIcon}" style="color: white; font-size: 1rem;"></i>
+                    </div>
+                    <div class="choice-title fw-bold" style="flex: 1;">${choice.title}</div>
                 </div>
-                <div class="choice-title">${choice.title}</div>
+                <div class="badge bg-primary ms-2" style="flex-shrink: 0;">${choice.cost} pts</div>
             </div>
-            <div class="choice-description">${choice.description}</div>
-            <div class="choice-cost">${choice.cost} points</div>
         `;
         
         // Add click listener
@@ -2170,16 +2174,46 @@ function updatePhase4BudgetManual() {
         totalCost += parseInt(choice.dataset.cost) || 0;
     });
     
-    const budgetText = document.getElementById('phase4-budget-text');
-    const budgetDisplay = document.getElementById('phase4-budget-display'); // Also check this element
+    const budgetDisplay = document.getElementById('phase4-budget-display');
+    const budgetFill = document.getElementById('budget-fill-horizontal');
+    const budgetStatus = document.getElementById('budget-status');
     const confirmBtn = document.getElementById('phase4-confirm-btn');
     
-    if (budgetText) {
-        budgetText.textContent = `${totalCost}/30 points`;
-    }
-    
+    // Update display text
     if (budgetDisplay) {
         budgetDisplay.textContent = `${totalCost}/30 points`;
+    }
+    
+    // Update horizontal progress bar
+    if (budgetFill) {
+        const percentage = (totalCost / 30) * 100;
+        budgetFill.style.width = `${Math.min(percentage, 100)}%`;
+        
+        // Change color based on budget usage
+        if (percentage > 100) {
+            budgetFill.style.background = 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)';
+        } else if (percentage >= 80) {
+            budgetFill.style.background = 'linear-gradient(90deg, #f59e0b 0%, #d97706 100%)';
+        } else {
+            budgetFill.style.background = 'linear-gradient(90deg, #10b981 0%, #059669 100%)';
+        }
+    }
+    
+    // Update status badge
+    if (budgetStatus) {
+        if (totalCost > 30) {
+            budgetStatus.textContent = 'Budget exceeded!';
+            budgetStatus.className = 'badge bg-danger';
+        } else if (totalCost === 30) {
+            budgetStatus.textContent = 'Budget full';
+            budgetStatus.className = 'badge bg-success';
+        } else if (totalCost > 0) {
+            budgetStatus.textContent = `${30 - totalCost} pts remaining`;
+            budgetStatus.className = 'badge bg-info';
+        } else {
+            budgetStatus.textContent = 'Select enablers';
+            budgetStatus.className = 'badge bg-secondary';
+        }
     }
     
     if (confirmBtn) {

@@ -1510,32 +1510,32 @@ class GameController {
         priorityItem.className = 'priority-item';
         priorityItem.dataset.choiceId = choiceId;
         
-        const titleText = solutionCard.querySelector('.solution-title')?.textContent || 'Unknown';
-        const numberSquare = solutionCard.querySelector('.matrix-number-square');
-        const numberText = numberSquare ? numberSquare.textContent : '';
-        
-        priorityItem.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center" style="flex: 1;">
-                    ${numberText ? `<div class="matrix-number-square me-2" style="
-                        width: 30px;
-                        height: 30px;
-                        border-radius: 6px;
-                        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-                        color: white;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-weight: bold;
-                        font-size: 0.9rem;
-                    ">${numberText}</div>` : ''}
-                    <div class="fw-bold">${titleText}</div>
+            const titleText = solutionCard.querySelector('.solution-title')?.textContent || 'Unknown';
+            const numberSquare = solutionCard.querySelector('.matrix-number-square');
+            const numberText = numberSquare ? numberSquare.textContent : '';
+            
+            priorityItem.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center" style="flex: 1;">
+                        ${numberText ? `<div class="matrix-number-square me-2" style="
+                            width: 30px;
+                            height: 30px;
+                            border-radius: 6px;
+                            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+                            color: white;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-weight: bold;
+                            font-size: 0.9rem;
+                        ">${numberText}</div>` : ''}
+                        <div class="fw-bold">${titleText}</div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); gameController.removeFromPriority('${choiceId}');">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                <button class="btn btn-sm btn-outline-danger" onclick="gameController.removeFromPriority('${choiceId}')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
+            `;
 
         // Add to slot
         slot.innerHTML = '';
