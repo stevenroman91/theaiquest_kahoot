@@ -1097,7 +1097,19 @@ class KahootMode {
                 const nameText = nameCell ? nameCell.textContent.trim() : '?';
                 const isVisible = row.offsetHeight > 0 && row.offsetWidth > 0;
                 const display = window.getComputedStyle(row).display;
-                console.log(`    Row ${idx + 1}: rank="${rankText}", name="${nameText}", visible=${isVisible}, display=${display}`);
+                
+                // Check actual visibility in viewport
+                const rect = row.getBoundingClientRect();
+                const tableContainerRect = tableContainer ? tableContainer.getBoundingClientRect() : null;
+                const isInViewport = tableContainerRect ? 
+                    (rect.top >= tableContainerRect.top && rect.bottom <= tableContainerRect.bottom) :
+                    (rect.top >= 0 && rect.bottom <= window.innerHeight);
+                
+                console.log(`    Row ${idx + 1}: rank="${rankText}", name="${nameText}"`);
+                console.log(`        - visible=${isVisible}, display=${display}`);
+                console.log(`        - rect: top=${rect.top}, bottom=${rect.bottom}`);
+                console.log(`        - inViewport=${isInViewport}`);
+                console.log(`        - scrollTop=${tableContainer ? tableContainer.scrollTop : 'N/A'}`);
             });
         }
         
