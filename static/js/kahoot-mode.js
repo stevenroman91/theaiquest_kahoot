@@ -1331,17 +1331,156 @@ function loadStep3Directly() {
     fetch('/api/phase3/choices', { credentials: 'include' })
         .then(res => res.json())
         .then(data => {
-            if (data.success && data.choices && window.gameController && window.gameController.renderMOT3Choices) {
-                window.gameController.renderMOT3Choices(data.choices);
-            } else if (data.success && data.choices) {
-                // Basic fallback rendering
-                const container = document.getElementById('phase3-choices');
-                if (container) {
-                    container.innerHTML = '<p>Choix Step 3 chargés (rendu basique)</p>';
+            if (data.success && data.choices) {
+                // Try to use GameController first
+                if (window.gameController && window.gameController.renderMOT3Choices) {
+                    window.gameController.renderMOT3Choices(data.choices);
+                    if (window.gameController.initializePhase3Progress) {
+                        window.gameController.initializePhase3Progress();
+                    }
+                } else {
+                    // Fallback: use full rendering function
+                    renderMOT3ChoicesFull(data.choices);
                 }
             }
         })
         .catch(err => console.error('Error loading Step 3:', err));
+}
+
+// Full rendering function for Step 3 choices (fallback if GameController not fully available)
+function renderMOT3ChoicesFull(choices) {
+    const container = document.getElementById('phase3-choices');
+    if (!container) {
+        console.error('❌ phase3-choices container not found');
+        return;
+    }
+    
+    container.innerHTML = '';
+    container.className = '';
+    
+    // Define category metadata
+    const categoryMetadata = {
+        'people': {
+            title: 'People',
+            icon: 'fas fa-users',
+            class: 'people'
+        },
+        'technology': {
+            title: 'Technology',
+            icon: 'fas fa-handshake',
+            class: 'technology'
+        },
+        'gover': {
+            title: 'Governance',
+            icon: 'fas fa-shield-alt',
+            class: 'gover'
+        }
+    };
+    
+    // Define specific icons for each choice
+    const choiceIcons = {
+        'ai_data_platform_modernization': 'fas fa-database',
+        'automation_ai_models_deployment': 'fas fa-robot',
+        'data_quality_tooling': 'fas fa-clipboard-check',
+        'ai_leadership_program': 'fas fa-graduation-cap',
+        'hands_on_ai_bootcamp': 'fas fa-code',
+        'business_ai_champions': 'fas fa-trophy',
+        'responsible_ai_guidelines': 'fas fa-shield-alt',
+        'ai_governance_roadmap': 'fas fa-map-signs',
+        'ai_governance_board': 'fas fa-gavel'
+    };
+    
+    // Create matrix structure - Original category columns
+    Object.entries(choices).forEach(([category, categoryChoices]) => {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'matrix-category';
+        
+        const metadata = categoryMetadata[category] || { title: category, icon: 'fas fa-cog', class: '' };
+        
+        categoryDiv.innerHTML = `
+            <div class="category-header ${metadata.class}">
+                <i class="${metadata.icon} me-2"></i>${metadata.title}
+            </div>
+            ${categoryChoices.map(choice => `
+                <div class="matrix-choice" data-choice-id="${choice.id}" data-category="${category}">
+                    <div class="choice-header">
+                        <div style="background-color: ${category === 'people' ? '#f97316' : category === 'technology' ? '#8b5cf6' : '#3b82f6'}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                            <i class="${choiceIcons[choice.id] || 'fas fa-cog'}" style="color: white; font-size: 1rem;"></i>
+                        </div>
+                        <div class="choice-title">${choice.title}</div>
+                    </div>
+                    <div class="choice-description">${choice.description}</div>
+                </div>
+            `).join('')}
+        `;
+        
+        // Add click listeners to choices
+        categoryDiv.querySelectorAll('.matrix-choice').forEach(choiceEl => {
+            choiceEl.addEventListener('click', () => {
+                const choiceId = choiceEl.dataset.choiceId;
+                const category = choiceEl.dataset.category;
+                
+                // Remove previous selection from this category
+                categoryDiv.querySelectorAll('.matrix-choice').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                
+                // Add new selection
+                choiceEl.classList.add('selected');
+                
+                // Update progress if GameController available
+                if (window.gameController && window.gameController.selectMOT3Choice) {
+                    window.gameController.selectMOT3Choice(choiceId, category);
+                } else {
+                    // Manual progress update
+                    updatePhase3ProgressManual();
+                }
+            });
+        });
+        
+        container.appendChild(categoryDiv);
+    });
+    
+    // Initialize progress
+    updatePhase3ProgressManual();
+    
+    console.log('✅ Rendered Step 3 choices with full visual');
+}
+
+// Helper to update Phase 3 progress manually
+function updatePhase3ProgressManual() {
+    const selectedCount = document.querySelectorAll('#phase3-choices .matrix-choice.selected').length;
+    const progressText = document.getElementById('phase3-progress-text');
+    const confirmBtn = document.getElementById('phase3-confirm-btn');
+    
+    if (progressText) {
+        progressText.textContent = `${selectedCount}/3 selected`;
+    }
+    
+    // Update progress steps
+    for (let i = 1; i <= 3; i++) {
+        const step = document.querySelector(`.progress-step[data-step="${i}"]`);
+        if (step) {
+            if (i <= selectedCount) {
+                step.classList.add('completed');
+            } else {
+                step.classList.remove('completed');
+            }
+        }
+    }
+    
+    // Enable/disable confirm button
+    if (confirmBtn) {
+        if (selectedCount === 3) {
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('btn-secondary');
+            confirmBtn.classList.add('btn-primary');
+        } else {
+            confirmBtn.disabled = true;
+            confirmBtn.classList.remove('btn-primary');
+            confirmBtn.classList.add('btn-secondary');
+        }
+    }
 }
 
 function loadStep4Directly() {
@@ -1361,17 +1500,133 @@ function loadStep4Directly() {
     fetch('/api/phase4/choices', { credentials: 'include' })
         .then(res => res.json())
         .then(data => {
-            if (data.success && data.choices && window.gameController && window.gameController.renderMOT4Choices) {
-                window.gameController.renderMOT4Choices(data.choices);
-            } else if (data.success && data.choices) {
-                // Basic fallback rendering
-                const container = document.getElementById('phase4-choices');
-                if (container) {
-                    container.innerHTML = '<p>Choix Step 4 chargés (rendu basique)</p>';
+            if (data.success && data.choices) {
+                // Try to use GameController first
+                if (window.gameController && window.gameController.renderMOT4Choices) {
+                    window.gameController.renderMOT4Choices(data.choices);
+                    if (window.gameController.initializePhase4Budget) {
+                        window.gameController.initializePhase4Budget();
+                    }
+                } else {
+                    // Fallback: use full rendering function
+                    renderMOT4ChoicesFull(data.choices);
                 }
             }
         })
         .catch(err => console.error('Error loading Step 4:', err));
+}
+
+// Full rendering function for Step 4 choices (fallback if GameController not fully available)
+function renderMOT4ChoicesFull(choices) {
+    const container = document.getElementById('phase4-choices');
+    if (!container) {
+        console.error('❌ phase4-choices container not found');
+        return;
+    }
+    
+    container.innerHTML = '';
+    container.className = 'matrix-choices-grid';
+    
+    // Define category colors
+    const categoryColors = {
+        'technology': '#8b5cf6',
+        'gover': '#3b82f6',
+        'people': '#f97316'
+    };
+    
+    // Map enabler IDs to pillars
+    const enablerPillars = {
+        'adoption_playbook': 'people',
+        'ai_storytelling_communication': 'people',
+        'ai_product_teams_setup': 'people',
+        'talent_mobility_program': 'people',
+        'industrialized_data_pipelines': 'technology',
+        'api_platform': 'technology',
+        'privacy_by_design_data': 'technology',
+        'role_responsibility_matrix': 'gover',
+        'country_level_ai_deployment': 'gover'
+    };
+    
+    // Icon mapping
+    const iconMap = {
+        'adoption_playbook': 'fas fa-book',
+        'ai_storytelling_communication': 'fas fa-bullhorn',
+        'ai_product_teams_setup': 'fas fa-users',
+        'talent_mobility_program': 'fas fa-exchange-alt',
+        'industrialized_data_pipelines': 'fas fa-cogs',
+        'api_platform': 'fas fa-code',
+        'privacy_by_design_data': 'fas fa-shield-alt',
+        'role_responsibility_matrix': 'fas fa-clipboard-check',
+        'country_level_ai_deployment': 'fas fa-globe'
+    };
+    
+    choices.forEach(choice => {
+        const choiceDiv = document.createElement('div');
+        choiceDiv.className = 'matrix-choice';
+        choiceDiv.dataset.choiceId = choice.id;
+        choiceDiv.dataset.cost = choice.cost;
+        
+        const pillar = enablerPillars[choice.id] || 'technology';
+        const categoryColor = categoryColors[pillar];
+        const specificIcon = iconMap[choice.id] || 'fas fa-cog';
+        
+        choiceDiv.innerHTML = `
+            <div class="choice-header">
+                <div style="background-color: ${categoryColor}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                    <i class="${specificIcon}" style="color: white; font-size: 1rem;"></i>
+                </div>
+                <div class="choice-title">${choice.title}</div>
+            </div>
+            <div class="choice-description">${choice.description}</div>
+            <div class="choice-cost">${choice.cost} points</div>
+        `;
+        
+        // Add click listener
+        choiceDiv.addEventListener('click', () => {
+            if (window.gameController && window.gameController.selectMOT4Choice) {
+                window.gameController.selectMOT4Choice(choice.id, choice.cost);
+            } else {
+                // Toggle selection manually
+                choiceDiv.classList.toggle('selected');
+                updatePhase4BudgetManual();
+            }
+        });
+        
+        container.appendChild(choiceDiv);
+    });
+    
+    // Initialize budget
+    updatePhase4BudgetManual();
+    
+    console.log('✅ Rendered Step 4 choices with full visual');
+}
+
+// Helper to update Phase 4 budget manually
+function updatePhase4BudgetManual() {
+    const selectedChoices = document.querySelectorAll('#phase4-choices .matrix-choice.selected');
+    let totalCost = 0;
+    selectedChoices.forEach(choice => {
+        totalCost += parseInt(choice.dataset.cost) || 0;
+    });
+    
+    const budgetText = document.getElementById('phase4-budget-text');
+    const confirmBtn = document.getElementById('phase4-confirm-btn');
+    
+    if (budgetText) {
+        budgetText.textContent = `${totalCost}/15 points`;
+    }
+    
+    if (confirmBtn) {
+        if (totalCost <= 15 && selectedChoices.length > 0) {
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('btn-secondary');
+            confirmBtn.classList.add('btn-primary');
+        } else {
+            confirmBtn.disabled = true;
+            confirmBtn.classList.remove('btn-primary');
+            confirmBtn.classList.add('btn-secondary');
+        }
+    }
 }
 
 function loadStep5Directly() {
@@ -1391,17 +1646,136 @@ function loadStep5Directly() {
     fetch('/api/phase5/choices', { credentials: 'include' })
         .then(res => res.json())
         .then(data => {
-            if (data.success && data.choices && window.gameController && window.gameController.renderMOT5Choices) {
-                window.gameController.renderMOT5Choices(data.choices);
-            } else if (data.success && data.choices) {
-                // Basic fallback rendering
-                const container = document.getElementById('phase5-choices');
-                if (container) {
-                    container.innerHTML = '<p>Choix Step 5 chargés (rendu basique)</p>';
+            if (data.success && data.choices) {
+                // Try to use GameController first
+                if (window.gameController && window.gameController.renderMOT5Choices) {
+                    window.gameController.renderMOT5Choices(data.choices);
+                    if (window.gameController.loadEnablerDescriptions) {
+                        window.gameController.loadEnablerDescriptions();
+                    }
+                } else {
+                    // Fallback: use full rendering function
+                    renderMOT5ChoicesFull(data.choices);
                 }
             }
         })
         .catch(err => console.error('Error loading Step 5:', err));
+}
+
+// Full rendering function for Step 5 choices (fallback if GameController not fully available)
+function renderMOT5ChoicesFull(choices) {
+    const container = document.getElementById('phase5-choices');
+    if (!container) {
+        console.error('❌ phase5-choices container not found');
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    // Define choice details
+    const choiceDetails = {
+        'boost_self_service_ai': {
+            enablers: [
+                { id: 'self_service_ai_tools', icon: 'fas fa-tools', label: 'Self-service AI tools', category: 'technology' },
+                { id: 'data_ai_academy', icon: 'fas fa-book-open', label: 'Data & AI Academy', category: 'people' },
+                { id: 'ai_collaboration_hub', icon: 'fas fa-project-diagram', label: 'AI Collaboration Hub', category: 'people' },
+                { id: 'attractive_ai_career_tracks', icon: 'fas fa-user-tie', label: 'Attractive AI career tracks', category: 'people' },
+                { id: 'responsible_ai_awareness', icon: 'fas fa-shield-alt', label: 'Responsible AI awareness', category: 'gover' }
+            ]
+        },
+        'build_to_scale': {
+            enablers: [
+                { id: 'trusted_tech_partners', icon: 'fas fa-handshake', label: 'Trusted tech partners', category: 'technology' },
+                { id: 'ai_collaboration_hub', icon: 'fas fa-project-diagram', label: 'AI Collaboration Hub', category: 'people' },
+                { id: 'attractive_ai_career_tracks', icon: 'fas fa-user-tie', label: 'Attractive AI career tracks', category: 'people' },
+                { id: 'ai_governance_roadmap', icon: 'fas fa-map-signs', label: 'AI Governance Roadmap', category: 'gover' },
+                { id: 'responsible_ai_awareness', icon: 'fas fa-shield-alt', label: 'Responsible AI awareness', category: 'gover' }
+            ]
+        },
+        'empower_people_amplify_impact': {
+            enablers: [
+                { id: 'trusted_tech_partners', icon: 'fas fa-handshake', label: 'Trusted tech partners', category: 'technology' },
+                { id: 'data_ai_academy', icon: 'fas fa-book-open', label: 'Data & AI Academy', category: 'people' },
+                { id: 'attractive_ai_career_tracks', icon: 'fas fa-user-tie', label: 'Attractive AI career tracks', category: 'people' },
+                { id: 'ai_value_office', icon: 'fas fa-chart-line', label: 'AI Value Office', category: 'gover' },
+                { id: 'ai_governance_roadmap', icon: 'fas fa-map-signs', label: 'AI Governance Roadmap', category: 'gover' }
+            ]
+        }
+    };
+    
+    choices.forEach((choice, index) => {
+        const columnDiv = document.createElement('div');
+        columnDiv.className = 'col-md-4 col-sm-12';
+        
+        const details = choiceDetails[choice.id] || { enablers: [], description: choice.description };
+        
+        // Generate content for enablers
+        let contentHtml = '';
+        if (details.enablers && details.enablers.length > 0) {
+            contentHtml = `
+                <div class="choice-enablers">
+                    ${details.enablers.map(enabler => `
+                        <div class="choice-enabler" data-enabler-id="${enabler.id}">
+                            <div class="enabler-icon ${enabler.category}">
+                                <i class="${enabler.icon}"></i>
+                            </div>
+                            <div class="enabler-label">${enabler.label}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        const choiceColumn = document.createElement('div');
+        choiceColumn.className = 'choice-column';
+        choiceColumn.dataset.choiceId = choice.id;
+        
+        choiceColumn.innerHTML = `
+            <div class="choice-header">
+                <h4 class="choice-title">${choice.title}</h4>
+            </div>
+            <div class="choice-content">
+                <div class="choice-description">
+                    ${choice.description}
+                </div>
+                ${contentHtml}
+            </div>
+        `;
+        
+        // Add click listener
+        choiceColumn.addEventListener('click', () => {
+            // Remove selection from all
+            document.querySelectorAll('.choice-column').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Add selection to clicked
+            choiceColumn.classList.add('selected');
+            
+            // Enable confirm button
+            const confirmBtn = document.getElementById('phase5-confirm-btn');
+            if (confirmBtn) {
+                confirmBtn.disabled = false;
+                confirmBtn.classList.remove('btn-secondary');
+                confirmBtn.classList.add('btn-primary');
+            }
+            
+            // Also call GameController if available
+            if (window.gameController && window.gameController.selectMOT5Choice) {
+                window.gameController.selectMOT5Choice(choice.id);
+            }
+        });
+        
+        columnDiv.appendChild(choiceColumn);
+        container.appendChild(columnDiv);
+    });
+    
+    // Load descriptions if GameController available
+    if (window.gameController && window.gameController.loadEnablerDescriptions) {
+        window.gameController.loadEnablerDescriptions();
+    }
+    
+    console.log('✅ Rendered Step 5 choices with full visual');
 }
 
 // Hook into score display to show leaderboard after Step 5
