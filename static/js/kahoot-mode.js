@@ -281,50 +281,7 @@ class KahootMode {
                 // Start game directly to Step 1 (skip all videos/intro)
                 // In Kahoot mode, we want to go directly to Step 1 choices
                 
-                // Wait a bit to ensure GameController is fully initialized
-                // Mais aussi charger les choix directement si GameController tarde
-                let retryCount = 0;
-                const maxRetries = 10; // Maximum 10 tentatives (2 secondes)
-                
-                // Charger les choix directement en parallèle
-                loadPhase1ChoicesDirectly();
-                
-                const startStep1 = () => {
-                    if (window.gameController) {
-                        // Stop all videos first
-                        if (window.gameController.stopAllVideos) {
-                            window.gameController.stopAllVideos();
-                        }
-                        
-                        // S'assurer que la section est visible
-                        const phase1Section = document.getElementById('phase1-section');
-                        if (phase1Section) {
-                            phase1Section.style.display = 'block';
-                        }
-                        
-                        // Call loadMOT1Choices directly to skip video and show Step 1
-                        if (window.gameController.loadMOT1Choices) {
-                            window.gameController.loadMOT1Choices();
-                            console.log('✅ Loaded Step 1 via GameController (Kahoot mode)');
-                        } else if (window.gameController.startMOT1Game) {
-                            // Fallback to startMOT1Game if loadMOT1Choices doesn't exist
-                            window.gameController.startMOT1Game();
-                            console.log('✅ Started Step 1 via startMOT1Game (Kahoot mode)');
-                        } else {
-                            console.error('Cannot find method to start Step 1');
-                            // Last resort: show phase1-section directly
-                            showPhase1Directly();
-                        }
-                    } else if (retryCount < maxRetries) {
-                        retryCount++;
-                        console.log(`⏳ GameController not found, retrying... (${retryCount}/${maxRetries})`);
-                        setTimeout(startStep1, 200);
-                    } else {
-                        console.warn('⚠️ GameController not found after max retries, showing Step 1 directly');
-                        // Fallback: show phase1-section directly
-                        showPhase1Directly();
-                    }
-                };
+                // Définir d'abord les fonctions helper (avant de les utiliser)
                 
                 // Helper function pour charger les choix directement via l'API
                 const loadPhase1ChoicesDirectly = () => {
@@ -370,48 +327,6 @@ class KahootMode {
                             container.innerHTML = '<p class="text-danger">Erreur de connexion lors du chargement des choix.</p>';
                         }
                     });
-                };
-                
-                // Helper function to show Step 1 directly
-                const showPhase1Directly = () => {
-                    const phase1Section = document.getElementById('phase1-section');
-                    if (phase1Section) {
-                        phase1Section.style.display = 'block';
-                        console.log('✅ Showing Step 1 section directly (fallback)');
-                        
-                        // Essayer d'appeler l'API pour charger les choix (URL correcte: /api/phase1/choices)
-                        fetch('/api/phase1/choices', {
-                            credentials: 'include'
-                        })
-                            .then(res => {
-                                if (!res.ok) {
-                                    throw new Error(`HTTP ${res.status}`);
-                                }
-                                return res.json();
-                            })
-                            .then(data => {
-                                if (data.success) {
-                                    console.log('✅ Phase1 choices loaded via API');
-                                    // Si GameController est disponible, utiliser renderMOT1Choices
-                                    if (window.gameController && window.gameController.renderMOT1Choices) {
-                                        window.gameController.renderMOT1Choices(data.choices);
-                                    } else {
-                                        // Sinon, rendre manuellement les choix
-                                        renderChoicesManually(data.choices);
-                                    }
-                                } else {
-                                    console.error('❌ API returned error:', data.message);
-                                    renderChoicesManually([]);
-                                }
-                            })
-                            .catch(err => {
-                                console.error('Error loading phase1 choices:', err);
-                                // Essayer quand même de rendre quelque chose
-                                renderChoicesManually([]);
-                            });
-                    } else {
-                        console.error('❌ Phase 1 section not found in DOM');
-                    }
                 };
                 
                 // Helper function pour rendre les choix manuellement si GameController n'est pas disponible
@@ -482,6 +397,66 @@ class KahootMode {
                         alert('Erreur de connexion');
                     });
                 };
+                
+                // Helper function to show Step 1 directly
+                const showPhase1Directly = () => {
+                    const phase1Section = document.getElementById('phase1-section');
+                    if (phase1Section) {
+                        phase1Section.style.display = 'block';
+                        console.log('✅ Showing Step 1 section directly (fallback)');
+                        
+                        // Appeler loadPhase1ChoicesDirectly (maintenant définie)
+                        loadPhase1ChoicesDirectly();
+                    } else {
+                        console.error('❌ Phase 1 section not found in DOM');
+                    }
+                };
+                
+                // Wait a bit to ensure GameController is fully initialized
+                // Mais aussi charger les choix directement si GameController tarde
+                let retryCount = 0;
+                const maxRetries = 10; // Maximum 10 tentatives (2 secondes)
+                
+                // Charger les choix directement en parallèle
+                loadPhase1ChoicesDirectly();
+                
+                const startStep1 = () => {
+                    if (window.gameController) {
+                        // Stop all videos first
+                        if (window.gameController.stopAllVideos) {
+                            window.gameController.stopAllVideos();
+                        }
+                        
+                        // S'assurer que la section est visible
+                        const phase1Section = document.getElementById('phase1-section');
+                        if (phase1Section) {
+                            phase1Section.style.display = 'block';
+                        }
+                        
+                        // Call loadMOT1Choices directly to skip video and show Step 1
+                        if (window.gameController.loadMOT1Choices) {
+                            window.gameController.loadMOT1Choices();
+                            console.log('✅ Loaded Step 1 via GameController (Kahoot mode)');
+                        } else if (window.gameController.startMOT1Game) {
+                            // Fallback to startMOT1Game if loadMOT1Choices doesn't exist
+                            window.gameController.startMOT1Game();
+                            console.log('✅ Started Step 1 via startMOT1Game (Kahoot mode)');
+                        } else {
+                            console.error('Cannot find method to start Step 1');
+                            // Last resort: show phase1-section directly
+                            showPhase1Directly();
+                        }
+                    } else if (retryCount < maxRetries) {
+                        retryCount++;
+                        console.log(`⏳ GameController not found, retrying... (${retryCount}/${maxRetries})`);
+                        setTimeout(startStep1, 200);
+                    } else {
+                        console.warn('⚠️ GameController not found after max retries, showing Step 1 directly');
+                        // Fallback: show phase1-section directly
+                        showPhase1Directly();
+                    }
+                };
+                
                 
                 // Start after a short delay to ensure everything is initialized
                 setTimeout(startStep1, 500);
