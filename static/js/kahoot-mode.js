@@ -1061,6 +1061,53 @@ function hookScoreModal() {
     }
 }
 
+// Helper function to load and render Step 2 directly (similar to loadAndRenderStep1)
+function loadAndRenderStep2() {
+    console.log('🎮 Loading Step 2 choices...');
+    
+    // Hide all phase sections
+    document.querySelectorAll('.phase-section').forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Show phase2 section
+    const phase2Section = document.getElementById('phase2-section');
+    if (phase2Section) {
+        phase2Section.style.display = 'block';
+    } else {
+        console.error('❌ Phase 2 section not found');
+        return;
+    }
+    
+    // Load choices from API
+    fetch('/api/phase2/choices', {
+        credentials: 'include'
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+        return res.json();
+    })
+    .then(data => {
+        if (data.success && data.choices) {
+            console.log('✅ Step 2 choices loaded:', data.choices);
+            // If GameController is available, use its render method
+            if (window.gameController && window.gameController.renderMOT2Choices) {
+                window.gameController.renderMOT2Choices(data.choices);
+            } else {
+                console.warn('⚠️ GameController not available for Step 2 rendering');
+                // Fallback: could render manually if needed
+            }
+        } else {
+            console.error('❌ Failed to load Step 2 choices:', data.message);
+        }
+    })
+    .catch(err => {
+        console.error('❌ Error loading Step 2 choices:', err);
+    });
+}
+
 // Remove all video sections immediately in Kahoot mode
 function removeVideoSections() {
     // Remove video sections immediately to prevent browser preloading
