@@ -1,20 +1,21 @@
 # Déploiement automatique sur Railway - Guide rapide 🚀
 
-## Option 1 : Déploiement automatique via GitHub (RECOMMANDÉ)
+## 🎯 Configuration Automatique (Une seule fois, puis tout est automatique !)
 
-### Étape unique : Connecter Railway à GitHub
+### ✅ Étape 1 : Connecter Railway à GitHub (5 minutes)
 
-1. **Allez sur https://railway.app**
+1. **Allez sur https://railway.app** et connectez-vous
 2. **Cliquez sur "New Project"**
 3. **Sélectionnez "Deploy from GitHub repo"**
-4. **Choisissez votre repository `theaiquest_kahoot`**
-
-**C'est tout !** Railway va automatiquement :
-- ✅ Détecter que c'est une application Flask
-- ✅ Utiliser le `Procfile` créé
-- ✅ Installer les dépendances depuis `requirements.txt`
-- ✅ Configurer Gunicorn
-- ✅ Déployer à chaque push sur `main`
+4. **Autorisez Railway** à accéder à GitHub (si demandé)
+5. **Choisissez** : `stevenroman91/theaiquest_kahoot`
+6. **C'est terminé !** Railway va automatiquement :
+   - ✅ Détecter que c'est une application Flask
+   - ✅ Utiliser le `Procfile` créé
+   - ✅ Installer les dépendances depuis `requirements.txt`
+   - ✅ Configurer Gunicorn
+   - ✅ Builder et déployer votre app
+   - ✅ **Re-déployer automatiquement à chaque `git push` sur `main`**
 
 ### ⚙️ Configuration ESSENTIELLE : Base de données
 
