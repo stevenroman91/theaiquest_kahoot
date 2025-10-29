@@ -1939,7 +1939,7 @@ class GameController {
         const container = document.getElementById('phase4-choices');
         container.innerHTML = '';
 
-        // Add grid class for uniform sizing (3x3 grid)
+        // Use flex column layout for compact display
         container.className = 'matrix-choices-grid';
 
         // Define category colors (consistent with dashboard)

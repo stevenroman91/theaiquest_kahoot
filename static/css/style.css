@@ -548,14 +548,15 @@ body.modal-open {
 
 /* Phase 3 Matrix 3x3 Styles */
 .matrix-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: auto auto auto;
-    gap: 20px;
-    margin-bottom: 20px;
-    max-width: 1600px; /* Largeur maximale encore plus grande */
-    margin-left: auto;
-    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+/* For Step 4 specifically, use even more compact layout */
+#phase4-choices.matrix-container {
+    gap: 4px;
 }
 
 .matrix-category {
