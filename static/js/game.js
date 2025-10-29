@@ -2056,7 +2056,6 @@ class GameController {
     updatePhase4Budget() {
         const budgetDisplay = document.getElementById('phase4-budget-display');
         const budgetFill = document.getElementById('budget-fill-horizontal');
-        const statusBadge = document.getElementById('budget-status');
         const confirmBtn = document.getElementById('phase4-confirm-btn');
         
         console.log('DEBUG updatePhase4Budget: budget =', this.budget);
@@ -2079,23 +2078,6 @@ class GameController {
                 budgetFill.style.background = 'linear-gradient(90deg, #f59e0b 0%, #d97706 100%)';
             } else {
                 budgetFill.style.background = 'linear-gradient(90deg, #10b981 0%, #059669 100%)';
-            }
-        }
-        
-        // Update status badge
-        if (statusBadge) {
-            if (this.budget > 30) {
-                statusBadge.textContent = 'Budget exceeded!';
-                statusBadge.className = 'badge bg-danger';
-            } else if (this.budget === 30) {
-                statusBadge.textContent = 'Budget full';
-                statusBadge.className = 'badge bg-success';
-            } else if (this.budget > 0) {
-                statusBadge.textContent = `${30 - this.budget} pts remaining`;
-                statusBadge.className = 'badge bg-info';
-            } else {
-                statusBadge.textContent = 'Select enablers';
-                statusBadge.className = 'badge bg-secondary';
             }
         }
         

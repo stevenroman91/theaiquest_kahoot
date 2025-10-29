@@ -190,6 +190,30 @@ body.modal-open {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     cursor: move;
     transition: all 0.3s ease;
+    min-height: 60px;
+}
+
+.priority-item .d-flex {
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+}
+
+.priority-item .fw-bold {
+    flex: 1;
+    min-width: 0; /* Allow text wrapping */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    font-size: 0.95rem;
+    line-height: 1.3;
+}
+
+.priority-item .matrix-number-square {
+    flex-shrink: 0; /* Prevent number from shrinking */
+}
+
+.priority-item .remove-priority-btn {
+    flex-shrink: 0; /* Prevent remove button from shrinking */
 }
 
 .priority-item:hover {

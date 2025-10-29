@@ -682,6 +682,34 @@ class KahootMode {
         }
     }
 
+    // Show alert message at top of screen (similar to GameController.showAlert)
+    showAlert(message, type = 'warning') {
+        const alertContainer = document.getElementById('alert-container');
+        if (!alertContainer) {
+            // Fallback to alert if container not found
+            alert(message);
+            return;
+        }
+        
+        const alertId = 'alert-' + Date.now();
+        const alertHTML = `
+            <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+        
+        alertContainer.insertAdjacentHTML('beforeend', alertHTML);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            const alertElement = document.getElementById(alertId);
+            if (alertElement) {
+                alertElement.remove();
+            }
+        }, 5000);
+    }
+
     setupLeaderboardButtons() {
         // Play again button (Close button removed)
         const playAgainBtn = document.getElementById('leaderboard-play-again-btn');
@@ -2100,10 +2128,14 @@ function renderMOT4ChoicesFull(choices) {
                     // Trying to select - check if it would exceed 30 points
                     if (currentBudget + currentCost > 30) {
                         console.warn('❌ Budget would exceed 30 points');
+                        // Use GameController.showAlert if available, otherwise use kahootMode.showAlert
                         if (window.gameController && window.gameController.showAlert) {
                             window.gameController.showAlert(`Budget limit reached: You cannot exceed 30 points. Current: ${currentBudget}/30`, 'warning');
+                        } else if (window.kahootMode && window.kahootMode.showAlert) {
+                            window.kahootMode.showAlert(`Budget limit reached: You cannot exceed 30 points. Current: ${currentBudget}/30`, 'warning');
                         } else {
-                            alert(`Budget limit reached: You cannot exceed 30 points. Current: ${currentBudget}/30`);
+                            // Fallback: use simple alert (should not happen if kahootMode is initialized)
+                            showAlertMessageTop(`Budget limit reached: You cannot exceed 30 points. Current: ${currentBudget}/30`, 'warning');
                         }
                         return;
                     }
@@ -2151,8 +2183,10 @@ function renderMOT4ChoicesFull(choices) {
             if (selectedChoices.length === 0) {
                 if (window.gameController && window.gameController.showAlert) {
                     window.gameController.showAlert('Please select at least one choice.', 'warning');
+                } else if (window.kahootMode && window.kahootMode.showAlert) {
+                    window.kahootMode.showAlert('Please select at least one choice.', 'warning');
                 } else {
-                    alert('Veuillez sélectionner au moins un choix.');
+                    showAlertMessageTop('Veuillez sélectionner au moins un choix.', 'warning');
                 }
                 return;
             }
@@ -2160,8 +2194,10 @@ function renderMOT4ChoicesFull(choices) {
             if (totalCost > 30) {
                 if (window.gameController && window.gameController.showAlert) {
                     window.gameController.showAlert(`Budget exceeded: ${totalCost}/30 points. Please adjust your selections.`, 'warning');
+                } else if (window.kahootMode && window.kahootMode.showAlert) {
+                    window.kahootMode.showAlert(`Budget exceeded: ${totalCost}/30 points. Please adjust your selections.`, 'warning');
                 } else {
-                    alert(`Budget dépassé: ${totalCost}/30 points. Veuillez ajuster vos sélections.`);
+                    showAlertMessageTop(`Budget dépassé: ${totalCost}/30 points. Veuillez ajuster vos sélections.`, 'warning');
                 }
                 return;
             }
@@ -2211,7 +2247,6 @@ function updatePhase4BudgetManual() {
     
     const budgetDisplay = document.getElementById('phase4-budget-display');
     const budgetFill = document.getElementById('budget-fill-horizontal');
-    const budgetStatus = document.getElementById('budget-status');
     const confirmBtn = document.getElementById('phase4-confirm-btn');
     
     // Update display text
@@ -2231,23 +2266,6 @@ function updatePhase4BudgetManual() {
             budgetFill.style.background = 'linear-gradient(90deg, #f59e0b 0%, #d97706 100%)';
         } else {
             budgetFill.style.background = 'linear-gradient(90deg, #10b981 0%, #059669 100%)';
-        }
-    }
-    
-    // Update status badge
-    if (budgetStatus) {
-        if (totalCost > 30) {
-            budgetStatus.textContent = 'Budget exceeded!';
-            budgetStatus.className = 'badge bg-danger';
-        } else if (totalCost === 30) {
-            budgetStatus.textContent = 'Budget full';
-            budgetStatus.className = 'badge bg-success';
-        } else if (totalCost > 0) {
-            budgetStatus.textContent = `${30 - totalCost} pts remaining`;
-            budgetStatus.className = 'badge bg-info';
-        } else {
-            budgetStatus.textContent = 'Select enablers';
-            budgetStatus.className = 'badge bg-secondary';
         }
     }
     
@@ -2700,6 +2718,38 @@ function initializeKahootMode() {
         });
     }
     
+    // Fallback function for showing alerts at top of screen (used if kahootMode not available)
+    window.showAlertMessageTop = function(message, type = 'warning') {
+        const alertContainer = document.getElementById('alert-container');
+        if (!alertContainer) {
+            // If container doesn't exist, try to create it
+            const container = document.createElement('div');
+            container.id = 'alert-container';
+            container.className = 'position-fixed top-0 end-0 p-3';
+            container.style.zIndex = '1050';
+            document.body.appendChild(container);
+        }
+        
+        const alertId = 'alert-' + Date.now();
+        const alertHTML = `
+            <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+        
+        const finalContainer = document.getElementById('alert-container');
+        finalContainer.insertAdjacentHTML('beforeend', alertHTML);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            const alertElement = document.getElementById(alertId);
+            if (alertElement) {
+                alertElement.remove();
+            }
+        }, 5000);
+    };
+
     window.kahootMode = new KahootMode();
     hookScoreModal();
 }
