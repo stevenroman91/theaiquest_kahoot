@@ -2072,10 +2072,16 @@ function renderMOT4ChoicesFull(choices) {
         `;
         
         // Add click listener with budget validation
-        choiceDiv.addEventListener('click', () => {
+        choiceDiv.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            
+            console.log('🔘 Step 4 choice clicked:', choice.id, 'cost:', choice.cost);
+            
             if (window.gameController && window.gameController.selectMOT4Choice) {
+                console.log('✅ Using GameController.selectMOT4Choice');
                 window.gameController.selectMOT4Choice(choice.id, choice.cost);
             } else {
+                console.log('⚠️ Using fallback manual selection');
                 // Manual selection with budget check
                 const isSelected = choiceDiv.classList.contains('selected');
                 const currentCost = parseInt(choice.dataset.cost) || 0;
@@ -2086,9 +2092,12 @@ function renderMOT4ChoicesFull(choices) {
                     currentBudget += parseInt(selectedEl.dataset.cost) || 0;
                 });
                 
+                console.log('📊 Current budget:', currentBudget, 'Cost:', currentCost, 'Selected:', isSelected);
+                
                 if (!isSelected) {
                     // Trying to select - check if it would exceed 30 points
                     if (currentBudget + currentCost > 30) {
+                        console.warn('❌ Budget would exceed 30 points');
                         if (window.gameController && window.gameController.showAlert) {
                             window.gameController.showAlert(`Budget limit reached: You cannot exceed 30 points. Current: ${currentBudget}/30`, 'warning');
                         } else {
@@ -2100,6 +2109,8 @@ function renderMOT4ChoicesFull(choices) {
                 
                 // Toggle selection
                 choiceDiv.classList.toggle('selected');
+                const isNowSelected = choiceDiv.classList.contains('selected');
+                console.log('✅ Selection toggled. Now selected:', isNowSelected);
                 updatePhase4BudgetManual();
             }
         });

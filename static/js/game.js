@@ -2138,13 +2138,24 @@ class GameController {
         }
 
         // Update visual selection state
-        const choiceElement = document.querySelector(`[data-choice-id="${choiceId}"]`);
+        // Scope search to phase4-choices container
+        const container = document.getElementById('phase4-choices');
+        const choiceElement = container 
+            ? container.querySelector(`[data-choice-id="${choiceId}"]`)
+            : document.querySelector(`#phase4-choices [data-choice-id="${choiceId}"]`);
+        
+        console.log('🔍 Looking for choice element:', choiceId, 'Found:', !!choiceElement);
+        
         if (choiceElement) {
             if (this.selectedChoices.mot4.includes(choiceId)) {
                 choiceElement.classList.add('selected');
+                console.log('✅ Added selected class to:', choiceId);
             } else {
                 choiceElement.classList.remove('selected');
+                console.log('❌ Removed selected class from:', choiceId);
             }
+        } else {
+            console.warn('⚠️ Choice element not found for:', choiceId);
         }
 
         // Update budget display and UI
