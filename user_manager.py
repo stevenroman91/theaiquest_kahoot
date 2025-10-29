@@ -435,7 +435,7 @@ class UserManager:
             logger.error(f"Erreur lors de la sauvegarde du score pour {username}: {e}")
             return False
     
-    def get_leaderboard(self, limit: int = 50) -> List[Dict]:
+    def get_leaderboard(self, limit: int = 1000) -> List[Dict]:
         """Récupère le classement des meilleurs scores (un seul score par utilisateur, le meilleur)"""
         try:
             import json
@@ -595,7 +595,7 @@ class UserManager:
             logger.error(f"Erreur lors de l'incrémentation du compteur de joueurs: {e}")
             return False
     
-    def get_leaderboard_for_session(self, session_code: str, limit: int = 50) -> List[Dict]:
+    def get_leaderboard_for_session(self, session_code: str, limit: int = 1000) -> List[Dict]:
         """Récupère le leaderboard pour une session spécifique"""
         try:
             import json

@@ -1392,7 +1392,7 @@ def get_current_phase_title(game_state):
 def api_leaderboard():
     """API pour récupérer le classement des meilleurs scores (filtré par session si en mode Kahoot)"""
     try:
-        limit = request.args.get('limit', 50, type=int)
+        limit = request.args.get('limit', 1000, type=int)
         session_code = session.get('game_session_code')  # Code de session Kahoot
         
         logger.info(f"Leaderboard request: session_code={session_code}, limit={limit}")

@@ -775,7 +775,7 @@ class KahootMode {
         }
     }
 
-    async showLeaderboard() {
+    async showLeaderboard(initialLoad = true) {
         try {
             // Show modal first to ensure DOM is ready
             const modalElement = document.getElementById('leaderboardModal');
@@ -785,14 +785,17 @@ class KahootMode {
                 return;
             }
             
-            const modal = new bootstrap.Modal(modalElement);
-            modal.show();
-            
-            // Wait a bit for modal to be fully displayed
-            await new Promise(resolve => setTimeout(resolve, 100));
+            // Only show modal on initial load, not on refresh
+            if (initialLoad) {
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+                
+                // Wait a bit for modal to be fully displayed
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
             
             // Now fetch and populate data (with cache-busting to ensure fresh data)
-            const cacheBuster = `?_t=${Date.now()}&limit=50`;
+            const cacheBuster = `?_t=${Date.now()}&limit=1000`;
             const response = await fetch(`/api/leaderboard${cacheBuster}`, {
                 cache: 'no-store',
                 headers: {
@@ -820,13 +823,24 @@ class KahootMode {
                 }
                 
                 // Update current username from API response if available
+                // Use API response username as primary source, fallback to session storage
+                const apiUsername = data.current_username || sessionStorage.getItem('username');
+                if (apiUsername) {
+                    this.setCurrentUsername(apiUsername);
+                    console.log(`📊 Updated current username to: ${apiUsername}`);
+                }
+                
+                // Also store in sessionStorage for persistence
                 if (data.current_username) {
-                    this.setCurrentUsername(data.current_username);
-                    console.log(`📊 Updated current username to: ${data.current_username}`);
+                    sessionStorage.setItem('username', data.current_username);
+                    sessionStorage.setItem('leaderboard_username', data.current_username);
                 }
                 
                 // Populate the leaderboard (this will now work because modal is shown)
-                this.populateLeaderboard(leaderboard, data.user_rank);
+                this.populateLeaderboard(leaderboard, data.user_rank, data.current_username);
+                
+                // Set up auto-refresh if leaderboard modal is visible
+                this.setupLeaderboardAutoRefresh();
             } else {
                 console.error('Leaderboard API error:', data.message);
                 alert('Erreur lors du chargement du leaderboard: ' + (data.message || 'Unknown error'));
@@ -836,9 +850,49 @@ class KahootMode {
             alert('Erreur lors du chargement du leaderboard: ' + error.message);
         }
     }
+    
+    setupLeaderboardAutoRefresh() {
+        // Clear any existing interval
+        if (this.leaderboardRefreshInterval) {
+            clearInterval(this.leaderboardRefreshInterval);
+        }
+        
+        // Only refresh if leaderboard modal is visible
+        const modalElement = document.getElementById('leaderboardModal');
+        if (!modalElement) return;
+        
+        // Check if modal is visible
+        const isVisible = modalElement.classList.contains('show') || 
+                         modalElement.style.display !== 'none' ||
+                         bootstrap.Modal.getInstance(modalElement) !== null;
+        
+        if (isVisible) {
+            // Refresh every 3 seconds
+            this.leaderboardRefreshInterval = setInterval(() => {
+                const currentModal = bootstrap.Modal.getInstance(modalElement);
+                if (currentModal && modalElement.classList.contains('show')) {
+                    console.log('🔄 Auto-refreshing leaderboard...');
+                    this.showLeaderboard(false); // false = don't show modal again, just refresh data
+                } else {
+                    // Modal is closed, stop refreshing
+                    clearInterval(this.leaderboardRefreshInterval);
+                    this.leaderboardRefreshInterval = null;
+                }
+            }, 3000);
+            
+            // Stop refresh when modal is hidden
+            modalElement.addEventListener('hidden.bs.modal', () => {
+                if (this.leaderboardRefreshInterval) {
+                    clearInterval(this.leaderboardRefreshInterval);
+                    this.leaderboardRefreshInterval = null;
+                    console.log('🛑 Stopped leaderboard auto-refresh');
+                }
+            }, { once: true });
+        }
+    }
 
-    populateLeaderboard(leaderboard, userRank) {
-        console.log('🔧 populateLeaderboard called with:', { leaderboard: leaderboard?.length, userRank });
+    populateLeaderboard(leaderboard, userRank, apiUsername = null) {
+        console.log('🔧 populateLeaderboard called with:', { leaderboard: leaderboard?.length, userRank, apiUsername });
         
         const tbody = document.getElementById('leaderboard-tbody');
         const statsDiv = document.getElementById('leaderboard-stats');
@@ -865,9 +919,14 @@ class KahootMode {
         // Clear existing content
         tbody.innerHTML = '';
 
-        // Get current username from session or somewhere else
-        const currentUsername = this.getCurrentUsername();
-        console.log('🔧 Current username for comparison:', currentUsername);
+        // Get current username - prioritize API username, then session storage, then getCurrentUsername()
+        let currentUsername = apiUsername || sessionStorage.getItem('leaderboard_username') || sessionStorage.getItem('username') || this.getCurrentUsername();
+        currentUsername = (currentUsername || '').trim();
+        console.log('🔧 Current username for comparison (multiple sources checked):', currentUsername);
+        console.log('    - API username:', apiUsername);
+        console.log('    - SessionStorage leaderboard_username:', sessionStorage.getItem('leaderboard_username'));
+        console.log('    - SessionStorage username:', sessionStorage.getItem('username'));
+        console.log('    - getCurrentUsername():', this.getCurrentUsername());
         console.log('🔧 Usernames in leaderboard:', leaderboard.map(e => (e?.username || e?.['username'] || '').trim()));
 
         // Populate stats
@@ -2557,19 +2616,28 @@ function hookScoreModal() {
                         const currentPath = data.current_path || {};
                         
                         // Check if we just completed Step 5 (results state)
-                        if (gameState === 'results' || gameState === 'completed') {
+                        // Also check if all 5 steps are completed
+                        const allStepsCompleted = currentPath.mot1_choice && 
+                                                  currentPath.mot2_choices && 
+                                                  currentPath.mot3_choices && 
+                                                  currentPath.mot4_choices && 
+                                                  currentPath.mot5_choice;
+                        
+                        if (gameState === 'results' || gameState === 'completed' || allStepsCompleted) {
+                            console.log('✅ Game completed (all 5 steps done), showing leaderboard');
                             // Close score modal first
                             const scoreModal = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
                             if (scoreModal) {
                                 scoreModal.hide();
                             }
                             
-                            // Wait a bit then show leaderboard
+                            // Wait a bit then show leaderboard (avoid navigation back to Step 5)
                             setTimeout(() => {
                                 if (window.kahootMode) {
                                     window.kahootMode.showLeaderboard();
                                 }
-                            }, 300);
+                            }, 400);
+                            return; // IMPORTANT: Exit early to prevent navigation to next step
                         } else {
                             // Not final step - proceed directly to next step (Kahoot mode: skip dashboard)
                             const scoreModal = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
