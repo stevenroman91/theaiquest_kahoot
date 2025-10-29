@@ -2071,12 +2071,34 @@ function renderMOT4ChoicesFull(choices) {
             </div>
         `;
         
-        // Add click listener
+        // Add click listener with budget validation
         choiceDiv.addEventListener('click', () => {
             if (window.gameController && window.gameController.selectMOT4Choice) {
                 window.gameController.selectMOT4Choice(choice.id, choice.cost);
             } else {
-                // Toggle selection manually
+                // Manual selection with budget check
+                const isSelected = choiceDiv.classList.contains('selected');
+                const currentCost = parseInt(choice.dataset.cost) || 0;
+                
+                // Calculate current total budget
+                let currentBudget = 0;
+                document.querySelectorAll('#phase4-choices .matrix-choice.selected').forEach(selectedEl => {
+                    currentBudget += parseInt(selectedEl.dataset.cost) || 0;
+                });
+                
+                if (!isSelected) {
+                    // Trying to select - check if it would exceed 30 points
+                    if (currentBudget + currentCost > 30) {
+                        if (window.gameController && window.gameController.showAlert) {
+                            window.gameController.showAlert(`Budget limit reached: You cannot exceed 30 points. Current: ${currentBudget}/30`, 'warning');
+                        } else {
+                            alert(`Budget limit reached: You cannot exceed 30 points. Current: ${currentBudget}/30`);
+                        }
+                        return;
+                    }
+                }
+                
+                // Toggle selection
                 choiceDiv.classList.toggle('selected');
                 updatePhase4BudgetManual();
             }
