@@ -13,13 +13,27 @@ class AdminPanel {
 
     async checkAdminStatus() {
         try {
-            // Le panneau admin est affiché/caché côté serveur via le template
-            // On peut ajouter une vérification supplémentaire ici si nécessaire
+            // Vérifier si l'utilisateur est admin en vérifiant la session
+            // On affiche le panneau si l'utilisateur est déjà connecté en admin
             const adminSection = document.getElementById('admin-section');
-            if (adminSection && adminSection.style.display === 'none') {
-                // Si caché par défaut, on ne force pas l'affichage
-                return;
+            const loginSection = document.getElementById('login-section');
+            
+            if (!adminSection || !loginSection) return;
+            
+            // Vérifier côté serveur si l'utilisateur est admin
+            try {
+                const response = await fetch('/api/game_config');
+                const data = await response.json();
+                
+                // Si on peut récupérer la config sans erreur, on vérifie la session côté client
+                // La vraie vérification se fait via la présence de la section admin dans le DOM
+                // On va plutôt utiliser un cookie ou vérifier si le panneau admin existe
+            } catch (e) {
+                // Ignore
             }
+            
+            // Si l'admin section est cachée mais qu'on veut l'afficher après login,
+            // on la laisse cachée pour le moment et on attend que kahoot-mode.js la révèle
         } catch (error) {
             console.error('Error checking admin status:', error);
         }

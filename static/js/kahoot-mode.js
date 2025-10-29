@@ -138,13 +138,33 @@ class KahootMode {
                     this.setCurrentUsername(data.user_info.username);
                 }
                 
-                // Hide login section
-                const loginSection = document.getElementById('login-section');
-                if (loginSection) loginSection.style.display = 'none';
-                
                 // Admin ne joue pas, il gère juste les sessions
-                // Recharger la page pour voir le panneau admin
-                if (data.user_info && data.user_info.role === 'admin') {
+                // Afficher directement le panneau admin sans recharger
+                if (data.user_info && (data.user_info.role === 'admin' || data.user_info.role === 'trainer')) {
+                    // Hide login section
+                    const loginSection = document.getElementById('login-section');
+                    if (loginSection) {
+                        loginSection.style.display = 'none';
+                    }
+                    
+                    // Show admin section
+                    const adminSection = document.getElementById('admin-section');
+                    if (adminSection) {
+                        adminSection.style.display = 'block';
+                        console.log('✅ Admin panel displayed');
+                        
+                        // Réinitialiser le panneau admin pour s'assurer que les event listeners sont bien attachés
+                        if (window.adminPanel) {
+                            window.adminPanel.setupEventListeners();
+                        } else if (window.AdminPanel) {
+                            window.adminPanel = new window.AdminPanel();
+                        }
+                    } else {
+                        console.error('Admin section not found, reloading page');
+                        window.location.reload();
+                    }
+                } else {
+                    // Non-admin: reload for normal flow
                     window.location.reload();
                 }
             }
@@ -692,6 +712,18 @@ function removeVideoSections() {
 // Initialize when DOM is ready
 function initializeKahootMode() {
     removeVideoSections(); // Remove video sections immediately
+    
+    // Vérifier si l'utilisateur est déjà connecté en admin
+    // Si oui, afficher le panneau admin et cacher le login
+    const adminSection = document.getElementById('admin-section');
+    const loginSection = document.getElementById('login-section');
+    
+    // Vérifier si on est sur la page après une connexion admin réussie
+    // En vérifiant si la section admin doit être affichée (cachée par défaut maintenant)
+    // On vérifie plutôt via un indicateur dans la session ou via un élément du DOM
+    
+    // Pour l'instant, on se base sur le fait que si login-section existe,
+    // on affiche le formulaire de connexion. Sinon, l'utilisateur est déjà connecté.
     
     // Pré-remplir le code de session depuis l'URL ou la variable Jinja (uniquement en mode joueur)
     const sessionCodeInput = document.getElementById('session-code');
