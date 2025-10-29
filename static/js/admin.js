@@ -78,6 +78,19 @@ class AdminPanel {
                 credentials: 'include'
             });
 
+            // Vérifier le status HTTP avant de parser le JSON
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage = 'Erreur de connexion au serveur';
+                try {
+                    const errorData = JSON.parse(errorText);
+                    errorMessage = errorData.message || errorMessage;
+                } catch (e) {
+                    errorMessage = `Erreur ${response.status}: ${errorText || errorMessage}`;
+                }
+                throw new Error(errorMessage);
+            }
+
             const data = await response.json();
 
             if (data.success) {
@@ -118,7 +131,8 @@ class AdminPanel {
             }
         } catch (error) {
             console.error('Error creating session:', error);
-            alert('Erreur de connexion au serveur');
+            const errorMessage = error.message || 'Erreur de connexion au serveur';
+            alert(errorMessage);
             createBtn.disabled = false;
             createBtn.innerHTML = '<i class="fas fa-play me-2"></i>Lancer une nouvelle session';
         }

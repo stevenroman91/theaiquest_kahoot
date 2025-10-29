@@ -204,8 +204,9 @@ def api_game_config():
 def api_create_session():
     """API pour créer une nouvelle session de jeu (admin uniquement)"""
     try:
-        # Vérifier que l'utilisateur est admin
-        if not session.get('logged_in') or session.get('user_role') != 'admin':
+        # Vérifier que l'utilisateur est admin ou trainer
+        user_role = session.get('user_role')
+        if not session.get('logged_in') or (user_role != 'admin' and user_role != 'trainer'):
             return jsonify({
                 'success': False,
                 'message': 'Accès refusé. Admin requis.'
