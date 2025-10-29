@@ -734,17 +734,31 @@ class KahootMode {
             const response = await fetch('/api/leaderboard?limit=50');
             const data = await response.json();
 
+            console.log('📊 Leaderboard API response:', data);
+            console.log('📊 Leaderboard type:', typeof data.leaderboard, 'isArray:', Array.isArray(data.leaderboard));
+            console.log('📊 Leaderboard content:', data.leaderboard);
+
             if (data.success) {
-                this.populateLeaderboard(data.leaderboard, data.user_rank);
+                const leaderboard = data.leaderboard || [];
+                console.log(`📊 Received ${leaderboard.length} players in leaderboard`);
+                
+                if (leaderboard.length > 0) {
+                    console.log('📊 First entry:', leaderboard[0]);
+                    console.log('📊 First entry keys:', Object.keys(leaderboard[0]));
+                }
+                
+                this.populateLeaderboard(leaderboard, data.user_rank);
                 
                 // Show modal
                 const modal = new bootstrap.Modal(document.getElementById('leaderboardModal'));
                 modal.show();
             } else {
-                console.error('Error loading leaderboard:', data.message);
+                console.error('Leaderboard API error:', data.message);
+                alert('Erreur lors du chargement du leaderboard: ' + (data.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Leaderboard error:', error);
+            alert('Erreur lors du chargement du leaderboard: ' + error.message);
         }
     }
 
@@ -803,12 +817,22 @@ class KahootMode {
             return;
         }
         
-        leaderboard.forEach((entry, index) => {
+        // Convert to array if needed and ensure we have valid data
+        const leaderboardArray = Array.isArray(leaderboard) ? leaderboard : [];
+        
+        leaderboardArray.forEach((entry, index) => {
             try {
-                console.log(`  Adding player ${index + 1}: ${entry.username} (Rank ${entry.rank}, Score ${entry.total_score}, Stars ${entry.stars})`);
+                // Handle both object and dict formats (Python dict becomes JS object, but check structure)
+                const username = entry.username || entry['username'] || '';
+                const rank = entry.rank !== undefined ? entry.rank : (entry['rank'] !== undefined ? entry['rank'] : index + 1);
+                const totalScore = entry.total_score !== undefined ? entry.total_score : (entry['total_score'] !== undefined ? entry['total_score'] : 0);
+                const stars = entry.stars !== undefined ? entry.stars : (entry['stars'] !== undefined ? entry['stars'] : 0);
+                
+                console.log(`  Adding player ${index + 1}: ${username} (Rank ${rank}, Score ${totalScore}, Stars ${stars})`);
+                console.log(`    Entry object:`, entry);
                 
                 // Validate entry data
-                if (!entry || !entry.username) {
+                if (!entry || !username) {
                     console.error('⚠️ Invalid entry at index', index, ':', entry);
                     return;
                 }
@@ -816,54 +840,57 @@ class KahootMode {
                 const row = document.createElement('tr');
                 
                 // Highlight top 3
-                if (entry.rank <= 3) {
+                if (rank <= 3) {
                     row.classList.add('top-three');
                 }
                 
                 // Add rank class for medal display
-                if (entry.rank === 1) {
+                if (rank === 1) {
                     row.classList.add('rank-1');
-                } else if (entry.rank === 2) {
+                } else if (rank === 2) {
                     row.classList.add('rank-2');
-                } else if (entry.rank === 3) {
+                } else if (rank === 3) {
                     row.classList.add('rank-3');
                 }
                 
                 // Highlight current user
-                if (entry.username === currentUsername) {
+                if (username === currentUsername) {
                     row.classList.add('user-row');
                 }
 
-                // Create stars display (handle missing stars property)
-                const starsCount = entry.stars || 0;
-                const starsHTML = this.createStarsDisplay(starsCount);
+                // Create stars display
+                const starsHTML = this.createStarsDisplay(stars);
 
                 // Add rank class to rank column for medal emojis
-                const rankClass = entry.rank <= 3 ? `rank-col rank-${entry.rank}` : 'rank-col';
-                const rankDisplay = entry.rank <= 3 ? '' : entry.rank; // Empty for top 3 (shown via ::before)
-
-                // Ensure total_score exists
-                const totalScore = entry.total_score || 0;
+                const rankClass = rank <= 3 ? `rank-col rank-${rank}` : 'rank-col';
+                const rankDisplay = rank <= 3 ? '' : rank; // Empty for top 3 (shown via ::before)
 
                 row.innerHTML = `
                     <td class="${rankClass}">${rankDisplay}</td>
-                    <td class="name-col">${this.escapeHtml(entry.username)}</td>
+                    <td class="name-col">${this.escapeHtml(username)}</td>
                     <td class="score-col">${totalScore}/15</td>
                     <td class="stars-col">${starsHTML}</td>
                 `;
 
                 tbody.appendChild(row);
-                console.log(`    ✅ Row added to DOM`);
+                console.log(`    ✅ Row added to DOM, tbody now has ${tbody.children.length} children`);
             } catch (err) {
                 console.error(`❌ Error adding player ${index + 1}:`, err, entry);
+                console.error(`    Error stack:`, err.stack);
             }
         });
 
         const rowsCreated = tbody.children.length;
-        console.log(`✅ Leaderboard populated: ${rowsCreated} rows created (expected ${leaderboard.length})`);
+        const expectedRows = Array.isArray(leaderboard) ? leaderboard.length : 0;
+        console.log(`✅ Leaderboard populated: ${rowsCreated} rows created (expected ${expectedRows})`);
+        console.log(`    tbody exists:`, !!tbody);
+        console.log(`    tbody.innerHTML length:`, tbody.innerHTML.length);
         
-        if (rowsCreated === 0 && leaderboard.length > 0) {
+        if (rowsCreated === 0 && expectedRows > 0) {
             console.error('❌ CRITICAL: No rows created despite having leaderboard data!');
+            console.error('    Leaderboard data:', leaderboard);
+            console.error('    tbody element:', tbody);
+            console.error('    tbody parent:', tbody?.parentElement);
         }
 
         // Scroll to top to ensure first player is visible
