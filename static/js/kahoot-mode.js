@@ -1703,11 +1703,11 @@ function renderMOT4ChoicesFull(choices) {
             }
             
             // Use GameController method if available
-            if (window.gameController && window.gameController.confirmPhase4Choices) {
+            if (window.gameController && window.gameController.confirmMOT4Choices) {
                 // Store selections in GameController first
                 window.gameController.selectedChoices.mot4 = selectedChoices;
                 window.gameController.budget = totalCost;
-                await window.gameController.confirmPhase4Choices();
+                await window.gameController.confirmMOT4Choices();
             } else {
                 // Direct API call as fallback
                 try {
@@ -1715,7 +1715,7 @@ function renderMOT4ChoicesFull(choices) {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         credentials: 'include',
-                        body: JSON.stringify({ choice_ids: selectedChoices })
+                        body: JSON.stringify({ enabler_ids: selectedChoices })
                     });
                     
                     const data = await response.json();
