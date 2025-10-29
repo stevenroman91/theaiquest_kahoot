@@ -745,8 +745,16 @@ class KahootMode {
             // Wait a bit for modal to be fully displayed
             await new Promise(resolve => setTimeout(resolve, 100));
             
-            // Now fetch and populate data
-            const response = await fetch('/api/leaderboard?limit=50');
+            // Now fetch and populate data (with cache-busting to ensure fresh data)
+            const cacheBuster = `?_t=${Date.now()}&limit=50`;
+            const response = await fetch(`/api/leaderboard${cacheBuster}`, {
+                cache: 'no-store',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            });
             const data = await response.json();
 
             console.log('📊 Leaderboard API response:', data);
@@ -861,6 +869,15 @@ class KahootMode {
         // Convert to array if needed and ensure we have valid data
         const leaderboardArray = Array.isArray(leaderboard) ? leaderboard : [];
         
+        console.log(`📊 Starting to populate ${leaderboardArray.length} entries:`, 
+            leaderboardArray.map(e => ({ 
+                rank: e.rank || e['rank'], 
+                username: e.username || e['username'] 
+            })));
+        
+        // Clear tbody completely before adding rows
+        tbody.innerHTML = '';
+        
         leaderboardArray.forEach((entry, index) => {
             try {
                 // Handle both object and dict formats (Python dict becomes JS object, but check structure)
@@ -903,7 +920,9 @@ class KahootMode {
                 `;
 
                 tbody.appendChild(row);
-                console.log(`    ✅ Row added to DOM, tbody now has ${tbody.children.length} children`);
+                const addedRank = parseInt(rankDisplay);
+                const addedName = username;
+                console.log(`    ✅ Row added to DOM: Rank ${addedRank} - ${addedName} (tbody now has ${tbody.children.length} children)`);
             } catch (err) {
                 console.error(`❌ Error adding player ${index + 1}:`, err, entry);
                 console.error(`    Error stack:`, err.stack);
