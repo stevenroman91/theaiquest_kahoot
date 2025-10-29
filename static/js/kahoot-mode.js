@@ -579,7 +579,7 @@ function removeVideoSections() {
 function initializeKahootMode() {
     removeVideoSections(); // Remove video sections immediately
     
-    // Pré-remplir le code de session depuis l'URL ou la variable Jinja
+    // Pré-remplir le code de session depuis l'URL ou la variable Jinja (uniquement en mode joueur)
     const sessionCodeInput = document.getElementById('session-code');
     if (sessionCodeInput) {
         // Vérifier l'URL pour le paramètre ?session=CODE
@@ -594,6 +594,11 @@ function initializeKahootMode() {
         
         if (codeToUse) {
             sessionCodeInput.value = codeToUse.toUpperCase();
+            // Basculer automatiquement en mode joueur si code présent
+            const playerModeBtn = document.getElementById('player-mode-btn');
+            if (playerModeBtn && window.kahootMode) {
+                window.kahootMode.switchToPlayerMode();
+            }
         }
         
         // Forcer les majuscules lors de la saisie

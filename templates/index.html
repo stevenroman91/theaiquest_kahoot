@@ -103,39 +103,60 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                     
-                    <form id="login-form" novalidate>
-                        <div class="mb-4" id="session-code-container">
-                            <label for="session-code" class="form-label">
-                                <i class="fas fa-key me-2"></i>Code de Session <small class="text-muted">(requis pour les joueurs)</small>
-                            </label>
-                            <input type="text" class="form-control form-control-lg text-uppercase" id="session-code" placeholder="Entrez le code (ex: ABC123)" minlength="6" maxlength="6" autocomplete="off" pattern="[A-Z0-9]{6}">
-                            <div class="invalid-feedback" id="session-code-error"></div>
-                            <div class="form-text">Code à 6 caractères (ex: ABC123). <strong>Laissez vide pour admin</strong></div>
-                        </div>
-                        <div class="mb-4">
-                            <label for="username" class="form-label">
-                                <i class="fas fa-user me-2"></i>Username
-                            </label>
-                            <input type="text" class="form-control form-control-lg" id="username" placeholder="Enter your username" required minlength="2" maxlength="50" autocomplete="username">
-                            <div class="invalid-feedback" id="username-error"></div>
-                            <div class="form-text">Minimum 2 characters</div>
-                        </div>
-                        <div class="mb-4" id="password-container" style="display: none;">
-                            <label for="password" class="form-label">
-                                <i class="fas fa-lock me-2"></i>Password <small class="text-muted">(Optional - Kahoot mode)</small>
-                            </label>
-                            <input type="password" class="form-control form-control-lg" id="password" placeholder="Enter your password (optional)" minlength="6" autocomplete="current-password">
-                            <div class="invalid-feedback" id="password-error"></div>
-                            <div class="form-text">Leave empty for Kahoot mode (just username)</div>
-                        </div>
-                        <div class="mb-3">
-                            <button type="button" class="btn btn-link p-0 text-muted" id="toggle-password-mode">
-                                <small><i class="fas fa-key me-1"></i>Need password? Click here</small>
+                    <!-- Mode Selector -->
+                    <div class="mb-4">
+                        <div class="btn-group w-100" role="group">
+                            <button type="button" class="btn btn-outline-primary active" id="player-mode-btn">
+                                <i class="fas fa-users me-2"></i>Joueur
+                            </button>
+                            <button type="button" class="btn btn-outline-primary" id="admin-mode-btn">
+                                <i class="fas fa-user-shield me-2"></i>Admin
                             </button>
                         </div>
+                    </div>
+
+                    <form id="login-form" novalidate>
+                        <!-- Mode Joueur: Code + Username -->
+                        <div id="player-mode-fields">
+                            <div class="mb-4" id="session-code-container">
+                                <label for="session-code" class="form-label">
+                                    <i class="fas fa-key me-2"></i>Code de Session
+                                </label>
+                                <input type="text" class="form-control form-control-lg text-uppercase" id="session-code" placeholder="Entrez le code (ex: ABC123)" required minlength="6" maxlength="6" autocomplete="off" pattern="[A-Z0-9]{6}">
+                                <div class="invalid-feedback" id="session-code-error"></div>
+                                <div class="form-text">Code à 6 caractères (ex: ABC123)</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="username" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Username
+                                </label>
+                                <input type="text" class="form-control form-control-lg" id="username" placeholder="Enter your username" required minlength="2" maxlength="50" autocomplete="username">
+                                <div class="invalid-feedback" id="username-error"></div>
+                                <div class="form-text">Minimum 2 characters</div>
+                            </div>
+                        </div>
+
+                        <!-- Mode Admin: Username + Password -->
+                        <div id="admin-mode-fields" style="display: none;">
+                            <div class="mb-4">
+                                <label for="admin-username" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Username
+                                </label>
+                                <input type="text" class="form-control form-control-lg" id="admin-username" placeholder="Enter admin username" required minlength="2" maxlength="50" autocomplete="username">
+                                <div class="invalid-feedback" id="admin-username-error"></div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="admin-password" class="form-label">
+                                    <i class="fas fa-lock me-2"></i>Password
+                                </label>
+                                <input type="password" class="form-control form-control-lg" id="admin-password" placeholder="Enter your password" required minlength="6" autocomplete="current-password">
+                                <div class="invalid-feedback" id="admin-password-error"></div>
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-primary btn-lg w-100" id="login-submit-btn" style="min-height: 50px; font-size: 1.1rem;">
                             <span id="login-btn-text">
-                                <i class="fas fa-sign-in-alt me-2"></i>Start Game
+                                <i class="fas fa-sign-in-alt me-2"></i><span id="login-btn-text-content">Start Game</span>
                             </span>
                             <span id="login-btn-loading" style="display: none;">
                                 <i class="fas fa-spinner fa-spin me-2"></i>Connecting...

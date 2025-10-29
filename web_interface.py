@@ -291,32 +291,28 @@ def api_login():
         
         session_code = data.get('session_code', '').strip().upper()
         username = data.get('username', '').strip()
-        password = data.get('password', '')  # Optionnel en mode Kahoot
+        password = data.get('password', '')  # Requis pour admin, non utilisé pour joueurs
         
-        # Validation du code de session (obligatoire en mode Kahoot SAUF pour admin)
-        # Mode Kahoot sans password: code de session requis (sauf si admin)
-        is_admin_user = username.lower() in ['admin', 'trainer']
-        
-        if not password:  # Mode Kahoot
-            # Admin peut se connecter sans code de session pour accéder au panneau admin
-            if is_admin_user:
-                # Admin peut créer une session plus tard, code non requis
-                session_code = None
-            else:
-                # Non-admin: code de session requis
-                if not session_code or len(session_code) != 6:
-                    return jsonify({
-                        'success': False,
-                        'message': 'Code de session requis (6 caractères)'
-                    }), 400
-                
-                # Vérifier que la session existe et est active
-                session_data = user_manager.get_session_by_code(session_code)
-                if not session_data:
-                    return jsonify({
-                        'success': False,
-                        'message': 'Code de session invalide ou session terminée'
-                    }), 404
+        # Si password fourni: mode Admin (pas de code requis)
+        # Si pas de password: mode Joueur (code requis)
+        if password:
+            # Mode Admin: pas de code de session requis
+            session_code = None
+        else:
+            # Mode Joueur: code de session obligatoire
+            if not session_code or len(session_code) != 6:
+                return jsonify({
+                    'success': False,
+                    'message': 'Code de session requis (6 caractères)'
+                }), 400
+            
+            # Vérifier que la session existe et est active
+            session_data = user_manager.get_session_by_code(session_code)
+            if not session_data:
+                return jsonify({
+                    'success': False,
+                    'message': 'Code de session invalide ou session terminée'
+                }), 404
         
         # Validation basique du username
         if not username or len(username) < 2:
