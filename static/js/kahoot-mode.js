@@ -84,8 +84,8 @@ class KahootMode {
                 // Hide login section and all intro sections
                 document.getElementById('login-section').style.display = 'none';
                 
-                // Hide all video/intro sections in Kahoot mode and prevent video loading
-                const sectionsToHide = [
+                // Remove all video/intro sections completely in Kahoot mode
+                const sectionsToRemove = [
                     'video-intro-section',
                     'game-intro',
                     'welcome-section',
@@ -100,29 +100,17 @@ class KahootMode {
                     'phase5-2-video-section',
                     'recap-video-section'
                 ];
-                sectionsToHide.forEach(sectionId => {
+                sectionsToRemove.forEach(sectionId => {
                     const el = document.getElementById(sectionId);
                     if (el) {
-                        el.style.display = 'none';
-                        // Remove video sources to prevent loading
-                        const videos = el.querySelectorAll('video');
-                        videos.forEach(video => {
-                            // Remove all source elements
-                            const sources = video.querySelectorAll('source');
-                            sources.forEach(source => source.remove());
-                            // Clear src and reset
-                            video.removeAttribute('src');
-                            video.load();
-                        });
+                        // Remove the entire section from DOM
+                        el.remove();
                     }
                 });
                 
-                // Also disable all remaining video elements on the page
+                // Also remove any remaining video elements on the page
                 document.querySelectorAll('video').forEach(video => {
-                    const sources = video.querySelectorAll('source');
-                    sources.forEach(source => source.remove());
-                    video.removeAttribute('src');
-                    video.load();
+                    video.remove();
                 });
                 
                 // Start game directly to Step 1 (skip all videos/intro)
@@ -514,33 +502,47 @@ function hookScoreModal() {
     }
 }
 
-// Prevent video loading in Kahoot mode
-function preventVideoLoading() {
-    // Remove video sources immediately to prevent browser preloading
-    const allVideos = document.querySelectorAll('video');
-    allVideos.forEach(video => {
-        const sources = video.querySelectorAll('source');
-        sources.forEach(source => {
-            // Store original src in data attribute but remove from DOM
-            if (source.src && !source.dataset.originalSrc) {
-                source.dataset.originalSrc = source.src;
-            }
-            source.removeAttribute('src');
-        });
-        video.removeAttribute('src');
-        video.load(); // Reset video element
+// Remove all video sections immediately in Kahoot mode
+function removeVideoSections() {
+    // Remove video sections immediately to prevent browser preloading
+    const sectionsToRemove = [
+        'video-intro-section',
+        'game-intro',
+        'welcome-section',
+        'teams-meeting-section',
+        'harnessing-video-section',
+        'step1-followup-section',
+        'phase1-video-section',
+        'phase2-video-section',
+        'phase3-video-section',
+        'phase4-video-section',
+        'phase5-1-video-section',
+        'phase5-2-video-section',
+        'recap-video-section'
+    ];
+    
+    sectionsToRemove.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.remove();
+        }
+    });
+    
+    // Remove any remaining video elements
+    document.querySelectorAll('video').forEach(video => {
+        video.remove();
     });
 }
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        preventVideoLoading(); // Prevent videos from loading immediately
+        removeVideoSections(); // Remove video sections immediately
         window.kahootMode = new KahootMode();
         hookScoreModal();
     });
 } else {
-    preventVideoLoading(); // Prevent videos from loading immediately
+    removeVideoSections(); // Remove video sections immediately
     window.kahootMode = new KahootMode();
     hookScoreModal();
 }
