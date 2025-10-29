@@ -488,6 +488,20 @@ body.modal-open {
     position: relative;
 }
 
+/* Mobile: make cards more tappable */
+@media (max-width: 768px) {
+    .solution-card {
+        cursor: pointer;
+        padding: 16px;
+        border-width: 3px;
+    }
+    
+    .solution-card:not(.used):active {
+        transform: scale(0.98);
+        background: #f3f4f6;
+    }
+}
+
 .solution-card:hover {
     border-color: #3b82f6;
     transform: translateY(-2px);

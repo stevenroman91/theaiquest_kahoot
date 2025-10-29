@@ -1484,11 +1484,73 @@ function renderMOT2ChoicesFull(choices) {
             </div>
         `;
         
-        // Mobile: cards are just for display (selection happens via slot modal)
-        // Desktop: keep drag-and-drop (mouse events)
+        // Mobile: simple tap on card = add to next empty slot automatically
+        // Desktop: keep drag-and-drop
         const isMobile = 'ontouchstart' in window || window.innerWidth < 768;
         
-        if (!isMobile) {
+        if (isMobile) {
+            // Mobile: tap card to add to next empty slot
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Don't add if already used
+                if (card.classList.contains('used')) {
+                    return;
+                }
+                
+                // Find first empty slot
+                const slots = document.querySelectorAll('.priority-slot');
+                let emptySlot = null;
+                for (const slot of slots) {
+                    if (!slot.querySelector('.priority-item')) {
+                        emptySlot = slot;
+                        break;
+                    }
+                }
+                
+                if (!emptySlot) {
+                    // No empty slot available
+                    if (window.gameController && window.gameController.showAlert) {
+                        window.gameController.showAlert('Vous devez retirer une solution d\'abord pour en ajouter une autre.', 'warning');
+                    } else {
+                        alert('Tous les slots sont remplis. Retirez-en un pour continuer.');
+                    }
+                    return;
+                }
+                
+                // Add to slot
+                const choiceId = card.dataset.choiceId;
+                handleDropToSlot(emptySlot, choiceId);
+            });
+            
+            // Also support touch
+            card.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (card.classList.contains('used')) {
+                    return;
+                }
+                
+                const slots = document.querySelectorAll('.priority-slot');
+                let emptySlot = null;
+                for (const slot of slots) {
+                    if (!slot.querySelector('.priority-item')) {
+                        emptySlot = slot;
+                        break;
+                    }
+                }
+                
+                if (!emptySlot) {
+                    return;
+                }
+                
+                const choiceId = card.dataset.choiceId;
+                handleDropToSlot(emptySlot, choiceId);
+            });
+        } else {
+            // Desktop: drag and drop
             card.addEventListener('dragstart', (e) => {
                 const choiceId = card.dataset.choiceId;
                 e.dataTransfer.setData('text/plain', choiceId);
@@ -1534,44 +1596,11 @@ function renderMOT2ChoicesFull(choices) {
         const newSlot = slot.cloneNode(true);
         slot.parentNode.replaceChild(newSlot, slot);
         
-        // Mobile: tap on slot to open selection modal
+        // Mobile: slots are just display areas (cards handle the interaction)
+        // Desktop: drag and drop to slots
         const isMobile = 'ontouchstart' in window || window.innerWidth < 768;
         
-        if (isMobile) {
-            // Mobile: open modal when tapping on empty slot
-            newSlot.addEventListener('click', (e) => {
-                // Don't open if clicking remove button
-                if (e.target.closest('.remove-priority-btn')) {
-                    return;
-                }
-                
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // If slot is already occupied, don't open modal (allow removal instead)
-                if (newSlot.querySelector('.priority-item')) {
-                    return;
-                }
-                
-                // Open selection modal
-                openStep2SelectionModal(newSlot, choices);
-            });
-            
-            // Also handle touchstart for better mobile support
-            newSlot.addEventListener('touchstart', (e) => {
-                // Don't open if clicking remove button
-                if (e.target.closest('.remove-priority-btn')) {
-                    return;
-                }
-                
-                if (newSlot.querySelector('.priority-item')) {
-                    return;
-                }
-                
-                e.preventDefault();
-                openStep2SelectionModal(newSlot, choices);
-            });
-        } else {
+        if (!isMobile) {
             // Desktop: keep drag and drop
             newSlot.addEventListener('dragover', (e) => {
                 e.preventDefault();
@@ -1610,167 +1639,6 @@ function renderMOT2ChoicesFull(choices) {
         }
     });
     
-    // Mobile helper: Open selection modal
-    function openStep2SelectionModal(targetSlot, availableChoices) {
-        // Get already used choices
-        const usedChoiceIds = Array.from(document.querySelectorAll('.priority-item'))
-            .map(item => item.dataset.choiceId)
-            .filter(Boolean);
-        
-        // Filter out already used choices
-        const availableChoicesFiltered = availableChoices.filter(choice => {
-            // Check if this choice is already in a slot
-            return !usedChoiceIds.includes(choice.id);
-        });
-        
-        if (availableChoicesFiltered.length === 0) {
-            // Show alert if no choices available
-            if (window.gameController && window.gameController.showAlert) {
-                window.gameController.showAlert('Toutes les solutions sont déjà sélectionnées. Retirez-en une pour en sélectionner une autre.', 'warning');
-            } else {
-                alert('Toutes les solutions sont déjà sélectionnées.');
-            }
-            return;
-        }
-        
-        // Create modal overlay
-        const modalOverlay = document.createElement('div');
-        modalOverlay.className = 'step2-selection-modal-overlay';
-        modalOverlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        `;
-        
-        // Create modal content
-        const modalContent = document.createElement('div');
-        modalContent.className = 'step2-selection-modal';
-        modalContent.style.cssText = `
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        `;
-        
-        // Modal header
-        const slotNumber = targetSlot.dataset.slot || '?';
-        modalContent.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 style="margin: 0; color: var(--fdj-blue-primary); font-weight: 700;">
-                    <i class="fas fa-plus-circle me-2"></i>Sélectionner Priority ${slotNumber}
-                </h4>
-                <button class="btn btn-sm btn-outline-secondary close-modal-btn" style="border: none; font-size: 1.5rem; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="step2-modal-choices" style="margin-top: 16px;">
-                ${availableChoicesFiltered.map((choice, index) => {
-                    const matrixPosition = choiceToMatrixPosition[choice.id] || '?';
-                    const backgroundColor = 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)';
-                    
-                    return `
-                        <div class="step2-modal-choice-item" 
-                             data-choice-id="${choice.id}" 
-                             style="
-                                 padding: 16px;
-                                 margin-bottom: 12px;
-                                 border: 2px solid #e5e7eb;
-                                 border-radius: 12px;
-                                 cursor: pointer;
-                                 transition: all 0.2s ease;
-                                 background: white;
-                             "
-                             onmouseover="this.style.borderColor='#3b82f6'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.15)';"
-                             onmouseout="this.style.borderColor='#e5e7eb'; this.style.transform=''; this.style.boxShadow='';">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center" style="flex: 1;">
-                                    <div class="matrix-number-square me-3" style="
-                                        width: 40px;
-                                        height: 40px;
-                                        border-radius: 8px;
-                                        background: ${backgroundColor};
-                                        color: white;
-                                        display: flex;
-                                        align-items: center;
-                                        justify-content: center;
-                                        font-weight: bold;
-                                        font-size: 1.2rem;
-                                        flex-shrink: 0;
-                                    ">${matrixPosition}</div>
-                                    <div class="fw-bold" style="font-size: 1rem; color: #1f2937;">${choice.title}</div>
-                                </div>
-                                <i class="fas fa-chevron-right text-muted"></i>
-                            </div>
-                        </div>
-                    `;
-                }).join('')}
-            </div>
-        `;
-        
-        modalOverlay.appendChild(modalContent);
-        document.body.appendChild(modalOverlay);
-        
-        // Close modal handlers
-        const closeModal = () => {
-            document.body.removeChild(modalOverlay);
-        };
-        
-        modalOverlay.querySelector('.close-modal-btn').addEventListener('click', closeModal);
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                closeModal();
-            }
-        });
-        
-        // Choice selection handlers
-        modalContent.querySelectorAll('.step2-modal-choice-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const choiceId = item.dataset.choiceId;
-                closeModal();
-                handleDropToSlot(targetSlot, choiceId);
-            });
-            
-            // Touch support
-            item.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                const choiceId = item.dataset.choiceId;
-                closeModal();
-                handleDropToSlot(targetSlot, choiceId);
-            });
-        });
-    }
-    
-    // Mobile helper: Handle drop to slot
-    function handleMobileDrop(slotElement, choiceId) {
-        // Check if slot is already occupied
-        if (slotElement.querySelector('.priority-item')) {
-            if (window.gameController && window.gameController.showAlert) {
-                window.gameController.showAlert('This priority slot is already occupied. Please remove the existing item first.', 'warning');
-            } else {
-                alert('Ce slot est déjà occupé. Veuillez retirer l\'élément existant d\'abord.');
-            }
-            return;
-        }
-        
-        // Find the solution card
-        const solutionCard = document.querySelector(`[data-choice-id="${choiceId}"]`);
-        if (!solutionCard) return;
-        
-        handleDropToSlot(slotElement, choiceId);
-    }
     
     // Shared helper: Handle drop to slot (used by both mobile and desktop)
     function handleDropToSlot(slotElement, choiceId) {
