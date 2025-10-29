@@ -282,6 +282,8 @@ class KahootMode {
                 // In Kahoot mode, we want to go directly to Step 1 choices
                 
                 // Wait a bit to ensure GameController is fully initialized
+                let retryCount = 0;
+                const maxRetries = 10; // Maximum 10 tentatives (2 secondes)
                 const startStep1 = () => {
                     if (window.gameController) {
                         // Stop all videos first
@@ -300,15 +302,40 @@ class KahootMode {
                         } else {
                             console.error('Cannot find method to start Step 1');
                             // Last resort: show phase1-section directly
-                            const phase1Section = document.getElementById('phase1-section');
-                            if (phase1Section) {
-                                phase1Section.style.display = 'block';
-                                console.log('✅ Showing Step 1 section directly');
-                            }
+                            showPhase1Directly();
                         }
-                    } else {
-                        console.error('GameController not found, retrying...');
+                    } else if (retryCount < maxRetries) {
+                        retryCount++;
+                        console.log(`⏳ GameController not found, retrying... (${retryCount}/${maxRetries})`);
                         setTimeout(startStep1, 200);
+                    } else {
+                        console.warn('⚠️ GameController not found after max retries, showing Step 1 directly');
+                        // Fallback: show phase1-section directly
+                        showPhase1Directly();
+                    }
+                };
+                
+                // Helper function to show Step 1 directly
+                const showPhase1Directly = () => {
+                    const phase1Section = document.getElementById('phase1-section');
+                    if (phase1Section) {
+                        phase1Section.style.display = 'block';
+                        console.log('✅ Showing Step 1 section directly (fallback)');
+                        
+                        // Essayer d'appeler l'API pour charger les choix
+                        fetch('/api/phase1_choices')
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success && window.gameController) {
+                                    // Si GameController est maintenant disponible, l'utiliser
+                                    if (window.gameController.loadMOT1Choices) {
+                                        window.gameController.loadMOT1Choices();
+                                    }
+                                }
+                            })
+                            .catch(err => console.error('Error loading phase1 choices:', err));
+                    } else {
+                        console.error('❌ Phase 1 section not found in DOM');
                     }
                 };
                 
