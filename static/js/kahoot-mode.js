@@ -915,14 +915,24 @@ class KahootMode {
         console.log(`✅ Leaderboard populated: ${rowsCreated} rows created (expected ${expectedRows})`);
         console.log(`    tbody exists:`, !!tbody);
         console.log(`    tbody.innerHTML length:`, tbody.innerHTML.length);
-        console.log(`    tbody HTML preview:`, tbody.innerHTML.substring(0, 200));
+        
+        // Debug: Log all rows in DOM to see if rank 3 is there but hidden
+        if (tbody.children.length > 0) {
+            console.log(`📋 Rows in DOM (in order):`);
+            Array.from(tbody.children).forEach((row, idx) => {
+                const rankCell = row.querySelector('.rank-col');
+                const nameCell = row.querySelector('.name-col');
+                const rankText = rankCell ? rankCell.textContent.trim() : '?';
+                const nameText = nameCell ? nameCell.textContent.trim() : '?';
+                console.log(`    Row ${idx + 1}: rank="${rankText}", name="${nameText}"`);
+            });
+        }
         
         if (rowsCreated === 0 && expectedRows > 0) {
             console.error('❌ CRITICAL: No rows created despite having leaderboard data!');
             console.error('    Leaderboard data:', JSON.stringify(leaderboard, null, 2));
             console.error('    tbody element:', tbody);
             console.error('    tbody parent:', tbody?.parentElement);
-            console.error('    tbody parent HTML:', tbody?.parentElement?.innerHTML?.substring(0, 500));
             
             // Force show an error row
             tbody.innerHTML = `
@@ -941,6 +951,71 @@ class KahootMode {
                     </td>
                 </tr>
             `;
+        } else if (rowsCreated < expectedRows) {
+            console.error(`❌ WARNING: Only ${rowsCreated} rows created but ${expectedRows} expected!`);
+            console.error('    Missing rows - checking which ranks are missing...');
+            
+            // Check which ranks are present and which are missing
+            const presentRanks = Array.from(tbody.children).map(row => {
+                const rankCell = row.querySelector('.rank-col');
+                return rankCell ? parseInt(rankCell.textContent.trim()) : null;
+            }).filter(r => r !== null);
+            
+            const expectedRanks = leaderboard.map(e => e.rank || e['rank'] || 0);
+            const missingRanks = expectedRanks.filter(r => !presentRanks.includes(r));
+            
+            console.error(`    Present ranks:`, presentRanks);
+            console.error(`    Expected ranks:`, expectedRanks);
+            console.error(`    Missing ranks:`, missingRanks);
+            
+            // Try to add missing rows
+            if (missingRanks.length > 0) {
+                console.log(`    Attempting to add missing ranks:`, missingRanks);
+                missingRanks.forEach(missingRank => {
+                    const missingEntry = leaderboard.find(e => (e.rank || e['rank']) === missingRank);
+                    if (missingEntry) {
+                        console.log(`    Adding missing rank ${missingRank}:`, missingEntry);
+                        try {
+                            const username = (missingEntry.username || missingEntry['username'] || '').trim();
+                            const totalScore = missingEntry.total_score !== undefined ? missingEntry.total_score : (missingEntry['total_score'] !== undefined ? missingEntry['total_score'] : 0);
+                            const stars = missingEntry.stars !== undefined ? missingEntry.stars : (missingEntry['stars'] !== undefined ? missingEntry['stars'] : 0);
+                            const starsHTML = this.createStarsDisplay(stars);
+                            
+                            const row = document.createElement('tr');
+                            if (username.toLowerCase() === currentUsername.toLowerCase()) {
+                                row.classList.add('user-row');
+                            }
+                            
+                            row.innerHTML = `
+                                <td class="rank-col">${missingRank}</td>
+                                <td class="name-col">${this.escapeHtml(username)}</td>
+                                <td class="score-col">${totalScore}/15</td>
+                                <td class="stars-col">${starsHTML}</td>
+                            `;
+                            
+                            // Insert at correct position
+                            const existingRows = Array.from(tbody.children);
+                            let insertIndex = existingRows.findIndex(r => {
+                                const rRank = parseInt(r.querySelector('.rank-col')?.textContent?.trim() || '999');
+                                return rRank > missingRank;
+                            });
+                            if (insertIndex === -1) insertIndex = existingRows.length;
+                            
+                            if (insertIndex === 0) {
+                                tbody.insertBefore(row, tbody.firstChild);
+                            } else if (insertIndex >= existingRows.length) {
+                                tbody.appendChild(row);
+                            } else {
+                                tbody.insertBefore(row, existingRows[insertIndex]);
+                            }
+                            
+                            console.log(`    ✅ Added missing rank ${missingRank} at position ${insertIndex}`);
+                        } catch (err) {
+                            console.error(`    ❌ Error adding missing rank ${missingRank}:`, err);
+                        }
+                    }
+                });
+            }
         }
 
         // Scroll to top to ensure first player is visible
