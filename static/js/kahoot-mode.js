@@ -2688,10 +2688,10 @@ function initializeKahootMode() {
     // Pour l'instant, on se base sur le fait que si login-section existe,
     // on affiche le formulaire de connexion. Sinon, l'utilisateur est déjà connecté.
     
-    // Pré-remplir le code de session depuis l'URL ou la variable Jinja (uniquement en mode joueur)
+    // Pré-remplir le code de session depuis l'URL (priorité sur la variable Jinja)
     const sessionCodeInput = document.getElementById('session-code');
     if (sessionCodeInput) {
-        // Vérifier l'URL pour le paramètre ?session=CODE
+        // Vérifier l'URL pour le paramètre ?session=CODE (priorité absolue)
         const urlParams = new URLSearchParams(window.location.search);
         const sessionCodeFromUrl = urlParams.get('session');
         
@@ -2702,20 +2702,44 @@ function initializeKahootMode() {
         const codeToUse = sessionCodeFromUrl || sessionCodeFromTemplate;
         
         if (codeToUse) {
-            sessionCodeInput.value = codeToUse.toUpperCase();
-            // Basculer automatiquement en mode joueur si code présent
-            // Doit être fait après la création de l'instance
-            setTimeout(() => {
-                if (window.kahootMode) {
-                    window.kahootMode.switchToPlayerMode();
-                }
-            }, 100);
+            // Normaliser le code : majuscules, max 6 caractères, uniquement alphanumériques
+            const normalizedCode = codeToUse.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 6);
+            if (normalizedCode.length === 6) {
+                sessionCodeInput.value = normalizedCode;
+                console.log('✅ Session code pré-rempli depuis URL:', normalizedCode);
+                
+                // Basculer automatiquement en mode joueur si code présent
+                setTimeout(() => {
+                    if (window.kahootMode) {
+                        window.kahootMode.switchToPlayerMode();
+                    }
+                }, 100);
+            }
         }
         
-        // Forcer les majuscules lors de la saisie
+        // Forcer les majuscules et limiter à 6 caractères lors de la saisie
         sessionCodeInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            const currentValue = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            e.target.value = currentValue.substring(0, 6);
         });
+        
+        // Aussi pré-remplir si l'URL change (pour les cas où on navigue après)
+        // Observer les changements d'URL avec un MutationObserver serait complexe,
+        // mais on peut au moins vérifier à nouveau après un court délai
+        setTimeout(() => {
+            const urlParamsCheck = new URLSearchParams(window.location.search);
+            const sessionCodeCheck = urlParamsCheck.get('session');
+            if (sessionCodeCheck && (!sessionCodeInput.value || sessionCodeInput.value.length < 6)) {
+                const normalizedCheck = sessionCodeCheck.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 6);
+                if (normalizedCheck.length === 6) {
+                    sessionCodeInput.value = normalizedCheck;
+                    console.log('✅ Session code pré-rempli après vérification:', normalizedCheck);
+                    if (window.kahootMode) {
+                        window.kahootMode.switchToPlayerMode();
+                    }
+                }
+            }
+        }, 500);
     }
     
     // Fallback function for showing alerts at top of screen (used if kahootMode not available)
