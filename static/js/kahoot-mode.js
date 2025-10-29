@@ -384,48 +384,56 @@ class KahootMode {
                 };
                 
                 // Wait for GameController to be fully initialized
-                // We'll listen for when it's ready instead of polling
-                const waitForGameController = () => {
-                    // Vérifier si GameController est disponible
-                    if (window.gameController && typeof window.gameController.loadMOT1Choices === 'function') {
-                        console.log('✅ GameController found, loading Step 1 with full visual render');
+                // Since game.js creates GameController at the bottom of the file,
+                // we need to wait for it to be available
+                const startStep1WhenReady = () => {
+                    let attempts = 0;
+                    const maxAttempts = 100; // 20 secondes maximum (100 * 200ms)
+                    
+                    const checkGameController = () => {
+                        attempts++;
                         
-                        // Stop all videos first
-                        if (window.gameController.stopAllVideos) {
-                            window.gameController.stopAllVideos();
-                        }
-                        
-                        // S'assurer que la section est visible
-                        const phase1Section = document.getElementById('phase1-section');
-                        if (phase1Section) {
-                            phase1Section.style.display = 'block';
-                        }
-                        
-                        // Hide all other sections
-                        document.querySelectorAll('.phase-section').forEach(section => {
-                            if (section.id !== 'phase1-section') {
-                                section.style.display = 'none';
+                        if (window.gameController && typeof window.gameController.loadMOT1Choices === 'function') {
+                            console.log('✅ GameController found after', attempts, 'attempts, loading Step 1 with full visual render');
+                            
+                            // Stop all videos first
+                            if (window.gameController.stopAllVideos) {
+                                window.gameController.stopAllVideos();
                             }
-                        });
-                        
-                        // Utiliser loadMOT1Choices qui charge l'API ET rend avec le style complet
-                        window.gameController.loadMOT1Choices();
-                    } else {
-                        // Si GameController n'est pas encore disponible, réessayer
-                        // Utiliser requestAnimationFrame pour une meilleure synchronisation
-                        requestAnimationFrame(waitForGameController);
-                    }
+                            
+                            // S'assurer que la section est visible
+                            const phase1Section = document.getElementById('phase1-section');
+                            if (phase1Section) {
+                                phase1Section.style.display = 'block';
+                            }
+                            
+                            // Hide all other sections
+                            document.querySelectorAll('.phase-section').forEach(section => {
+                                if (section.id !== 'phase1-section') {
+                                    section.style.display = 'none';
+                                }
+                            });
+                            
+                            // Utiliser loadMOT1Choices qui charge l'API ET rend avec le style complet
+                            window.gameController.loadMOT1Choices();
+                        } else if (attempts < maxAttempts) {
+                            // Continuer à vérifier
+                            setTimeout(checkGameController, 200);
+                        } else {
+                            console.error('❌ GameController not found after', maxAttempts, 'attempts');
+                            console.error('Available on window:', Object.keys(window).filter(k => k.includes('game') || k.includes('Game')));
+                            // En dernier recours, utiliser le fallback
+                            showPhase1Directly();
+                        }
+                    };
+                    
+                    // Commencer la vérification
+                    checkGameController();
                 };
                 
-                // Start waiting for GameController immediately
-                // Using requestAnimationFrame ensures we wait for the DOM and scripts to be ready
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', () => {
-                        setTimeout(waitForGameController, 100);
-                    });
-                } else {
-                    setTimeout(waitForGameController, 100);
-                }
+                // Start waiting for GameController
+                // Give it a moment for scripts to load
+                setTimeout(startStep1WhenReady, 300);
             } else {
                 this.showLoginAlert(data.message || 'Login failed', 'danger');
                 loginBtn.disabled = false;
