@@ -43,14 +43,22 @@ class KahootMode {
                 // Normaliser le code : majuscules, max 6 caractères, uniquement alphanumériques
                 const normalizedCode = codeToUse.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 6);
                 if (normalizedCode.length === 6) {
-                    sessionCodeInput.value = normalizedCode;
-                    console.log('✅ Session code pré-rempli depuis URL:', normalizedCode);
-                    
-                    // S'assurer que le champ est visible (basculer en mode joueur)
+                    // S'assurer d'abord que le champ est visible
                     this.switchToPlayerMode();
                     
-                    // Forcer la mise à jour visuelle (trigger event pour React/Vue si besoin)
-                    sessionCodeInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    // Attendre un peu pour que le basculement de mode soit effectif
+                    setTimeout(() => {
+                        // Vérifier à nouveau que le champ existe (au cas où le switchToPlayerMode l'aurait recréé)
+                        const inputField = document.getElementById('session-code');
+                        if (inputField) {
+                            inputField.value = normalizedCode;
+                            // Forcer la mise à jour visuelle et enlever le placeholder
+                            inputField.placeholder = ''; // Enlever le placeholder pour voir la valeur
+                            inputField.dispatchEvent(new Event('input', { bubbles: true }));
+                            inputField.dispatchEvent(new Event('change', { bubbles: true }));
+                            console.log('✅ Session code pré-rempli depuis URL:', normalizedCode, 'Valeur actuelle:', inputField.value);
+                        }
+                    }, 100);
                 }
             }
         };
