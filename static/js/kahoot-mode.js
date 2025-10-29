@@ -1445,6 +1445,67 @@ function renderMOT3ChoicesFull(choices) {
     updatePhase3ProgressManual();
     
     console.log('✅ Rendered Step 3 choices with full visual');
+    
+    // Setup confirm button listener
+    const confirmBtn = document.getElementById('phase3-confirm-btn');
+    if (confirmBtn) {
+        // Remove existing listeners by cloning
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        
+        newConfirmBtn.addEventListener('click', async () => {
+            // Get selected choices from all categories
+            const selectedChoices = {};
+            document.querySelectorAll('#phase3-choices .matrix-choice.selected').forEach(choiceEl => {
+                const category = choiceEl.dataset.category;
+                const choiceId = choiceEl.dataset.choiceId;
+                if (category && choiceId) {
+                    selectedChoices[category] = choiceId;
+                }
+            });
+            
+            const selectedCount = Object.keys(selectedChoices).length;
+            if (selectedCount !== 3) {
+                if (window.gameController && window.gameController.showAlert) {
+                    window.gameController.showAlert('Please select exactly 3 choices (one per category).', 'warning');
+                } else {
+                    alert('Veuillez sélectionner exactement 3 choix (un par catégorie).');
+                }
+                return;
+            }
+            
+            // Use GameController method if available
+            if (window.gameController && window.gameController.confirmMOT3Choices) {
+                // Store selections in GameController first
+                window.gameController.selectedChoices.mot3 = selectedChoices;
+                await window.gameController.confirmMOT3Choices();
+            } else {
+                // Direct API call as fallback
+                try {
+                    const response = await fetch('/api/phase3/choose', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ choices: selectedChoices })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        // Show score screen
+                        if (window.gameController && window.gameController.showScoreScreen) {
+                            const score = data.score || data.score_info || {};
+                            const mot3Score = score.scores ? score.scores.mot3 : (score.mot3 || 0);
+                            window.gameController.showScoreScreen(3, mot3Score, score);
+                        } else {
+                            showScoreScreenManually(3, data);
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error confirming Step 3 choices:', err);
+                }
+            }
+        });
+    }
 }
 
 // Helper to update Phase 3 progress manually
@@ -1599,6 +1660,81 @@ function renderMOT4ChoicesFull(choices) {
     updatePhase4BudgetManual();
     
     console.log('✅ Rendered Step 4 choices with full visual');
+    
+    // Setup confirm button listener
+    const confirmBtn = document.getElementById('phase4-confirm-btn');
+    if (confirmBtn) {
+        // Remove existing listeners by cloning
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        
+        newConfirmBtn.addEventListener('click', async () => {
+            // Get selected choices
+            const selectedChoices = [];
+            document.querySelectorAll('#phase4-choices .matrix-choice.selected').forEach(choiceEl => {
+                selectedChoices.push(choiceEl.dataset.choiceId);
+            });
+            
+            // Calculate total cost
+            let totalCost = 0;
+            selectedChoices.forEach(choiceId => {
+                const choiceEl = document.querySelector(`#phase4-choices [data-choice-id="${choiceId}"]`);
+                if (choiceEl) {
+                    totalCost += parseInt(choiceEl.dataset.cost) || 0;
+                }
+            });
+            
+            if (selectedChoices.length === 0) {
+                if (window.gameController && window.gameController.showAlert) {
+                    window.gameController.showAlert('Please select at least one choice.', 'warning');
+                } else {
+                    alert('Veuillez sélectionner au moins un choix.');
+                }
+                return;
+            }
+            
+            if (totalCost > 15) {
+                if (window.gameController && window.gameController.showAlert) {
+                    window.gameController.showAlert(`Budget exceeded: ${totalCost}/15 points. Please adjust your selections.`, 'warning');
+                } else {
+                    alert(`Budget dépassé: ${totalCost}/15 points. Veuillez ajuster vos sélections.`);
+                }
+                return;
+            }
+            
+            // Use GameController method if available
+            if (window.gameController && window.gameController.confirmPhase4Choices) {
+                // Store selections in GameController first
+                window.gameController.selectedChoices.mot4 = selectedChoices;
+                window.gameController.budget = totalCost;
+                await window.gameController.confirmPhase4Choices();
+            } else {
+                // Direct API call as fallback
+                try {
+                    const response = await fetch('/api/phase4/choose', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ choice_ids: selectedChoices })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        // Show score screen
+                        if (window.gameController && window.gameController.showScoreScreen) {
+                            const score = data.score || data.score_info || {};
+                            const mot4Score = score.scores ? score.scores.mot4 : (score.mot4 || 0);
+                            window.gameController.showScoreScreen(4, mot4Score, score);
+                        } else {
+                            showScoreScreenManually(4, data);
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error confirming Step 4 choices:', err);
+                }
+            }
+        });
+    }
 }
 
 // Helper to update Phase 4 budget manually
@@ -1776,6 +1912,61 @@ function renderMOT5ChoicesFull(choices) {
     }
     
     console.log('✅ Rendered Step 5 choices with full visual');
+    
+    // Setup confirm button listener
+    const confirmBtn = document.getElementById('phase5-confirm-btn');
+    if (confirmBtn) {
+        // Remove existing listeners by cloning
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        
+        newConfirmBtn.addEventListener('click', async () => {
+            // Get selected choice
+            const selectedColumn = document.querySelector('#phase5-choices .choice-column.selected');
+            if (!selectedColumn) {
+                if (window.gameController && window.gameController.showAlert) {
+                    window.gameController.showAlert('Please select an approach first', 'warning');
+                } else {
+                    alert('Veuillez sélectionner une approche d\'abord.');
+                }
+                return;
+            }
+            
+            const choiceId = selectedColumn.dataset.choiceId;
+            
+            // Use GameController method if available
+            if (window.gameController && window.gameController.confirmPhase5Choice) {
+                // Store selection in GameController first
+                window.gameController.selectedChoices.mot5 = choiceId;
+                await window.gameController.confirmPhase5Choice();
+            } else {
+                // Direct API call as fallback
+                try {
+                    const response = await fetch('/api/phase5/choose', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ choice_id: choiceId })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        // Show score screen
+                        if (window.gameController && window.gameController.showScoreScreen) {
+                            // Phase 5 uses results.scores.mot5
+                            const score = data.results?.scores?.mot5 || data.score?.scores?.mot5 || 0;
+                            const scoreData = data.score_data || data.score || {};
+                            window.gameController.showScoreScreen(5, score, scoreData);
+                        } else {
+                            showScoreScreenManually(5, data);
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error confirming Step 5 choice:', err);
+                }
+            }
+        });
+    }
 }
 
 // Hook into score display to show leaderboard after Step 5
