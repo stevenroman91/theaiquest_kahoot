@@ -945,10 +945,20 @@ class KahootMode {
 
         // Scroll to top to ensure first player is visible
         if (tableContainer) {
+            // Force scroll to top and ensure first row is visible
             setTimeout(() => {
                 tableContainer.scrollTop = 0;
-            }, 100);
+                // Also try to scroll the first row into view
+                const firstRow = tbody.querySelector('tr:first-child');
+                if (firstRow) {
+                    firstRow.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+                    console.log('📊 Scrolled to show first row');
+                }
+            }, 200);
         }
+        
+        // Log final state for debugging
+        console.log(`📊 Final leaderboard state: ${tbody.children.length} rows in DOM, ${leaderboard.length} in data`);
     }
 
     createStarsDisplay(count) {

@@ -5579,6 +5579,13 @@ body {
 .leaderboard-table tbody tr:first-child {
     position: relative;
     z-index: 1;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+/* Ensure table container has proper scroll positioning */
+.leaderboard-table-container {
+    scroll-padding-top: 0;
 }
 
 .leaderboard-table thead th:first-child {
@@ -5600,7 +5607,7 @@ body {
 @keyframes fadeInRow {
     from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(0px); /* Changed from -10px to 0px to prevent hiding first row */
     }
     to {
         opacity: 1;
