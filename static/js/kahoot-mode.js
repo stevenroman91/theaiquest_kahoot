@@ -1610,12 +1610,22 @@ function renderMOT2ChoicesFull(choices) {
             </div>
         `;
         
-        // Add click handler for remove button
-        priorityItem.querySelector('.remove-priority-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            removeFromPrioritySlot(choiceId);
-        });
+        // Add click handler for remove button (both touch and click for mobile support)
+        const removeBtn = priorityItem.querySelector('.remove-priority-btn');
+        if (removeBtn) {
+            // Handle both click and touchstart for mobile compatibility
+            const handleRemove = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation(); // Prevent any other handlers
+                console.log('🗑️ Removing choice from slot:', choiceId);
+                removeFromPrioritySlot(choiceId);
+                return false;
+            };
+            
+            removeBtn.addEventListener('click', handleRemove, { capture: true });
+            removeBtn.addEventListener('touchend', handleRemove, { capture: true });
+        }
         
         // Add to slot
         slotElement.innerHTML = '';
