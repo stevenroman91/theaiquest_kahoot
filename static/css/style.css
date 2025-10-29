@@ -5595,7 +5595,7 @@ body {
     justify-content: space-around;
     margin-bottom: 3rem;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .stat-card {
@@ -5661,6 +5661,10 @@ body {
     max-height: 60vh;
     box-shadow: 0 10px 40px rgba(30, 64, 175, 0.15);
     border: 2px solid rgba(30, 64, 175, 0.2);
+    /* Force scroll to start from absolute top */
+    scroll-behavior: auto;
+    /* Ensure content starts from top */
+    position: relative;
 }
 
 .leaderboard-table {
@@ -5686,6 +5690,8 @@ body {
     top: 0;
     z-index: 10;
     backdrop-filter: blur(10px);
+    /* Ensure header doesn't overlap first row */
+    margin-bottom: 0;
 }
 
 /* Ensure first row is visible below sticky header */
@@ -5762,12 +5768,13 @@ body {
     box-shadow: 0 4px 15px rgba(30, 64, 175, 0.2);
 }
 
+/* Current user styling - highest priority */
 .leaderboard-table tbody tr.user-row {
-    background: rgba(16, 185, 129, 0.15);
-    border: 3px solid var(--fdj-success);
+    background: rgba(16, 185, 129, 0.25) !important;
+    border: 3px solid var(--fdj-success) !important;
     font-weight: 700;
     color: var(--fdj-gray-dark);
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
     animation: pulse 2s ease-in-out infinite;
 }
 
@@ -5776,21 +5783,48 @@ body {
     50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.5); }
 }
 
-.leaderboard-table tbody tr.top-three {
-    background: rgba(59, 130, 246, 0.08);
-    font-weight: 600;
+/* Top 3 styling */
+.leaderboard-table tbody tr.rank-1 {
+    background: rgba(251, 191, 36, 0.3);
+    font-weight: 700;
 }
 
-.leaderboard-table tbody tr.rank-1 {
-    background: rgba(251, 191, 36, 0.2);
+.leaderboard-table tbody tr.rank-1 .rank-col {
+    color: #f59e0b;
 }
 
 .leaderboard-table tbody tr.rank-2 {
-    background: rgba(203, 213, 225, 0.3);
+    background: rgba(203, 213, 225, 0.4);
+    font-weight: 700;
+}
+
+.leaderboard-table tbody tr.rank-2 .rank-col {
+    color: #64748b;
 }
 
 .leaderboard-table tbody tr.rank-3 {
-    background: rgba(254, 243, 199, 0.3);
+    background: rgba(254, 243, 199, 0.4);
+    font-weight: 700;
+}
+
+.leaderboard-table tbody tr.rank-3 .rank-col {
+    color: #d97706;
+}
+
+/* When current user is also in top 3, combine styles */
+.leaderboard-table tbody tr.user-row.rank-1 {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(16, 185, 129, 0.25)) !important;
+    border: 3px solid #f59e0b !important;
+}
+
+.leaderboard-table tbody tr.user-row.rank-2 {
+    background: linear-gradient(135deg, rgba(203, 213, 225, 0.4), rgba(16, 185, 129, 0.25)) !important;
+    border: 3px solid #64748b !important;
+}
+
+.leaderboard-table tbody tr.user-row.rank-3 {
+    background: linear-gradient(135deg, rgba(254, 243, 199, 0.4), rgba(16, 185, 129, 0.25)) !important;
+    border: 3px solid #d97706 !important;
 }
 
 .leaderboard-table tbody td {

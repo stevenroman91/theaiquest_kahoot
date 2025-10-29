@@ -476,6 +476,8 @@ class UserManager:
         """Sauvegarde le score d'une partie terminée"""
         try:
             import json
+            # Normaliser le session_id en uppercase pour cohérence
+            normalized_session_id = session_id.upper().strip() if session_id else None
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 cursor.execute('''
@@ -487,10 +489,10 @@ class UserManager:
                     stars,
                     json.dumps(mot_scores),
                     datetime.now().isoformat(),
-                    session_id
+                    normalized_session_id
                 ))
                 conn.commit()
-            logger.info(f"Score sauvegardé pour {username}: {total_score}/15 ({stars} étoiles)")
+            logger.info(f"Score sauvegardé pour {username}: {total_score}/15 ({stars} étoiles), session={normalized_session_id}")
             return True
         except Exception as e:
             logger.error(f"Erreur lors de la sauvegarde du score pour {username}: {e}")
@@ -660,19 +662,25 @@ class UserManager:
         """Récupère le leaderboard pour une session spécifique"""
         try:
             import json
+            # Normaliser le session_code en uppercase pour la comparaison
+            normalized_code = session_code.upper().strip()
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 # Filter strictly by session_id - only players who played in THIS specific session
+                # Use UPPER() to handle any case inconsistencies
                 cursor.execute('''
                     SELECT username, MAX(total_score) as max_score, MAX(stars) as max_stars, 
-                           (SELECT mot_scores FROM game_scores WHERE username = gs.username AND session_id = ? ORDER BY total_score DESC LIMIT 1) as mot_scores,
+                           (SELECT mot_scores FROM game_scores 
+                            WHERE username = gs.username 
+                            AND UPPER(TRIM(session_id)) = ? 
+                            ORDER BY total_score DESC LIMIT 1) as mot_scores,
                            MIN(completed_at) as first_completed
                     FROM game_scores gs
-                    WHERE session_id = ? AND session_id IS NOT NULL
+                    WHERE UPPER(TRIM(session_id)) = ? AND session_id IS NOT NULL
                     GROUP BY username
                     ORDER BY max_score DESC, first_completed ASC
                     LIMIT ?
-                ''', (session_code.upper(), session_code.upper(), limit))
+                ''', (normalized_code, normalized_code, limit))
                 
                 leaderboard = []
                 rank = 1

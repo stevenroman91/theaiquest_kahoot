@@ -944,6 +944,16 @@ class KahootMode {
             const topScore = leaderboard.length > 0 
                 ? (leaderboard[0]?.total_score || leaderboard[0]?.['total_score'] || 0)
                 : 0;
+            
+            // Find current user's score
+            const currentUserEntry = leaderboard.find(entry => {
+                const entryUsername = (entry?.username || entry?.['username'] || '').trim().toLowerCase();
+                const currentUserNormalized = currentUsername.toLowerCase();
+                return entryUsername === currentUserNormalized;
+            });
+            const yourScore = currentUserEntry 
+                ? (currentUserEntry?.total_score || currentUserEntry?.['total_score'] || 0)
+                : 0;
 
             statsDiv.innerHTML = `
                 <div class="stat-card">
@@ -957,6 +967,10 @@ class KahootMode {
                 <div class="stat-card">
                     <span class="stat-value">${topScore}</span>
                     <span class="stat-label">Top Score</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">${yourScore}</span>
+                    <span class="stat-label">Your Score</span>
                 </div>
             `;
         }
@@ -1018,6 +1032,15 @@ class KahootMode {
                 }
                 
                 const row = document.createElement('tr');
+                
+                // Add top 3 styling
+                if (rank === 1) {
+                    row.classList.add('rank-1');
+                } else if (rank === 2) {
+                    row.classList.add('rank-2');
+                } else if (rank === 3) {
+                    row.classList.add('rank-3');
+                }
                 
                 // Only highlight current user (case-insensitive comparison)
                 const currentUsernameTrimmed = (currentUsername || '').trim();
