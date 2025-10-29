@@ -283,66 +283,8 @@ class KahootMode {
                 
                 // Définir d'abord les fonctions helper (avant de les utiliser)
                 
-                // Helper function pour charger les choix directement via l'API
-                const loadPhase1ChoicesDirectly = () => {
-                    // Afficher la section d'abord
-                    const phase1Section = document.getElementById('phase1-section');
-                    if (phase1Section) {
-                        phase1Section.style.display = 'block';
-                    }
-                    
-                    // Charger les choix via l'API
-                    fetch('/api/phase1/choices', {
-                        credentials: 'include'
-                    })
-                    .then(res => {
-                        if (!res.ok) {
-                            throw new Error(`HTTP ${res.status}`);
-                        }
-                        return res.json();
-                    })
-                    .then(data => {
-                        if (data.success && data.choices) {
-                            console.log('✅ Phase1 choices loaded directly via API:', data.choices.length, 'choices');
-                            
-                            // Attendre que GameController soit disponible pour le rendu complet
-                            // avec les photos et le style original
-                            let renderAttempts = 0;
-                            const maxRenderAttempts = 20; // 4 secondes maximum
-                            
-                            const tryRender = () => {
-                                if (window.gameController && window.gameController.renderMOT1Choices) {
-                                    // Utiliser le rendu complet de GameController
-                                    window.gameController.renderMOT1Choices(data.choices);
-                                    console.log('✅ Phase1 choices rendered with GameController (full visual)');
-                                } else if (renderAttempts < maxRenderAttempts) {
-                                    renderAttempts++;
-                                    setTimeout(tryRender, 200);
-                                } else {
-                                    // En dernier recours seulement, utiliser le rendu simple
-                                    console.warn('⚠️ GameController not available for rendering, using simple fallback');
-                                    renderChoicesManually(data.choices);
-                                }
-                            };
-                            
-                            // Commencer à essayer de rendre
-                            tryRender();
-                        } else {
-                            console.error('❌ API returned error:', data.message);
-                            const container = document.getElementById('phase1-choices');
-                            if (container) {
-                                container.innerHTML = '<p class="text-danger">Erreur lors du chargement des choix: ' + (data.message || 'Erreur inconnue') + '</p>';
-                            }
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Error loading phase1 choices directly:', err);
-                        const container = document.getElementById('phase1-choices');
-                        if (container) {
-                            container.innerHTML = '<p class="text-danger">Erreur de connexion lors du chargement des choix.</p>';
-                        }
-                    });
-                };
+                // Supprimé loadPhase1ChoicesDirectly - on utilise uniquement GameController.loadMOT1Choices()
+                // qui gère à la fois le chargement de l'API et le rendu complet avec les photos
                 
                 // Helper function pour rendre les choix manuellement si GameController n'est pas disponible
                 const renderChoicesManually = (choices) => {
@@ -420,20 +362,31 @@ class KahootMode {
                         phase1Section.style.display = 'block';
                         console.log('✅ Showing Step 1 section directly (fallback)');
                         
-                        // Appeler loadPhase1ChoicesDirectly (maintenant définie)
-                        loadPhase1ChoicesDirectly();
+                        // Essayer d'utiliser GameController une dernière fois
+                        if (window.gameController && window.gameController.loadMOT1Choices) {
+                            window.gameController.loadMOT1Choices();
+                        } else {
+                            // En dernier recours, charger les choix et utiliser le rendu simple
+                            fetch('/api/phase1/choices', {
+                                credentials: 'include'
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success && data.choices) {
+                                    renderChoicesManually(data.choices);
+                                }
+                            })
+                            .catch(err => console.error('Error loading choices:', err));
+                        }
                     } else {
                         console.error('❌ Phase 1 section not found in DOM');
                     }
                 };
                 
-                // Wait a bit to ensure GameController is fully initialized
-                // Mais aussi charger les choix directement si GameController tarde
+                // Wait for GameController and use its loadMOT1Choices method
+                // which handles the full visual rendering with photos
                 let retryCount = 0;
-                const maxRetries = 10; // Maximum 10 tentatives (2 secondes)
-                
-                // Charger les choix directement en parallèle
-                loadPhase1ChoicesDirectly();
+                const maxRetries = 30; // Maximum 30 tentatives (6 secondes) pour être sûr
                 
                 const startStep1 = () => {
                     if (window.gameController) {
@@ -448,10 +401,17 @@ class KahootMode {
                             phase1Section.style.display = 'block';
                         }
                         
-                        // Call loadMOT1Choices directly to skip video and show Step 1
+                        // Hide all other sections
+                        document.querySelectorAll('.phase-section').forEach(section => {
+                            if (section.id !== 'phase1-section') {
+                                section.style.display = 'none';
+                            }
+                        });
+                        
+                        // Utiliser loadMOT1Choices qui charge l'API ET rend avec le style complet
                         if (window.gameController.loadMOT1Choices) {
                             window.gameController.loadMOT1Choices();
-                            console.log('✅ Loaded Step 1 via GameController (Kahoot mode)');
+                            console.log('✅ Loaded Step 1 via GameController.loadMOT1Choices (full visual render)');
                         } else if (window.gameController.startMOT1Game) {
                             // Fallback to startMOT1Game if loadMOT1Choices doesn't exist
                             window.gameController.startMOT1Game();
