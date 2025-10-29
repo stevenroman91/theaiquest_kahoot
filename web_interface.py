@@ -1422,11 +1422,24 @@ def api_leaderboard():
         if session.get('logged_in'):
             current_username = session.get('username')
             logger.info(f"Current logged-in user: {current_username}")
+            # Normalize username for comparison (case-insensitive)
+            current_username_normalized = current_username.lower().strip() if current_username else None
             for entry in leaderboard:
-                if entry['username'] == current_username:
+                entry_username = entry.get('username', '').strip()
+                if entry_username and current_username_normalized:
+                    if entry_username.lower() == current_username_normalized:
+                        user_rank = entry['rank']
+                        logger.info(f"User {current_username} found at rank {user_rank} (normalized comparison)")
+                        break
+                elif entry_username == current_username:  # Fallback to exact match
                     user_rank = entry['rank']
-                    logger.info(f"User {current_username} found at rank {user_rank}")
+                    logger.info(f"User {current_username} found at rank {user_rank} (exact match)")
                     break
+            
+            # Log if user not found in leaderboard
+            if user_rank is None and current_username:
+                logger.warning(f"User {current_username} NOT FOUND in leaderboard!")
+                logger.warning(f"Available usernames in leaderboard: {[e.get('username', 'N/A') for e in leaderboard]}")
         
         # Ensure leaderboard is a list and contains valid data
         leaderboard_list = []
@@ -1446,13 +1459,39 @@ def api_leaderboard():
         
         logger.info(f"Returning leaderboard with {len(leaderboard_list)} entries for session {session_code}")
         
+        # DEBUG: Log all usernames in leaderboard and current username for comparison
+        if current_username:
+            leaderboard_usernames = [e.get('username', 'N/A') for e in leaderboard_list]
+            logger.info(f"DEBUG: Current username '{current_username}' looking in: {leaderboard_usernames}")
+            if current_username not in leaderboard_usernames:
+                logger.warning(f"WARNING: Current username '{current_username}' NOT in leaderboard list!")
+                logger.warning(f"  Normalized comparison: Looking for '{current_username.lower().strip()}'")
+                logger.warning(f"  Available (normalized): {[u.lower().strip() for u in leaderboard_usernames]}")
+        
+        # Get the timestamp of the most recent score completion for this session
+        last_completion_time = None
+        if session_code and leaderboard_list:
+            try:
+                from datetime import datetime
+                completion_times = [e.get('completed_at', '') for e in leaderboard_list if e.get('completed_at')]
+                if completion_times:
+                    # Get the most recent completion time
+                    last_completion_time = max(completion_times)
+            except Exception as e:
+                logger.warning(f"Error getting last completion time: {e}")
+        
         return jsonify({
             'success': True,
             'leaderboard': leaderboard_list,
             'user_rank': user_rank,
             'current_username': current_username,  # Inclure le username actuel pour la comparaison frontend
             'total_entries': len(leaderboard_list),
-            'session_code': session_code  # Inclure le code de session dans la réponse
+            'session_code': session_code,  # Inclure le code de session dans la réponse
+            'last_completion_time': last_completion_time,  # Timestamp du dernier score pour détecter les nouveaux joueurs
+            'debug_info': {
+                'leaderboard_usernames': [e.get('username', 'N/A') for e in leaderboard_list],
+                'current_username_normalized': current_username.lower().strip() if current_username else None
+            } if current_username else None
         })
     except Exception as e:
         logger.error(f"Error getting leaderboard: {str(e)}")

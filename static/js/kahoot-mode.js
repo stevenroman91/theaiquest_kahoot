@@ -840,7 +840,14 @@ class KahootMode {
                 }
                 
                 // Populate the leaderboard (this will now work because modal is shown)
-                this.populateLeaderboard(leaderboard, data.user_rank, data.current_username);
+                // On initial load, update stats. On refresh (initialLoad=false), only update rows
+                this.populateLeaderboard(leaderboard, data.user_rank, data.current_username, !initialLoad);
+                
+                // Initialize tracking for change detection
+                if (initialLoad) {
+                    this.lastKnownPlayerCount = data.total_entries || 0;
+                    this.lastKnownCompletionTime = data.last_completion_time || null;
+                }
                 
                 // Set up auto-refresh if leaderboard modal is visible
                 this.setupLeaderboardAutoRefresh();
@@ -864,37 +871,87 @@ class KahootMode {
         const modalElement = document.getElementById('leaderboardModal');
         if (!modalElement) return;
         
+        // Store the last known total entries count and last completion time
+        this.lastKnownPlayerCount = null;
+        this.lastKnownCompletionTime = null;
+        
         // Check if modal is visible
         const isVisible = modalElement.classList.contains('show') || 
                          modalElement.style.display !== 'none' ||
                          bootstrap.Modal.getInstance(modalElement) !== null;
         
         if (isVisible) {
-            // Refresh every 3 seconds
-            this.leaderboardRefreshInterval = setInterval(() => {
+            // Check for new players every 10 seconds (less frequent than before)
+            // Only refresh if the player count or last completion time changed
+            this.leaderboardRefreshInterval = setInterval(async () => {
                 const currentModal = bootstrap.Modal.getInstance(modalElement);
                 if (currentModal && modalElement.classList.contains('show')) {
-                    console.log('🔄 Auto-refreshing leaderboard...');
-                    this.showLeaderboard(false); // false = don't show modal again, just refresh data
+                    try {
+                        // Quick check: fetch leaderboard to see if player count or last completion time changed
+                        const cacheBuster = `?_t=${Date.now()}&limit=1000&check=true`;
+                        const response = await fetch(`/api/leaderboard${cacheBuster}`, {
+                            cache: 'no-store',
+                            headers: {
+                                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                                'Pragma': 'no-cache',
+                                'Expires': '0'
+                            }
+                        });
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            const currentPlayerCount = data.total_entries || 0;
+                            const currentLastCompletion = data.last_completion_time || null;
+                            
+                            // Check if something changed
+                            const playerCountChanged = this.lastKnownPlayerCount !== null && 
+                                                     currentPlayerCount !== this.lastKnownPlayerCount;
+                            const completionTimeChanged = this.lastKnownCompletionTime !== null && 
+                                                         currentLastCompletion !== null &&
+                                                         currentLastCompletion !== this.lastKnownCompletionTime;
+                            
+                            if (playerCountChanged || completionTimeChanged) {
+                                console.log('🔄 New player finished! Refreshing leaderboard...');
+                                console.log(`    Player count: ${this.lastKnownPlayerCount} -> ${currentPlayerCount}`);
+                                console.log(`    Last completion: ${this.lastKnownCompletionTime} -> ${currentLastCompletion}`);
+                                
+                                // Refresh the full leaderboard
+                                this.lastKnownPlayerCount = currentPlayerCount;
+                                this.lastKnownCompletionTime = currentLastCompletion;
+                                this.showLeaderboard(false); // false = don't show modal again, just refresh data
+                            } else {
+                                // No change, nothing to do
+                                if (this.lastKnownPlayerCount === null) {
+                                    // First check - initialize
+                                    this.lastKnownPlayerCount = currentPlayerCount;
+                                    this.lastKnownCompletionTime = currentLastCompletion;
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error checking for new players:', error);
+                    }
                 } else {
                     // Modal is closed, stop refreshing
                     clearInterval(this.leaderboardRefreshInterval);
                     this.leaderboardRefreshInterval = null;
                 }
-            }, 3000);
+            }, 10000); // Check every 10 seconds instead of refreshing every 3 seconds
             
             // Stop refresh when modal is hidden
             modalElement.addEventListener('hidden.bs.modal', () => {
                 if (this.leaderboardRefreshInterval) {
                     clearInterval(this.leaderboardRefreshInterval);
                     this.leaderboardRefreshInterval = null;
+                    this.lastKnownPlayerCount = null;
+                    this.lastKnownCompletionTime = null;
                     console.log('🛑 Stopped leaderboard auto-refresh');
                 }
             }, { once: true });
         }
     }
 
-    populateLeaderboard(leaderboard, userRank, apiUsername = null) {
+    populateLeaderboard(leaderboard, userRank, apiUsername = null, skipStatsUpdate = false) {
         console.log('🔧 populateLeaderboard called with:', { leaderboard: leaderboard?.length, userRank, apiUsername });
         
         const tbody = document.getElementById('leaderboard-tbody');
@@ -915,9 +972,12 @@ class KahootMode {
             leaderboard = [];
         }
 
+        // Convert to array first (before using it in logs or checks)
+        const leaderboardArray = Array.isArray(leaderboard) ? leaderboard : [];
+        
         // Safe logging to prevent errors if username doesn't exist
-        const playerNames = leaderboard.map(e => e?.username || e?.['username'] || 'Unknown').filter(name => name !== 'Unknown');
-        console.log(`📊 Populating leaderboard with ${leaderboard.length} players:`, playerNames);
+        const playerNames = leaderboardArray.map(e => e?.username || e?.['username'] || 'Unknown').filter(name => name !== 'Unknown');
+        console.log(`📊 Populating leaderboard with ${leaderboardArray.length} players:`, playerNames);
 
         // Clear existing content
         tbody.innerHTML = '';
@@ -925,28 +985,63 @@ class KahootMode {
         // Get current username - prioritize API username, then session storage, then getCurrentUsername()
         let currentUsername = apiUsername || sessionStorage.getItem('leaderboard_username') || sessionStorage.getItem('username') || this.getCurrentUsername();
         currentUsername = (currentUsername || '').trim();
-        console.log('🔧 Current username for comparison (multiple sources checked):', currentUsername);
+        
+        console.log('🔧 ========== CURRENT USER DETECTION ==========');
+        console.log('🔧 Current username:', currentUsername);
         console.log('    - API username:', apiUsername);
         console.log('    - SessionStorage leaderboard_username:', sessionStorage.getItem('leaderboard_username'));
         console.log('    - SessionStorage username:', sessionStorage.getItem('username'));
+        console.log('    - window.currentUsername:', window.currentUsername);
         console.log('    - getCurrentUsername():', this.getCurrentUsername());
-        console.log('🔧 Usernames in leaderboard:', leaderboard.map(e => (e?.username || e?.['username'] || '').trim()));
+        console.log('🔧 Current username normalized:', currentUsername.toLowerCase());
+        
+        // Log ALL usernames from leaderboard with their ranks
+        console.log('🔧 ALL players in leaderboard data:');
+        leaderboardArray.forEach((entry, idx) => {
+            const u = (entry?.username || entry?.['username'] || '').trim();
+            const r = entry?.rank || entry?.['rank'] || idx + 1;
+            console.log(`    Rank ${r}: "${u}" (normalized: "${u.toLowerCase()}")`);
+        });
+        
+        // Check if current username is in the leaderboard data
+        const currentUserInLeaderboard = leaderboardArray.find(entry => {
+            const entryUsername = (entry?.username || entry?.['username'] || '').trim();
+            const match = entryUsername.toLowerCase() === currentUsername.toLowerCase();
+            if (match) {
+                console.log(`✅ MATCH FOUND: "${entryUsername}" === "${currentUsername}"`);
+            }
+            return match;
+        });
+        
+        if (currentUserInLeaderboard) {
+            console.log('✅ Current user FOUND in leaderboard data:', currentUserInLeaderboard);
+            console.log(`✅ User rank: ${currentUserInLeaderboard.rank || currentUserInLeaderboard['rank']}, Score: ${currentUserInLeaderboard.total_score || currentUserInLeaderboard['total_score']}`);
+        } else {
+            console.error('❌❌❌ Current user NOT FOUND in leaderboard data!');
+            console.error('    Looking for:', `"${currentUsername}"`);
+            console.error('    Normalized:', `"${currentUsername.toLowerCase()}"`);
+            console.error('    Available usernames (normalized):', leaderboardArray.map(e => {
+                const u = (e?.username || e?.['username'] || '').trim().toLowerCase();
+                return `"${u}"`;
+            }));
+        }
+        console.log('🔧 =============================================');
 
-        // Populate stats
-        if (statsDiv) {
-            const totalPlayers = leaderboard.length;
-            const avgScore = leaderboard.length > 0 
-                ? Math.round(leaderboard.reduce((sum, entry) => {
+        // Populate stats (only skip update during auto-refresh to avoid flicker)
+        if (statsDiv && !skipStatsUpdate) {
+            const totalPlayers = leaderboardArray.length;
+            const avgScore = leaderboardArray.length > 0 
+                ? Math.round(leaderboardArray.reduce((sum, entry) => {
                     const score = entry?.total_score || entry?.['total_score'] || 0;
                     return sum + score;
-                }, 0) / leaderboard.length)
+                }, 0) / leaderboardArray.length)
                 : 0;
-            const topScore = leaderboard.length > 0 
-                ? (leaderboard[0]?.total_score || leaderboard[0]?.['total_score'] || 0)
+            const topScore = leaderboardArray.length > 0 
+                ? (leaderboardArray[0]?.total_score || leaderboardArray[0]?.['total_score'] || 0)
                 : 0;
             
             // Find current user's score
-            const currentUserEntry = leaderboard.find(entry => {
+            const currentUserEntry = leaderboardArray.find(entry => {
                 const entryUsername = (entry?.username || entry?.['username'] || '').trim().toLowerCase();
                 const currentUserNormalized = currentUsername.toLowerCase();
                 return entryUsername === currentUserNormalized;
@@ -976,7 +1071,7 @@ class KahootMode {
         }
 
         // Populate table
-        if (!leaderboard || leaderboard.length === 0) {
+        if (!leaderboardArray || leaderboardArray.length === 0) {
             console.warn('⚠️ Leaderboard is empty, showing empty message');
             tbody.innerHTML = `
                 <tr>
@@ -988,18 +1083,43 @@ class KahootMode {
             return;
         }
         
-        // Convert to array if needed and ensure we have valid data
-        const leaderboardArray = Array.isArray(leaderboard) ? leaderboard : [];
-        
+        // leaderboardArray already defined above
         console.log(`📊 Starting to populate ${leaderboardArray.length} entries`);
         console.log(`📊 Raw leaderboard data:`, JSON.stringify(leaderboardArray, null, 2));
         
-        // Clear tbody completely before adding rows
-        tbody.innerHTML = '';
+        // Save scroll position before any updates (to restore after)
+        const savedScrollTop = tableContainer ? tableContainer.scrollTop : 0;
+        console.log('📊 Saving scroll position:', savedScrollTop);
+        
+        // Instead of clearing all, update rows efficiently
+        // First, let's check if we can update existing rows
+        const existingRows = Array.from(tbody.querySelectorAll('tr')).filter(row => {
+            // Filter out empty rows or rows with only whitespace
+            const nameCell = row.querySelector('.name-col');
+            return nameCell && nameCell.textContent.trim().length > 0;
+        });
+        const shouldClearAndRebuild = existingRows.length !== leaderboardArray.length;
         
         // Track which entries were successfully added
         const addedEntries = [];
         const failedEntries = [];
+        
+        // For smart update, create a map of existing rows by username AND their current position
+        const existingRowsByUsername = new Map();
+        if (!shouldClearAndRebuild && existingRows.length > 0) {
+            existingRows.forEach((row, idx) => {
+                const nameCell = row.querySelector('.name-col');
+                if (nameCell) {
+                    const rowUsername = nameCell.textContent.trim().toLowerCase();
+                    existingRowsByUsername.set(rowUsername, { row: row, originalIndex: idx });
+                }
+            });
+            console.log('📊 Smart update mode: found', existingRowsByUsername.size, 'existing rows to update');
+        } else {
+            // Clear tbody completely before adding rows (full rebuild)
+            tbody.innerHTML = '';
+            console.log('📊 Full rebuild: clearing all rows and rebuilding');
+        }
         
         leaderboardArray.forEach((entry, index) => {
             try {
@@ -1021,7 +1141,10 @@ class KahootMode {
                 if (!username || username.length === 0) {
                     console.error(`⚠️ Entry at index ${index} has no username:`, entry);
                     failedEntries.push({ index, entry, reason: 'no_username' });
-                    return;
+                    // DO NOT RETURN - create a placeholder row instead of skipping
+                    // This prevents empty lines
+                    username = `Unknown_${index}`;
+                    console.warn(`    Using placeholder username: ${username}`);
                 }
                 
                 // Ensure rank is valid
@@ -1044,9 +1167,28 @@ class KahootMode {
                 
                 // Only highlight current user (case-insensitive comparison)
                 const currentUsernameTrimmed = (currentUsername || '').trim();
-                if (username.toLowerCase() === currentUsernameTrimmed.toLowerCase()) {
-                    console.log(`    ✅ Match found! Highlighting user row for "${username}"`);
+                const usernameNormalized = username.toLowerCase();
+                const currentUsernameNormalized = currentUsernameTrimmed.toLowerCase();
+                
+                // Debug comparison - only log for first few entries and current user potential matches
+                if (index < 3 || usernameNormalized.includes(currentUsernameNormalized.substring(0, 3)) || currentUsernameNormalized.includes(usernameNormalized.substring(0, 3))) {
+                    console.log(`    Comparing: "${usernameNormalized}" === "${currentUsernameNormalized}"? ${usernameNormalized === currentUsernameNormalized}`);
+                }
+                
+                if (usernameNormalized === currentUsernameNormalized && currentUsernameNormalized.length > 0) {
+                    console.log(`    🎯🎯🎯 MATCH FOUND! Highlighting user row for "${username}" (rank ${rank})`);
                     row.classList.add('user-row');
+                    // Force visibility with inline styles
+                    row.style.setProperty('border', '3px solid var(--fdj-success)', 'important');
+                    row.style.setProperty('background-color', 'rgba(16, 185, 129, 0.35)', 'important');
+                    row.style.setProperty('font-weight', '900', 'important');
+                    row.style.setProperty('z-index', '100', 'important');
+                    row.setAttribute('data-is-current-user', 'true');
+                } else {
+                    row.setAttribute('data-is-current-user', 'false');
+                    if (currentUsernameNormalized.length === 0 && index === 0) {
+                        console.warn(`    ⚠️ No current username available for comparison`);
+                    }
                 }
 
                 // Create stars display
@@ -1073,17 +1215,144 @@ class KahootMode {
                         throw new Error('Row HTML structure invalid');
                     }
                     
-                    // Append to DOM
-                    tbody.appendChild(row);
+                    // Ensure row is visible before appending
+                    row.style.display = 'table-row';
+                    row.style.visibility = 'visible';
+                    row.style.opacity = '1';
                     
-                    // Verify row was actually added
-                    const lastChild = tbody.lastElementChild;
-                    if (lastChild !== row) {
-                        throw new Error('Row not added to DOM');
+                    // Append to DOM or update existing row
+                    if (shouldClearAndRebuild || existingRowsByUsername.size === 0) {
+                        // Full rebuild: append new row
+                        tbody.appendChild(row);
+                        
+                        // Verify row was actually added and is visible
+                        const lastChild = tbody.lastElementChild;
+                        if (lastChild !== row) {
+                            throw new Error('Row not added to DOM');
+                        }
+                        
+                        // Force visibility check
+                        if (row.offsetHeight === 0 || row.offsetWidth === 0) {
+                            console.error(`    ❌ Row for "${username}" has no dimensions! Force fixing...`);
+                            row.style.display = 'table-row';
+                            row.style.height = 'auto';
+                            row.style.minHeight = '60px';
+                            // Re-verify after fix
+                            setTimeout(() => {
+                                if (row.offsetHeight === 0) {
+                                    console.error(`    ❌ Row still has no height after fix for "${username}"`);
+                                }
+                            }, 100);
+                        }
+                    } else {
+                        // Smart update: find existing row by username
+                        const usernameKey = username.toLowerCase();
+                        const existingRowData = existingRowsByUsername.get(usernameKey);
+                        if (existingRowData) {
+                            const existingRow = existingRowData.row;
+                            // Check if the rank changed (player moved in ranking)
+                            const existingRankCell = existingRow.querySelector('.rank-col');
+                            const existingRank = existingRankCell ? parseInt(existingRankCell.textContent.trim()) : null;
+                            
+                            if (existingRank !== rank) {
+                                // Rank changed - need to re-sort, so rebuild this row
+                                console.log(`    ⚠️ Rank changed for "${username}" from ${existingRank} to ${rank}, rebuilding row`);
+                                existingRow.className = row.className;
+                                existingRow.innerHTML = row.innerHTML;
+                                // Force visibility
+                                existingRow.style.display = 'table-row';
+                                existingRow.style.visibility = 'visible';
+                                existingRow.style.opacity = '1';
+                                if (row.style.border) {
+                                    existingRow.style.setProperty('border', row.style.border, 'important');
+                                }
+                                if (row.style.backgroundColor) {
+                                    existingRow.style.setProperty('background-color', row.style.backgroundColor, 'important');
+                                }
+                                console.log(`    ✅ Rebuilt row for "${username}" with new rank ${rank}`);
+                            } else {
+                                // Rank unchanged - update existing row in place
+                                existingRow.className = row.className;
+                                
+                                // Update cells individually to avoid flash and preserve scroll
+                                const rankCell = existingRow.querySelector('.rank-col');
+                                const nameCell = existingRow.querySelector('.name-col');
+                                const scoreCell = existingRow.querySelector('.score-col');
+                                const starsCell = existingRow.querySelector('.stars-col');
+                                
+                                // Ensure all cells exist and have content
+                                if (!rankCell || !nameCell || !scoreCell || !starsCell) {
+                                    console.error(`    ⚠️ Missing cells in existing row, rebuilding for "${username}"`);
+                                    existingRow.innerHTML = row.innerHTML;
+                                } else {
+                                    rankCell.textContent = rankDisplay;
+                                    nameCell.textContent = escapedUsername;
+                                    scoreCell.textContent = `${totalScore}/15`;
+                                    starsCell.innerHTML = starsHTML;
+                                }
+                                
+                                // Preserve inline styles for current user highlighting
+                                if (row.style.border) {
+                                    existingRow.style.setProperty('border', row.style.border, 'important');
+                                } else {
+                                    existingRow.style.border = '';
+                                }
+                                if (row.style.backgroundColor) {
+                                    existingRow.style.setProperty('background-color', row.style.backgroundColor, 'important');
+                                } else {
+                                    existingRow.style.backgroundColor = '';
+                                }
+                                
+                                // Update classes for top 3 styling
+                                existingRow.classList.remove('rank-1', 'rank-2', 'rank-3');
+                                if (rank === 1) existingRow.classList.add('rank-1');
+                                else if (rank === 2) existingRow.classList.add('rank-2');
+                                else if (rank === 3) existingRow.classList.add('rank-3');
+                                
+                                // Update user-row class if needed
+                                if (usernameNormalized === currentUsernameNormalized && currentUsernameNormalized.length > 0) {
+                                    existingRow.classList.add('user-row');
+                                    existingRow.style.setProperty('border', '3px solid var(--fdj-success)', 'important');
+                                    existingRow.style.setProperty('background-color', 'rgba(16, 185, 129, 0.35)', 'important');
+                                } else {
+                                    existingRow.classList.remove('user-row');
+                                }
+                                
+                                // Ensure row is visible
+                                existingRow.style.display = 'table-row';
+                                existingRow.style.visibility = 'visible';
+                                existingRow.style.opacity = '1';
+                                
+                                console.log(`    🔄 Updated existing row for "${username}" in place (rank unchanged)`);
+                            }
+                        } else {
+                            // New player not in existing rows, append it
+                            // Ensure visibility before appending
+                            row.style.display = 'table-row';
+                            row.style.visibility = 'visible';
+                            row.style.opacity = '1';
+                            tbody.appendChild(row);
+                            
+                            // Verify visibility after append
+                            if (row.offsetHeight === 0) {
+                                console.warn(`    ⚠️ New row for "${username}" has height 0, forcing display`);
+                                row.style.height = 'auto';
+                                row.style.minHeight = '60px';
+                            }
+                            console.log(`    ➕ Added new row for "${username}"`);
+                        }
                     }
                     
-                    addedEntries.push({ rank, username, totalScore, stars });
-                    console.log(`    ✅ Successfully added: Rank ${rank} - "${username}" (${addedEntries.length} total rows in DOM)`);
+                    addedEntries.push({ rank, username, totalScore, stars, isCurrentUser: usernameNormalized === currentUsernameNormalized });
+                    
+                    // Log special message for current user
+                    if (usernameNormalized === currentUsernameNormalized && currentUsernameNormalized.length > 0) {
+                        console.log(`    🎯🎯🎯 SUCCESS! Current user row added: Rank ${rank} - "${username}"`);
+                    } else {
+                        if (addedEntries.length <= 5) {
+                            console.log(`    ✅ Successfully added: Rank ${rank} - "${username}" (${addedEntries.length} total rows in DOM)`);
+                        }
+                    }
                 } catch (htmlErr) {
                     console.error(`    ❌ HTML error for "${username}":`, htmlErr);
                     failedEntries.push({ index, entry, reason: 'html_error', error: htmlErr.message });
@@ -1098,8 +1367,41 @@ class KahootMode {
         
         // Log summary
         console.log(`📊 Population complete: ${addedEntries.length} succeeded, ${failedEntries.length} failed`);
+        
+        // Check if current user was added
+        const currentUserAdded = addedEntries.find(e => e.isCurrentUser === true);
+        if (currentUserAdded) {
+            console.log(`🎯🎯🎯 CURRENT USER WAS SUCCESSFULLY ADDED: Rank ${currentUserAdded.rank} - "${currentUserAdded.username}"`);
+        } else {
+            console.error(`❌❌❌ CURRENT USER WAS NOT ADDED TO TABLE!`);
+            console.error(`    Looking for: "${currentUsername}"`);
+            console.error(`    Added usernames:`, addedEntries.map(e => `"${e.username}"`).slice(0, 10));
+        }
+        
         if (failedEntries.length > 0) {
             console.error(`❌ Failed entries:`, failedEntries);
+        }
+        
+        // Final verification: check if current user row exists in DOM
+        const currentUserRowInDOM = Array.from(tbody.children).find(row => {
+            const nameCell = row.querySelector('.name-col');
+            if (!nameCell) return false;
+            const rowUsername = nameCell.textContent.trim().toLowerCase();
+            return rowUsername === currentUsername.toLowerCase();
+        });
+        
+        if (currentUserRowInDOM) {
+            console.log(`✅✅✅ CURRENT USER ROW VERIFIED IN DOM!`);
+            console.log(`    Rank:`, currentUserRowInDOM.querySelector('.rank-col')?.textContent);
+            console.log(`    Username:`, currentUserRowInDOM.querySelector('.name-col')?.textContent);
+            currentUserRowInDOM.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            console.error(`❌❌❌ CURRENT USER ROW NOT FOUND IN DOM!`);
+            console.error(`    Current username: "${currentUsername}"`);
+            console.error(`    Rows in DOM:`, Array.from(tbody.children).map((row, idx) => {
+                const nameCell = row.querySelector('.name-col');
+                return `${idx + 1}. "${nameCell ? nameCell.textContent.trim() : 'NO NAME CELL'}"`;
+            }));
         }
 
         // Final verification
@@ -1252,47 +1554,44 @@ class KahootMode {
             }
         }
 
-        // Scroll to top to ensure first player is visible
+        // Restore scroll position after update (only if we're doing incremental update, not initial load)
         if (tableContainer) {
-            // Force scroll to top multiple times to ensure it works
-            // Sometimes browser needs multiple attempts
-            setTimeout(() => {
-                tableContainer.scrollTop = 0;
-                
-                // Also scroll the container's parent if it's scrollable
-                const scrollableParent = tableContainer.closest('.leaderboard-content') || tableContainer.closest('[style*="overflow"]');
-                if (scrollableParent) {
-                    scrollableParent.scrollTop = 0;
-                }
-                
-                // Scroll the first row into view with 'start' to ensure it's fully visible above sticky header
-                const firstRow = tbody.querySelector('tr:first-child');
-                if (firstRow) {
-                    // Use 'start' instead of 'nearest' to ensure row is at the top
-                    firstRow.scrollIntoView({ behavior: 'auto', block: 'start' });
+            if (!shouldClearAndRebuild && existingRowsByUsername.size > 0 && savedScrollTop > 0) {
+                // Incremental update: restore scroll position to where user was
+                setTimeout(() => {
+                    tableContainer.scrollTop = savedScrollTop;
+                    console.log('📊 Restored scroll position to:', savedScrollTop);
+                }, 50);
+            } else {
+                // Initial load or full rebuild: scroll to top
+                setTimeout(() => {
+                    tableContainer.scrollTop = 0;
                     
-                    // Double-check: force scroll to 0 again after scrollIntoView
-                    setTimeout(() => {
-                        tableContainer.scrollTop = 0;
-                        if (scrollableParent) {
-                            scrollableParent.scrollTop = 0;
-                        }
-                        console.log('📊 Final scroll position:', tableContainer.scrollTop);
-                    }, 50);
-                }
-                
-                console.log('📊 Scrolled to show first row, scrollTop:', tableContainer.scrollTop);
-            }, 100);
-            
-            // Also try again after animation completes
-            setTimeout(() => {
-                tableContainer.scrollTop = 0;
-                const firstRow = tbody.querySelector('tr:first-child');
-                if (firstRow) {
-                    firstRow.scrollIntoView({ behavior: 'auto', block: 'start' });
-                }
-                console.log('📊 Second scroll attempt, scrollTop:', tableContainer.scrollTop);
-            }, 600); // After animations (0.5s + buffer)
+                    // Also scroll the container's parent if it's scrollable
+                    const scrollableParent = tableContainer.closest('.leaderboard-content') || tableContainer.closest('[style*="overflow"]');
+                    if (scrollableParent) {
+                        scrollableParent.scrollTop = 0;
+                    }
+                    
+                    // Scroll the first row into view with 'start' to ensure it's fully visible above sticky header
+                    const firstRow = tbody.querySelector('tr:first-child');
+                    if (firstRow) {
+                        // Use 'start' instead of 'nearest' to ensure row is at the top
+                        firstRow.scrollIntoView({ behavior: 'auto', block: 'start' });
+                        
+                        // Double-check: force scroll to 0 again after scrollIntoView
+                        setTimeout(() => {
+                            tableContainer.scrollTop = 0;
+                            if (scrollableParent) {
+                                scrollableParent.scrollTop = 0;
+                            }
+                            console.log('📊 Final scroll position (initial load):', tableContainer.scrollTop);
+                        }, 50);
+                    }
+                    
+                    console.log('📊 Scrolled to show first row (initial load), scrollTop:', tableContainer.scrollTop);
+                }, 100);
+            }
         }
         
         // Log final state for debugging

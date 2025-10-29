@@ -522,14 +522,14 @@ class UserManager:
                 leaderboard = []
                 rank = 1
                 prev_score = None
-                prev_rank = 1
                 
                 for row in cursor.fetchall():
                     total_score = row[1]
                     
-                    # Gérer les ex-aequo : même rang si même score
-                    if prev_score is not None and total_score < prev_score:
-                        rank = prev_rank + 1
+                    # Pas de même rank en cas d'égalité : celui qui a fini en premier (par ORDER BY completed_at ASC)
+                    # est mieux classé. Donc on incrémente toujours le rank.
+                    # Le ORDER BY total_score DESC, completed_at ASC dans la requête SQL garantit déjà
+                    # que les joueurs sont triés correctement (meilleur score d'abord, puis premier fini en premier)
                     
                     # Pour les scores avec enablers, on doit récupérer le stars du meilleur score
                     # On fait une sous-requête pour récupérer le stars du meilleur score de cet utilisateur
@@ -555,7 +555,6 @@ class UserManager:
                     })
                     
                     prev_score = total_score
-                    prev_rank = rank
                     rank += 1
                     
                 return leaderboard
@@ -685,7 +684,6 @@ class UserManager:
                 leaderboard = []
                 rank = 1
                 prev_score = None
-                prev_rank = 1
                 
                 for row in cursor.fetchall():
                     username = row[0]
@@ -695,11 +693,10 @@ class UserManager:
                     completed_at = row[4]
                     mot_scores = json.loads(mot_scores_json) if mot_scores_json else {}
                     
-                    # Gérer les égalités de score
-                    if prev_score is not None and total_score == prev_score:
-                        rank = prev_rank
-                    else:
-                        prev_rank = rank
+                    # Pas de même rank en cas d'égalité : celui qui a fini en premier (par ORDER BY first_completed ASC)
+                    # est mieux classé. Donc on incrémente toujours le rank.
+                    # Le ORDER BY max_score DESC, first_completed ASC dans la requête SQL garantit déjà
+                    # que les joueurs sont triés correctement (meilleur score d'abord, puis premier fini en premier)
                     
                     leaderboard.append({
                         'rank': rank,
@@ -711,7 +708,6 @@ class UserManager:
                     })
                     
                     prev_score = total_score
-                    prev_rank = rank
                     rank += 1
                 
                 return leaderboard
