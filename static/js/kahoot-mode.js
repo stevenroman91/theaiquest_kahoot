@@ -982,6 +982,9 @@ function hookScoreModal() {
                                                 window.gameController.loadMOT2Choices();
                                             } else if (window.gameController.startPhase2Game) {
                                                 window.gameController.startPhase2Game();
+                                            } else {
+                                                // Fallback: load Step 2 directly
+                                                loadAndRenderStep2();
                                             }
                                             break;
                                         case 3:
