@@ -1778,14 +1778,13 @@ class GameController {
                 </div>
                     ${categoryChoices.map(choice => `
                     <div class="matrix-choice" data-choice-id="${choice.id}" data-category="${category}" onclick="gameController.selectMOT3Choice('${choice.id}', '${category}')">
-                        <div class="choice-header">
-                            <div style="background-color: ${category === 'people' ? '#f97316' : category === 'technology' ? '#8b5cf6' : '#3b82f6'}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <div class="choice-header d-flex align-items-center">
+                            <div style="background-color: ${category === 'people' ? '#f97316' : category === 'technology' ? '#8b5cf6' : '#3b82f6'}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 10px;">
                                 <i class="${choiceIcons[choice.id] || 'fas fa-cog'}" style="color: white; font-size: 1rem;"></i>
-                                    </div>
-                        <div class="choice-title">${choice.title}</div>
+                            </div>
+                            <div class="choice-title fw-bold" style="flex: 1;">${choice.title}</div>
                         </div>
-                        <div class="choice-description">${choice.description}</div>
-                        </div>
+                    </div>
                     `).join('')}
             `;
             container.appendChild(categoryDiv);
