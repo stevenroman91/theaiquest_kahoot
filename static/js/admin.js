@@ -106,16 +106,21 @@ class AdminPanel {
                 
                 // Fonction pour générer le QR code une fois la bibliothèque disponible
                 const generateQRCode = (retryCount = 0) => {
-                    const maxRetries = 50; // 5 secondes max (50 * 100ms)
+                    const maxRetries = 100; // 10 secondes max (100 * 100ms)
                     
-                    if (typeof QRCode === 'undefined') {
+                    // Vérifier si la bibliothèque est chargée (vérifier à la fois le flag et l'objet global)
+                    const isLibraryLoaded = (typeof QRCode !== 'undefined') || (window.qrcodeLibraryLoaded === true);
+                    
+                    if (!isLibraryLoaded) {
                         if (retryCount < maxRetries) {
-                            console.log(`QRCode library not yet loaded, retrying... (${retryCount + 1}/${maxRetries})`);
+                            if (retryCount % 10 === 0) { // Log tous les 10 essais pour éviter trop de logs
+                                console.log(`QRCode library not yet loaded, retrying... (${retryCount + 1}/${maxRetries})`);
+                            }
                             setTimeout(() => generateQRCode(retryCount + 1), 100);
                             return;
                         } else {
                             console.error('QRCode library failed to load after retries');
-                            qrcodeContainer.innerHTML = '<p class="text-danger">Bibliothèque QR Code non chargée. Veuillez rafraîchir la page.</p>';
+                            qrcodeContainer.innerHTML = '<p class="text-danger">Bibliothèque QR Code non chargée. Veuillez vérifier votre connexion et rafraîchir la page.<br><small>Vous pouvez toujours utiliser l\'URL pour partager la session.</small></p>';
                             return;
                         }
                     }
