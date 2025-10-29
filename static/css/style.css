@@ -217,6 +217,33 @@ body.modal-open {
     grid-column: 2;
 }
 
+/* Horizontal layout for mobile Step 2 */
+.available-solutions-horizontal {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 5px 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+.available-solutions-horizontal .solution-card {
+    flex: 0 0 auto;
+    min-width: 200px;
+    max-width: 250px;
+    margin-bottom: 0;
+    white-space: normal;
+}
+
+@media (max-width: 768px) {
+    .available-solutions-horizontal .solution-card {
+        min-width: 180px;
+        max-width: 200px;
+    }
+}
+
 /* Impact/Feasibility Matrix Styles */
 .matrix-section {
     margin-bottom: 1rem;
