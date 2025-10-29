@@ -416,65 +416,75 @@ function hookScoreModal() {
                                 scoreModal.hide();
                             }
                             
-                            // Determine which step was just completed from gameController
-                            let currentStep = window.gameController?.currentPhaseNumber || 1;
+                            // Determine which step was just completed
+                            // Use currentPhaseNumber from gameController (set when score modal is shown)
+                            let completedStep = window.gameController?.currentPhaseNumber;
                             
-                            // Alternative: check current_path if currentPhaseNumber not set
-                            if (!currentStep && currentPath) {
+                            // If not available, infer from current_path
+                            if (!completedStep && currentPath) {
                                 if (currentPath.mot5_choice) {
-                                    currentStep = 5;
+                                    completedStep = 5;
                                 } else if (currentPath.mot4_choices && currentPath.mot4_choices.length > 0) {
-                                    currentStep = 4;
+                                    completedStep = 4;
                                 } else if (currentPath.mot3_choices && Object.keys(currentPath.mot3_choices).length > 0) {
-                                    currentStep = 3;
+                                    completedStep = 3;
                                 } else if (currentPath.mot2_choices && currentPath.mot2_choices.length > 0) {
-                                    currentStep = 2;
+                                    completedStep = 2;
                                 } else if (currentPath.mot1_choice) {
-                                    currentStep = 1;
+                                    completedStep = 1;
                                 }
                             }
                             
-                            console.log(`🎮 Kahoot mode: Proceeding from Step ${currentStep} to Step ${currentStep + 1}`);
+                            // If still not found, default to 1
+                            if (!completedStep) {
+                                completedStep = 1;
+                            }
+                            
+                            // Next step is completedStep + 1
+                            const nextStep = completedStep + 1;
+                            
+                            console.log(`🎮 Kahoot mode: Completed Step ${completedStep}, proceeding to Step ${nextStep}`);
                             
                             // Go directly to next step (skip videos and dashboard)
                             if (window.gameController) {
                                 // Small delay to ensure modal is closed
                                 setTimeout(() => {
-                                    switch(currentStep) {
-                                        case 1:
-                                            // Step 1 → Step 2 (skip video)
-                                            if (window.gameController.startPhase2Game) {
-                                                window.gameController.startPhase2Game();
-                                            } else if (window.gameController.loadMOT2Choices) {
-                                                window.gameController.loadMOT2Choices();
-                                            }
-                                            break;
+                                    // Call loadMOTXChoices directly to skip videos
+                                    switch(nextStep) {
                                         case 2:
-                                            // Step 2 → Step 3 (skip video)
-                                            if (window.gameController.startPhase3Game) {
-                                                window.gameController.startPhase3Game();
-                                            } else if (window.gameController.loadMOT3Choices) {
-                                                window.gameController.loadMOT3Choices();
+                                            // Go to Step 2
+                                            if (window.gameController.loadMOT2Choices) {
+                                                window.gameController.loadMOT2Choices();
+                                            } else if (window.gameController.startPhase2Game) {
+                                                window.gameController.startPhase2Game();
                                             }
                                             break;
                                         case 3:
-                                            // Step 3 → Step 4 (skip video)
-                                            if (window.gameController.startPhase4Game) {
-                                                window.gameController.startPhase4Game();
-                                            } else if (window.gameController.loadMOT4Choices) {
-                                                window.gameController.loadMOT4Choices();
+                                            // Go to Step 3
+                                            if (window.gameController.loadMOT3Choices) {
+                                                window.gameController.loadMOT3Choices();
+                                            } else if (window.gameController.startPhase3Game) {
+                                                window.gameController.startPhase3Game();
                                             }
                                             break;
                                         case 4:
-                                            // Step 4 → Step 5 (skip video)
-                                            if (window.gameController.startPhase5Game) {
-                                                window.gameController.startPhase5Game();
-                                            } else if (window.gameController.loadMOT5Choices) {
+                                            // Go to Step 4
+                                            if (window.gameController.loadMOT4Choices) {
+                                                window.gameController.loadMOT4Choices();
+                                            } else if (window.gameController.startPhase4Game) {
+                                                window.gameController.startPhase4Game();
+                                            }
+                                            break;
+                                        case 5:
+                                            // Go to Step 5
+                                            if (window.gameController.loadMOT5Choices) {
                                                 window.gameController.loadMOT5Choices();
+                                            } else if (window.gameController.startPhase5Game) {
+                                                window.gameController.startPhase5Game();
                                             }
                                             break;
                                         default:
-                                            console.error('Unknown step number:', currentStep);
+                                            console.error('Unknown next step number:', nextStep);
                                     }
                                 }, 200);
                             }
