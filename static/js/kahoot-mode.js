@@ -2759,18 +2759,22 @@ function initializeKahootMode() {
             // Normaliser le code : majuscules, max 6 caractères, uniquement alphanumériques
             const normalizedCode = codeToUse.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 6);
             if (normalizedCode.length === 6) {
-                sessionCodeInput.value = normalizedCode;
-                console.log('✅ Session code pré-rempli depuis URL (initializeKahootMode):', normalizedCode);
+                // S'assurer que le mode joueur est activé
+                if (window.kahootMode) {
+                    window.kahootMode.switchToPlayerMode();
+                }
                 
-                // Forcer la mise à jour visuelle
-                sessionCodeInput.dispatchEvent(new Event('input', { bubbles: true }));
-                
-                // Basculer automatiquement en mode joueur si code présent
+                // Attendre que le champ soit visible puis remplir
                 setTimeout(() => {
-                    if (window.kahootMode) {
-                        window.kahootMode.switchToPlayerMode();
+                    const inputField = document.getElementById('session-code');
+                    if (inputField) {
+                        inputField.value = normalizedCode;
+                        inputField.placeholder = ''; // Enlever placeholder pour voir la valeur
+                        inputField.dispatchEvent(new Event('input', { bubbles: true }));
+                        inputField.dispatchEvent(new Event('change', { bubbles: true }));
+                        console.log('✅ Session code pré-rempli depuis URL (initializeKahootMode):', normalizedCode);
                     }
-                }, 50);
+                }, 150);
             }
         }
         
