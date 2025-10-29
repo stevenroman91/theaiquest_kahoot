@@ -910,11 +910,20 @@ function showScoreScreenManually(phaseNumber, apiData) {
     let motScore = 0;
     
     // Get score for the specific phase
-    if (scoreData.scores) {
+    // Handle Step 5 which might have score in apiData.results.scores or apiData.mot5_score
+    if (phaseNumber === 5 && apiData.mot5_score !== undefined) {
+        motScore = apiData.mot5_score;
+    } else if (phaseNumber === 5 && apiData.results && apiData.results.scores) {
+        // Step 5 has score in results.scores.mot5
+        const scores = apiData.results.scores;
+        motScore = scores.mot5 || (typeof scores === 'object' && scores.get ? scores.get('mot5') : null) || 0;
+    } else if (scoreData.scores) {
         motScore = scoreData.scores[`mot${phaseNumber}`] || scoreData.scores.mot1 || 0;
     } else {
         motScore = scoreData[`mot${phaseNumber}`] || scoreData.mot1 || 0;
     }
+    
+    console.log(`📊 Score extracted for Step ${phaseNumber}:`, motScore, 'from data:', { scoreData, apiData });
     
     // Hide the current phase section
     const phaseSection = document.getElementById(`phase${phaseNumber}-section`);
@@ -926,17 +935,33 @@ function showScoreScreenManually(phaseNumber, apiData) {
     const scoreModal = document.getElementById('scoreModal');
     if (scoreModal) {
         // Populate score data
-        const scoreTitle = scoreModal.querySelector('#score-phase-title');
-        const scoreValue = scoreModal.querySelector('#score-value');
+        // Update the step title (current-mot-title is the element used in the modal)
+        const stepTitleElement = document.getElementById('current-mot-title');
+        const scorePhaseTitle = scoreModal.querySelector('#score-phase-title'); // Fallback if this element exists
         const scoreDescription = scoreModal.querySelector('#score-description');
         const starsContainer = scoreModal.querySelector('#score-stars-container');
         
-        if (scoreTitle) {
-            scoreTitle.textContent = `Step ${phaseNumber}`;
+        // Define step titles (same as GameController)
+        const stepTitles = {
+            1: 'STEP 1: Get started with the right AI strategy',
+            2: 'STEP 2: Building your AI use cases portfolio',
+            3: 'STEP 3: Launching your priority AI pilots',
+            4: 'STEP 4: Scaling your AI and GenAI solutions',
+            5: 'STEP 5: Deploying AI across the organization'
+        };
+        
+        const stepTitleText = stepTitles[phaseNumber] || `Step ${phaseNumber}`;
+        
+        // Update current-mot-title (primary element)
+        if (stepTitleElement) {
+            stepTitleElement.textContent = stepTitleText;
         }
-        if (scoreValue) {
-            scoreValue.textContent = `${motScore}/3`;
+        
+        // Also update score-phase-title if it exists (fallback)
+        if (scorePhaseTitle) {
+            scorePhaseTitle.textContent = stepTitleText;
         }
+        // Note: score-value might not exist in this modal structure, but we update stars instead
         
         // Generate visual stars
         if (starsContainer) {
@@ -1693,11 +1718,11 @@ function renderMOT4ChoicesFull(choices) {
                 return;
             }
             
-            if (totalCost > 15) {
+            if (totalCost > 30) {
                 if (window.gameController && window.gameController.showAlert) {
-                    window.gameController.showAlert(`Budget exceeded: ${totalCost}/15 points. Please adjust your selections.`, 'warning');
+                    window.gameController.showAlert(`Budget exceeded: ${totalCost}/30 points. Please adjust your selections.`, 'warning');
                 } else {
-                    alert(`Budget dépassé: ${totalCost}/15 points. Veuillez ajuster vos sélections.`);
+                    alert(`Budget dépassé: ${totalCost}/30 points. Veuillez ajuster vos sélections.`);
                 }
                 return;
             }
@@ -1746,14 +1771,19 @@ function updatePhase4BudgetManual() {
     });
     
     const budgetText = document.getElementById('phase4-budget-text');
+    const budgetDisplay = document.getElementById('phase4-budget-display'); // Also check this element
     const confirmBtn = document.getElementById('phase4-confirm-btn');
     
     if (budgetText) {
-        budgetText.textContent = `${totalCost}/15 points`;
+        budgetText.textContent = `${totalCost}/30 points`;
+    }
+    
+    if (budgetDisplay) {
+        budgetDisplay.textContent = `${totalCost}/30 points`;
     }
     
     if (confirmBtn) {
-        if (totalCost <= 15 && selectedChoices.length > 0) {
+        if (totalCost > 0 && totalCost <= 30 && selectedChoices.length > 0) {
             confirmBtn.disabled = false;
             confirmBtn.classList.remove('btn-secondary');
             confirmBtn.classList.add('btn-primary');
@@ -1953,12 +1983,31 @@ function renderMOT5ChoicesFull(choices) {
                     if (data.success) {
                         // Show score screen
                         if (window.gameController && window.gameController.showScoreScreen) {
-                            // Phase 5 uses results.scores.mot5
-                            const score = data.results?.scores?.mot5 || data.score?.scores?.mot5 || 0;
-                            const scoreData = data.score_data || data.score || {};
+                            // Phase 5 uses results.scores.mot5 from the API response
+                            let score = 0;
+                            if (data.results && data.results.scores) {
+                                score = data.results.scores.mot5 || data.results.scores.get('mot5') || 0;
+                            } else if (data.score && data.score.scores) {
+                                score = data.score.scores.mot5 || data.score.scores.get('mot5') || 0;
+                            }
+                            
+                            // Use score_data if available, otherwise construct from results
+                            const scoreData = data.score_data || {
+                                scores: data.results?.scores || {},
+                                total: data.results?.total || 0,
+                                stars: data.results?.stars || 0
+                            };
+                            
+                            console.log('📊 Step 5 score data:', { score, scoreData, results: data.results });
                             window.gameController.showScoreScreen(5, score, scoreData);
                         } else {
-                            showScoreScreenManually(5, data);
+                            // For fallback, ensure we extract the score correctly
+                            let score = 0;
+                            if (data.results && data.results.scores) {
+                                score = data.results.scores.mot5 || (typeof data.results.scores === 'object' && data.results.scores.get ? data.results.scores.get('mot5') : 0) || 0;
+                            }
+                            console.log('📊 Step 5 score (fallback):', { score, data });
+                            showScoreScreenManually(5, { ...data, mot5_score: score });
                         }
                     }
                 } catch (err) {
