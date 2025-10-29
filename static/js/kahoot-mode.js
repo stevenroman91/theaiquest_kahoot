@@ -286,41 +286,117 @@ class KahootMode {
                 // Supprimé loadPhase1ChoicesDirectly - on utilise uniquement GameController.loadMOT1Choices()
                 // qui gère à la fois le chargement de l'API et le rendu complet avec les photos
                 
-                // Helper function pour rendre les choix manuellement si GameController n'est pas disponible
-                const renderChoicesManually = (choices) => {
+                // Helper function pour rendre les choix avec le RENDU COMPLET (comme GameController.renderMOT1Choices)
+                // Copie de la logique de game.js pour garantir le même rendu visuel
+                const renderMOT1ChoicesFull = (choices) => {
                     const container = document.getElementById('phase1-choices');
                     if (!container) {
                         console.error('❌ phase1-choices container not found');
                         return;
                     }
                     
-                    if (choices.length === 0) {
-                        container.innerHTML = '<p class="text-danger">Aucun choix disponible. Veuillez rafraîchir la page.</p>';
-                        return;
-                    }
-                    
                     container.innerHTML = '';
-                    choices.forEach(choice => {
-                        const choiceCard = document.createElement('div');
-                        choiceCard.className = 'choice-card';
-                        choiceCard.dataset.choiceId = choice.id;
-                        choiceCard.innerHTML = `
-                            <h4>${choice.title || choice.id}</h4>
-                            <p>${choice.description || ''}</p>
-                        `;
-                        choiceCard.addEventListener('click', () => {
-                            // Sélectionner ce choix
-                            document.querySelectorAll('.choice-card').forEach(card => {
-                                card.classList.remove('selected');
-                            });
-                            choiceCard.classList.add('selected');
-                            
-                            // Confirmer la sélection
-                            confirmPhase1Choice(choice.id);
-                        });
-                        container.appendChild(choiceCard);
+
+                    // Define choice details based on the template (copié de game.js)
+                    const choiceDetails = {
+                        'elena': {
+                            enablers: [
+                                { id: 'ai_value_opportunities_gaming', icon: 'fas fa-chart-line', label: 'AI Value Opportunities in gaming', category: 'gover' },
+                                { id: 'ai_tech_benchmark', icon: 'fas fa-search', label: 'AI Tech benchmark', category: 'technology' }
+                            ]
+                        },
+                        'james': {
+                            enablers: [
+                                { id: 'sourcing_ai_tech', icon: 'fas fa-shopping-cart', label: 'Sourcing of an AI-tech Platform', category: 'technology' },
+                                { id: 'bulk_data_migration', icon: 'fas fa-exchange-alt', label: 'Bulk Data Migration', category: 'technology' }
+                            ]
+                        },
+                        'amira': {
+                            use_cases: [
+                                { id: 'automated_banners_generation', icon: 'fas fa-image', label: 'Automated Banners\nGeneration' },
+                                { id: 'customer_email_classifier', icon: 'fas fa-envelope', label: 'Customer Email\nClassifier' },
+                                { id: 'virtual_learning_coach_prototype', icon: 'fas fa-graduation-cap', label: 'Virtual Learning\nCoach Prototype' },
+                                { id: 'supplier_risk_scoring', icon: 'fas fa-shield-alt', label: 'Supplier Risk\nScoring' },
+                                { id: 'simulated_game_design', icon: 'fas fa-gamepad', label: 'Simulated Game\nDesign' },
+                                { id: 'predictive_maintenance_sandbox', icon: 'fas fa-tools', label: 'Predictive Maintenance\nSandbox' }
+                            ]
+                        }
+                    };
+                    
+                    // Reorder choices: Amira, Elena, James
+                    const reorderedChoices = [];
+                    const order = ['amira', 'elena', 'james'];
+                    
+                    order.forEach(id => {
+                        const choice = choices.find(c => c.id === id);
+                        if (choice) {
+                            reorderedChoices.push(choice);
+                        }
                     });
-                    console.log(`✅ Rendered ${choices.length} choices manually`);
+                    
+                    reorderedChoices.forEach((choice, index) => {
+                        const columnDiv = document.createElement('div');
+                        columnDiv.className = 'col-md-4 col-sm-12';
+                        
+                        const details = choiceDetails[choice.id] || { enablers: [], use_cases: [], description: choice.description };
+                        
+                        // Générer le contenu selon le type de choix
+                        let contentHtml = '';
+                        if (details.enablers && details.enablers.length > 0) {
+                            contentHtml = `
+                                <div class="choice-enablers">
+                                    ${details.enablers.map(enabler => `
+                                        <div class="choice-enabler" data-enabler-id="${enabler.id}">
+                                            <div class="enabler-icon ${enabler.category}">
+                                                <i class="${enabler.icon}"></i>
+                                    </div>
+                                            <div class="enabler-label">${enabler.label}</div>
+                                                </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else if (details.use_cases && details.use_cases.length > 0) {
+                            contentHtml = `
+                                <div class="choice-use-cases">
+                                    <h5><i class="fas fa-lightbulb me-2"></i>Launch 6 use case pilots immediately</h5>
+                                    ${details.use_cases.map(useCase => {
+                                        return `
+                                        <div class="choice-use-case" data-use-case-id="${useCase.id}">
+                                            <div class="use-case-icon">
+                                                <i class="${useCase.icon}"></i>
+                                            </div>
+                                            <div class="use-case-label">${useCase.label}</div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                    </div>
+                            `;
+                        }
+                        
+                        // Define custom titles for each choice with photos (COPIÉ DE GAME.JS)
+                        const customTitles = {
+                            'elena': '<img src="/static/images/Elena_photo.png" alt="Elena" class="character-photo me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">Map where AI creates the most value and align with company culture',
+                            'james': '<img src="/static/images/James_photo.png" alt="James" class="character-photo me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">Build strong foundations:<br>secure data, tools,<br>and architecture first',
+                            'amira': '<img src="/static/images/Amira_photo.png" alt="Amira" class="character-photo me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">Act fast - democratize AI,<br>let teams experiment immediately'
+                        };
+                        
+                        const displayTitle = customTitles[choice.id] || choice.title;
+                        
+                        columnDiv.innerHTML = `
+                            <div class="choice-column" data-choice-id="${choice.id}" onclick="window.gameController ? window.gameController.selectChoice('${choice.id}') : confirmPhase1Choice('${choice.id}')">
+                                <div class="choice-header">
+                                    <h4 class="choice-title" style="display: flex; align-items: center;">${displayTitle}</h4>
+                                </div>
+                                <div class="choice-content">
+                                    ${contentHtml}
+                                </div>
+                            </div>
+                        `;
+                        
+                        container.appendChild(columnDiv);
+                    });
+                    
+                    console.log(`✅ Rendered ${choices.length} choices with FULL VISUAL (photos, enablers, use cases)`);
                 };
                 
                 // Helper function pour confirmer le choix Phase 1
@@ -366,14 +442,14 @@ class KahootMode {
                         if (window.gameController && window.gameController.loadMOT1Choices) {
                             window.gameController.loadMOT1Choices();
                         } else {
-                            // En dernier recours, charger les choix et utiliser le rendu simple
+                            // En dernier recours, charger les choix et utiliser le rendu complet
                             fetch('/api/phase1/choices', {
                                 credentials: 'include'
                             })
                             .then(res => res.json())
                             .then(data => {
                                 if (data.success && data.choices) {
-                                    renderChoicesManually(data.choices);
+                                    renderMOT1ChoicesFull(data.choices);
                                 }
                             })
                             .catch(err => console.error('Error loading choices:', err));
@@ -420,10 +496,25 @@ class KahootMode {
                             // Continuer à vérifier
                             setTimeout(checkGameController, 200);
                         } else {
-                            console.error('❌ GameController not found after', maxAttempts, 'attempts');
-                            console.error('Available on window:', Object.keys(window).filter(k => k.includes('game') || k.includes('Game')));
-                            // En dernier recours, utiliser le fallback
-                            showPhase1Directly();
+                            console.warn('⚠️ GameController not found after', attempts, 'attempts, using full visual render directly');
+                            // Charger les choix et utiliser le rendu complet (avec photos)
+                            fetch('/api/phase1/choices', {
+                                credentials: 'include'
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success && data.choices) {
+                                    const phase1Section = document.getElementById('phase1-section');
+                                    if (phase1Section) {
+                                        phase1Section.style.display = 'block';
+                                    }
+                                    // Utiliser le rendu complet avec photos
+                                    renderMOT1ChoicesFull(data.choices);
+                                } else {
+                                    console.error('Failed to load choices');
+                                }
+                            })
+                            .catch(err => console.error('Error loading choices:', err));
                         }
                     };
                     
