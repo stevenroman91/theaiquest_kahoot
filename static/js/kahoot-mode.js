@@ -900,6 +900,127 @@ window.fetch = function(...args) {
     return originalFetch.apply(this, args);
 };
 
+// Helper functions to load steps directly (fallback if GameController not available)
+function loadStep2Directly() {
+    console.log('📥 Loading Step 2 directly via API...');
+    const phase2Section = document.getElementById('phase2-section');
+    if (phase2Section) {
+        phase2Section.style.display = 'block';
+    }
+    
+    // Hide other sections
+    document.querySelectorAll('.phase-section').forEach(section => {
+        if (section.id !== 'phase2-section') {
+            section.style.display = 'none';
+        }
+    });
+    
+    fetch('/api/phase2/choices', { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.choices && window.gameController && window.gameController.renderMOT2Choices) {
+                window.gameController.renderMOT2Choices(data.choices);
+            } else if (data.success && data.choices) {
+                // Basic fallback rendering if GameController not available
+                const container = document.getElementById('phase2-choices');
+                if (container) {
+                    container.innerHTML = '<p>Choix Step 2 chargés (rendu basique)</p>';
+                }
+            }
+        })
+        .catch(err => console.error('Error loading Step 2:', err));
+}
+
+function loadStep3Directly() {
+    console.log('📥 Loading Step 3 directly via API...');
+    const phase3Section = document.getElementById('phase3-section');
+    if (phase3Section) {
+        phase3Section.style.display = 'block';
+    }
+    
+    // Hide other sections
+    document.querySelectorAll('.phase-section').forEach(section => {
+        if (section.id !== 'phase3-section') {
+            section.style.display = 'none';
+        }
+    });
+    
+    fetch('/api/phase3/choices', { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.choices && window.gameController && window.gameController.renderMOT3Choices) {
+                window.gameController.renderMOT3Choices(data.choices);
+            } else if (data.success && data.choices) {
+                // Basic fallback rendering
+                const container = document.getElementById('phase3-choices');
+                if (container) {
+                    container.innerHTML = '<p>Choix Step 3 chargés (rendu basique)</p>';
+                }
+            }
+        })
+        .catch(err => console.error('Error loading Step 3:', err));
+}
+
+function loadStep4Directly() {
+    console.log('📥 Loading Step 4 directly via API...');
+    const phase4Section = document.getElementById('phase4-section');
+    if (phase4Section) {
+        phase4Section.style.display = 'block';
+    }
+    
+    // Hide other sections
+    document.querySelectorAll('.phase-section').forEach(section => {
+        if (section.id !== 'phase4-section') {
+            section.style.display = 'none';
+        }
+    });
+    
+    fetch('/api/phase4/choices', { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.choices && window.gameController && window.gameController.renderMOT4Choices) {
+                window.gameController.renderMOT4Choices(data.choices);
+            } else if (data.success && data.choices) {
+                // Basic fallback rendering
+                const container = document.getElementById('phase4-choices');
+                if (container) {
+                    container.innerHTML = '<p>Choix Step 4 chargés (rendu basique)</p>';
+                }
+            }
+        })
+        .catch(err => console.error('Error loading Step 4:', err));
+}
+
+function loadStep5Directly() {
+    console.log('📥 Loading Step 5 directly via API...');
+    const phase5Section = document.getElementById('phase5-section');
+    if (phase5Section) {
+        phase5Section.style.display = 'block';
+    }
+    
+    // Hide other sections
+    document.querySelectorAll('.phase-section').forEach(section => {
+        if (section.id !== 'phase5-section') {
+            section.style.display = 'none';
+        }
+    });
+    
+    fetch('/api/phase5/choices', { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.choices && window.gameController && window.gameController.renderMOT5Choices) {
+                window.gameController.renderMOT5Choices(data.choices);
+            } else if (data.success && data.choices) {
+                // Basic fallback rendering
+                const container = document.getElementById('phase5-choices');
+                if (container) {
+                    container.innerHTML = '<p>Choix Step 5 chargés (rendu basique)</p>';
+                }
+            }
+        })
+        .catch(err => console.error('Error loading Step 5:', err));
+}
+
 // Hook into score display to show leaderboard after Step 5
 function hookScoreModal() {
     // Check if score modal exists and hook the button
@@ -970,45 +1091,65 @@ function hookScoreModal() {
                             
                             console.log(`🎮 Kahoot mode: Completed Step ${completedStep}, proceeding to Step ${nextStep}`);
                             
-                            // Go directly to next step using GameController methods
-                            // GameController should be available as it's initialized before kahoot-mode.js
-                            console.log('🎮 Proceeding to Step', nextStep, '- GameController available:', !!window.gameController);
-                            
-                            if (window.gameController) {
-                                // Small delay to ensure modal is closed
-                                setTimeout(() => {
-                                    // Use existing GameController methods directly
+                            // Small delay to ensure modal is closed, then proceed
+                            setTimeout(() => {
+                                // Try to use GameController first (preferred)
+                                if (window.gameController) {
+                                    console.log('✅ Using GameController methods for Step', nextStep);
                                     switch(nextStep) {
                                         case 2:
                                             if (window.gameController.loadMOT2Choices) {
                                                 window.gameController.loadMOT2Choices();
+                                            } else {
+                                                // Fallback: load directly
+                                                loadStep2Directly();
                                             }
                                             break;
                                         case 3:
                                             if (window.gameController.loadMOT3Choices) {
                                                 window.gameController.loadMOT3Choices();
+                                            } else {
+                                                loadStep3Directly();
                                             }
                                             break;
                                         case 4:
                                             if (window.gameController.loadMOT4Choices) {
                                                 window.gameController.loadMOT4Choices();
+                                            } else {
+                                                loadStep4Directly();
                                             }
                                             break;
                                         case 5:
                                             if (window.gameController.loadMOT5Choices) {
                                                 window.gameController.loadMOT5Choices();
+                                            } else {
+                                                loadStep5Directly();
                                             }
                                             break;
                                         default:
                                             console.error('Unknown next step number:', nextStep);
                                     }
-                                }, 200);
-                            } else {
-                                // GameController should be available - log error for debugging
-                                console.error('❌ GameController not available. This should not happen. game.js should load before kahoot-mode.js');
-                                console.error('Available window objects:', Object.keys(window).filter(k => k.includes('game') || k.includes('Game')));
-                                alert('Erreur: GameController non disponible. Veuillez rafraîchir la page.');
-                            }
+                                } else {
+                                    // GameController not available - use direct API calls (fallback)
+                                    console.warn('⚠️ GameController not available, using direct API calls for Step', nextStep);
+                                    switch(nextStep) {
+                                        case 2:
+                                            loadStep2Directly();
+                                            break;
+                                        case 3:
+                                            loadStep3Directly();
+                                            break;
+                                        case 4:
+                                            loadStep4Directly();
+                                            break;
+                                        case 5:
+                                            loadStep5Directly();
+                                            break;
+                                        default:
+                                            console.error('Unknown next step number:', nextStep);
+                                    }
+                                }
+                            }, 200);
                         }
                     }
                 } catch (error) {
