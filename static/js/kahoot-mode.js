@@ -971,20 +971,17 @@ function hookScoreModal() {
                             console.log(`🎮 Kahoot mode: Completed Step ${completedStep}, proceeding to Step ${nextStep}`);
                             
                             // Go directly to next step (skip videos and dashboard)
-                            if (window.gameController) {
-                                // Small delay to ensure modal is closed
-                                setTimeout(() => {
-                                    // Call loadMOTXChoices directly to skip videos
+                            // Wait for GameController to be available if needed
+                            const proceedToNextStep = () => {
+                                if (window.gameController) {
+                                    // Call the appropriate method directly
                                     switch(nextStep) {
                                         case 2:
-                                            // Go to Step 2
+                                            // Go to Step 2 - use existing GameController methods
                                             if (window.gameController.loadMOT2Choices) {
                                                 window.gameController.loadMOT2Choices();
                                             } else if (window.gameController.startPhase2Game) {
                                                 window.gameController.startPhase2Game();
-                                            } else {
-                                                // Fallback: load Step 2 directly
-                                                loadAndRenderStep2();
                                             }
                                             break;
                                         case 3:
@@ -1014,29 +1011,15 @@ function hookScoreModal() {
                                         default:
                                             console.error('Unknown next step number:', nextStep);
                                     }
-                                }, 200);
-                            } else {
-                                // GameController not available - use fallback
-                                console.warn('⚠️ GameController not available, using fallback for Step', nextStep);
-                                setTimeout(() => {
-                                    switch(nextStep) {
-                                        case 2:
-                                            loadAndRenderStep2();
-                                            break;
-                                        case 3:
-                                            console.warn('Step 3 fallback not yet implemented');
-                                            break;
-                                        case 4:
-                                            console.warn('Step 4 fallback not yet implemented');
-                                            break;
-                                        case 5:
-                                            console.warn('Step 5 fallback not yet implemented');
-                                            break;
-                                        default:
-                                            console.error('Unknown next step number:', nextStep);
-                                    }
-                                }, 200);
-                            }
+                                } else {
+                                    // GameController not available yet - wait and retry
+                                    console.warn('⚠️ GameController not yet available, retrying...');
+                                    setTimeout(proceedToNextStep, 100);
+                                }
+                            };
+                            
+                            // Small delay to ensure modal is closed, then proceed
+                            setTimeout(proceedToNextStep, 200);
                         }
                     }
                 } catch (error) {
@@ -1059,53 +1042,6 @@ function hookScoreModal() {
             setTimeout(setupScoreButton, 100);
         });
     }
-}
-
-// Helper function to load and render Step 2 directly (similar to loadAndRenderStep1)
-function loadAndRenderStep2() {
-    console.log('🎮 Loading Step 2 choices...');
-    
-    // Hide all phase sections
-    document.querySelectorAll('.phase-section').forEach(section => {
-        section.style.display = 'none';
-    });
-    
-    // Show phase2 section
-    const phase2Section = document.getElementById('phase2-section');
-    if (phase2Section) {
-        phase2Section.style.display = 'block';
-    } else {
-        console.error('❌ Phase 2 section not found');
-        return;
-    }
-    
-    // Load choices from API
-    fetch('/api/phase2/choices', {
-        credentials: 'include'
-    })
-    .then(res => {
-        if (!res.ok) {
-            throw new Error(`HTTP ${res.status}`);
-        }
-        return res.json();
-    })
-    .then(data => {
-        if (data.success && data.choices) {
-            console.log('✅ Step 2 choices loaded:', data.choices);
-            // If GameController is available, use its render method
-            if (window.gameController && window.gameController.renderMOT2Choices) {
-                window.gameController.renderMOT2Choices(data.choices);
-            } else {
-                console.warn('⚠️ GameController not available for Step 2 rendering');
-                // Fallback: could render manually if needed
-            }
-        } else {
-            console.error('❌ Failed to load Step 2 choices:', data.message);
-        }
-    })
-    .catch(err => {
-        console.error('❌ Error loading Step 2 choices:', err);
-    });
 }
 
 // Remove all video sections immediately in Kahoot mode
