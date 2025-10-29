@@ -1,52 +1,25 @@
-# AI Transformation - PlayNext Leader Edition
+# The AI Quest - Kahoot Edition 🎮
+
+Version Kahoot du serious game AI Acceleration - Interface simplifiée pour parties multi-joueurs sur mobile.
+
+![GitHub](https://img.shields.io/badge/version-2.0--kahoot-blue)
+![Python](https://img.shields.io/badge/python-3.12+-blue)
+![Flask](https://img.shields.io/badge/flask-2.3.3-green)
 
 ## 🎯 Vue d'ensemble
 
-**AI Transformation** est un serious game interactif conçu pour les dirigeants et managers qui souhaitent comprendre et maîtriser la transformation numérique de leur organisation. Le jeu simule des décisions stratégiques autour de l'intégration de l'IA dans différents domaines métier.
+Version simplifiée du jeu AI Acceleration optimisée pour :
+- **50 joueurs simultanés** sur mobile
+- **Authentification rapide** : juste un username (mode Kahoot)
+- **Flow simplifié** : Step → Score → Continue → Step suivant
+- **Leaderboard automatique** après Step 5
 
-### 🏢 Contexte
-- **Entreprise** : PlayNext - Leader Edition v1.9
-- **Public cible** : Dirigeants et managers RH
-- **Objectif** : Formation à la transformation IA par la simulation de décisions stratégiques
+## 🚀 Installation rapide
 
-## 🏗️ Architecture Technique
-
-### Structure du Projet
-```
-v1.9-phase1-context-enhanced/
-├── web_interface.py          # Interface Flask principale
-├── ai_acceleration_game.py   # Logique métier du jeu
-├── template_engine_complete.py # Gestion centralisée du contenu
-├── user_manager.py           # Système d'authentification
-├── game_template_complete.json # Configuration du jeu
-├── templates/
-│   └── index.html           # Interface utilisateur
-├── static/
-│   ├── css/style.css        # Styles
-│   ├── js/game.js          # Logique frontend
-│   └── videos/             # Ressources vidéo
-├── users.db                # Base de données SQLite
-└── requirements.txt        # Dépendances Python
-```
-
-### Technologies Utilisées
-- **Backend** : Python 3.12, Flask
-- **Frontend** : HTML5, CSS3, JavaScript ES6+
-- **Base de données** : SQLite3
-- **Authentification** : Sessions Flask + hachage SHA-256
-- **Templates** : Jinja2
-
-## 🚀 Installation et Démarrage
-
-### Prérequis
-- Python 3.12+
-- pip (gestionnaire de paquets Python)
-
-### Installation
 ```bash
-# Cloner le projet
-git clone <repository-url>
-cd v1.9-phase1-context-enhanced
+# Cloner le repository
+git clone https://github.com/stevenroman91/theaiquest_kahoot.git
+cd theaiquest_kahoot
 
 # Installer les dépendances
 pip install -r requirements.txt
@@ -55,238 +28,161 @@ pip install -r requirements.txt
 python3 web_interface.py
 ```
 
-### Accès
-- **URL** : http://localhost:5001
-- **Utilisateurs par défaut** :
-  - Créés automatiquement au premier démarrage
-  - Utilisez le script `create_default_users.py` pour créer des utilisateurs
+L'application sera accessible sur `http://localhost:5001`
 
-## 🔐 Sécurité
+## 📱 Utilisation
 
-### Création d'Utilisateurs
-```bash
-# Créer les utilisateurs par défaut
-python3 create_default_users.py
+### Connexion Kahoot
+
+1. Entrer un **username** (minimum 2 caractères)
+2. Cliquer sur "Start Game"
+3. Le jeu démarre directement à Step 1
+
+**Option** : Cliquer sur "Need password?" pour un login sécurisé avec username + password.
+
+### Flow du jeu
+
+```
+Login → Step 1 → Score → Continue → Step 2 → Score → Continue → 
+Step 3 → Score → Continue → Step 4 → Score → Continue → 
+Step 5 → Score → Leaderboard
 ```
 
-⚠️ **IMPORTANT** : Ne jamais commiter de mots de passe en dur dans le code ou la documentation !
+Chaque step affiche un écran de score avec le nombre d'étoiles obtenues (1-3).
+
+## 🏆 Leaderboard
+
+Le leaderboard s'affiche automatiquement après Step 5 avec :
+- **Top 50 joueurs**
+- **Statistiques** : Total Players, Average Score, Top Score
+- **Votre rang** mis en évidence
+- **Boutons** : Close / Play Again
+
+## 📊 Architecture
+
+### Backend
+- **Flask** (Python 3.12)
+- **SQLite** pour utilisateurs et scores
+- **Authentification** Kahoot (username uniquement) ou normale (username + password)
+
+### Frontend
+- **HTML5/CSS3/JavaScript**
+- **Bootstrap 5** pour le responsive
+- **Mobile-first** design
+
+### Base de données
+- `users` : Utilisateurs (mode Kahoot ou normal)
+- `game_scores` : Scores des parties (leaderboard)
 
 ## 🔧 Configuration
 
-### Variables d'Environnement
-```bash
-# Optionnel - Clé secrète pour les sessions Flask
-export SECRET_KEY="votre_cle_secrete"
+### Variables d'environnement
 
-# Optionnel - Port de l'application (défaut: 5001)
+```bash
 export PORT=5001
-
-# Optionnel - Mode de production
-export FLASK_ENV=production
+export FLASK_ENV=production  # ou development
+export SECRET_KEY="votre_cle_secrete"
 ```
 
-### Configuration du Jeu
-Le contenu du jeu est centralisé dans `game_template_complete.json`. Ce fichier contient :
-- Informations générales (titre, entreprise)
-- Configuration des phases du jeu
-- Choix disponibles pour chaque phase
-- Enablers et leurs conditions de déblocage
-- Messages personnalisés
+## 📁 Structure du projet
 
-## 🎮 Fonctionnalités du Jeu
-
-### Phases du Jeu
-1. **STEP 1** : Designing Your AI-Enhanced Business Strategy
-2. **STEP 2** : Building Your AI Use Case Portfolio  
-3. **STEP 3** : Launching Your Priority AI Pilots
-4. **STEP 4** : Scaling Your AI and GenAI Solutions
-5. **STEP 5** : Deploying AI Across the Organization
-
-### Système de Scoring
-- Chaque choix génère un score de 1 à 3 étoiles
-- Les scores influencent les enablers débloqués
-- Messages personnalisés selon les performances
-
-### Enablers
-- Système de déblocage progressif
-- Affichage conditionnel selon les choix
-- Impact sur le tableau de bord pédagogique
-
-## 🛠️ Maintenance et Développement
-
-### Structure du Code
-
-#### `web_interface.py`
-- **Responsabilité** : Interface Flask, routes API, gestion des sessions
-- **Patterns** : Singleton pour l'instance de jeu, gestion d'erreurs centralisée
-- **Optimisations** : Configuration via variables d'environnement, logging structuré
-
-#### `ai_acceleration_game.py`
-- **Responsabilité** : Logique métier, calcul des scores, gestion des états
-- **Patterns** : Dataclasses pour les modèles, Enum pour les états
-- **Optimisations** : Typage strict, gestion d'erreurs robuste
-
-#### `template_engine_complete.py`
-- **Responsabilité** : Chargement et accès au contenu du jeu
-- **Patterns** : Singleton pour l'instance template, fallback sur configuration par défaut
-- **Optimisations** : Cache du template, gestion d'erreurs avec logging
-
-#### `user_manager.py`
-- **Responsabilité** : Authentification, gestion des utilisateurs
-- **Patterns** : Hachage sécurisé des mots de passe, gestion des sessions
-- **Optimisations** : Requêtes SQL optimisées, gestion des connexions
-
-### Ajout de Nouveau Contenu
-
-#### Modifier le Template
-1. Éditer `game_template_complete.json`
-2. Redémarrer l'application pour recharger le template
-3. Vérifier la cohérence des IDs et références
-
-#### Ajouter une Nouvelle Phase
-1. Ajouter la configuration dans `game_template_complete.json`
-2. Implémenter la logique dans `ai_acceleration_game.py`
-3. Ajouter les routes dans `web_interface.py`
-4. Mettre à jour l'interface dans `templates/index.html`
-
-### Debugging
-
-#### Logs
-```bash
-# Activer les logs détaillés
-export FLASK_ENV=development
-python3 web_interface.py
+```
+theaiquest_kahoot/
+├── web_interface.py          # API Flask principale
+├── ai_acceleration_game.py   # Logique métier du jeu
+├── user_manager.py           # Authentification + Leaderboard
+├── game_content_manager.py   # Gestion du contenu
+├── game_content.json         # Configuration du jeu
+├── templates/
+│   └── index.html           # Interface utilisateur
+├── static/
+│   ├── css/style.css        # Styles (mobile-first)
+│   ├── js/
+│   │   ├── game.js          # Logique du jeu
+│   │   └── kahoot-mode.js   # Mode Kahoot spécifique
+│   ├── videos/              # Vidéos du jeu
+│   └── images/              # Images
+├── requirements.txt         # Dépendances Python
+└── README_KAHOOT.md        # Documentation détaillée
 ```
 
-#### Base de Données
-```bash
-# Accéder à la base SQLite
-sqlite3 users.db
-.tables
-SELECT * FROM users;
-```
+## 🎮 Fonctionnalités Kahoot
 
-### Tests
-```bash
-# Tester l'API
-curl -X POST http://localhost:5001/api/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"FDJ2024!Admin"}'
+### Authentification simplifiée
+- ✅ Juste un username (création automatique)
+- ✅ Option password pour login sécurisé
+- ✅ Gestion automatique des sessions
 
-# Tester la configuration du jeu
-curl http://localhost:5001/api/game_config
-```
+### Flow simplifié
+- ✅ Pas de pages welcome/introduction
+- ✅ Accès direct aux steps
+- ✅ Score après chaque step
+- ✅ Navigation continue entre steps
+
+### Leaderboard
+- ✅ Sauvegarde automatique après Step 5
+- ✅ Top 50 joueurs
+- ✅ Statistiques en temps réel
+- ✅ Mise en évidence de votre rang
+
+### Mobile-first
+- ✅ Boutons optimisés (48px+)
+- ✅ Textes lisibles
+- ✅ Interface responsive
+- ✅ Support multi-touch
+
+## 📖 Documentation
+
+Consultez [README_KAHOOT.md](README_KAHOOT.md) pour la documentation complète :
+- Architecture détaillée
+- API endpoints
+- Structure de la base de données
+- Dépannage
 
 ## 🔒 Sécurité
 
-### Authentification
-- Mots de passe hachés avec SHA-256 + salt
 - Sessions Flask sécurisées
-- Protection CSRF intégrée
-
-### Données Sensibles
-- Clé secrète configurable via variable d'environnement
-- Pas de données sensibles en dur dans le code
-- Logs sans exposition d'informations sensibles
-
-## 📊 Monitoring et Performance
-
-### Métriques
-- Logs structurés avec timestamps
-- Gestion des erreurs avec stack traces
-- Monitoring des performances des requêtes
-
-### Optimisations
-- Singleton pattern pour les instances lourdes
-- Cache du template en mémoire
-- Requêtes SQL optimisées
-- Limitation de taille des uploads
-
-## 🔐 Configuration des utilisateurs
-
-### Déploiement initial
-
-Pour créer les utilisateurs par défaut lors du premier déploiement :
-
-```bash
-# Définir les mots de passe (remplacer par vos mots de passe sécurisés)
-export ADMIN_PASSWORD='votre_mot_de_passe_admin_securise'
-export TRAINER_PASSWORD='votre_mot_de_passe_trainer_securise'
-
-# Créer les utilisateurs
-python3 deploy_users.py
-```
-
-### Utilisateurs par défaut
-- **Admin** : `admin` / [mot de passe défini via ADMIN_PASSWORD]
-- **Trainer** : `trainer` / [mot de passe défini via TRAINER_PASSWORD]
-
-⚠️ **Important** : Ne jamais commiter les mots de passe dans le code source !
+- Hashage des mots de passe (mode normal)
+- Protection CSRF
+- Validation des inputs
 
 ## 🚀 Déploiement
 
-### Production
-```bash
-# Configuration production
-export FLASK_ENV=production
-export SECRET_KEY="cle_secrete_production"
-export PORT=80
+### Production avec Gunicorn
 
-# Démarrage avec Gunicorn (recommandé)
+```bash
 pip install gunicorn
-gunicorn -w 4 -b 0.0.0.0:80 web_interface:app
+gunicorn -w 4 -b 0.0.0.0:5001 web_interface:app
 ```
 
-### Docker (optionnel)
-```bash
-# Build de l'image
-docker build -t ai-transformation .
+### Railway / Heroku
 
-# Exécution
-docker run -p 5001:5001 ai-transformation
-```
+Configurez les variables d'environnement et déployez directement.
 
 ## 📝 Changelog
 
-### Version 1.9 (Actuelle)
-- ✅ Architecture optimisée et code nettoyé
-- ✅ Gestion d'erreurs robuste
-- ✅ Logging structuré
-- ✅ Documentation complète
-- ✅ Suppression des fichiers redondants
-- ✅ Configuration via variables d'environnement
-
-### Versions Précédentes
-- v1.8 : Ajout du système d'enablers
-- v1.7 : Personnalisation des messages de score
-- v1.6 : Intégration des vidéos
-- v1.5 : Système d'authentification
+### Version 2.0-kahoot
+- ✅ Authentification Kahoot (username uniquement)
+- ✅ Flow simplifié (Step → Score → Continue)
+- ✅ Leaderboard automatique
+- ✅ Interface mobile-first
+- ✅ Sessions multiples
 
 ## 🤝 Contribution
 
-### Standards de Code
-- PEP 8 pour le style Python
-- Docstrings pour toutes les fonctions publiques
-- Typage strict avec `typing`
-- Gestion d'erreurs explicite
-- Logging structuré
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
 
-### Processus
-1. Créer une branche feature
-2. Implémenter avec tests
-3. Documenter les changements
-4. Code review
-5. Merge vers main
+## 📄 Licence
+
+Ce projet est privé et propriétaire.
 
 ## 📞 Support
 
 Pour toute question ou problème :
-1. Vérifier les logs de l'application
-2. Consulter cette documentation
-3. Tester avec les utilisateurs par défaut
-4. Vérifier la configuration du template
+1. Vérifier les logs (`server.log`)
+2. Consulter [README_KAHOOT.md](README_KAHOOT.md)
+3. Ouvrir une issue sur GitHub
 
 ---
 
-**AI Transformation - PlayNext Leader Edition v1.9**  
-*Architecture optimisée pour la performance et la maintenabilité*
+**The AI Quest - Kahoot Edition** - Fait pour des parties multi-joueurs engageantes ! 🎯
