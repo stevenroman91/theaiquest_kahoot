@@ -606,7 +606,7 @@ body.modal-open {
     background: white;
     border: 2px solid #e5e7eb;
     border-radius: 8px;
-    padding: 8px 12px;
+    padding: 6px 10px;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
@@ -616,6 +616,7 @@ body.modal-open {
     flex-direction: row;
     align-items: center;
     overflow: visible;
+    margin-bottom: 4px;
 }
 
 .matrix-choice:hover {
@@ -655,6 +656,12 @@ body.modal-open {
     margin: 0;
     padding: 0;
     width: 100%;
+}
+
+.matrix-choice .choice-header {
+    margin: 0;
+    padding: 0;
+    gap: 10px;
 }
 
 .choice-icon {
@@ -936,11 +943,10 @@ body.modal-open {
 
 /* Step 4 - Grid layout 3x3 avec style uniforme comme Step 3 */
 .matrix-choices-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 2rem;
-    align-items: stretch; /* Toutes les cartes ont la même hauteur */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 1rem;
 }
 
 /* Step 4 - Alignement du budget avec la première ligne de choix */
@@ -1016,11 +1022,13 @@ body.modal-open {
 }
 
 .matrix-choices-grid .matrix-choice {
-    min-height: 200px; /* Hauteur minimale */
+    min-height: auto;
+    height: auto;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow: visible; /* Permet au contenu de s'afficher */
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 10px;
+    margin-bottom: 4px;
 }
 
 .matrix-choices-grid .choice-title {
