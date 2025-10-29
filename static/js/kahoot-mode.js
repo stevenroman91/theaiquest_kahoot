@@ -918,17 +918,122 @@ function loadStep2Directly() {
     fetch('/api/phase2/choices', { credentials: 'include' })
         .then(res => res.json())
         .then(data => {
-            if (data.success && data.choices && window.gameController && window.gameController.renderMOT2Choices) {
-                window.gameController.renderMOT2Choices(data.choices);
-            } else if (data.success && data.choices) {
-                // Basic fallback rendering if GameController not available
-                const container = document.getElementById('phase2-choices');
-                if (container) {
-                    container.innerHTML = '<p>Choix Step 2 chargés (rendu basique)</p>';
+            if (data.success && data.choices) {
+                // Try to use GameController first
+                if (window.gameController && window.gameController.renderMOT2Choices) {
+                    window.gameController.renderMOT2Choices(data.choices);
+                    // Also initialize priority slots if available
+                    if (window.gameController.initializePrioritySlots) {
+                        window.gameController.initializePrioritySlots();
+                    }
+                } else {
+                    // Fallback: use GameController.createSolutionCard if available, otherwise renderMOT2ChoicesFull
+                    renderMOT2ChoicesFull(data.choices);
                 }
             }
         })
         .catch(err => console.error('Error loading Step 2:', err));
+}
+
+// Full rendering function for Step 2 choices (fallback if GameController not fully available)
+function renderMOT2ChoicesFull(choices) {
+    const container = document.getElementById('phase2-choices');
+    if (!container) {
+        console.error('❌ phase2-choices container not found');
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    // Mapping des choix vers leurs positions dans la matrice
+    const choiceToMatrixPosition = {
+        'fraud_integrity_detection': 1,
+        'ai_storyline_generator': 2,
+        'smart_game_design_assistant': 3,
+        'player_journey_optimizer': 4,
+        'talent_analytics_dashboard': 5
+    };
+    
+    // Create all solution cards
+    choices.forEach(choice => {
+        const matrixPosition = choiceToMatrixPosition[choice.id] || '?';
+        const isAvailable = matrixPosition <= 5;
+        const backgroundColor = isAvailable 
+            ? 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)'
+            : 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)';
+        
+        const card = document.createElement('div');
+        card.className = 'solution-card';
+        card.draggable = isAvailable;
+        card.dataset.choiceId = choice.id;
+        card.innerHTML = `
+            <div class="solution-options">
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
+            <div class="solution-header">
+                <div class="solution-title">${choice.title}</div>
+                <div class="matrix-number-square" style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 8px;
+                    background: ${backgroundColor};
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    font-size: 1.2rem;
+                    box-shadow: ${isAvailable ? '0 2px 8px rgba(6, 182, 212, 0.3)' : '0 2px 8px rgba(107, 114, 128, 0.3)'};
+                    flex-shrink: 0;
+                    border: 2px solid white;
+                ">${matrixPosition}</div>
+            </div>
+            <div class="solution-description">${choice.description}</div>
+        `;
+        
+        // Add drag event listeners if GameController is available
+        if (window.gameController) {
+            card.addEventListener('dragstart', (e) => {
+                if (window.gameController.handleDragStart) {
+                    window.gameController.handleDragStart(e);
+                }
+            });
+            card.addEventListener('dragend', (e) => {
+                if (window.gameController.handleDragEnd) {
+                    window.gameController.handleDragEnd(e);
+                }
+            });
+        }
+        
+        container.appendChild(card);
+    });
+    
+    // Initialize priority slots if GameController is available
+    if (window.gameController && window.gameController.initializePrioritySlots) {
+        window.gameController.initializePrioritySlots();
+    } else {
+        // Manual initialization of priority slots
+        const slots = document.querySelectorAll('.priority-slot');
+        slots.forEach(slot => {
+            slot.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+            slot.addEventListener('drop', (e) => {
+                e.preventDefault();
+                // Basic drop handling - would need full implementation
+                console.log('Drop on priority slot:', slot.dataset.slot);
+            });
+            slot.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+                slot.classList.add('drag-over');
+            });
+            slot.addEventListener('dragleave', (e) => {
+                slot.classList.remove('drag-over');
+            });
+        });
+    }
+    
+    console.log(`✅ Rendered ${choices.length} Step 2 choices with full visual`);
 }
 
 function loadStep3Directly() {
