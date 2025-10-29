@@ -795,6 +795,22 @@ class KahootMode {
                 
                 // Wait a bit for modal to be fully displayed
                 await new Promise(resolve => setTimeout(resolve, 100));
+            } else {
+                // This is a refresh - verify modal is actually open before proceeding
+                const currentModal = bootstrap.Modal.getInstance(modalElement);
+                const isModalOpen = currentModal && modalElement.classList.contains('show');
+                
+                if (!isModalOpen) {
+                    console.log('🛑 Leaderboard modal is not open, skipping refresh');
+                    // Stop any refresh interval if modal is closed
+                    if (this.leaderboardRefreshInterval) {
+                        clearInterval(this.leaderboardRefreshInterval);
+                        this.leaderboardRefreshInterval = null;
+                        this.lastKnownPlayerCount = null;
+                        this.lastKnownCompletionTime = null;
+                    }
+                    return;
+                }
             }
             
             // Now fetch and populate data (with cache-busting to ensure fresh data)
@@ -884,57 +900,76 @@ class KahootMode {
             // Check for new players every 10 seconds (less frequent than before)
             // Only refresh if the player count or last completion time changed
             this.leaderboardRefreshInterval = setInterval(async () => {
+                // Robust check: modal must be visible (show class) AND not hidden (display not none) AND modal instance exists
                 const currentModal = bootstrap.Modal.getInstance(modalElement);
-                if (currentModal && modalElement.classList.contains('show')) {
-                    try {
-                        // Quick check: fetch leaderboard to see if player count or last completion time changed
-                        const cacheBuster = `?_t=${Date.now()}&limit=1000&check=true`;
-                        const response = await fetch(`/api/leaderboard${cacheBuster}`, {
-                            cache: 'no-store',
-                            headers: {
-                                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                                'Pragma': 'no-cache',
-                                'Expires': '0'
-                            }
-                        });
-                        const data = await response.json();
+                const isModalVisible = currentModal && 
+                                       modalElement.classList.contains('show') && 
+                                       modalElement.style.display !== 'none' &&
+                                       getComputedStyle(modalElement).display !== 'none';
+                
+                if (!isModalVisible) {
+                    // Modal is not visible, stop refreshing
+                    console.log('🛑 Leaderboard modal is not visible, stopping auto-refresh');
+                    clearInterval(this.leaderboardRefreshInterval);
+                    this.leaderboardRefreshInterval = null;
+                    this.lastKnownPlayerCount = null;
+                    this.lastKnownCompletionTime = null;
+                    return;
+                }
+                
+                try {
+                    // Quick check: fetch leaderboard to see if player count or last completion time changed
+                    const cacheBuster = `?_t=${Date.now()}&limit=1000&check=true`;
+                    const response = await fetch(`/api/leaderboard${cacheBuster}`, {
+                        cache: 'no-store',
+                        headers: {
+                            'Cache-Control': 'no-cache, no-store, must-revalidate',
+                            'Pragma': 'no-cache',
+                            'Expires': '0'
+                        }
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        const currentPlayerCount = data.total_entries || 0;
+                        const currentLastCompletion = data.last_completion_time || null;
                         
-                        if (data.success) {
-                            const currentPlayerCount = data.total_entries || 0;
-                            const currentLastCompletion = data.last_completion_time || null;
+                        // Check if something changed
+                        const playerCountChanged = this.lastKnownPlayerCount !== null && 
+                                                 currentPlayerCount !== this.lastKnownPlayerCount;
+                        const completionTimeChanged = this.lastKnownCompletionTime !== null && 
+                                                     currentLastCompletion !== null &&
+                                                     currentLastCompletion !== this.lastKnownCompletionTime;
+                        
+                        if (playerCountChanged || completionTimeChanged) {
+                            console.log('🔄 New player finished! Refreshing leaderboard...');
+                            console.log(`    Player count: ${this.lastKnownPlayerCount} -> ${currentPlayerCount}`);
+                            console.log(`    Last completion: ${this.lastKnownCompletionTime} -> ${currentLastCompletion}`);
                             
-                            // Check if something changed
-                            const playerCountChanged = this.lastKnownPlayerCount !== null && 
-                                                     currentPlayerCount !== this.lastKnownPlayerCount;
-                            const completionTimeChanged = this.lastKnownCompletionTime !== null && 
-                                                         currentLastCompletion !== null &&
-                                                         currentLastCompletion !== this.lastKnownCompletionTime;
-                            
-                            if (playerCountChanged || completionTimeChanged) {
-                                console.log('🔄 New player finished! Refreshing leaderboard...');
-                                console.log(`    Player count: ${this.lastKnownPlayerCount} -> ${currentPlayerCount}`);
-                                console.log(`    Last completion: ${this.lastKnownCompletionTime} -> ${currentLastCompletion}`);
-                                
+                            // Double-check modal is still visible before refreshing
+                            const stillVisible = bootstrap.Modal.getInstance(modalElement) && 
+                                                modalElement.classList.contains('show');
+                            if (stillVisible) {
                                 // Refresh the full leaderboard
                                 this.lastKnownPlayerCount = currentPlayerCount;
                                 this.lastKnownCompletionTime = currentLastCompletion;
                                 this.showLeaderboard(false); // false = don't show modal again, just refresh data
                             } else {
-                                // No change, nothing to do
-                                if (this.lastKnownPlayerCount === null) {
-                                    // First check - initialize
-                                    this.lastKnownPlayerCount = currentPlayerCount;
-                                    this.lastKnownCompletionTime = currentLastCompletion;
-                                }
+                                console.log('🛑 Leaderboard modal closed during refresh check, stopping');
+                                clearInterval(this.leaderboardRefreshInterval);
+                                this.leaderboardRefreshInterval = null;
+                            }
+                        } else {
+                            // No change, nothing to do
+                            if (this.lastKnownPlayerCount === null) {
+                                // First check - initialize
+                                this.lastKnownPlayerCount = currentPlayerCount;
+                                this.lastKnownCompletionTime = currentLastCompletion;
                             }
                         }
-                    } catch (error) {
-                        console.error('Error checking for new players:', error);
                     }
-                } else {
-                    // Modal is closed, stop refreshing
-                    clearInterval(this.leaderboardRefreshInterval);
-                    this.leaderboardRefreshInterval = null;
+                } catch (error) {
+                    console.error('Error checking for new players:', error);
                 }
             }, 10000); // Check every 10 seconds instead of refreshing every 3 seconds
             
