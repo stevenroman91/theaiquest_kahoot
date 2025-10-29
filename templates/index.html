@@ -106,11 +106,11 @@
                     <form id="login-form" novalidate>
                         <div class="mb-4" id="session-code-container">
                             <label for="session-code" class="form-label">
-                                <i class="fas fa-key me-2"></i>Code de Session
+                                <i class="fas fa-key me-2"></i>Code de Session <small class="text-muted">(requis pour les joueurs)</small>
                             </label>
-                            <input type="text" class="form-control form-control-lg text-uppercase" id="session-code" placeholder="Entrez le code (ex: ABC123)" required minlength="6" maxlength="6" autocomplete="off" pattern="[A-Z0-9]{6}">
+                            <input type="text" class="form-control form-control-lg text-uppercase" id="session-code" placeholder="Entrez le code (ex: ABC123)" minlength="6" maxlength="6" autocomplete="off" pattern="[A-Z0-9]{6}">
                             <div class="invalid-feedback" id="session-code-error"></div>
-                            <div class="form-text">Code à 6 caractères (ex: ABC123)</div>
+                            <div class="form-text">Code à 6 caractères (ex: ABC123). <strong>Laissez vide pour admin</strong></div>
                         </div>
                         <div class="mb-4">
                             <label for="username" class="form-label">

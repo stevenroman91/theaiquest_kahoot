@@ -51,13 +51,19 @@ class KahootMode {
         // Get and validate session code
         let sessionCode = sessionCodeInput ? sessionCodeInput.value.trim().toUpperCase() : '';
         
-        // Validation
-        if (!sessionCode || sessionCode.length !== 6) {
-            this.showLoginAlert('Code de session requis (6 caractères)', 'danger');
-            if (sessionCodeInput) {
-                sessionCodeInput.focus();
+        // Vérifier si c'est un admin (admin peut se connecter sans code)
+        const isAdminUser = username.toLowerCase() === 'admin' || username.toLowerCase() === 'trainer';
+        
+        // Validation (code requis sauf pour admin en mode Kahoot)
+        if (!password && !isAdminUser) {
+            // Mode Kahoot sans password et non-admin: code de session requis
+            if (!sessionCode || sessionCode.length !== 6) {
+                this.showLoginAlert('Code de session requis (6 caractères)', 'danger');
+                if (sessionCodeInput) {
+                    sessionCodeInput.focus();
+                }
+                return;
             }
-            return;
         }
         
         if (!username || username.length < 2) {
