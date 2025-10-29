@@ -491,13 +491,16 @@ class KahootMode {
                                 // Utiliser showScoreScreen si disponible (avec les bons paramètres)
                                 const score = data.score || data.score_info || {};
                                 const mot1Score = score.scores ? score.scores.mot1 : (score.mot1 || 0);
+                                // Ajouter le choix au scoreData pour l'affichage
+                                score.choice = choiceId;
                                 window.gameController.showScoreScreen(1, mot1Score, score);
                             } else if (window.gameController && window.gameController.showScore) {
-                                window.gameController.showScore(data.score || data.score_info);
+                                const scoreData = data.score || data.score_info || {};
+                                scoreData.choice = choiceId;
+                                window.gameController.showScore(scoreData);
                             } else {
-                                // Fallback : utiliser l'API pour charger l'écran de score
-                                // ou rediriger vers une page de score
-                                window.location.reload(); // Le backend devrait afficher le score
+                                // Fallback : afficher l'écran de score manuellement sans recharger
+                                showScoreScreenManually(1, data);
                             }
                         } else {
                             console.error('❌ Error confirming choice:', data.message);
@@ -535,6 +538,69 @@ class KahootMode {
                         }
                     } else {
                         console.error('❌ Phase 1 section not found in DOM');
+                    }
+                };
+                
+                // Helper function pour afficher l'écran de score manuellement (fallback si GameController n'est pas disponible)
+                const showScoreScreenManually = (phaseNumber, apiData) => {
+                    console.log('📊 Showing score screen manually for phase', phaseNumber, apiData);
+                    
+                    const scoreData = apiData.score || apiData.score_info || {};
+                    const mot1Score = scoreData.scores ? scoreData.scores.mot1 : (scoreData.mot1 || 0);
+                    
+                    // Cacher la section phase1
+                    const phase1Section = document.getElementById('phase1-section');
+                    if (phase1Section) {
+                        phase1Section.style.display = 'none';
+                    }
+                    
+                    // Chercher le modal de score et le remplir
+                    const scoreModal = document.getElementById('scoreModal');
+                    if (scoreModal) {
+                        // Remplir les données du score
+                        const scoreTitle = scoreModal.querySelector('#score-phase-title');
+                        const scoreValue = scoreModal.querySelector('#score-value');
+                        const scoreDescription = scoreModal.querySelector('#score-description');
+                        
+                        if (scoreTitle) {
+                            scoreTitle.textContent = `Step ${phaseNumber}`;
+                        }
+                        if (scoreValue) {
+                            scoreValue.textContent = `${mot1Score}/3`;
+                        }
+                        if (scoreDescription) {
+                            // Description basée sur le choix
+                            let description = '';
+                            if (apiData.choice_id || scoreData.choice) {
+                                const choiceId = apiData.choice_id || scoreData.choice;
+                                if (choiceId === 'elena' && mot1Score === 3) {
+                                    description = "Excellent! By choosing Elena's approach, you earned 3 stars out of 3. This value-driven and culture-aligned strategy ensures you'll build a sustainable AI roadmap.";
+                                } else if (choiceId === 'james' && mot1Score === 2) {
+                                    description = "Good Choice! By selecting James's approach, you earned 2 stars out of 3. You chose a prudent and structured path, focusing on data, technology, and architecture.";
+                                } else if (choiceId === 'amira' && mot1Score === 1) {
+                                    description = "Interesting Choice! By selecting Amira's approach, you earned 1 star out of 3. This fast-paced, experimentation-focused strategy can deliver quick wins.";
+                                } else {
+                                    description = `You earned ${mot1Score} star${mot1Score > 1 ? 's' : ''} out of 3 for Step ${phaseNumber}.`;
+                                }
+                            } else {
+                                description = `You earned ${mot1Score} star${mot1Score > 1 ? 's' : ''} out of 3 for Step ${phaseNumber}.`;
+                            }
+                            scoreDescription.textContent = description;
+                        }
+                        
+                        // Afficher le modal avec Bootstrap
+                        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                            const modalInstance = new bootstrap.Modal(scoreModal);
+                            modalInstance.show();
+                        } else {
+                            // Fallback si Bootstrap n'est pas disponible
+                            scoreModal.style.display = 'block';
+                            scoreModal.classList.add('show');
+                        }
+                    } else {
+                        console.error('❌ Score modal not found');
+                        // Si le modal n'existe pas, on ne peut pas afficher le score, mais on ne recharge pas la page
+                        alert(`Score: ${mot1Score}/3`);
                     }
                 };
                 
