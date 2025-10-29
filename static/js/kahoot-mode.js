@@ -683,16 +683,7 @@ class KahootMode {
     }
 
     setupLeaderboardButtons() {
-        // Leaderboard close button
-        const closeBtn = document.getElementById('leaderboard-close-btn');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('leaderboardModal'));
-                if (modal) modal.hide();
-            });
-        }
-
-        // Play again button
+        // Play again button (Close button removed)
         const playAgainBtn = document.getElementById('leaderboard-play-again-btn');
         if (playAgainBtn) {
             playAgainBtn.addEventListener('click', () => {
