@@ -893,9 +893,9 @@ class KahootMode {
                 // Create stars display
                 const starsHTML = this.createStarsDisplay(stars);
 
-                // Add rank class to rank column for medal emojis
-                const rankClass = rank <= 3 ? `rank-col rank-${rank}` : 'rank-col';
-                const rankDisplay = rank <= 3 ? '' : rank; // Empty for top 3 (shown via ::before)
+                // Display rank number for all players (no special styling)
+                const rankClass = 'rank-col';
+                const rankDisplay = rank; // Always show the rank number
 
                 row.innerHTML = `
                     <td class="${rankClass}">${rankDisplay}</td>
