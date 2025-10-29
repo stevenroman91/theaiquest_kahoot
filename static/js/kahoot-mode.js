@@ -756,11 +756,19 @@ class KahootMode {
             if (data.success) {
                 const leaderboard = data.leaderboard || [];
                 console.log(`📊 Received ${leaderboard.length} players in leaderboard`);
+                console.log(`📊 Current session username from API:`, data.current_username || 'not provided');
                 
                 if (leaderboard.length > 0) {
                     console.log('📊 First entry:', leaderboard[0]);
                     console.log('📊 First entry keys:', Object.keys(leaderboard[0]));
                     console.log('📊 First entry full:', JSON.stringify(leaderboard[0], null, 2));
+                    console.log('📊 All usernames in leaderboard:', leaderboard.map(e => e?.username || e?.['username']));
+                }
+                
+                // Update current username from API response if available
+                if (data.current_username) {
+                    this.setCurrentUsername(data.current_username);
+                    console.log(`📊 Updated current username to: ${data.current_username}`);
                 }
                 
                 // Populate the leaderboard (this will now work because modal is shown)
@@ -805,7 +813,8 @@ class KahootMode {
 
         // Get current username from session or somewhere else
         const currentUsername = this.getCurrentUsername();
-        console.log('🔧 Current username:', currentUsername);
+        console.log('🔧 Current username for comparison:', currentUsername);
+        console.log('🔧 Usernames in leaderboard:', leaderboard.map(e => (e?.username || e?.['username'] || '').trim()));
 
         // Populate stats
         if (statsDiv) {
@@ -855,13 +864,13 @@ class KahootMode {
         leaderboardArray.forEach((entry, index) => {
             try {
                 // Handle both object and dict formats (Python dict becomes JS object, but check structure)
-                const username = entry.username || entry['username'] || '';
+                const username = (entry.username || entry['username'] || '').trim();
                 const rank = entry.rank !== undefined ? entry.rank : (entry['rank'] !== undefined ? entry['rank'] : index + 1);
                 const totalScore = entry.total_score !== undefined ? entry.total_score : (entry['total_score'] !== undefined ? entry['total_score'] : 0);
                 const stars = entry.stars !== undefined ? entry.stars : (entry['stars'] !== undefined ? entry['stars'] : 0);
                 
-                console.log(`  Adding player ${index + 1}: ${username} (Rank ${rank}, Score ${totalScore}, Stars ${stars})`);
-                console.log(`    Entry object:`, entry);
+                console.log(`  Adding player ${index + 1}: "${username}" (Rank ${rank}, Score ${totalScore}, Stars ${stars})`);
+                console.log(`    Comparing: "${username}" === "${currentUsername}" -> ${username === currentUsername}`);
                 
                 // Validate entry data
                 if (!entry || !username) {
@@ -872,8 +881,10 @@ class KahootMode {
                 const row = document.createElement('tr');
                 
                 // Removed top-3 styling - all players displayed equally
-                // Only highlight current user
-                if (username === currentUsername) {
+                // Only highlight current user (case-insensitive comparison)
+                const currentUsernameTrimmed = (currentUsername || '').trim();
+                if (username.toLowerCase() === currentUsernameTrimmed.toLowerCase()) {
+                    console.log(`    ✅ Match found! Highlighting user row for "${username}"`);
                     row.classList.add('user-row');
                 }
 

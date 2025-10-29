@@ -1409,11 +1409,14 @@ def api_leaderboard():
         
         # Ajouter le rang de l'utilisateur actuel s'il est connecté
         user_rank = None
+        current_username = None
         if session.get('logged_in'):
-            username = session.get('username')
+            current_username = session.get('username')
+            logger.info(f"Current logged-in user: {current_username}")
             for entry in leaderboard:
-                if entry['username'] == username:
+                if entry['username'] == current_username:
                     user_rank = entry['rank']
+                    logger.info(f"User {current_username} found at rank {user_rank}")
                     break
         
         # Ensure leaderboard is a list and contains valid data
@@ -1438,6 +1441,7 @@ def api_leaderboard():
             'success': True,
             'leaderboard': leaderboard_list,
             'user_rank': user_rank,
+            'current_username': current_username,  # Inclure le username actuel pour la comparaison frontend
             'total_entries': len(leaderboard_list),
             'session_code': session_code  # Inclure le code de session dans la réponse
         })
