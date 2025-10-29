@@ -5798,15 +5798,7 @@ body {
     color: var(--fdj-warning);
     font-size: 1.4rem;
     filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.6));
-    animation: starTwinkle 2s ease-in-out infinite;
-}
-
-.star-icon:nth-child(2) { animation-delay: 0.2s; }
-.star-icon:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes starTwinkle {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2); opacity: 0.8; }
+    /* Animation removed as requested */
 }
 
 .leaderboard-footer {

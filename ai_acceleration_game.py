@@ -593,9 +593,10 @@ class AIAccelerationGame:
         self.current_path.total_score = total_score
         
         # Calcul des étoiles globales (sur 15 max)
-        if total_score >= 15:
+        # Aligné avec game.js: >= 14 pour 3 étoiles, >= 11 pour 2 étoiles
+        if total_score >= 14:
             self.current_path.stars = 3
-        elif total_score >= 10:
+        elif total_score >= 11:
             self.current_path.stars = 2
         else:
             self.current_path.stars = 1
