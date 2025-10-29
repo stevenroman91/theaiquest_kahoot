@@ -2084,7 +2084,8 @@ function renderMOT4ChoicesFull(choices) {
                 console.log('⚠️ Using fallback manual selection');
                 // Manual selection with budget check
                 const isSelected = choiceDiv.classList.contains('selected');
-                const currentCost = parseInt(choice.dataset.cost) || 0;
+                // Use choice.cost (from API data) or choiceDiv.dataset.cost (from DOM), prefer DOM
+                const currentCost = parseInt(choiceDiv.dataset.cost) || parseInt(choice.cost) || 0;
                 
                 // Calculate current total budget
                 let currentBudget = 0;
