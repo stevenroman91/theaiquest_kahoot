@@ -46,6 +46,50 @@
         <!-- Main Content -->
         <div class="main-container">
             <!-- Login Section -->
+            <!-- Admin Section (for creating game sessions) -->
+            <div id="admin-section" class="card mb-4" style="display: {% if is_admin %}block{% else %}none{% endif %};">
+                <div class="card-header bg-primary text-white">
+                    <h3><i class="fas fa-cog me-2"></i>Panneau Administrateur</h3>
+                </div>
+                <div class="card-body">
+                    <div id="admin-session-creator">
+                        <div class="text-center mb-4">
+                            <h4>Créer une nouvelle session de jeu</h4>
+                            <p class="text-muted">Générez un code de session et partagez-le avec les joueurs</p>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-lg w-100 mb-4" id="create-session-btn">
+                            <i class="fas fa-play me-2"></i>Lancer une nouvelle session
+                        </button>
+                        
+                        <div id="session-result" style="display: none;">
+                            <div class="alert alert-success">
+                                <h5><i class="fas fa-check-circle me-2"></i>Session créée avec succès !</h5>
+                                <p class="mb-2"><strong>Code de session :</strong></p>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control form-control-lg text-center font-monospace fs-2 fw-bold" id="session-code-display" readonly>
+                                    <button class="btn btn-outline-secondary" type="button" id="copy-code-btn">
+                                        <i class="fas fa-copy"></i> Copier
+                                    </button>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="mb-2"><strong>URL à partager :</strong></p>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="session-url-display" readonly>
+                                        <button class="btn btn-outline-secondary" type="button" id="copy-url-btn">
+                                            <i class="fas fa-copy"></i> Copier
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="text-center mb-3">
+                                    <p class="mb-2"><strong>QR Code :</strong></p>
+                                    <div id="qrcode-container" class="d-flex justify-content-center"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="login-section" class="login-container">
                 <div class="login-card">
                     <div class="text-center mb-4">
@@ -60,6 +104,14 @@
                     </div>
                     
                     <form id="login-form" novalidate>
+                        <div class="mb-4" id="session-code-container">
+                            <label for="session-code" class="form-label">
+                                <i class="fas fa-key me-2"></i>Code de Session
+                            </label>
+                            <input type="text" class="form-control form-control-lg text-uppercase" id="session-code" placeholder="Entrez le code (ex: ABC123)" required minlength="6" maxlength="6" autocomplete="off" pattern="[A-Z0-9]{6}">
+                            <div class="invalid-feedback" id="session-code-error"></div>
+                            <div class="form-text">Code à 6 caractères (ex: ABC123)</div>
+                        </div>
                         <div class="mb-4">
                             <label for="username" class="form-label">
                                 <i class="fas fa-user me-2"></i>Username
@@ -1133,7 +1185,14 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Passer le code de session depuis le template au JavaScript
+            const sessionCode = '{{ session_code or "" }}';
+        </script>
+        <!-- QR Code library -->
+        <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
         <script src="{{ url_for('static', filename='js/game.js') }}?v=2.78&t={{ range(1000000, 9999999) | random }}"></script>
-        <script src="{{ url_for('static', filename='js/kahoot-mode.js') }}?v=1.7"></script>
+        <script src="{{ url_for('static', filename='js/kahoot-mode.js') }}?v=1.8"></script>
+        <script src="{{ url_for('static', filename='js/admin.js') }}?v=1.0"></script>
 </body>
 </html>

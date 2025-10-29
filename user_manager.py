@@ -55,6 +55,23 @@ class UserManager:
                     )
                 ''')
                 
+                # Créer la table pour les sessions de jeu (Kahoot mode)
+                cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS game_sessions (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        session_code TEXT UNIQUE NOT NULL,
+                        created_by TEXT NOT NULL,
+                        created_at TEXT NOT NULL,
+                        is_active BOOLEAN DEFAULT 1,
+                        player_count INTEGER DEFAULT 0
+                    )
+                ''')
+                
+                # Créer un index pour les sessions actives
+                cursor.execute('''
+                    CREATE INDEX IF NOT EXISTS idx_session_code ON game_sessions(session_code)
+                ''')
+                
                 # Créer la table pour le leaderboard (scores)
                 cursor.execute('''
                     CREATE TABLE IF NOT EXISTS game_scores (
@@ -68,9 +85,12 @@ class UserManager:
                     )
                 ''')
                 
-                # Créer un index pour les classements
+                # Créer un index pour les classements par session
                 cursor.execute('''
                     CREATE INDEX IF NOT EXISTS idx_total_score ON game_scores(total_score DESC)
+                ''')
+                cursor.execute('''
+                    CREATE INDEX IF NOT EXISTS idx_session_id ON game_scores(session_id)
                 ''')
                 
                 # Migration : Mettre à jour la structure de la table si nécessaire
@@ -506,6 +526,127 @@ class UserManager:
         except Exception as e:
             logger.error(f"Erreur lors de la récupération du meilleur score de {username}: {e}")
             return None
+    
+    def create_game_session(self, created_by: str) -> Optional[str]:
+        """Crée une nouvelle session de jeu et retourne le code de session"""
+        try:
+            # Générer un code de session unique (6 caractères alphanumériques)
+            import random
+            import string
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            
+            # Vérifier que le code n'existe pas déjà
+            while self.get_session_by_code(code):
+                code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO game_sessions (session_code, created_by, created_at, is_active, player_count)
+                    VALUES (?, ?, ?, 1, 0)
+                ''', (code, created_by, datetime.now().isoformat()))
+                conn.commit()
+            
+            logger.info(f"Session de jeu créée: {code} par {created_by}")
+            return code
+        except Exception as e:
+            logger.error(f"Erreur lors de la création de la session: {e}")
+            return None
+    
+    def get_session_by_code(self, session_code: str) -> Optional[Dict]:
+        """Récupère une session par son code"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT id, session_code, created_by, created_at, is_active, player_count
+                    FROM game_sessions
+                    WHERE session_code = ? AND is_active = 1
+                ''', (session_code.upper(),))
+                row = cursor.fetchone()
+                if row:
+                    return {
+                        'id': row[0],
+                        'session_code': row[1],
+                        'created_by': row[2],
+                        'created_at': row[3],
+                        'is_active': bool(row[4]),
+                        'player_count': row[5]
+                    }
+            return None
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération de la session {session_code}: {e}")
+            return None
+    
+    def increment_session_player_count(self, session_code: str) -> bool:
+        """Incrémente le compteur de joueurs pour une session"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    UPDATE game_sessions
+                    SET player_count = player_count + 1
+                    WHERE session_code = ?
+                ''', (session_code.upper(),))
+                conn.commit()
+            return True
+        except Exception as e:
+            logger.error(f"Erreur lors de l'incrémentation du compteur de joueurs: {e}")
+            return False
+    
+    def get_leaderboard_for_session(self, session_code: str, limit: int = 50) -> List[Dict]:
+        """Récupère le leaderboard pour une session spécifique"""
+        try:
+            import json
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT username, MAX(total_score) as max_score, MAX(stars) as max_stars, 
+                           (SELECT mot_scores FROM game_scores WHERE username = gs.username AND session_id = ? ORDER BY total_score DESC LIMIT 1) as mot_scores,
+                           MIN(completed_at) as first_completed
+                    FROM game_scores gs
+                    WHERE session_id = ?
+                    GROUP BY username
+                    ORDER BY max_score DESC, first_completed ASC
+                    LIMIT ?
+                ''', (session_code.upper(), session_code.upper(), limit))
+                
+                leaderboard = []
+                rank = 1
+                prev_score = None
+                prev_rank = 1
+                
+                for row in cursor.fetchall():
+                    username = row[0]
+                    total_score = row[1]
+                    stars = row[2]
+                    mot_scores_json = row[3]
+                    completed_at = row[4]
+                    mot_scores = json.loads(mot_scores_json) if mot_scores_json else {}
+                    
+                    # Gérer les égalités de score
+                    if prev_score is not None and total_score == prev_score:
+                        rank = prev_rank
+                    else:
+                        prev_rank = rank
+                    
+                    leaderboard.append({
+                        'rank': rank,
+                        'username': username,
+                        'total_score': total_score,
+                        'stars': stars,
+                        'mot_scores': mot_scores,
+                        'completed_at': completed_at
+                    })
+                    
+                    prev_score = total_score
+                    prev_rank = rank
+                    rank += 1
+                
+                return leaderboard
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération du leaderboard de session: {e}")
+            return []
 
 # Instance globale du gestionnaire d'utilisateurs
 user_manager = UserManager()

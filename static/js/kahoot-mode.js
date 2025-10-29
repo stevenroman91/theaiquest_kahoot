@@ -41,13 +41,25 @@ class KahootMode {
     }
 
     async handleKahootLogin() {
+        const sessionCodeInput = document.getElementById('session-code');
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
         const loginBtn = document.getElementById('login-submit-btn');
         const loginBtnText = document.getElementById('login-btn-text');
         const loginBtnLoading = document.getElementById('login-btn-loading');
-
+        
+        // Get and validate session code
+        let sessionCode = sessionCodeInput ? sessionCodeInput.value.trim().toUpperCase() : '';
+        
         // Validation
+        if (!sessionCode || sessionCode.length !== 6) {
+            this.showLoginAlert('Code de session requis (6 caractères)', 'danger');
+            if (sessionCodeInput) {
+                sessionCodeInput.focus();
+            }
+            return;
+        }
+        
         if (!username || username.length < 2) {
             this.showLoginAlert('Username must be at least 2 characters', 'danger');
             return;
@@ -66,6 +78,7 @@ class KahootMode {
                 },
                 credentials: 'include',
                 body: JSON.stringify({
+                    session_code: sessionCode,
                     username: username,
                     password: password || undefined // Only send if provided
                 })
@@ -73,12 +86,24 @@ class KahootMode {
 
             const data = await response.json();
 
+            if (!data.success) {
+                // Afficher l'erreur
+                this.showLoginAlert(data.message || 'Erreur de connexion', 'danger');
+                loginBtn.disabled = false;
+                loginBtnText.style.display = 'inline';
+                loginBtnLoading.style.display = 'none';
+                return;
+            }
+
             if (data.success) {
                 console.log('✅ Login successful:', data);
                 
-                // Store username
+                // Store username and session code
                 if (data.user_info && data.user_info.username) {
                     this.setCurrentUsername(data.user_info.username);
+                }
+                if (data.session_code) {
+                    console.log('📋 Session code:', data.session_code);
                 }
                 
                 // Hide login section and all intro sections
@@ -545,16 +570,40 @@ function removeVideoSections() {
 }
 
 // Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        removeVideoSections(); // Remove video sections immediately
-        window.kahootMode = new KahootMode();
-        hookScoreModal();
-    });
-} else {
+function initializeKahootMode() {
     removeVideoSections(); // Remove video sections immediately
+    
+    // Pré-remplir le code de session depuis l'URL ou la variable Jinja
+    const sessionCodeInput = document.getElementById('session-code');
+    if (sessionCodeInput) {
+        // Vérifier l'URL pour le paramètre ?session=CODE
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionCodeFromUrl = urlParams.get('session');
+        
+        // Vérifier aussi la variable Jinja si disponible
+        const sessionCodeFromTemplate = typeof sessionCode !== 'undefined' ? sessionCode : null;
+        
+        // Utiliser celui de l'URL en priorité, sinon celui du template
+        const codeToUse = sessionCodeFromUrl || sessionCodeFromTemplate;
+        
+        if (codeToUse) {
+            sessionCodeInput.value = codeToUse.toUpperCase();
+        }
+        
+        // Forcer les majuscules lors de la saisie
+        sessionCodeInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        });
+    }
+    
     window.kahootMode = new KahootMode();
     hookScoreModal();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeKahootMode);
+} else {
+    initializeKahootMode();
 }
 
 // Export for global access

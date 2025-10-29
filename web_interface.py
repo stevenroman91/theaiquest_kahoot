@@ -99,13 +99,19 @@ def get_game():
 def index():
     """Page d'accueil"""
     template = content
+    # Récupérer le code de session depuis l'URL (si présent)
+    session_code_from_url = request.args.get('session', '').strip().upper()
+    # Vérifier si l'utilisateur est admin pour afficher le panneau admin
+    is_admin = session.get('logged_in') and session.get('user_role') == 'admin'
     return render_template('index.html', 
                          game_title=template.get_game_title(),
                          company_name=template.get_company_name(),
                          teams_meeting_text=template.get_teams_meeting_text(),
                          teams_meeting_button_text=template.get_teams_meeting_button_text(),
                          template=template,
-                         content=content)
+                         content=content,
+                         session_code=session_code_from_url,
+                         is_admin=is_admin)
 
 @app.route('/api/game_config')
 def api_game_config():
@@ -194,9 +200,87 @@ def api_game_config():
             "message": f"Error loading game configuration: {str(e)}"
         }), 500
 
+@app.route('/api/admin/create_session', methods=['POST'])
+def api_create_session():
+    """API pour créer une nouvelle session de jeu (admin uniquement)"""
+    try:
+        # Vérifier que l'utilisateur est admin
+        if not session.get('logged_in') or session.get('user_role') != 'admin':
+            return jsonify({
+                'success': False,
+                'message': 'Accès refusé. Admin requis.'
+            }), 403
+        
+        username = session.get('username', 'admin')
+        session_code = user_manager.create_game_session(username)
+        
+        if session_code:
+            # Construire l'URL pour rejoindre la session
+            base_url = request.url_root.rstrip('/')
+            join_url = f"{base_url}/?session={session_code}"
+            
+            return jsonify({
+                'success': True,
+                'session_code': session_code,
+                'join_url': join_url,
+                'message': f'Session créée avec succès: {session_code}'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Erreur lors de la création de la session'
+            }), 500
+            
+    except Exception as e:
+        logger.error(f"Erreur lors de la création de session: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Erreur: {str(e)}'
+        }), 500
+
+@app.route('/api/validate_session', methods=['POST'])
+def api_validate_session():
+    """API pour valider un code de session"""
+    try:
+        data = request.json
+        if not data:
+            return jsonify({
+                'success': False,
+                'message': 'Code de session manquant'
+            }), 400
+        
+        session_code = data.get('session_code', '').strip().upper()
+        
+        if not session_code or len(session_code) != 6:
+            return jsonify({
+                'success': False,
+                'message': 'Code de session invalide (doit contenir 6 caractères)'
+            }), 400
+        
+        session_data = user_manager.get_session_by_code(session_code)
+        
+        if session_data:
+            return jsonify({
+                'success': True,
+                'session_code': session_code,
+                'message': 'Session valide'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Session introuvable ou inactive'
+            }), 404
+            
+    except Exception as e:
+        logger.error(f"Erreur lors de la validation de session: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Erreur: {str(e)}'
+        }), 500
+
 @app.route('/api/login', methods=['POST'])
 def api_login():
-    """API pour l'authentification (mode Kahoot avec juste username ou mode normal avec password)"""
+    """API pour l'authentification (mode Kahoot avec code de session et username)"""
     try:
         data = request.json
         if not data:
@@ -205,10 +289,27 @@ def api_login():
                 'message': 'Données de connexion manquantes'
             }), 400
         
+        session_code = data.get('session_code', '').strip().upper()
         username = data.get('username', '').strip()
         password = data.get('password', '')  # Optionnel en mode Kahoot
         
-        # Validation basique
+        # Validation du code de session (obligatoire en mode Kahoot)
+        if not password:  # Mode Kahoot - code de session requis
+            if not session_code or len(session_code) != 6:
+                return jsonify({
+                    'success': False,
+                    'message': 'Code de session requis (6 caractères)'
+                }), 400
+            
+            # Vérifier que la session existe et est active
+            session_data = user_manager.get_session_by_code(session_code)
+            if not session_data:
+                return jsonify({
+                    'success': False,
+                    'message': 'Code de session invalide ou session terminée'
+                }), 404
+        
+        # Validation basique du username
         if not username or len(username) < 2:
             return jsonify({
                 'success': False,
@@ -228,6 +329,8 @@ def api_login():
             # Démarrer le jeu automatiquement en mode Kahoot
             if not password:  # Mode Kahoot
                 game.start_game()
+                # Incrémenter le compteur de joueurs
+                user_manager.increment_session_player_count(session_code)
             
             session['logged_in'] = True
             session['user_id'] = user.id
@@ -235,6 +338,8 @@ def api_login():
             session['user_role'] = user.role
             session['login_time'] = datetime.now().isoformat()
             session['kahoot_mode'] = user.is_kahoot_mode
+            if session_code:
+                session['game_session_code'] = session_code
             
             return jsonify({
                 'success': True,
@@ -245,6 +350,7 @@ def api_login():
                     'role': user.role,
                     'is_kahoot_mode': user.is_kahoot_mode
                 },
+                'session_code': session_code if session_code else None,
                 'game_state': game.get_current_state().value if game else 'login'
             })
         else:
@@ -740,15 +846,14 @@ def api_phase5_choose():
         
         # Sauvegarder le score dans le leaderboard
         username = session.get('username')
-        import uuid
-        session_id = session.get('session_id', str(uuid.uuid4()))
+        session_code = session.get('game_session_code')  # Code de session Kahoot
         
         user_manager.save_game_score(
             username=username,
             total_score=results['total'],
             stars=results['stars'],
             mot_scores=results['scores'],
-            session_id=session_id
+            session_id=session_code  # Utiliser le code de session Kahoot
         )
         
         return jsonify({
@@ -1279,10 +1384,17 @@ def get_current_phase_title(game_state):
 
 @app.route('/api/leaderboard')
 def api_leaderboard():
-    """API pour récupérer le classement des meilleurs scores"""
+    """API pour récupérer le classement des meilleurs scores (filtré par session si en mode Kahoot)"""
     try:
         limit = request.args.get('limit', 50, type=int)
-        leaderboard = user_manager.get_leaderboard(limit=limit)
+        session_code = session.get('game_session_code')  # Code de session Kahoot
+        
+        # Si on a un code de session, filtrer par session
+        if session_code:
+            leaderboard = user_manager.get_leaderboard_for_session(session_code, limit=limit)
+        else:
+            # Sinon, leaderboard global (mode normal)
+            leaderboard = user_manager.get_leaderboard(limit=limit)
         
         # Ajouter le rang de l'utilisateur actuel s'il est connecté
         user_rank = None
@@ -1297,7 +1409,8 @@ def api_leaderboard():
             'success': True,
             'leaderboard': leaderboard,
             'user_rank': user_rank,
-            'total_entries': len(leaderboard)
+            'total_entries': len(leaderboard),
+            'session_code': session_code  # Inclure le code de session dans la réponse
         })
     except Exception as e:
         logger.error(f"Error getting leaderboard: {str(e)}")
