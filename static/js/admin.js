@@ -101,57 +101,90 @@ class AdminPanel {
                 codeDisplay.value = sessionCode;
                 urlDisplay.value = joinUrl;
 
-                // Générer le QR code
-                qrcodeContainer.innerHTML = '';
+                // Générer le QR code avec attente de la bibliothèque si nécessaire
+                qrcodeContainer.innerHTML = '<p class="text-info"><i class="fas fa-spinner fa-spin me-2"></i>Génération du QR code...</p>';
                 
-                // Vérifier que QRCode est disponible
-                if (typeof QRCode === 'undefined') {
-                    console.error('QRCode library not loaded');
-                    qrcodeContainer.innerHTML = '<p class="text-danger">Bibliothèque QR Code non chargée. Veuillez rafraîchir la page.</p>';
-                } else {
-                    // Utiliser toDataURL avec un img comme alternative plus fiable
-                    QRCode.toDataURL(joinUrl, {
-                        width: 256,
-                        margin: 2,
-                        color: {
-                            dark: '#1e40af',  // FDJ blue
-                            light: '#ffffff'
-                        }
-                    }, (error, url) => {
-                        if (error) {
-                            console.error('Error generating QR code:', error);
-                            // Fallback: essayer toCanvas
-                            try {
-                                const canvas = document.createElement('canvas');
-                                qrcodeContainer.appendChild(canvas);
-                                QRCode.toCanvas(canvas, joinUrl, {
-                                    width: 256,
-                                    margin: 2,
-                                    color: {
-                                        dark: '#1e40af',
-                                        light: '#ffffff'
-                                    }
-                                }, (canvasError) => {
-                                    if (canvasError) {
-                                        console.error('Canvas error:', canvasError);
-                                        qrcodeContainer.innerHTML = '<p class="text-danger">Erreur lors de la génération du QR code</p>';
-                                    }
-                                });
-                            } catch (e) {
-                                console.error('Fallback error:', e);
-                                qrcodeContainer.innerHTML = '<p class="text-danger">Erreur lors de la génération du QR code</p>';
-                            }
+                // Fonction pour générer le QR code une fois la bibliothèque disponible
+                const generateQRCode = (retryCount = 0) => {
+                    const maxRetries = 50; // 5 secondes max (50 * 100ms)
+                    
+                    if (typeof QRCode === 'undefined') {
+                        if (retryCount < maxRetries) {
+                            console.log(`QRCode library not yet loaded, retrying... (${retryCount + 1}/${maxRetries})`);
+                            setTimeout(() => generateQRCode(retryCount + 1), 100);
+                            return;
                         } else {
-                            // Afficher l'image du QR code
-                            const img = document.createElement('img');
-                            img.src = url;
-                            img.alt = 'QR Code';
-                            img.style.maxWidth = '256px';
-                            img.style.height = 'auto';
-                            qrcodeContainer.appendChild(img);
+                            console.error('QRCode library failed to load after retries');
+                            qrcodeContainer.innerHTML = '<p class="text-danger">Bibliothèque QR Code non chargée. Veuillez rafraîchir la page.</p>';
+                            return;
                         }
-                    });
-                }
+                    }
+                    
+                    console.log('✅ QRCode library loaded, generating QR code...');
+                    qrcodeContainer.innerHTML = '';
+                    
+                    try {
+                        // Utiliser toDataURL (méthode la plus fiable)
+                        QRCode.toDataURL(joinUrl, {
+                            width: 256,
+                            margin: 2,
+                            color: {
+                                dark: '#1e40af',  // FDJ blue
+                                light: '#ffffff'
+                            },
+                            errorCorrectionLevel: 'M'
+                        }, (error, url) => {
+                            if (error) {
+                                console.error('Error generating QR code with toDataURL:', error);
+                                // Fallback: essayer toCanvas
+                                try {
+                                    const canvas = document.createElement('canvas');
+                                    qrcodeContainer.innerHTML = '';
+                                    qrcodeContainer.appendChild(canvas);
+                                    QRCode.toCanvas(canvas, joinUrl, {
+                                        width: 256,
+                                        margin: 2,
+                                        color: {
+                                            dark: '#1e40af',
+                                            light: '#ffffff'
+                                        },
+                                        errorCorrectionLevel: 'M'
+                                    }, (canvasError) => {
+                                        if (canvasError) {
+                                            console.error('Canvas error:', canvasError);
+                                            qrcodeContainer.innerHTML = '<p class="text-danger">Erreur lors de la génération du QR code. Veuillez utiliser l\'URL manuellement.</p>';
+                                        } else {
+                                            console.log('✅ QR code generated successfully with toCanvas');
+                                        }
+                                    });
+                                } catch (e) {
+                                    console.error('Fallback error:', e);
+                                    qrcodeContainer.innerHTML = '<p class="text-danger">Erreur lors de la génération du QR code. Veuillez utiliser l\'URL manuellement.</p>';
+                                }
+                            } else {
+                                // Afficher l'image du QR code
+                                const img = document.createElement('img');
+                                img.src = url;
+                                img.alt = 'QR Code';
+                                img.style.maxWidth = '256px';
+                                img.style.height = 'auto';
+                                img.style.border = '2px solid #e5e7eb';
+                                img.style.borderRadius = '8px';
+                                img.style.padding = '8px';
+                                img.style.background = 'white';
+                                qrcodeContainer.innerHTML = '';
+                                qrcodeContainer.appendChild(img);
+                                console.log('✅ QR code generated successfully with toDataURL');
+                            }
+                        });
+                    } catch (e) {
+                        console.error('Exception in QR code generation:', e);
+                        qrcodeContainer.innerHTML = '<p class="text-danger">Erreur lors de la génération du QR code. Veuillez utiliser l\'URL manuellement.</p>';
+                    }
+                };
+                
+                // Démarrer la génération (avec retry si nécessaire)
+                generateQRCode();
 
                 // Afficher la section résultat
                 resultDiv.style.display = 'block';
