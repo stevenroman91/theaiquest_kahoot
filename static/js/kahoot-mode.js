@@ -292,20 +292,6 @@ class KahootMode {
             if (data.success) {
                 console.log('✅ Login successful:', data);
                 
-                // Handle username change (if username was taken in this session)
-                if (data.username_changed) {
-                    // Show notification about username change
-                    this.showLoginAlert(
-                        `Le nom "${data.original_username}" est déjà pris dans cette session. Votre nom est "${data.new_username}".`,
-                        'info'
-                    );
-                    
-                    // Update the username input field with the new username
-                    if (usernameInput) {
-                        usernameInput.value = data.new_username;
-                    }
-                }
-                
                 // Store username and session code
                 if (data.user_info && data.user_info.username) {
                     this.setCurrentUsername(data.user_info.username);

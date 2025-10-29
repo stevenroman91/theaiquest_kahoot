@@ -322,21 +322,18 @@ def api_login():
                 'message': 'Le nom d\'utilisateur doit contenir au moins 2 caractères'
             }), 400
         
-        # Mode Kahoot : générer un username unique pour cette session si nécessaire
-        final_username = username
-        username_changed = False
+        # Mode Kahoot : vérifier si le username est déjà pris dans cette session
         if not password and session_code:  # Mode Kahoot avec session
             # Vérifier si le username existe déjà dans cette session
             if user_manager.username_exists_in_session(username, session_code):
-                # Générer un username unique pour cette session
-                final_username = user_manager.generate_unique_username(username, session_code)
-                if final_username != username:
-                    username_changed = True
-                    logger.info(f"Username '{username}' déjà pris dans session {session_code}, utilisation de '{final_username}'")
+                return jsonify({
+                    'success': False,
+                    'message': f'Le nom "{username}" est déjà pris dans cette session. Veuillez choisir un autre nom.'
+                }), 409  # HTTP 409 Conflict
         
         # Mode Kahoot : authentification sans password
         # Mode normal : authentification avec password
-        success, user = user_manager.authenticate_user(final_username, password if password else None)
+        success, user = user_manager.authenticate_user(username, password if password else None)
         
         if success and user:
             # Réinitialiser le jeu pour une nouvelle session
@@ -359,7 +356,7 @@ def api_login():
             if session_code:
                 session['game_session_code'] = session_code
             
-            response_data = {
+            return jsonify({
                 'success': True,
                 'message': f'Bienvenue {user.username}!',
                 'user_info': {
@@ -370,16 +367,7 @@ def api_login():
                 },
                 'session_code': session_code if session_code else None,
                 'game_state': game.get_current_state().value if game else 'login'
-            }
-            
-            # Informer le frontend si le username a été modifié
-            if username_changed:
-                response_data['username_changed'] = True
-                response_data['original_username'] = username
-                response_data['new_username'] = user.username
-                response_data['message'] = f'Le nom "{username}" est déjà pris. Votre nom est "{user.username}"'
-            
-            return jsonify(response_data)
+            })
         else:
             return jsonify({
                 'success': False,
