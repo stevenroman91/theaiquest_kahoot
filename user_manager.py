@@ -8,6 +8,7 @@ import sqlite3
 import hashlib
 import secrets
 import logging
+import os
 from typing import Optional, Tuple, List, Dict
 from dataclasses import dataclass
 from datetime import datetime
@@ -650,4 +651,16 @@ class UserManager:
             return []
 
 # Instance globale du gestionnaire d'utilisateurs
-user_manager = UserManager()
+# Utilise DATABASE_PATH depuis les variables d'environnement, ou défaut à "users.db"
+# Sur Railway, utiliser un chemin dans un volume persistant (ex: /data/users.db)
+database_path = os.environ.get('DATABASE_PATH', 'users.db')
+
+# Créer le répertoire parent si nécessaire (pour Railway volumes)
+if database_path != 'users.db':
+    db_dir = os.path.dirname(database_path)
+    if db_dir and not os.path.exists(db_dir):
+        os.makedirs(db_dir, exist_ok=True)
+        logger.info(f"📁 Créé le répertoire pour la base de données: {db_dir}")
+
+logger.info(f"📊 Initialisation de la base de données: {database_path}")
+user_manager = UserManager(db_path=database_path)

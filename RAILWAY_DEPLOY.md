@@ -79,20 +79,32 @@ Guide complet pour déployer l'application The AI Quest (Kahoot Edition) sur Rai
 | `PORT` | Port de l'application | Automatique (défini par Railway) |
 | `FLASK_ENV` | Environnement Flask | `production` |
 | `SECRET_KEY` | Clé secrète pour les sessions | Générer avec `secrets.token_hex(32)` |
+| `DATABASE_PATH` | Chemin vers la base SQLite | `/data/users.db` (dans le volume persistant) |
 
-### Variables d'environnement optionnelles
-
-| Variable | Description | Valeur par défaut |
-|----------|-------------|-------------------|
-| `DATABASE_PATH` | Chemin vers la base SQLite | `users.db` (dans le répertoire du projet) |
+**Important** : Définissez `DATABASE_PATH=/data/users.db` pour utiliser le volume persistant Railway. Sinon, la base sera perdue à chaque redéploiement.
 
 ## 📝 Notes importantes
 
 ### Base de données
 
-- La base de données SQLite (`users.db`) sera créée automatiquement au premier démarrage
-- Les données persistent entre les redémarrages car Railway monte un volume persistant
-- Pour réinitialiser la base : supprimez le service et recréez-le, ou utilisez la variable `DATABASE_PATH`
+**Configuration requise** :
+1. **Dans Railway Dashboard** :
+   - Allez dans votre projet → Variables
+   - Ajoutez : `DATABASE_PATH=/data/users.db`
+
+2. **Créer le volume persistant** :
+   - Dans Railway Dashboard → votre service → "Volumes"
+   - Cliquez sur "Add Volume"
+   - Mount Path : `/data`
+   - Size : `1GB` (ou plus selon vos besoins)
+   - Cliquez sur "Create"
+
+3. **La base sera automatiquement** :
+   - Créée au premier démarrage dans `/data/users.db`
+   - Persistante entre tous les redéploiements
+   - Sauvegardée automatiquement par Railway
+
+**⚠️ Important** : Sans le volume persistant, les données seront perdues à chaque redéploiement !
 
 ### Fichiers statiques
 

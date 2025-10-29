@@ -1,0 +1,14 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 2 --timeout 120 web_interface:app"
+healthcheckPath = "/"
+healthcheckTimeout = 300
+
+# Configuration du volume persistant pour la base de données
+# Railway créera automatiquement un volume persistant monté sur /data
+[deploy.volume]
+mountPath = "/data"
+size = "1GB"
+

@@ -65,10 +65,17 @@ fi
 # Définir les variables d'environnement
 railway variables set FLASK_ENV=production
 railway variables set SECRET_KEY="$SECRET_KEY"
+railway variables set DATABASE_PATH=/data/users.db
 
 echo "✅ Variables d'environnement configurées"
 echo "   - FLASK_ENV=production"
 echo "   - SECRET_KEY=*** (configurée)"
+echo "   - DATABASE_PATH=/data/users.db"
+echo ""
+echo "⚠️  IMPORTANT : N'oubliez pas de créer le volume persistant dans Railway Dashboard :"
+echo "   1. Allez dans votre projet → Volumes"
+echo "   2. Créez un volume avec Mount Path: /data"
+echo "   3. Size: 1GB minimum"
 echo ""
 
 # Vérifier que tous les fichiers nécessaires existent
