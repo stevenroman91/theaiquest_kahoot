@@ -222,16 +222,77 @@ class UserManager:
             logger.error(f"Erreur lors de la création de l'utilisateur {username}: {e}")
             return False
     
+    def generate_unique_username(self, base_username: str, session_code: str = None) -> str:
+        """Génère un username unique en ajoutant un suffixe numérique si nécessaire
+        
+        Si session_code est fourni, vérifie l'unicité uniquement dans cette session.
+        Sinon, vérifie l'unicité globale dans la table users.
+        """
+        username = base_username.strip()
+        original_username = username
+        
+        if session_code:
+            # Vérifier l'unicité dans la session spécifique (via game_scores)
+            counter = 1
+            while self.username_exists_in_session(username, session_code):
+                username = f"{original_username}{counter}"
+                counter += 1
+                # Limite de sécurité pour éviter une boucle infinie
+                if counter > 9999:
+                    # Utiliser un timestamp comme fallback
+                    import time
+                    username = f"{original_username}_{int(time.time())}"
+                    break
+        else:
+            # Vérifier l'unicité globale dans la table users
+            counter = 1
+            while self.get_user_by_username(username):
+                username = f"{original_username}{counter}"
+                counter += 1
+                # Limite de sécurité pour éviter une boucle infinie
+                if counter > 9999:
+                    # Utiliser un timestamp comme fallback
+                    import time
+                    username = f"{original_username}_{int(time.time())}"
+                    break
+        
+        return username
+    
+    def username_exists_in_session(self, username: str, session_code: str) -> bool:
+        """Vérifie si un username existe déjà dans une session donnée"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT COUNT(*) FROM game_scores
+                    WHERE username = ? AND session_id = ?
+                ''', (username, session_code.upper()))
+                count = cursor.fetchone()[0]
+                return count > 0
+        except Exception as e:
+            logger.error(f"Erreur lors de la vérification du username dans la session: {e}")
+            return False
+    
     def authenticate_user(self, username: str, password: str = None) -> Tuple[bool, Optional[User]]:
         """Authentifie un utilisateur (mode normal avec password ou mode Kahoot sans)"""
         try:
             user = self.get_user_by_username(username)
-            if not user:
-                # En mode Kahoot, créer l'utilisateur automatiquement
-                logger.info(f"Utilisateur {username} n'existe pas, création en mode Kahoot")
-                if self.create_user(username, kahoot_mode=True):
-                    user = self.get_user_by_username(username)
+            
+            # En mode Kahoot (sans password), gérer les doublons automatiquement
+            if password is None:
+                if not user:
+                    # Créer l'utilisateur automatiquement en mode Kahoot
+                    logger.info(f"Utilisateur {username} n'existe pas, création en mode Kahoot")
+                    if self.create_user(username, kahoot_mode=True):
+                        user = self.get_user_by_username(username)
+                    else:
+                        return False, None
                 else:
+                    # Utilisateur existe déjà - réutiliser (mode Kahoot permet la réutilisation)
+                    logger.info(f"Connexion Kahoot avec utilisateur existant: {username}")
+            else:
+                # Mode normal avec password - pas de création automatique
+                if not user:
                     return False, None
             
             if not user.is_active:
