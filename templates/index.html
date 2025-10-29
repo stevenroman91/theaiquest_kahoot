@@ -1074,13 +1074,7 @@
             // Passer le code de session depuis le template au JavaScript
             const sessionCode = '{{ session_code or "" }}';
         </script>
-        <!-- QR Code library with onload handler -->
-        <script>
-            window.qrcodeLibraryLoaded = false;
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" 
-                onload="window.qrcodeLibraryLoaded = true; console.log('✅ QRCode library loaded');"
-                onerror="console.error('❌ Failed to load QRCode library from CDN');"></script>
+        <!-- QR Code library no longer needed - using API instead -->
         <script src="{{ url_for('static', filename='js/game.js') }}?v=2.78&t={{ range(1000000, 9999999) | random }}"></script>
         <script src="{{ url_for('static', filename='js/kahoot-mode.js') }}?v=2.8"></script>
         <script src="{{ url_for('static', filename='js/admin.js') }}?v=1.1"></script>
