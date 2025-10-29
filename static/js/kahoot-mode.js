@@ -338,49 +338,24 @@ class KahootMode {
                         const columnDiv = document.createElement('div');
                         columnDiv.className = 'col-md-4 col-sm-12';
                         
-                        const details = choiceDetails[choice.id] || { enablers: [], use_cases: [], description: choice.description };
+                        // Simplified: removed all enablers, use_cases, and description content generation
+                        // Only photo and title will be displayed
                         
-                        // Générer le contenu selon le type de choix
-                        let contentHtml = '';
-                        if (details.enablers && details.enablers.length > 0) {
-                            contentHtml = `
-                                <div class="choice-enablers">
-                                    ${details.enablers.map(enabler => `
-                                        <div class="choice-enabler" data-enabler-id="${enabler.id}">
-                                            <div class="enabler-icon ${enabler.category}">
-                                                <i class="${enabler.icon}"></i>
-                                    </div>
-                                            <div class="enabler-label">${enabler.label}</div>
-                                                </div>
-                                    `).join('')}
-                                </div>
-                            `;
-                        } else if (details.use_cases && details.use_cases.length > 0) {
-                            contentHtml = `
-                                <div class="choice-use-cases">
-                                    <h5><i class="fas fa-lightbulb me-2"></i>Launch 6 use case pilots immediately</h5>
-                                    ${details.use_cases.map(useCase => {
-                                        return `
-                                        <div class="choice-use-case" data-use-case-id="${useCase.id}">
-                                            <div class="use-case-icon">
-                                                <i class="${useCase.icon}"></i>
-                                            </div>
-                                            <div class="use-case-label">${useCase.label}</div>
-                                            </div>
-                                        `;
-                                    }).join('')}
-                                    </div>
-                            `;
-                        }
-                        
-                        // Define custom titles for each choice with photos (COPIÉ DE GAME.JS)
-                        const customTitles = {
-                            'elena': '<img src="/static/images/Elena_photo.png" alt="Elena" class="character-photo me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">Map where AI creates the most value and align with company culture',
-                            'james': '<img src="/static/images/James_photo.png" alt="James" class="character-photo me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">Build strong foundations:<br>secure data, tools,<br>and architecture first',
-                            'amira': '<img src="/static/images/Amira_photo.png" alt="Amira" class="character-photo me-2" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;">Act fast - democratize AI,<br>let teams experiment immediately'
+                        // Simplified for mobile: only photo and title (supprime enablers, use cases, descriptions)
+                        const characterPhotos = {
+                            'elena': '/static/images/Elena_photo.png',
+                            'james': '/static/images/James_photo.png',
+                            'amira': '/static/images/Amira_photo.png'
                         };
                         
-                        const displayTitle = customTitles[choice.id] || choice.title;
+                        const choiceTitles = {
+                            'elena': 'Map where AI creates the most value and align with company culture',
+                            'james': 'Build strong foundations: secure data, tools, and architecture first',
+                            'amira': 'Act fast - democratize AI, let teams experiment immediately'
+                        };
+                        
+                        const photo = characterPhotos[choice.id] || '';
+                        const title = choiceTitles[choice.id] || choice.title;
                         
                         // Créer l'élément choice-column
                         const choiceColumn = document.createElement('div');
@@ -393,11 +368,9 @@ class KahootMode {
                         });
                         
                         choiceColumn.innerHTML = `
-                            <div class="choice-header">
-                                <h4 class="choice-title" style="display: flex; align-items: center;">${displayTitle}</h4>
-                            </div>
-                            <div class="choice-content">
-                                ${contentHtml}
+                            <div class="choice-header text-center">
+                                ${photo ? `<img src="${photo}" alt="${choice.id}" class="character-photo mb-3" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--fdj-blue-primary); display: block; margin: 0 auto;">` : ''}
+                                <h4 class="choice-title" style="font-weight: 700; color: var(--fdj-blue-primary);">${title}</h4>
                             </div>
                         `;
                         
