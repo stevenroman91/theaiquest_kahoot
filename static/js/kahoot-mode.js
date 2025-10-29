@@ -869,14 +869,15 @@ class KahootMode {
         // Convert to array if needed and ensure we have valid data
         const leaderboardArray = Array.isArray(leaderboard) ? leaderboard : [];
         
-        console.log(`📊 Starting to populate ${leaderboardArray.length} entries:`, 
-            leaderboardArray.map(e => ({ 
-                rank: e.rank || e['rank'], 
-                username: e.username || e['username'] 
-            })));
+        console.log(`📊 Starting to populate ${leaderboardArray.length} entries`);
+        console.log(`📊 Raw leaderboard data:`, JSON.stringify(leaderboardArray, null, 2));
         
         // Clear tbody completely before adding rows
         tbody.innerHTML = '';
+        
+        // Track which entries were successfully added
+        const addedEntries = [];
+        const failedEntries = [];
         
         leaderboardArray.forEach((entry, index) => {
             try {
@@ -886,18 +887,30 @@ class KahootMode {
                 const totalScore = entry.total_score !== undefined ? entry.total_score : (entry['total_score'] !== undefined ? entry['total_score'] : 0);
                 const stars = entry.stars !== undefined ? entry.stars : (entry['stars'] !== undefined ? entry['stars'] : 0);
                 
-                console.log(`  Adding player ${index + 1}: "${username}" (Rank ${rank}, Score ${totalScore}, Stars ${stars})`);
-                console.log(`    Comparing: "${username}" === "${currentUsername}" -> ${username === currentUsername}`);
+                console.log(`  [${index + 1}/${leaderboardArray.length}] Processing: "${username}" (Rank ${rank}, Score ${totalScore}, Stars ${stars})`);
                 
-                // Validate entry data
-                if (!entry || !username) {
-                    console.error('⚠️ Invalid entry at index', index, ':', entry);
+                // Validate entry data - stricter validation
+                if (!entry) {
+                    console.error(`⚠️ Entry at index ${index} is null/undefined`);
+                    failedEntries.push({ index, entry, reason: 'null_entry' });
+                    return;
+                }
+                
+                if (!username || username.length === 0) {
+                    console.error(`⚠️ Entry at index ${index} has no username:`, entry);
+                    failedEntries.push({ index, entry, reason: 'no_username' });
+                    return;
+                }
+                
+                // Ensure rank is valid
+                if (rank === undefined || rank === null || isNaN(rank) || rank < 1) {
+                    console.error(`⚠️ Entry at index ${index} has invalid rank ${rank}:`, entry);
+                    failedEntries.push({ index, entry, reason: 'invalid_rank' });
                     return;
                 }
                 
                 const row = document.createElement('tr');
                 
-                // Removed top-3 styling - all players displayed equally
                 // Only highlight current user (case-insensitive comparison)
                 const currentUsernameTrimmed = (currentUsername || '').trim();
                 if (username.toLowerCase() === currentUsernameTrimmed.toLowerCase()) {
@@ -906,45 +919,104 @@ class KahootMode {
                 }
 
                 // Create stars display
-                const starsHTML = this.createStarsDisplay(stars);
+                const starsHTML = this.createStarsDisplay(stars || 0);
 
-                // Display rank number for all players (no special styling)
+                // Display rank number for all players
                 const rankClass = 'rank-col';
-                const rankDisplay = rank; // Always show the rank number
+                const rankDisplay = String(rank); // Always show the rank number
 
-                row.innerHTML = `
-                    <td class="${rankClass}">${rankDisplay}</td>
-                    <td class="name-col">${this.escapeHtml(username)}</td>
-                    <td class="score-col">${totalScore}/15</td>
-                    <td class="stars-col">${starsHTML}</td>
-                `;
-
-                tbody.appendChild(row);
-                const addedRank = parseInt(rankDisplay);
-                const addedName = username;
-                console.log(`    ✅ Row added to DOM: Rank ${addedRank} - ${addedName} (tbody now has ${tbody.children.length} children)`);
+                // Build row HTML with explicit error handling
+                try {
+                    const escapedUsername = this.escapeHtml(username);
+                    row.innerHTML = `
+                        <td class="${rankClass}">${rankDisplay}</td>
+                        <td class="name-col">${escapedUsername}</td>
+                        <td class="score-col">${totalScore}/15</td>
+                        <td class="stars-col">${starsHTML}</td>
+                    `;
+                    
+                    // Verify row was created correctly
+                    const testRank = row.querySelector('.rank-col');
+                    const testName = row.querySelector('.name-col');
+                    if (!testRank || !testName) {
+                        throw new Error('Row HTML structure invalid');
+                    }
+                    
+                    // Append to DOM
+                    tbody.appendChild(row);
+                    
+                    // Verify row was actually added
+                    const lastChild = tbody.lastElementChild;
+                    if (lastChild !== row) {
+                        throw new Error('Row not added to DOM');
+                    }
+                    
+                    addedEntries.push({ rank, username, totalScore, stars });
+                    console.log(`    ✅ Successfully added: Rank ${rank} - "${username}" (${addedEntries.length} total rows in DOM)`);
+                } catch (htmlErr) {
+                    console.error(`    ❌ HTML error for "${username}":`, htmlErr);
+                    failedEntries.push({ index, entry, reason: 'html_error', error: htmlErr.message });
+                }
             } catch (err) {
-                console.error(`❌ Error adding player ${index + 1}:`, err, entry);
+                console.error(`❌ Critical error adding player ${index + 1}:`, err);
+                console.error(`    Entry data:`, entry);
                 console.error(`    Error stack:`, err.stack);
+                failedEntries.push({ index, entry, reason: 'exception', error: err.message });
             }
         });
+        
+        // Log summary
+        console.log(`📊 Population complete: ${addedEntries.length} succeeded, ${failedEntries.length} failed`);
+        if (failedEntries.length > 0) {
+            console.error(`❌ Failed entries:`, failedEntries);
+        }
 
+        // Final verification
         const rowsCreated = tbody.children.length;
         const expectedRows = Array.isArray(leaderboard) ? leaderboard.length : 0;
-        console.log(`✅ Leaderboard populated: ${rowsCreated} rows created (expected ${expectedRows})`);
-        console.log(`    tbody exists:`, !!tbody);
-        console.log(`    tbody.innerHTML length:`, tbody.innerHTML.length);
         
-        // Debug: Log all rows in DOM to see if rank 3 is there but hidden
+        console.log(`\n📊 FINAL VERIFICATION:`);
+        console.log(`    Expected rows: ${expectedRows}`);
+        console.log(`    Rows in DOM: ${rowsCreated}`);
+        console.log(`    Added entries: ${addedEntries.length}`);
+        
         if (tbody.children.length > 0) {
-            console.log(`📋 Rows in DOM (in order):`);
+            console.log(`\n📋 Rows in DOM (in order):`);
             Array.from(tbody.children).forEach((row, idx) => {
                 const rankCell = row.querySelector('.rank-col');
                 const nameCell = row.querySelector('.name-col');
                 const rankText = rankCell ? rankCell.textContent.trim() : '?';
                 const nameText = nameCell ? nameCell.textContent.trim() : '?';
-                console.log(`    Row ${idx + 1}: rank="${rankText}", name="${nameText}"`);
+                const isVisible = row.offsetHeight > 0 && row.offsetWidth > 0;
+                const display = window.getComputedStyle(row).display;
+                console.log(`    Row ${idx + 1}: rank="${rankText}", name="${nameText}", visible=${isVisible}, display=${display}`);
             });
+        }
+        
+        // Check for missing ranks
+        if (rowsCreated < expectedRows) {
+            const expectedRanks = leaderboardArray.map(e => e.rank || e['rank'] || 0).filter(r => r > 0);
+            const presentRanks = Array.from(tbody.children).map(row => {
+                const rankCell = row.querySelector('.rank-col');
+                return rankCell ? parseInt(rankCell.textContent.trim()) : null;
+            }).filter(r => r !== null && r > 0);
+            const missingRanks = expectedRanks.filter(r => !presentRanks.includes(r));
+            
+            console.error(`\n❌ MISSING RANKS DETECTED:`);
+            console.error(`    Expected ranks: ${expectedRanks.join(', ')}`);
+            console.error(`    Present ranks: ${presentRanks.join(', ')}`);
+            console.error(`    Missing ranks: ${missingRanks.join(', ')}`);
+            
+            // Try to recover missing ranks immediately
+            if (missingRanks.length > 0) {
+                console.log(`\n🔄 Attempting to recover ${missingRanks.length} missing rank(s)...`);
+                missingRanks.forEach(missingRank => {
+                    const missingEntry = leaderboardArray.find(e => (e.rank || e['rank']) === missingRank);
+                    if (missingEntry) {
+                        this.addLeaderboardRow(missingEntry, tbody, currentUsername);
+                    }
+                });
+            }
         }
         
         if (rowsCreated === 0 && expectedRows > 0) {
@@ -1056,22 +1128,87 @@ class KahootMode {
     }
 
     createStarsDisplay(count) {
-        let starsHTML = '<div class="stars-display">';
-        for (let i = 0; i < 3; i++) {
-            if (i < count) {
-                starsHTML += '<i class="fas fa-star star-icon"></i>';
-            } else {
-                starsHTML += '<i class="far fa-star star-icon" style="opacity: 0.3;"></i>';
+        try {
+            const starsCount = parseInt(count) || 0;
+            let starsHTML = '<div class="stars-display">';
+            for (let i = 0; i < 3; i++) {
+                if (i < starsCount) {
+                    starsHTML += '<i class="fas fa-star star-icon"></i>';
+                } else {
+                    starsHTML += '<i class="far fa-star star-icon" style="opacity: 0.3;"></i>';
+                }
             }
+            starsHTML += '</div>';
+            return starsHTML;
+        } catch (err) {
+            console.error('Error creating stars display:', err);
+            return '<div class="stars-display"><i class="far fa-star star-icon" style="opacity: 0.3;"></i></div>';
         }
-        starsHTML += '</div>';
-        return starsHTML;
+    }
+    
+    addLeaderboardRow(entry, tbody, currentUsername) {
+        try {
+            const username = (entry.username || entry['username'] || '').trim();
+            const rank = entry.rank || entry['rank'] || 0;
+            const totalScore = entry.total_score || entry['total_score'] || 0;
+            const stars = entry.stars || entry['stars'] || 0;
+            
+            if (!username || rank < 1) {
+                console.error('Cannot add row: invalid data', { username, rank });
+                return false;
+            }
+            
+            const row = document.createElement('tr');
+            if (username.toLowerCase() === (currentUsername || '').toLowerCase()) {
+                row.classList.add('user-row');
+            }
+            
+            const starsHTML = this.createStarsDisplay(stars);
+            const escapedUsername = this.escapeHtml(username);
+            
+            row.innerHTML = `
+                <td class="rank-col">${rank}</td>
+                <td class="name-col">${escapedUsername}</td>
+                <td class="score-col">${totalScore}/15</td>
+                <td class="stars-col">${starsHTML}</td>
+            `;
+            
+            // Find correct insertion point
+            const existingRows = Array.from(tbody.children);
+            let insertIndex = existingRows.findIndex(r => {
+                const rRank = parseInt(r.querySelector('.rank-col')?.textContent?.trim() || '999');
+                return rRank > rank;
+            });
+            
+            if (insertIndex === -1) {
+                tbody.appendChild(row);
+            } else if (insertIndex === 0) {
+                tbody.insertBefore(row, tbody.firstChild);
+            } else {
+                tbody.insertBefore(row, existingRows[insertIndex]);
+            }
+            
+            console.log(`✅ Recovered: Added rank ${rank} - ${username}`);
+            return true;
+        } catch (err) {
+            console.error(`❌ Error adding row for rank ${entry.rank}:`, err);
+            return false;
+        }
     }
 
     escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+        if (!text) return '';
+        try {
+            const div = document.createElement('div');
+            div.textContent = String(text);
+            return div.innerHTML;
+        } catch (err) {
+            console.error('Error escaping HTML:', err, text);
+            return String(text).replace(/[&<>"']/g, (m) => {
+                const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+                return map[m];
+            });
+        }
     }
 
     getCurrentUsername() {
