@@ -5974,6 +5974,26 @@ body {
         letter-spacing: 1px;
     }
     
+    .leaderboard-stats {
+        gap: 0.5rem;
+    }
+    
+    .stat-card {
+        padding: 0.75rem 0.5rem;
+        min-width: auto;
+        flex: 1;
+        border-radius: 12px;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 1.2rem;
+    }
+    
+    .stat-card .stat-label {
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+    }
+    
     .leaderboard-table-container {
         padding: 1rem;
         font-size: 0.9rem;
