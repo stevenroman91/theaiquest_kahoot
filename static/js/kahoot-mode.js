@@ -731,6 +731,21 @@ class KahootMode {
 
     async showLeaderboard() {
         try {
+            // Show modal first to ensure DOM is ready
+            const modalElement = document.getElementById('leaderboardModal');
+            if (!modalElement) {
+                console.error('❌ leaderboardModal not found in DOM');
+                alert('Erreur: Modal de leaderboard introuvable');
+                return;
+            }
+            
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+            
+            // Wait a bit for modal to be fully displayed
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // Now fetch and populate data
             const response = await fetch('/api/leaderboard?limit=50');
             const data = await response.json();
 
@@ -745,13 +760,11 @@ class KahootMode {
                 if (leaderboard.length > 0) {
                     console.log('📊 First entry:', leaderboard[0]);
                     console.log('📊 First entry keys:', Object.keys(leaderboard[0]));
+                    console.log('📊 First entry full:', JSON.stringify(leaderboard[0], null, 2));
                 }
                 
+                // Populate the leaderboard (this will now work because modal is shown)
                 this.populateLeaderboard(leaderboard, data.user_rank);
-                
-                // Show modal
-                const modal = new bootstrap.Modal(document.getElementById('leaderboardModal'));
-                modal.show();
             } else {
                 console.error('Leaderboard API error:', data.message);
                 alert('Erreur lors du chargement du leaderboard: ' + (data.message || 'Unknown error'));
