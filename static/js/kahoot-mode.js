@@ -305,13 +305,28 @@ class KahootMode {
                         if (data.success && data.choices) {
                             console.log('✅ Phase1 choices loaded directly via API:', data.choices.length, 'choices');
                             
-                            // Si GameController est disponible, utiliser sa méthode de rendu
-                            if (window.gameController && window.gameController.renderMOT1Choices) {
-                                window.gameController.renderMOT1Choices(data.choices);
-                            } else {
-                                // Sinon, utiliser le rendu manuel
-                                renderChoicesManually(data.choices);
-                            }
+                            // Attendre que GameController soit disponible pour le rendu complet
+                            // avec les photos et le style original
+                            let renderAttempts = 0;
+                            const maxRenderAttempts = 20; // 4 secondes maximum
+                            
+                            const tryRender = () => {
+                                if (window.gameController && window.gameController.renderMOT1Choices) {
+                                    // Utiliser le rendu complet de GameController
+                                    window.gameController.renderMOT1Choices(data.choices);
+                                    console.log('✅ Phase1 choices rendered with GameController (full visual)');
+                                } else if (renderAttempts < maxRenderAttempts) {
+                                    renderAttempts++;
+                                    setTimeout(tryRender, 200);
+                                } else {
+                                    // En dernier recours seulement, utiliser le rendu simple
+                                    console.warn('⚠️ GameController not available for rendering, using simple fallback');
+                                    renderChoicesManually(data.choices);
+                                }
+                            };
+                            
+                            // Commencer à essayer de rendre
+                            tryRender();
                         } else {
                             console.error('❌ API returned error:', data.message);
                             const container = document.getElementById('phase1-choices');
