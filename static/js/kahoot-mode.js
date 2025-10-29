@@ -382,22 +382,93 @@ class KahootMode {
                         
                         const displayTitle = customTitles[choice.id] || choice.title;
                         
-                        columnDiv.innerHTML = `
-                            <div class="choice-column" data-choice-id="${choice.id}" onclick="window.gameController ? window.gameController.selectChoice('${choice.id}') : confirmPhase1Choice('${choice.id}')">
-                                <div class="choice-header">
-                                    <h4 class="choice-title" style="display: flex; align-items: center;">${displayTitle}</h4>
-                                </div>
-                                <div class="choice-content">
-                                    ${contentHtml}
-                                </div>
+                        // Créer l'élément choice-column
+                        const choiceColumn = document.createElement('div');
+                        choiceColumn.className = 'choice-column';
+                        choiceColumn.dataset.choiceId = choice.id;
+                        
+                        // Ajouter l'event listener pour la sélection
+                        choiceColumn.addEventListener('click', () => {
+                            handleChoiceSelection(choice.id);
+                        });
+                        
+                        choiceColumn.innerHTML = `
+                            <div class="choice-header">
+                                <h4 class="choice-title" style="display: flex; align-items: center;">${displayTitle}</h4>
+                            </div>
+                            <div class="choice-content">
+                                ${contentHtml}
                             </div>
                         `;
                         
+                        columnDiv.appendChild(choiceColumn);
                         container.appendChild(columnDiv);
                     });
                     
                     console.log(`✅ Rendered ${choices.length} choices with FULL VISUAL (photos, enablers, use cases)`);
                 };
+                
+                // Helper function pour gérer la sélection d'un choix
+                const handleChoiceSelection = (choiceId) => {
+                    console.log('🔘 Choice selected:', choiceId);
+                    
+                    // Retirer la sélection de toutes les colonnes
+                    document.querySelectorAll('.choice-column').forEach(column => {
+                        column.classList.remove('selected');
+                    });
+                    
+                    // Ajouter la sélection à la colonne cliquée
+                    const selectedColumn = document.querySelector(`[data-choice-id="${choiceId}"]`);
+                    if (selectedColumn) {
+                        selectedColumn.classList.add('selected');
+                    }
+                    
+                    // Activer le bouton "Confirm Selection"
+                    const confirmBtn = document.getElementById('phase1-confirm-btn');
+                    if (confirmBtn) {
+                        confirmBtn.disabled = false;
+                        confirmBtn.classList.remove('btn-secondary');
+                        confirmBtn.classList.add('btn-primary');
+                        
+                        // Stocker le choix sélectionné pour la confirmation
+                        confirmBtn.dataset.selectedChoice = choiceId;
+                    }
+                    
+                    // Si GameController est disponible, utiliser sa méthode aussi
+                    if (window.gameController && window.gameController.selectPhase1Choice) {
+                        window.gameController.selectPhase1Choice(choiceId);
+                    }
+                };
+                
+                // Setup confirm button listener after choices are rendered
+                const setupConfirmButton = () => {
+                    const confirmBtn = document.getElementById('phase1-confirm-btn');
+                    if (confirmBtn) {
+                        // Remove existing listeners by cloning
+                        const newConfirmBtn = confirmBtn.cloneNode(true);
+                        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+                        
+                        // Add new listener
+                        newConfirmBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const choiceId = newConfirmBtn.dataset.selectedChoice;
+                            if (choiceId) {
+                                confirmPhase1Choice(choiceId);
+                            } else {
+                                // Try to find selected choice manually
+                                const selectedColumn = document.querySelector('.choice-column.selected');
+                                if (selectedColumn && selectedColumn.dataset.choiceId) {
+                                    confirmPhase1Choice(selectedColumn.dataset.choiceId);
+                                } else {
+                                    alert('Veuillez sélectionner un choix avant de confirmer');
+                                }
+                            }
+                        });
+                    }
+                };
+                
+                // Setup confirm button after a short delay to ensure it exists
+                setTimeout(setupConfirmButton, 200);
                 
                 // Helper function pour confirmer le choix Phase 1
                 const confirmPhase1Choice = (choiceId) => {
