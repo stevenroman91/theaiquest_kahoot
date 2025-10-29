@@ -1411,31 +1411,19 @@ function renderMOT2ChoicesFull(choices) {
             </div>
         `;
         
-        // Mobile-friendly interaction: double tap to select, then tap slot to drop
-        let lastTap = 0;
-        let tapTimeout;
-        
+        // Mobile-friendly interaction: simple tap to select, then tap slot to drop
         card.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTap;
-            
-            if (tapLength < 300 && tapLength > 0) {
-                // Double tap detected - select this card
-                e.stopPropagation();
-                selectCardForMobile(card);
-            } else {
-                // Single tap - start timeout for potential double tap
-                tapTimeout = setTimeout(() => {
-                    selectCardForMobile(card);
-                }, 300);
-            }
-            
-            lastTap = currentTime;
+            e.stopPropagation();
+            selectCardForMobile(card);
         });
         
-        card.addEventListener('touchend', (e) => {
-            clearTimeout(tapTimeout);
+        // Also work with click for desktop hybrid devices
+        card.addEventListener('click', (e) => {
+            if ('ontouchstart' in window) {
+                // Mobile device - click is just a fallback
+                return;
+            }
         });
         
         // Keep drag-and-drop for desktop (mouse events)
@@ -1530,21 +1518,38 @@ function renderMOT2ChoicesFull(choices) {
     
     // Mobile helper: Select card for mobile interaction
     function selectCardForMobile(card) {
+        // If card is already selected and clicked again, deselect it
+        if (card.classList.contains('selected-mobile')) {
+            card.classList.remove('selected-mobile');
+            card.style.opacity = '1';
+            card.style.border = '';
+            card.style.borderRadius = '';
+            return;
+        }
+        
         // Remove selection from all cards
         document.querySelectorAll('.solution-card').forEach(c => {
             c.classList.remove('selected-mobile');
             c.style.opacity = '1';
+            c.style.border = '';
+            c.style.borderRadius = '';
         });
         
         // Select this card
         card.classList.add('selected-mobile');
-        card.style.opacity = '0.7';
+        card.style.opacity = '0.8';
         card.style.border = '3px solid var(--fdj-blue-primary)';
         card.style.borderRadius = '8px';
         
-        // Show instruction
-        if (window.gameController && window.gameController.showAlert) {
-            window.gameController.showAlert('Card selected! Tap on a priority slot to add it.', 'info');
+        // Brief instruction (less intrusive)
+        const existingAlert = document.querySelector('.mobile-card-selected-hint');
+        if (!existingAlert) {
+            const hint = document.createElement('div');
+            hint.className = 'mobile-card-selected-hint alert alert-info';
+            hint.style.cssText = 'position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; padding: 8px 16px; font-size: 0.85rem; border-radius: 8px;';
+            hint.textContent = 'Tap sur un slot pour l\'ajouter';
+            document.body.appendChild(hint);
+            setTimeout(() => hint.remove(), 2000);
         }
     }
     
