@@ -1219,16 +1219,45 @@ class KahootMode {
 
         // Scroll to top to ensure first player is visible
         if (tableContainer) {
-            // Force scroll to top and ensure first row is visible
+            // Force scroll to top multiple times to ensure it works
+            // Sometimes browser needs multiple attempts
             setTimeout(() => {
                 tableContainer.scrollTop = 0;
-                // Also try to scroll the first row into view
+                
+                // Also scroll the container's parent if it's scrollable
+                const scrollableParent = tableContainer.closest('.leaderboard-content') || tableContainer.closest('[style*="overflow"]');
+                if (scrollableParent) {
+                    scrollableParent.scrollTop = 0;
+                }
+                
+                // Scroll the first row into view with 'start' to ensure it's fully visible above sticky header
                 const firstRow = tbody.querySelector('tr:first-child');
                 if (firstRow) {
-                    firstRow.scrollIntoView({ behavior: 'auto', block: 'nearest' });
-                    console.log('📊 Scrolled to show first row');
+                    // Use 'start' instead of 'nearest' to ensure row is at the top
+                    firstRow.scrollIntoView({ behavior: 'auto', block: 'start' });
+                    
+                    // Double-check: force scroll to 0 again after scrollIntoView
+                    setTimeout(() => {
+                        tableContainer.scrollTop = 0;
+                        if (scrollableParent) {
+                            scrollableParent.scrollTop = 0;
+                        }
+                        console.log('📊 Final scroll position:', tableContainer.scrollTop);
+                    }, 50);
                 }
-            }, 200);
+                
+                console.log('📊 Scrolled to show first row, scrollTop:', tableContainer.scrollTop);
+            }, 100);
+            
+            // Also try again after animation completes
+            setTimeout(() => {
+                tableContainer.scrollTop = 0;
+                const firstRow = tbody.querySelector('tr:first-child');
+                if (firstRow) {
+                    firstRow.scrollIntoView({ behavior: 'auto', block: 'start' });
+                }
+                console.log('📊 Second scroll attempt, scrollTop:', tableContainer.scrollTop);
+            }, 600); // After animations (0.5s + buffer)
         }
         
         // Log final state for debugging

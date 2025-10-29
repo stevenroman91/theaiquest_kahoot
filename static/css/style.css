@@ -5699,6 +5699,29 @@ body {
 /* Ensure table container has proper scroll positioning */
 .leaderboard-table-container {
     scroll-padding-top: 0;
+    scroll-margin-top: 0;
+    /* Force scroll to start from top */
+    scroll-behavior: auto;
+}
+
+/* Ensure tbody starts right after thead (no gap that could hide first row) */
+.leaderboard-table tbody {
+    display: table-row-group;
+    margin: 0;
+    padding: 0;
+}
+
+/* Make sure first row is not hidden by sticky header */
+.leaderboard-table-container::before {
+    content: '';
+    display: none; /* Remove any pseudo-elements that could interfere */
+}
+
+/* Additional safety: ensure first row is fully visible */
+.leaderboard-table tbody tr:first-child td {
+    padding-top: 1.5rem; /* Normal padding */
+    position: relative;
+    z-index: 1;
 }
 
 .leaderboard-table thead th:first-child {
