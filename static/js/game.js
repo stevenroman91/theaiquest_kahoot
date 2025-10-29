@@ -2055,7 +2055,7 @@ class GameController {
 
     updatePhase4Budget() {
         const budgetDisplay = document.getElementById('phase4-budget-display');
-        const budgetFill = document.getElementById('budget-fill');
+        const budgetFill = document.getElementById('budget-fill-horizontal');
         const statusBadge = document.getElementById('budget-status');
         const confirmBtn = document.getElementById('phase4-confirm-btn');
         
@@ -2063,27 +2063,40 @@ class GameController {
         console.log('DEBUG updatePhase4Budget: confirmBtn =', confirmBtn);
         
         // Update budget display
-        budgetDisplay.textContent = `${this.budget}/30 points`;
+        if (budgetDisplay) {
+            budgetDisplay.textContent = `${this.budget}/30 points`;
+        }
         
-        // Update budget bar fill
-        const fillPercentage = (this.budget / 30) * 100;
-        budgetFill.style.height = `${fillPercentage}%`;
+        // Update horizontal budget bar fill
+        if (budgetFill) {
+            const fillPercentage = (this.budget / 30) * 100;
+            budgetFill.style.width = `${Math.min(fillPercentage, 100)}%`;
+            
+            // Change color based on budget usage
+            if (fillPercentage > 100) {
+                budgetFill.style.background = 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)';
+            } else if (fillPercentage >= 80) {
+                budgetFill.style.background = 'linear-gradient(90deg, #f59e0b 0%, #d97706 100%)';
+            } else {
+                budgetFill.style.background = 'linear-gradient(90deg, #10b981 0%, #059669 100%)';
+            }
+        }
         
         // Update status badge
-        statusBadge.className = 'badge';
-        
-        if (this.budget === 0) {
-            statusBadge.classList.add('badge-secondary');
-            statusBadge.textContent = 'Select enablers';
-        } else if (this.budget < 30) {
-            statusBadge.classList.add('badge-warning');
-            statusBadge.textContent = `${30 - this.budget} points remaining`;
-        } else if (this.budget === 30) {
-            statusBadge.classList.add('badge-success');
-            statusBadge.textContent = 'Perfect budget!';
-        } else {
-            statusBadge.classList.add('badge-danger');
-            statusBadge.textContent = `${this.budget - 30} points over`;
+        if (statusBadge) {
+            if (this.budget > 30) {
+                statusBadge.textContent = 'Budget exceeded!';
+                statusBadge.className = 'badge bg-danger';
+            } else if (this.budget === 30) {
+                statusBadge.textContent = 'Budget full';
+                statusBadge.className = 'badge bg-success';
+            } else if (this.budget > 0) {
+                statusBadge.textContent = `${30 - this.budget} pts remaining`;
+                statusBadge.className = 'badge bg-info';
+            } else {
+                statusBadge.textContent = 'Select enablers';
+                statusBadge.className = 'badge bg-secondary';
+            }
         }
         
         // Enable/disable confirm button (allow confirmation if budget <= 30)
