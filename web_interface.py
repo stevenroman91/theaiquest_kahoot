@@ -1395,11 +1395,16 @@ def api_leaderboard():
         limit = request.args.get('limit', 50, type=int)
         session_code = session.get('game_session_code')  # Code de session Kahoot
         
-        # Si on a un code de session, filtrer par session
+        logger.info(f"Leaderboard request: session_code={session_code}, limit={limit}")
+        
+        # Si on a un code de session, filtrer STRICTEMENT par session (seulement les joueurs de cette session)
         if session_code:
+            logger.info(f"Filtering leaderboard for session: {session_code}")
             leaderboard = user_manager.get_leaderboard_for_session(session_code, limit=limit)
+            logger.info(f"Found {len(leaderboard)} players for session {session_code}")
         else:
             # Sinon, leaderboard global (mode normal)
+            logger.info("No session code, using global leaderboard")
             leaderboard = user_manager.get_leaderboard(limit=limit)
         
         # Ajouter le rang de l'utilisateur actuel s'il est connecté

@@ -600,12 +600,13 @@ class UserManager:
             import json
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
+                # Filter strictly by session_id - only players who played in THIS specific session
                 cursor.execute('''
                     SELECT username, MAX(total_score) as max_score, MAX(stars) as max_stars, 
                            (SELECT mot_scores FROM game_scores WHERE username = gs.username AND session_id = ? ORDER BY total_score DESC LIMIT 1) as mot_scores,
                            MIN(completed_at) as first_completed
                     FROM game_scores gs
-                    WHERE session_id = ?
+                    WHERE session_id = ? AND session_id IS NOT NULL
                     GROUP BY username
                     ORDER BY max_score DESC, first_completed ASC
                     LIMIT ?
