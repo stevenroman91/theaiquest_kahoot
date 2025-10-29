@@ -459,72 +459,62 @@ class KahootMode {
                     }
                 };
                 
-                // Wait for GameController to be fully initialized
-                // Since game.js creates GameController at the bottom of the file,
-                // we need to wait for it to be available
-                const startStep1WhenReady = () => {
-                    let attempts = 0;
-                    const maxAttempts = 100; // 20 secondes maximum (100 * 200ms)
+                // Load choices immediately and render with full visual
+                // This ensures the choices appear even if GameController isn't available
+                const loadAndRenderStep1 = () => {
+                    console.log('🎮 Loading Step 1 choices with full visual render...');
                     
-                    const checkGameController = () => {
-                        attempts++;
-                        
-                        if (window.gameController && typeof window.gameController.loadMOT1Choices === 'function') {
-                            console.log('✅ GameController found after', attempts, 'attempts, loading Step 1 with full visual render');
-                            
-                            // Stop all videos first
-                            if (window.gameController.stopAllVideos) {
-                                window.gameController.stopAllVideos();
-                            }
-                            
-                            // S'assurer que la section est visible
-                            const phase1Section = document.getElementById('phase1-section');
-                            if (phase1Section) {
-                                phase1Section.style.display = 'block';
-                            }
-                            
-                            // Hide all other sections
-                            document.querySelectorAll('.phase-section').forEach(section => {
-                                if (section.id !== 'phase1-section') {
-                                    section.style.display = 'none';
-                                }
-                            });
-                            
-                            // Utiliser loadMOT1Choices qui charge l'API ET rend avec le style complet
-                            window.gameController.loadMOT1Choices();
-                        } else if (attempts < maxAttempts) {
-                            // Continuer à vérifier
-                            setTimeout(checkGameController, 200);
-                        } else {
-                            console.warn('⚠️ GameController not found after', attempts, 'attempts, using full visual render directly');
-                            // Charger les choix et utiliser le rendu complet (avec photos)
-                            fetch('/api/phase1/choices', {
-                                credentials: 'include'
-                            })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.success && data.choices) {
-                                    const phase1Section = document.getElementById('phase1-section');
-                                    if (phase1Section) {
-                                        phase1Section.style.display = 'block';
-                                    }
-                                    // Utiliser le rendu complet avec photos
-                                    renderMOT1ChoicesFull(data.choices);
-                                } else {
-                                    console.error('Failed to load choices');
-                                }
-                            })
-                            .catch(err => console.error('Error loading choices:', err));
+                    // S'assurer que la section est visible
+                    const phase1Section = document.getElementById('phase1-section');
+                    if (phase1Section) {
+                        phase1Section.style.display = 'block';
+                    }
+                    
+                    // Hide all other sections
+                    document.querySelectorAll('.phase-section').forEach(section => {
+                        if (section.id !== 'phase1-section') {
+                            section.style.display = 'none';
                         }
-                    };
+                    });
                     
-                    // Commencer la vérification
-                    checkGameController();
+                    // Stop videos if GameController is available
+                    if (window.gameController && window.gameController.stopAllVideos) {
+                        window.gameController.stopAllVideos();
+                    }
+                    
+                    // Load choices and render immediately with full visual
+                    fetch('/api/phase1/choices', {
+                        credentials: 'include'
+                    })
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error(`HTTP ${res.status}`);
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.success && data.choices) {
+                            console.log('✅ Choices loaded, rendering with full visual (photos, enablers, use cases)');
+                            // Utiliser le rendu complet avec photos (même logique que game.js)
+                            renderMOT1ChoicesFull(data.choices);
+                            
+                            // Si GameController devient disponible plus tard, on peut essayer de charger les descriptions
+                            if (window.gameController && window.gameController.loadEnablerDescriptions) {
+                                // Charger les descriptions des enablers en arrière-plan
+                                window.gameController.loadEnablerDescriptions();
+                            }
+                        } else {
+                            console.error('❌ Failed to load choices:', data.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('❌ Error loading choices:', err);
+                    });
                 };
                 
-                // Start waiting for GameController
-                // Give it a moment for scripts to load
-                setTimeout(startStep1WhenReady, 300);
+                // Start loading immediately - don't wait for GameController
+                // The full visual render function is self-contained
+                setTimeout(loadAndRenderStep1, 100);
             } else {
                 this.showLoginAlert(data.message || 'Login failed', 'danger');
                 loginBtn.disabled = false;
