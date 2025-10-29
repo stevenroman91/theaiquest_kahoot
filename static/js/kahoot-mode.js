@@ -84,7 +84,7 @@ class KahootMode {
                 // Hide login section and all intro sections
                 document.getElementById('login-section').style.display = 'none';
                 
-                // Hide all video/intro sections in Kahoot mode
+                // Hide all video/intro sections in Kahoot mode and prevent video loading
                 const sectionsToHide = [
                     'video-intro-section',
                     'game-intro',
@@ -102,7 +102,27 @@ class KahootMode {
                 ];
                 sectionsToHide.forEach(sectionId => {
                     const el = document.getElementById(sectionId);
-                    if (el) el.style.display = 'none';
+                    if (el) {
+                        el.style.display = 'none';
+                        // Remove video sources to prevent loading
+                        const videos = el.querySelectorAll('video');
+                        videos.forEach(video => {
+                            // Remove all source elements
+                            const sources = video.querySelectorAll('source');
+                            sources.forEach(source => source.remove());
+                            // Clear src and reset
+                            video.removeAttribute('src');
+                            video.load();
+                        });
+                    }
+                });
+                
+                // Also disable all remaining video elements on the page
+                document.querySelectorAll('video').forEach(video => {
+                    const sources = video.querySelectorAll('source');
+                    sources.forEach(source => source.remove());
+                    video.removeAttribute('src');
+                    video.load();
                 });
                 
                 // Start game directly to Step 1 (skip all videos/intro)
@@ -494,13 +514,33 @@ function hookScoreModal() {
     }
 }
 
+// Prevent video loading in Kahoot mode
+function preventVideoLoading() {
+    // Remove video sources immediately to prevent browser preloading
+    const allVideos = document.querySelectorAll('video');
+    allVideos.forEach(video => {
+        const sources = video.querySelectorAll('source');
+        sources.forEach(source => {
+            // Store original src in data attribute but remove from DOM
+            if (source.src && !source.dataset.originalSrc) {
+                source.dataset.originalSrc = source.src;
+            }
+            source.removeAttribute('src');
+        });
+        video.removeAttribute('src');
+        video.load(); // Reset video element
+    });
+}
+
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+        preventVideoLoading(); // Prevent videos from loading immediately
         window.kahootMode = new KahootMode();
         hookScoreModal();
     });
 } else {
+    preventVideoLoading(); // Prevent videos from loading immediately
     window.kahootMode = new KahootMode();
     hookScoreModal();
 }
