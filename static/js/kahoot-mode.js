@@ -282,8 +282,13 @@ class KahootMode {
                 // In Kahoot mode, we want to go directly to Step 1 choices
                 
                 // Wait a bit to ensure GameController is fully initialized
+                // Mais aussi charger les choix directement si GameController tarde
                 let retryCount = 0;
                 const maxRetries = 10; // Maximum 10 tentatives (2 secondes)
+                
+                // Charger les choix directement en parallèle
+                loadPhase1ChoicesDirectly();
+                
                 const startStep1 = () => {
                     if (window.gameController) {
                         // Stop all videos first
@@ -291,10 +296,16 @@ class KahootMode {
                             window.gameController.stopAllVideos();
                         }
                         
+                        // S'assurer que la section est visible
+                        const phase1Section = document.getElementById('phase1-section');
+                        if (phase1Section) {
+                            phase1Section.style.display = 'block';
+                        }
+                        
                         // Call loadMOT1Choices directly to skip video and show Step 1
                         if (window.gameController.loadMOT1Choices) {
                             window.gameController.loadMOT1Choices();
-                            console.log('✅ Loaded Step 1 directly (Kahoot mode)');
+                            console.log('✅ Loaded Step 1 via GameController (Kahoot mode)');
                         } else if (window.gameController.startMOT1Game) {
                             // Fallback to startMOT1Game if loadMOT1Choices doesn't exist
                             window.gameController.startMOT1Game();
@@ -315,6 +326,52 @@ class KahootMode {
                     }
                 };
                 
+                // Helper function pour charger les choix directement via l'API
+                const loadPhase1ChoicesDirectly = () => {
+                    // Afficher la section d'abord
+                    const phase1Section = document.getElementById('phase1-section');
+                    if (phase1Section) {
+                        phase1Section.style.display = 'block';
+                    }
+                    
+                    // Charger les choix via l'API
+                    fetch('/api/phase1/choices', {
+                        credentials: 'include'
+                    })
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error(`HTTP ${res.status}`);
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.success && data.choices) {
+                            console.log('✅ Phase1 choices loaded directly via API:', data.choices.length, 'choices');
+                            
+                            // Si GameController est disponible, utiliser sa méthode de rendu
+                            if (window.gameController && window.gameController.renderMOT1Choices) {
+                                window.gameController.renderMOT1Choices(data.choices);
+                            } else {
+                                // Sinon, utiliser le rendu manuel
+                                renderChoicesManually(data.choices);
+                            }
+                        } else {
+                            console.error('❌ API returned error:', data.message);
+                            const container = document.getElementById('phase1-choices');
+                            if (container) {
+                                container.innerHTML = '<p class="text-danger">Erreur lors du chargement des choix: ' + (data.message || 'Erreur inconnue') + '</p>';
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error loading phase1 choices directly:', err);
+                        const container = document.getElementById('phase1-choices');
+                        if (container) {
+                            container.innerHTML = '<p class="text-danger">Erreur de connexion lors du chargement des choix.</p>';
+                        }
+                    });
+                };
+                
                 // Helper function to show Step 1 directly
                 const showPhase1Directly = () => {
                     const phase1Section = document.getElementById('phase1-section');
@@ -322,21 +379,108 @@ class KahootMode {
                         phase1Section.style.display = 'block';
                         console.log('✅ Showing Step 1 section directly (fallback)');
                         
-                        // Essayer d'appeler l'API pour charger les choix
-                        fetch('/api/phase1_choices')
-                            .then(res => res.json())
+                        // Essayer d'appeler l'API pour charger les choix (URL correcte: /api/phase1/choices)
+                        fetch('/api/phase1/choices', {
+                            credentials: 'include'
+                        })
+                            .then(res => {
+                                if (!res.ok) {
+                                    throw new Error(`HTTP ${res.status}`);
+                                }
+                                return res.json();
+                            })
                             .then(data => {
-                                if (data.success && window.gameController) {
-                                    // Si GameController est maintenant disponible, l'utiliser
-                                    if (window.gameController.loadMOT1Choices) {
-                                        window.gameController.loadMOT1Choices();
+                                if (data.success) {
+                                    console.log('✅ Phase1 choices loaded via API');
+                                    // Si GameController est disponible, utiliser renderMOT1Choices
+                                    if (window.gameController && window.gameController.renderMOT1Choices) {
+                                        window.gameController.renderMOT1Choices(data.choices);
+                                    } else {
+                                        // Sinon, rendre manuellement les choix
+                                        renderChoicesManually(data.choices);
                                     }
+                                } else {
+                                    console.error('❌ API returned error:', data.message);
+                                    renderChoicesManually([]);
                                 }
                             })
-                            .catch(err => console.error('Error loading phase1 choices:', err));
+                            .catch(err => {
+                                console.error('Error loading phase1 choices:', err);
+                                // Essayer quand même de rendre quelque chose
+                                renderChoicesManually([]);
+                            });
                     } else {
                         console.error('❌ Phase 1 section not found in DOM');
                     }
+                };
+                
+                // Helper function pour rendre les choix manuellement si GameController n'est pas disponible
+                const renderChoicesManually = (choices) => {
+                    const container = document.getElementById('phase1-choices');
+                    if (!container) {
+                        console.error('❌ phase1-choices container not found');
+                        return;
+                    }
+                    
+                    if (choices.length === 0) {
+                        container.innerHTML = '<p class="text-danger">Aucun choix disponible. Veuillez rafraîchir la page.</p>';
+                        return;
+                    }
+                    
+                    container.innerHTML = '';
+                    choices.forEach(choice => {
+                        const choiceCard = document.createElement('div');
+                        choiceCard.className = 'choice-card';
+                        choiceCard.dataset.choiceId = choice.id;
+                        choiceCard.innerHTML = `
+                            <h4>${choice.title || choice.id}</h4>
+                            <p>${choice.description || ''}</p>
+                        `;
+                        choiceCard.addEventListener('click', () => {
+                            // Sélectionner ce choix
+                            document.querySelectorAll('.choice-card').forEach(card => {
+                                card.classList.remove('selected');
+                            });
+                            choiceCard.classList.add('selected');
+                            
+                            // Confirmer la sélection
+                            confirmPhase1Choice(choice.id);
+                        });
+                        container.appendChild(choiceCard);
+                    });
+                    console.log(`✅ Rendered ${choices.length} choices manually`);
+                };
+                
+                // Helper function pour confirmer le choix Phase 1
+                const confirmPhase1Choice = (choiceId) => {
+                    fetch('/api/phase1/choose', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({ choice_id: choiceId })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('✅ Phase 1 choice confirmed:', choiceId);
+                            // Aller à l'écran de score
+                            if (window.gameController && window.gameController.showScore) {
+                                window.gameController.showScore(data.score_data);
+                            } else {
+                                // Rediriger vers le score manuellement
+                                window.location.href = '/?step=score&phase=1';
+                            }
+                        } else {
+                            console.error('❌ Error confirming choice:', data.message);
+                            alert('Erreur lors de la confirmation du choix: ' + data.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error confirming choice:', err);
+                        alert('Erreur de connexion');
+                    });
                 };
                 
                 // Start after a short delay to ensure everything is initialized
