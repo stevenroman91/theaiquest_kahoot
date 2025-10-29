@@ -15,22 +15,48 @@ class KahootMode {
     }
     
     prefillSessionCodeFromUrl() {
-        // Pré-remplir le code de session depuis l'URL si présent
-        const sessionCodeInput = document.getElementById('session-code');
-        if (!sessionCodeInput) return;
-        
-        const urlParams = new URLSearchParams(window.location.search);
-        const sessionCodeFromUrl = urlParams.get('session');
-        
-        if (sessionCodeFromUrl) {
-            const normalizedCode = sessionCodeFromUrl.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 6);
-            if (normalizedCode.length === 6) {
-                sessionCodeInput.value = normalizedCode;
-                console.log('✅ Session code pré-rempli depuis URL:', normalizedCode);
-                // Basculer en mode joueur
-                this.switchToPlayerMode();
+        // Fonction pour pré-remplir avec retry si le champ n'est pas encore disponible
+        const tryPrefill = (attempt = 0) => {
+            const sessionCodeInput = document.getElementById('session-code');
+            
+            if (!sessionCodeInput) {
+                // Réessayer si le champ n'existe pas encore (max 10 tentatives = 1 seconde)
+                if (attempt < 10) {
+                    setTimeout(() => tryPrefill(attempt + 1), 100);
+                } else {
+                    console.warn('⚠️ Champ session-code introuvable après plusieurs tentatives');
+                }
+                return;
             }
-        }
+            
+            // Vérifier l'URL pour le paramètre ?session=CODE
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionCodeFromUrl = urlParams.get('session');
+            
+            // Vérifier aussi la variable Jinja si disponible
+            const sessionCodeFromTemplate = typeof sessionCode !== 'undefined' ? sessionCode : null;
+            
+            // Utiliser celui de l'URL en priorité
+            const codeToUse = sessionCodeFromUrl || sessionCodeFromTemplate;
+            
+            if (codeToUse) {
+                // Normaliser le code : majuscules, max 6 caractères, uniquement alphanumériques
+                const normalizedCode = codeToUse.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 6);
+                if (normalizedCode.length === 6) {
+                    sessionCodeInput.value = normalizedCode;
+                    console.log('✅ Session code pré-rempli depuis URL:', normalizedCode);
+                    
+                    // S'assurer que le champ est visible (basculer en mode joueur)
+                    this.switchToPlayerMode();
+                    
+                    // Forcer la mise à jour visuelle (trigger event pour React/Vue si besoin)
+                    sessionCodeInput.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            }
+        };
+        
+        // Démarrer immédiatement
+        tryPrefill();
     }
 
     initializeEventListeners() {
@@ -2726,14 +2752,17 @@ function initializeKahootMode() {
             const normalizedCode = codeToUse.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 6);
             if (normalizedCode.length === 6) {
                 sessionCodeInput.value = normalizedCode;
-                console.log('✅ Session code pré-rempli depuis URL:', normalizedCode);
+                console.log('✅ Session code pré-rempli depuis URL (initializeKahootMode):', normalizedCode);
+                
+                // Forcer la mise à jour visuelle
+                sessionCodeInput.dispatchEvent(new Event('input', { bubbles: true }));
                 
                 // Basculer automatiquement en mode joueur si code présent
                 setTimeout(() => {
                     if (window.kahootMode) {
                         window.kahootMode.switchToPlayerMode();
                     }
-                }, 100);
+                }, 50);
             }
         }
         
