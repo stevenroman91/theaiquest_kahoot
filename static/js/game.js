@@ -1983,15 +1983,17 @@ class GameController {
             const categoryColor = categoryColors[pillar];
             const specificIcon = this.getEnablerIcon(choice.id);
             
+            // Simplified: only header with icon, title and cost badge
             choiceDiv.innerHTML = `
-                <div class="choice-header">
-                    <div style="background-color: ${categoryColor}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                        <i class="${specificIcon}" style="color: white; font-size: 1rem;"></i>
+                <div class="choice-header d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center" style="flex: 1;">
+                        <div style="background-color: ${categoryColor}; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 10px;">
+                            <i class="${specificIcon}" style="color: white; font-size: 1rem;"></i>
                         </div>
-                <div class="choice-title">${choice.title}</div>
+                        <div class="choice-title fw-bold" style="flex: 1;">${choice.title}</div>
+                    </div>
+                    <div class="badge bg-primary ms-2" style="flex-shrink: 0;">${choice.cost} pts</div>
                 </div>
-                <div class="choice-description">${choice.description}</div>
-                <div class="choice-cost">${choice.cost} points</div>
             `;
             
             container.appendChild(choiceDiv);
