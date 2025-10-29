@@ -991,49 +991,242 @@ function renderMOT2ChoicesFull(choices) {
             <div class="solution-description">${choice.description}</div>
         `;
         
-        // Add drag event listeners if GameController is available
-        if (window.gameController) {
-            card.addEventListener('dragstart', (e) => {
-                if (window.gameController.handleDragStart) {
-                    window.gameController.handleDragStart(e);
-                }
+        // Add drag event listeners (always add, will use GameController if available)
+        card.addEventListener('dragstart', (e) => {
+            const choiceId = card.dataset.choiceId;
+            e.dataTransfer.setData('text/plain', choiceId);
+            e.dataTransfer.effectAllowed = 'move';
+            card.classList.add('dragging');
+            
+            // Also call GameController if available
+            if (window.gameController && window.gameController.handleDragStart) {
+                // Store original handler and call it
+                const originalHandler = window.gameController.handleDragStart.bind(window.gameController);
+                originalHandler(e);
+            }
+        });
+        
+        card.addEventListener('dragend', (e) => {
+            card.classList.remove('dragging');
+            
+            // Remove drag-over class from all slots
+            document.querySelectorAll('.priority-slot').forEach(slot => {
+                slot.classList.remove('drag-over');
             });
-            card.addEventListener('dragend', (e) => {
-                if (window.gameController.handleDragEnd) {
-                    window.gameController.handleDragEnd(e);
-                }
-            });
-        }
+            
+            // Also call GameController if available
+            if (window.gameController && window.gameController.handleDragEnd) {
+                const originalHandler = window.gameController.handleDragEnd.bind(window.gameController);
+                originalHandler(e);
+            }
+        });
         
         container.appendChild(card);
     });
     
-    // Initialize priority slots if GameController is available
+    // Initialize priority slots
+    // Always try to use GameController methods first (with proper binding)
     if (window.gameController && window.gameController.initializePrioritySlots) {
         window.gameController.initializePrioritySlots();
-    } else {
-        // Manual initialization of priority slots
-        const slots = document.querySelectorAll('.priority-slot');
-        slots.forEach(slot => {
-            slot.addEventListener('dragover', (e) => {
-                e.preventDefault();
-            });
-            slot.addEventListener('drop', (e) => {
-                e.preventDefault();
-                // Basic drop handling - would need full implementation
-                console.log('Drop on priority slot:', slot.dataset.slot);
-            });
-            slot.addEventListener('dragenter', (e) => {
-                e.preventDefault();
-                slot.classList.add('drag-over');
-            });
-            slot.addEventListener('dragleave', (e) => {
-                slot.classList.remove('drag-over');
-            });
+    }
+    
+    // Also setup manual handlers as backup (will work even without GameController bind)
+    const slots = document.querySelectorAll('.priority-slot');
+    slots.forEach(slot => {
+        // Remove existing listeners by cloning (if any)
+        const newSlot = slot.cloneNode(true);
+        slot.parentNode.replaceChild(newSlot, slot);
+        
+        newSlot.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
         });
+        
+        newSlot.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const slotElement = e.target.closest('.priority-slot');
+            if (!slotElement) return;
+            
+            const choiceId = e.dataTransfer.getData('text/plain');
+            if (!choiceId) return;
+            
+            slotElement.classList.remove('drag-over');
+            
+            // Check if slot is already occupied
+            if (slotElement.querySelector('.priority-item')) {
+                if (window.gameController && window.gameController.showAlert) {
+                    window.gameController.showAlert('This priority slot is already occupied. Please remove the existing item first.', 'warning');
+                } else {
+                    alert('Ce slot est déjà occupé. Veuillez retirer l\'élément existant d\'abord.');
+                }
+                return;
+            }
+            
+            // Find the solution card
+            const solutionCard = document.querySelector(`[data-choice-id="${choiceId}"]`);
+            if (!solutionCard) return;
+            
+            // Create priority item
+            const priorityItem = document.createElement('div');
+            priorityItem.className = 'priority-item';
+            priorityItem.dataset.choiceId = choiceId;
+            
+            const titleText = solutionCard.querySelector('.solution-title')?.textContent || 'Unknown';
+            const descText = solutionCard.querySelector('.solution-description')?.textContent || '';
+            
+            priorityItem.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-bold">${titleText}</div>
+                        <div class="text-muted small">${descText}</div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger remove-priority-btn" data-choice-id="${choiceId}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Add click handler for remove button
+            priorityItem.querySelector('.remove-priority-btn').addEventListener('click', () => {
+                removeFromPrioritySlot(choiceId);
+            });
+            
+            // Add to slot
+            slotElement.innerHTML = '';
+            slotElement.appendChild(priorityItem);
+            slotElement.classList.add('occupied');
+            
+            // Mark solution as used
+            solutionCard.classList.add('used');
+            solutionCard.draggable = false;
+            
+            // Update counter
+            updatePhase2Counter();
+        });
+        
+        newSlot.addEventListener('dragenter', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const slotElement = e.target.closest('.priority-slot');
+            if (slotElement) {
+                slotElement.classList.add('drag-over');
+            }
+        });
+        
+        newSlot.addEventListener('dragleave', (e) => {
+            const slotElement = e.target.closest('.priority-slot');
+            if (slotElement) {
+                slotElement.classList.remove('drag-over');
+            }
+        });
+    });
+    
+    // Helper function to remove from priority slot
+    function removeFromPrioritySlot(choiceId) {
+        const priorityItem = document.querySelector(`.priority-item[data-choice-id="${choiceId}"]`);
+        if (!priorityItem) return;
+        
+        const slot = priorityItem.closest('.priority-slot');
+        if (!slot) return;
+        
+        // Restore placeholder
+        const slotNumber = slot.dataset.slot || '?';
+        slot.innerHTML = `
+            <div class="priority-placeholder">
+                <i class="fas fa-plus-circle me-2"></i>Priority ${slotNumber}
+            </div>
+        `;
+        slot.classList.remove('occupied');
+        
+        // Restore solution card
+        const solutionCard = document.querySelector(`[data-choice-id="${choiceId}"]`);
+        if (solutionCard) {
+            solutionCard.classList.remove('used');
+            solutionCard.draggable = true;
+        }
+        
+        // Update counter
+        updatePhase2Counter();
+    }
+    
+    // Helper function to update Phase 2 counter
+    function updatePhase2Counter() {
+        const selectedCount = document.querySelectorAll('.priority-item').length;
+        const counter = document.getElementById('phase2-selected-count');
+        const confirmBtn = document.getElementById('phase2-confirm-btn');
+        
+        if (counter) {
+            counter.textContent = `${selectedCount}/3 selected`;
+        }
+        
+        if (confirmBtn) {
+            if (selectedCount === 3) {
+                confirmBtn.disabled = false;
+                confirmBtn.classList.remove('btn-secondary');
+                confirmBtn.classList.add('btn-primary');
+            } else {
+                confirmBtn.disabled = true;
+                confirmBtn.classList.remove('btn-primary');
+                confirmBtn.classList.add('btn-secondary');
+            }
+        }
     }
     
     console.log(`✅ Rendered ${choices.length} Step 2 choices with full visual`);
+    
+    // Setup confirm button listener
+    const confirmBtn = document.getElementById('phase2-confirm-btn');
+    if (confirmBtn) {
+        // Remove existing listeners by cloning
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        
+        newConfirmBtn.addEventListener('click', async () => {
+            // Get selected choices from priority slots
+            const priorityItems = document.querySelectorAll('.priority-item');
+            const selectedChoices = Array.from(priorityItems).map(item => item.dataset.choiceId);
+            
+            if (selectedChoices.length !== 3) {
+                if (window.gameController && window.gameController.showAlert) {
+                    window.gameController.showAlert('Please select exactly 3 solutions by dragging them to the priority slots.', 'warning');
+                } else {
+                    alert('Veuillez sélectionner exactement 3 solutions en les glissant dans les slots de priorité.');
+                }
+                return;
+            }
+            
+            // Use GameController method if available
+            if (window.gameController && window.gameController.confirmPhase2Choices) {
+                await window.gameController.confirmPhase2Choices();
+            } else {
+                // Direct API call as fallback
+                try {
+                    const response = await fetch('/api/phase2/choose', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ solution_ids: selectedChoices })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        // Show score screen
+                        if (window.gameController && window.gameController.showScoreScreen) {
+                            const score = data.score || data.score_info || {};
+                            const mot2Score = score.scores ? score.scores.mot2 : (score.mot2 || 0);
+                            window.gameController.showScoreScreen(2, mot2Score, score);
+                        } else {
+                            showScoreScreenManually(2, data);
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error confirming Step 2 choices:', err);
+                }
+            }
+        });
+    }
 }
 
 function loadStep3Directly() {
