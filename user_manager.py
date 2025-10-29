@@ -94,6 +94,22 @@ class UserManager:
                     CREATE INDEX IF NOT EXISTS idx_session_id ON game_scores(session_id)
                 ''')
                 
+                # Créer la table pour les joueurs actifs (en cours de jeu)
+                cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS active_players (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        session_code TEXT NOT NULL,
+                        username TEXT NOT NULL,
+                        connected_at TEXT NOT NULL,
+                        UNIQUE(session_code, username)
+                    )
+                ''')
+                
+                # Créer un index pour les recherches rapides
+                cursor.execute('''
+                    CREATE INDEX IF NOT EXISTS idx_active_session_username ON active_players(session_code, username)
+                ''')
+                
                 # Migration : Mettre à jour la structure de la table si nécessaire
                 try:
                     cursor.execute('PRAGMA table_info(users)')
@@ -259,18 +275,59 @@ class UserManager:
         return username
     
     def username_exists_in_session(self, username: str, session_code: str) -> bool:
-        """Vérifie si un username existe déjà dans une session donnée"""
+        """Vérifie si un username existe déjà dans une session donnée (joueur actif ou ayant terminé)"""
         try:
+            normalized_code = session_code.upper().strip()
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
+                # Vérifier dans active_players (joueurs en cours) ET game_scores (joueurs ayant terminé)
                 cursor.execute('''
-                    SELECT COUNT(*) FROM game_scores
-                    WHERE username = ? AND session_id = ?
-                ''', (username, session_code.upper()))
+                    SELECT COUNT(*) FROM (
+                        SELECT username FROM active_players
+                        WHERE UPPER(TRIM(session_code)) = ? AND username = ?
+                        UNION
+                        SELECT username FROM game_scores
+                        WHERE UPPER(TRIM(session_id)) = ? AND username = ?
+                    )
+                ''', (normalized_code, username, normalized_code, username))
                 count = cursor.fetchone()[0]
                 return count > 0
         except Exception as e:
             logger.error(f"Erreur lors de la vérification du username dans la session: {e}")
+            return False
+    
+    def register_active_player(self, username: str, session_code: str) -> bool:
+        """Enregistre un joueur actif dans une session (appelé à la connexion)"""
+        try:
+            normalized_code = session_code.upper().strip()
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT OR REPLACE INTO active_players (session_code, username, connected_at)
+                    VALUES (?, ?, ?)
+                ''', (normalized_code, username, datetime.now().isoformat()))
+                conn.commit()
+                logger.info(f"Joueur actif enregistré: {username} dans la session {normalized_code}")
+                return True
+        except Exception as e:
+            logger.error(f"Erreur lors de l'enregistrement du joueur actif: {e}")
+            return False
+    
+    def remove_active_player(self, username: str, session_code: str) -> bool:
+        """Retire un joueur actif d'une session (appelé quand le jeu est terminé)"""
+        try:
+            normalized_code = session_code.upper().strip()
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    DELETE FROM active_players
+                    WHERE UPPER(TRIM(session_code)) = ? AND username = ?
+                ''', (normalized_code, username))
+                conn.commit()
+                logger.info(f"Joueur actif retiré: {username} de la session {normalized_code}")
+                return True
+        except Exception as e:
+            logger.error(f"Erreur lors de la suppression du joueur actif: {e}")
             return False
     
     def authenticate_user(self, username: str, password: str = None) -> Tuple[bool, Optional[User]]:

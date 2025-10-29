@@ -355,6 +355,8 @@ def api_login():
             session['kahoot_mode'] = user.is_kahoot_mode
             if session_code:
                 session['game_session_code'] = session_code
+                # Enregistrer le joueur comme actif dans cette session (pour empêcher les doublons)
+                user_manager.register_active_player(user.username, session_code)
             
             return jsonify({
                 'success': True,
@@ -870,6 +872,11 @@ def api_phase5_choose():
             mot_scores=results['scores'],
             session_id=session_code  # Utiliser le code de session Kahoot
         )
+        
+        # Retirer le joueur de la liste des joueurs actifs (il a terminé, son score est sauvegardé)
+        # La vérification d'unicité continuera de fonctionner grâce à game_scores
+        if session_code:
+            user_manager.remove_active_player(username, session_code)
         
         return jsonify({
             'success': True,
