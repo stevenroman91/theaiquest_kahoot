@@ -561,6 +561,7 @@ class KahootMode {
                         const scoreTitle = scoreModal.querySelector('#score-phase-title');
                         const scoreValue = scoreModal.querySelector('#score-value');
                         const scoreDescription = scoreModal.querySelector('#score-description');
+                        const starsContainer = scoreModal.querySelector('#score-stars-container');
                         
                         if (scoreTitle) {
                             scoreTitle.textContent = `Step ${phaseNumber}`;
@@ -568,6 +569,19 @@ class KahootMode {
                         if (scoreValue) {
                             scoreValue.textContent = `${mot1Score}/3`;
                         }
+                        
+                        // Générer les étoiles visuelles
+                        if (starsContainer) {
+                            starsContainer.innerHTML = '';
+                            for (let i = 1; i <= 3; i++) {
+                                const star = document.createElement('span');
+                                star.className = 'score-star';
+                                star.textContent = i <= mot1Score ? '★' : '☆';
+                                starsContainer.appendChild(star);
+                            }
+                            console.log(`⭐ Generated ${mot1Score} stars for phase ${phaseNumber}`);
+                        }
+                        
                         if (scoreDescription) {
                             // Description basée sur le choix
                             let description = '';
