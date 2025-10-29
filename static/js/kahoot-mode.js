@@ -972,6 +972,9 @@ function hookScoreModal() {
                             
                             // Go directly to next step (skip videos and dashboard)
                             // Wait for GameController to be available if needed
+                            let retryCount = 0;
+                            const maxRetries = 50; // Maximum 5 seconds (50 * 100ms)
+                            
                             const proceedToNextStep = () => {
                                 if (window.gameController) {
                                     // Call the appropriate method directly
@@ -1011,10 +1014,14 @@ function hookScoreModal() {
                                         default:
                                             console.error('Unknown next step number:', nextStep);
                                     }
-                                } else {
+                                } else if (retryCount < maxRetries) {
                                     // GameController not available yet - wait and retry
-                                    console.warn('⚠️ GameController not yet available, retrying...');
+                                    retryCount++;
                                     setTimeout(proceedToNextStep, 100);
+                                } else {
+                                    // Max retries reached - GameController still not available
+                                    console.error('❌ GameController not available after', maxRetries, 'retries. Unable to proceed to Step', nextStep);
+                                    alert('Erreur: Impossible de charger l\'étape suivante. Veuillez rafraîchir la page.');
                                 }
                             };
                             
