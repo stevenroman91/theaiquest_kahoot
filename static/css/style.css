@@ -159,6 +159,25 @@ body.modal-open {
     background: rgba(16, 185, 129, 0.05);
     transition: all 0.3s ease;
     position: relative;
+    cursor: pointer;
+}
+
+/* Mobile: Make slots more prominent */
+@media (max-width: 768px) {
+    .priority-slot {
+        min-height: 100px;
+        border-width: 3px;
+        font-size: 1.1rem;
+    }
+    
+    .priority-placeholder {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    .priority-placeholder i {
+        font-size: 1.3rem;
+    }
 }
 
 .priority-slot.drag-over {

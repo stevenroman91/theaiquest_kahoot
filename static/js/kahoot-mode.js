@@ -1484,23 +1484,11 @@ function renderMOT2ChoicesFull(choices) {
             </div>
         `;
         
-        // Mobile-friendly interaction: simple tap to select, then tap slot to drop
-        card.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            selectCardForMobile(card);
-        });
+        // Mobile: cards are just for display (selection happens via slot modal)
+        // Desktop: keep drag-and-drop (mouse events)
+        const isMobile = 'ontouchstart' in window || window.innerWidth < 768;
         
-        // Also work with click for desktop hybrid devices
-        card.addEventListener('click', (e) => {
-            if ('ontouchstart' in window) {
-                // Mobile device - click is just a fallback
-                return;
-            }
-        });
-        
-        // Keep drag-and-drop for desktop (mouse events)
-        if (!('ontouchstart' in window)) {
+        if (!isMobile) {
             card.addEventListener('dragstart', (e) => {
                 const choiceId = card.dataset.choiceId;
                 e.dataTransfer.setData('text/plain', choiceId);
@@ -1536,94 +1524,233 @@ function renderMOT2ChoicesFull(choices) {
         window.gameController.initializePrioritySlots();
     }
     
-    // Setup handlers for both mobile (touch) and desktop (drag-drop)
+    // Store choices globally for modal access
+    window.step2Choices = choices;
+    
+    // Setup handlers for both mobile (modal) and desktop (drag-drop)
     const slots = document.querySelectorAll('.priority-slot');
     slots.forEach(slot => {
         // Remove existing listeners by cloning (if any)
         const newSlot = slot.cloneNode(true);
         slot.parentNode.replaceChild(newSlot, slot);
         
-        // Mobile: tap on slot to drop selected card
-        newSlot.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const selectedCard = document.querySelector('.solution-card.selected-mobile');
-            if (selectedCard && selectedCard.dataset.choiceId) {
-                handleMobileDrop(newSlot, selectedCard.dataset.choiceId);
-            }
-        });
+        // Mobile: tap on slot to open selection modal
+        const isMobile = 'ontouchstart' in window || window.innerWidth < 768;
         
-        // Desktop: drag and drop
-        newSlot.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-        });
-        
-        newSlot.addEventListener('drop', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+        if (isMobile) {
+            // Mobile: open modal when tapping on empty slot
+            newSlot.addEventListener('click', (e) => {
+                // Don't open if clicking remove button
+                if (e.target.closest('.remove-priority-btn')) {
+                    return;
+                }
+                
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // If slot is already occupied, don't open modal (allow removal instead)
+                if (newSlot.querySelector('.priority-item')) {
+                    return;
+                }
+                
+                // Open selection modal
+                openStep2SelectionModal(newSlot, choices);
+            });
             
-            const slotElement = e.target.closest('.priority-slot');
-            if (!slotElement) return;
+            // Also handle touchstart for better mobile support
+            newSlot.addEventListener('touchstart', (e) => {
+                // Don't open if clicking remove button
+                if (e.target.closest('.remove-priority-btn')) {
+                    return;
+                }
+                
+                if (newSlot.querySelector('.priority-item')) {
+                    return;
+                }
+                
+                e.preventDefault();
+                openStep2SelectionModal(newSlot, choices);
+            });
+        } else {
+            // Desktop: keep drag and drop
+            newSlot.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
             
-            const choiceId = e.dataTransfer.getData('text/plain');
-            if (!choiceId) return;
-            
-            slotElement.classList.remove('drag-over');
-            handleDropToSlot(slotElement, choiceId);
-        });
-        
-        newSlot.addEventListener('dragenter', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const slotElement = e.target.closest('.priority-slot');
-            if (slotElement) {
-                slotElement.classList.add('drag-over');
-            }
-        });
-        
-        newSlot.addEventListener('dragleave', (e) => {
-            const slotElement = e.target.closest('.priority-slot');
-            if (slotElement) {
+            newSlot.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const slotElement = e.target.closest('.priority-slot');
+                if (!slotElement) return;
+                
+                const choiceId = e.dataTransfer.getData('text/plain');
+                if (!choiceId) return;
+                
                 slotElement.classList.remove('drag-over');
-            }
-        });
+                handleDropToSlot(slotElement, choiceId);
+            });
+            
+            newSlot.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const slotElement = e.target.closest('.priority-slot');
+                if (slotElement) {
+                    slotElement.classList.add('drag-over');
+                }
+            });
+            
+            newSlot.addEventListener('dragleave', (e) => {
+                const slotElement = e.target.closest('.priority-slot');
+                if (slotElement) {
+                    slotElement.classList.remove('drag-over');
+                }
+            });
+        }
     });
     
-    // Mobile helper: Select card for mobile interaction
-    function selectCardForMobile(card) {
-        // If card is already selected and clicked again, deselect it
-        if (card.classList.contains('selected-mobile')) {
-            card.classList.remove('selected-mobile');
-            card.style.opacity = '1';
-            card.style.border = '';
-            card.style.borderRadius = '';
+    // Mobile helper: Open selection modal
+    function openStep2SelectionModal(targetSlot, availableChoices) {
+        // Get already used choices
+        const usedChoiceIds = Array.from(document.querySelectorAll('.priority-item'))
+            .map(item => item.dataset.choiceId)
+            .filter(Boolean);
+        
+        // Filter out already used choices
+        const availableChoicesFiltered = availableChoices.filter(choice => {
+            // Check if this choice is already in a slot
+            return !usedChoiceIds.includes(choice.id);
+        });
+        
+        if (availableChoicesFiltered.length === 0) {
+            // Show alert if no choices available
+            if (window.gameController && window.gameController.showAlert) {
+                window.gameController.showAlert('Toutes les solutions sont déjà sélectionnées. Retirez-en une pour en sélectionner une autre.', 'warning');
+            } else {
+                alert('Toutes les solutions sont déjà sélectionnées.');
+            }
             return;
         }
         
-        // Remove selection from all cards
-        document.querySelectorAll('.solution-card').forEach(c => {
-            c.classList.remove('selected-mobile');
-            c.style.opacity = '1';
-            c.style.border = '';
-            c.style.borderRadius = '';
+        // Create modal overlay
+        const modalOverlay = document.createElement('div');
+        modalOverlay.className = 'step2-selection-modal-overlay';
+        modalOverlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        `;
+        
+        // Create modal content
+        const modalContent = document.createElement('div');
+        modalContent.className = 'step2-selection-modal';
+        modalContent.style.cssText = `
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        `;
+        
+        // Modal header
+        const slotNumber = targetSlot.dataset.slot || '?';
+        modalContent.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 style="margin: 0; color: var(--fdj-blue-primary); font-weight: 700;">
+                    <i class="fas fa-plus-circle me-2"></i>Sélectionner Priority ${slotNumber}
+                </h4>
+                <button class="btn btn-sm btn-outline-secondary close-modal-btn" style="border: none; font-size: 1.5rem; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="step2-modal-choices" style="margin-top: 16px;">
+                ${availableChoicesFiltered.map((choice, index) => {
+                    const matrixPosition = choiceToMatrixPosition[choice.id] || '?';
+                    const backgroundColor = 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)';
+                    
+                    return `
+                        <div class="step2-modal-choice-item" 
+                             data-choice-id="${choice.id}" 
+                             style="
+                                 padding: 16px;
+                                 margin-bottom: 12px;
+                                 border: 2px solid #e5e7eb;
+                                 border-radius: 12px;
+                                 cursor: pointer;
+                                 transition: all 0.2s ease;
+                                 background: white;
+                             "
+                             onmouseover="this.style.borderColor='#3b82f6'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.15)';"
+                             onmouseout="this.style.borderColor='#e5e7eb'; this.style.transform=''; this.style.boxShadow='';">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center" style="flex: 1;">
+                                    <div class="matrix-number-square me-3" style="
+                                        width: 40px;
+                                        height: 40px;
+                                        border-radius: 8px;
+                                        background: ${backgroundColor};
+                                        color: white;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-weight: bold;
+                                        font-size: 1.2rem;
+                                        flex-shrink: 0;
+                                    ">${matrixPosition}</div>
+                                    <div class="fw-bold" style="font-size: 1rem; color: #1f2937;">${choice.title}</div>
+                                </div>
+                                <i class="fas fa-chevron-right text-muted"></i>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+        
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+        
+        // Close modal handlers
+        const closeModal = () => {
+            document.body.removeChild(modalOverlay);
+        };
+        
+        modalOverlay.querySelector('.close-modal-btn').addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
         });
         
-        // Select this card
-        card.classList.add('selected-mobile');
-        card.style.opacity = '0.8';
-        card.style.border = '3px solid var(--fdj-blue-primary)';
-        card.style.borderRadius = '8px';
-        
-        // Brief instruction (less intrusive)
-        const existingAlert = document.querySelector('.mobile-card-selected-hint');
-        if (!existingAlert) {
-            const hint = document.createElement('div');
-            hint.className = 'mobile-card-selected-hint alert alert-info';
-            hint.style.cssText = 'position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; padding: 8px 16px; font-size: 0.85rem; border-radius: 8px;';
-            hint.textContent = 'Tap sur un slot pour l\'ajouter';
-            document.body.appendChild(hint);
-            setTimeout(() => hint.remove(), 2000);
-        }
+        // Choice selection handlers
+        modalContent.querySelectorAll('.step2-modal-choice-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const choiceId = item.dataset.choiceId;
+                closeModal();
+                handleDropToSlot(targetSlot, choiceId);
+            });
+            
+            // Touch support
+            item.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                const choiceId = item.dataset.choiceId;
+                closeModal();
+                handleDropToSlot(targetSlot, choiceId);
+            });
+        });
     }
     
     // Mobile helper: Handle drop to slot
