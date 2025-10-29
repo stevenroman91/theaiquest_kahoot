@@ -196,7 +196,7 @@ def api_game_config():
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
-    """API pour l'authentification réelle avec utilisateurs et mots de passe"""
+    """API pour l'authentification (mode Kahoot avec juste username ou mode normal avec password)"""
     try:
         data = request.json
         if not data:
@@ -206,28 +206,51 @@ def api_login():
             }), 400
         
         username = data.get('username', '').strip()
-        password = data.get('password', '')
+        password = data.get('password', '')  # Optionnel en mode Kahoot
         
-        game = get_game()
-        success, message, user_info = game.login(username, password)
+        # Validation basique
+        if not username or len(username) < 2:
+            return jsonify({
+                'success': False,
+                'message': 'Le nom d\'utilisateur doit contenir au moins 2 caractères'
+            }), 400
         
-        if success:
+        # Mode Kahoot : authentification sans password
+        # Mode normal : authentification avec password
+        success, user = user_manager.authenticate_user(username, password if password else None)
+        
+        if success and user:
+            # Réinitialiser le jeu pour une nouvelle session
+            global game_instance
+            game_instance = None
+            game = get_game()
+            
+            # Démarrer le jeu automatiquement en mode Kahoot
+            if not password:  # Mode Kahoot
+                game.start_game()
+            
             session['logged_in'] = True
-            session['user_id'] = user_info['id']
-            session['username'] = user_info['username']
-            session['user_role'] = user_info['role']
+            session['user_id'] = user.id
+            session['username'] = user.username
+            session['user_role'] = user.role
             session['login_time'] = datetime.now().isoformat()
+            session['kahoot_mode'] = user.is_kahoot_mode
             
             return jsonify({
                 'success': True,
-                'message': message,
-                'user_info': user_info,
-                'game_state': game.get_current_state().value
+                'message': f'Bienvenue {username}!',
+                'user_info': {
+                    'id': user.id,
+                    'username': user.username,
+                    'role': user.role,
+                    'is_kahoot_mode': user.is_kahoot_mode
+                },
+                'game_state': game.get_current_state().value if game else 'login'
             })
         else:
             return jsonify({
                 'success': False,
-                'message': message
+                'message': 'Nom d\'utilisateur invalide ou mot de passe incorrect'
             }), 401
             
     except Exception as e:
@@ -701,7 +724,7 @@ def api_phase5_choices():
 
 @app.route('/api/phase5/choose', methods=['POST'])
 def api_phase5_choose():
-    """API pour faire un choix Phase5"""
+    """API pour faire un choix Phase5 et sauvegarder le score"""
     if not session.get('logged_in'):
         return jsonify({'success': False, 'message': 'Not logged in'})
     
@@ -714,6 +737,19 @@ def api_phase5_choose():
     if success:
         results = game.get_results()
         game.save_path()
+        
+        # Sauvegarder le score dans le leaderboard
+        username = session.get('username')
+        import uuid
+        session_id = session.get('session_id', str(uuid.uuid4()))
+        
+        user_manager.save_game_score(
+            username=username,
+            total_score=results['total'],
+            stars=results['stars'],
+            mot_scores=results['scores'],
+            session_id=session_id
+        )
         
         return jsonify({
             'success': True,
@@ -1240,6 +1276,63 @@ def get_current_phase_title(game_state):
         "results": "Résultats Finaux"
     }
     return phase_titles.get(game_state.value, "Phase en cours")
+
+@app.route('/api/leaderboard')
+def api_leaderboard():
+    """API pour récupérer le classement des meilleurs scores"""
+    try:
+        limit = request.args.get('limit', 50, type=int)
+        leaderboard = user_manager.get_leaderboard(limit=limit)
+        
+        # Ajouter le rang de l'utilisateur actuel s'il est connecté
+        user_rank = None
+        if session.get('logged_in'):
+            username = session.get('username')
+            for entry in leaderboard:
+                if entry['username'] == username:
+                    user_rank = entry['rank']
+                    break
+        
+        return jsonify({
+            'success': True,
+            'leaderboard': leaderboard,
+            'user_rank': user_rank,
+            'total_entries': len(leaderboard)
+        })
+    except Exception as e:
+        logger.error(f"Error getting leaderboard: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'Erreur lors de la récupération du leaderboard'
+        }), 500
+
+@app.route('/api/user_best_score')
+def api_user_best_score():
+    """API pour récupérer le meilleur score de l'utilisateur connecté"""
+    if not session.get('logged_in'):
+        return jsonify({'success': False, 'message': 'Not logged in'}), 401
+    
+    try:
+        username = session.get('username')
+        best_score = user_manager.get_user_best_score(username)
+        
+        if best_score:
+            return jsonify({
+                'success': True,
+                'best_score': best_score
+            })
+        else:
+            return jsonify({
+                'success': True,
+                'best_score': None,
+                'message': 'Aucun score enregistré'
+            })
+    except Exception as e:
+        logger.error(f"Error getting user best score: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'Erreur lors de la récupération du meilleur score'
+        }), 500
 
 if __name__ == '__main__':
     import os

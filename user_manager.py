@@ -19,13 +19,14 @@ class User:
     """Représente un utilisateur"""
     id: int
     username: str
-    email: str
-    password_hash: str
-    salt: str
+    email: Optional[str]
+    password_hash: Optional[str]
+    salt: Optional[str]
     role: str
     created_at: str
     last_login: Optional[str] = None
     is_active: bool = True
+    is_kahoot_mode: bool = False
 
 class UserManager:
     """Gestionnaire des utilisateurs avec authentification sécurisée"""
@@ -43,15 +44,35 @@ class UserManager:
                     CREATE TABLE IF NOT EXISTS users (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         username TEXT UNIQUE NOT NULL,
-                        email TEXT UNIQUE NOT NULL,
-                        password_hash TEXT NOT NULL,
-                        salt TEXT NOT NULL,
+                        email TEXT UNIQUE,
+                        password_hash TEXT,
+                        salt TEXT,
                         role TEXT DEFAULT 'user',
                         created_at TEXT NOT NULL,
                         last_login TEXT,
-                        is_active BOOLEAN DEFAULT 1
+                        is_active BOOLEAN DEFAULT 1,
+                        is_kahoot_mode BOOLEAN DEFAULT 0
                     )
                 ''')
+                
+                # Créer la table pour le leaderboard (scores)
+                cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS game_scores (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        username TEXT NOT NULL,
+                        total_score INTEGER NOT NULL,
+                        stars INTEGER NOT NULL,
+                        mot_scores TEXT NOT NULL,
+                        completed_at TEXT NOT NULL,
+                        session_id TEXT
+                    )
+                ''')
+                
+                # Créer un index pour les classements
+                cursor.execute('''
+                    CREATE INDEX IF NOT EXISTS idx_total_score ON game_scores(total_score DESC)
+                ''')
+                
                 conn.commit()
                 
                 # Créer un utilisateur admin par défaut si aucun utilisateur n'existe
@@ -88,57 +109,82 @@ class UserManager:
         computed_hash, _ = self.hash_password(password, salt)
         return computed_hash == password_hash
     
-    def create_user(self, username: str, email: str, password: str, role: str = "user") -> bool:
-        """Crée un nouvel utilisateur"""
+    def create_user(self, username: str, email: str = None, password: str = None, role: str = "user", kahoot_mode: bool = False) -> bool:
+        """Crée un nouvel utilisateur (mode normal ou Kahoot)"""
         try:
             # Vérifier que l'utilisateur n'existe pas déjà
             if self.get_user_by_username(username):
                 logger.warning(f"Utilisateur {username} existe déjà")
                 return False
             
-            if self.get_user_by_email(email):
-                logger.warning(f"Email {email} existe déjà")
-                return False
-            
-            # Hacher le mot de passe
-            password_hash, salt = self.hash_password(password)
+            # En mode Kahoot, pas besoin d'email ni password
+            if kahoot_mode:
+                password_hash = None
+                salt = None
+                email = email or f"{username}@kahoot.local"
+            else:
+                if not email:
+                    logger.error("Email requis en mode normal")
+                    return False
+                if not password:
+                    logger.error("Mot de passe requis en mode normal")
+                    return False
+                if self.get_user_by_email(email):
+                    logger.warning(f"Email {email} existe déjà")
+                    return False
+                # Hacher le mot de passe
+                password_hash, salt = self.hash_password(password)
             
             # Insérer dans la base de données
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 cursor.execute('''
-                    INSERT INTO users (username, email, password_hash, salt, role, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ''', (username, email, password_hash, salt, role, datetime.now().isoformat()))
+                    INSERT INTO users (username, email, password_hash, salt, role, created_at, is_kahoot_mode)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                ''', (username, email, password_hash, salt, role, datetime.now().isoformat(), kahoot_mode))
                 conn.commit()
             
-            logger.info(f"Utilisateur {username} créé avec succès")
+            logger.info(f"Utilisateur {username} créé avec succès (mode: {'Kahoot' if kahoot_mode else 'Normal'})")
             return True
             
         except Exception as e:
             logger.error(f"Erreur lors de la création de l'utilisateur {username}: {e}")
             return False
     
-    def authenticate_user(self, username: str, password: str) -> Tuple[bool, Optional[User]]:
-        """Authentifie un utilisateur"""
+    def authenticate_user(self, username: str, password: str = None) -> Tuple[bool, Optional[User]]:
+        """Authentifie un utilisateur (mode normal avec password ou mode Kahoot sans)"""
         try:
             user = self.get_user_by_username(username)
             if not user:
-                logger.warning(f"Tentative de connexion avec un utilisateur inexistant: {username}")
-                return False, None
+                # En mode Kahoot, créer l'utilisateur automatiquement
+                logger.info(f"Utilisateur {username} n'existe pas, création en mode Kahoot")
+                if self.create_user(username, kahoot_mode=True):
+                    user = self.get_user_by_username(username)
+                else:
+                    return False, None
             
             if not user.is_active:
                 logger.warning(f"Tentative de connexion avec un compte désactivé: {username}")
                 return False, None
             
-            # Vérifier le mot de passe
-            if self.verify_password(password, user.password_hash, user.salt):
-                # Mettre à jour la dernière connexion
+            # Mode Kahoot : pas de vérification de mot de passe
+            if user.is_kahoot_mode or password is None:
                 self.update_last_login(user.id)
-                logger.info(f"Connexion réussie pour l'utilisateur: {username}")
+                logger.info(f"Connexion Kahoot réussie pour l'utilisateur: {username}")
                 return True, user
+            
+            # Mode normal : vérifier le mot de passe
+            if user.password_hash and user.salt:
+                if self.verify_password(password, user.password_hash, user.salt):
+                    self.update_last_login(user.id)
+                    logger.info(f"Connexion réussie pour l'utilisateur: {username}")
+                    return True, user
+                else:
+                    logger.warning(f"Mot de passe incorrect pour l'utilisateur: {username}")
+                    return False, None
             else:
-                logger.warning(f"Mot de passe incorrect pour l'utilisateur: {username}")
+                # Pas de mot de passe défini mais mode normal demandé
+                logger.warning(f"Mot de passe requis pour l'utilisateur: {username}")
                 return False, None
                 
         except Exception as e:
@@ -151,7 +197,7 @@ class UserManager:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 cursor.execute('''
-                    SELECT id, username, email, password_hash, salt, role, created_at, last_login, is_active
+                    SELECT id, username, email, password_hash, salt, role, created_at, last_login, is_active, is_kahoot_mode
                     FROM users WHERE username = ?
                 ''', (username,))
                 
@@ -166,7 +212,8 @@ class UserManager:
                         role=row[5],
                         created_at=row[6],
                         last_login=row[7],
-                        is_active=bool(row[8])
+                        is_active=bool(row[8]),
+                        is_kahoot_mode=bool(row[9]) if len(row) > 9 else False
                     )
                 return None
                 
@@ -180,7 +227,7 @@ class UserManager:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 cursor.execute('''
-                    SELECT id, username, email, password_hash, salt, role, created_at, last_login, is_active
+                    SELECT id, username, email, password_hash, salt, role, created_at, last_login, is_active, is_kahoot_mode
                     FROM users WHERE email = ?
                 ''', (email,))
                 
@@ -195,7 +242,8 @@ class UserManager:
                         role=row[5],
                         created_at=row[6],
                         last_login=row[7],
-                        is_active=bool(row[8])
+                        is_active=bool(row[8]),
+                        is_kahoot_mode=bool(row[9]) if len(row) > 9 else False
                     )
                 return None
                 
@@ -221,7 +269,7 @@ class UserManager:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 cursor.execute('''
-                    SELECT id, username, email, password_hash, salt, role, created_at, last_login, is_active
+                    SELECT id, username, email, password_hash, salt, role, created_at, last_login, is_active, is_kahoot_mode
                     FROM users ORDER BY created_at DESC
                 ''')
                 
@@ -236,7 +284,8 @@ class UserManager:
                         role=row[5],
                         created_at=row[6],
                         last_login=row[7],
-                        is_active=bool(row[8])
+                        is_active=bool(row[8]),
+                        is_kahoot_mode=bool(row[9]) if len(row) > 9 else False
                     ))
                 return users
                 
@@ -290,6 +339,88 @@ class UserManager:
         except Exception as e:
             logger.error(f"Erreur lors de la désactivation de {username}: {e}")
             return False
+    
+    def save_game_score(self, username: str, total_score: int, stars: int, mot_scores: Dict[str, int], session_id: str = None) -> bool:
+        """Sauvegarde le score d'une partie terminée"""
+        try:
+            import json
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO game_scores (username, total_score, stars, mot_scores, completed_at, session_id)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                ''', (
+                    username,
+                    total_score,
+                    stars,
+                    json.dumps(mot_scores),
+                    datetime.now().isoformat(),
+                    session_id
+                ))
+                conn.commit()
+            logger.info(f"Score sauvegardé pour {username}: {total_score}/15 ({stars} étoiles)")
+            return True
+        except Exception as e:
+            logger.error(f"Erreur lors de la sauvegarde du score pour {username}: {e}")
+            return False
+    
+    def get_leaderboard(self, limit: int = 50) -> List[Dict]:
+        """Récupère le classement des meilleurs scores"""
+        try:
+            import json
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT username, total_score, stars, mot_scores, completed_at
+                    FROM game_scores
+                    ORDER BY total_score DESC, completed_at ASC
+                    LIMIT ?
+                ''', (limit,))
+                
+                leaderboard = []
+                rank = 1
+                for row in cursor.fetchall():
+                    leaderboard.append({
+                        'rank': rank,
+                        'username': row[0],
+                        'total_score': row[1],
+                        'stars': row[2],
+                        'mot_scores': json.loads(row[3]) if row[3] else {},
+                        'completed_at': row[4]
+                    })
+                    rank += 1
+                return leaderboard
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération du leaderboard: {e}")
+            return []
+    
+    def get_user_best_score(self, username: str) -> Optional[Dict]:
+        """Récupère le meilleur score d'un utilisateur"""
+        try:
+            import json
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT username, total_score, stars, mot_scores, completed_at
+                    FROM game_scores
+                    WHERE username = ?
+                    ORDER BY total_score DESC, completed_at ASC
+                    LIMIT 1
+                ''', (username,))
+                
+                row = cursor.fetchone()
+                if row:
+                    return {
+                        'username': row[0],
+                        'total_score': row[1],
+                        'stars': row[2],
+                        'mot_scores': json.loads(row[3]) if row[3] else {},
+                        'completed_at': row[4]
+                    }
+                return None
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération du meilleur score de {username}: {e}")
+            return None
 
 # Instance globale du gestionnaire d'utilisateurs
 user_manager = UserManager()

@@ -61,27 +61,32 @@
                     
                     <form id="login-form" novalidate>
                         <div class="mb-4">
-                        <label for="username" class="form-label">
-                            <i class="fas fa-user me-2"></i>Username
-                        </label>
-                        <input type="text" class="form-control" id="username" placeholder="Enter your username" required minlength="2" maxlength="50">
-                        <div class="invalid-feedback" id="username-error"></div>
-                        <div class="form-text">Minimum 2 characters, maximum 50 characters</div>
-                        </div>
-                        <div class="mb-4">
-                            <label for="password" class="form-label">
-                                <i class="fas fa-lock me-2"></i>Password
+                            <label for="username" class="form-label">
+                                <i class="fas fa-user me-2"></i>Username
                             </label>
-                            <input type="password" class="form-control" id="password" placeholder="Enter your password" required minlength="6">
-                            <div class="invalid-feedback" id="password-error"></div>
-                            <div class="form-text">Minimum 6 characters</div>
+                            <input type="text" class="form-control form-control-lg" id="username" placeholder="Enter your username" required minlength="2" maxlength="50" autocomplete="username">
+                            <div class="invalid-feedback" id="username-error"></div>
+                            <div class="form-text">Minimum 2 characters</div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100" id="login-submit-btn">
+                        <div class="mb-4" id="password-container" style="display: none;">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password <small class="text-muted">(Optional - Kahoot mode)</small>
+                            </label>
+                            <input type="password" class="form-control form-control-lg" id="password" placeholder="Enter your password (optional)" minlength="6" autocomplete="current-password">
+                            <div class="invalid-feedback" id="password-error"></div>
+                            <div class="form-text">Leave empty for Kahoot mode (just username)</div>
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-link p-0 text-muted" id="toggle-password-mode">
+                                <small><i class="fas fa-key me-1"></i>Need password? Click here</small>
+                            </button>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100" id="login-submit-btn" style="min-height: 50px; font-size: 1.1rem;">
                             <span id="login-btn-text">
-                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                <i class="fas fa-sign-in-alt me-2"></i>Start Game
                             </span>
                             <span id="login-btn-loading" style="display: none;">
-                                <i class="fas fa-spinner fa-spin me-2"></i>Signing in...
+                                <i class="fas fa-spinner fa-spin me-2"></i>Connecting...
                             </span>
                         </button>
                     </form>
@@ -1070,7 +1075,65 @@
         </div>
     </div>
 
+    <!-- Leaderboard Modal -->
+    <div class="modal fade" id="leaderboardModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="leaderboard-container">
+                        <div class="leaderboard-header">
+                            <h1 class="leaderboard-title">
+                                <i class="fas fa-trophy me-3"></i>Leaderboard
+                            </h1>
+                            <p class="leaderboard-subtitle">Top Players Ranking</p>
+                        </div>
+                        
+                        <div class="leaderboard-content">
+                            <div class="leaderboard-stats" id="leaderboard-stats">
+                                <!-- Stats will be populated here -->
+                            </div>
+                            
+                            <div class="leaderboard-table-container">
+                                <table class="table leaderboard-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="rank-col">#</th>
+                                            <th class="name-col">Player</th>
+                                            <th class="score-col">Score</th>
+                                            <th class="stars-col">Stars</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="leaderboard-tbody">
+                                        <tr>
+                                            <td colspan="4" class="text-center">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="leaderboard-footer">
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <button type="button" class="btn btn-secondary btn-lg" id="leaderboard-close-btn">
+                                    <i class="fas fa-times me-2"></i>Close
+                                </button>
+                                <button type="button" class="btn btn-primary btn-lg" id="leaderboard-play-again-btn">
+                                    <i class="fas fa-redo me-2"></i>Play Again
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="{{ url_for('static', filename='js/game.js') }}?v=2.77&t={{ range(1000000, 9999999) | random }}"></script>
+        <script src="{{ url_for('static', filename='js/kahoot-mode.js') }}?v=1.0"></script>
 </body>
 </html>
