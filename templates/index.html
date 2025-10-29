@@ -11,37 +11,7 @@
 </head>
 <body>
     <div class="container-fluid">
-        <!-- Header -->
-        <header class="header-brand">
-            <div class="container-fluid">
-                <div class="row align-items-center py-3">
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <h1 class="brand-title mb-0 game-title">The AI Quest</h1>
-                                <p class="brand-subtitle mb-0 company-name">{{ company_name }} - HR Managers Edition v1.9</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <div class="d-flex justify-content-end align-items-center">
-                            <div class="score-display-container">
-                                <div class="score-item total-score me-3">
-                                    <i class="fas fa-star me-2"></i>
-                                    Score Total: <span id="total-score">0</span>/15
-                                </div>
-                            </div>
-                            <div class="banner-image-container ms-3">
-                                <img src="{{ url_for('static', filename='images/banner.png') }}" 
-                                     alt="Data AC" 
-                                     class="banner-image"
-                                     style="height: 90px; width: auto;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <!-- Header removed for mobile optimization -->
 
         <!-- Main Content -->
         <div class="main-container">
@@ -93,7 +63,13 @@
             <div id="login-section" class="login-container">
                 <div class="login-card">
                     <div class="text-center mb-4">
-                        <h2 class="mb-2" style="color: var(--fdj-blue-primary); font-weight: 700;">The AI Quest</h2>
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <img src="{{ url_for('static', filename='images/banner.png') }}" 
+                                 alt="AI Booster Logo" 
+                                 class="me-3"
+                                 style="height: 60px; width: auto; max-width: 60px; object-fit: contain;">
+                            <h2 class="mb-0" style="color: var(--fdj-blue-primary); font-weight: 700;">The AI Quest</h2>
+                        </div>
                         <p class="text-muted mb-4">PlayForward - Build your AI journey</p>
                     </div>
                     
