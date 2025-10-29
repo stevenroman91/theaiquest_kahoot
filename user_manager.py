@@ -73,6 +73,56 @@ class UserManager:
                     CREATE INDEX IF NOT EXISTS idx_total_score ON game_scores(total_score DESC)
                 ''')
                 
+                # Migration : Mettre à jour la structure de la table si nécessaire
+                try:
+                    cursor.execute('PRAGMA table_info(users)')
+                    columns_info = cursor.fetchall()
+                    columns = [row[1] for row in columns_info]
+                    
+                    # Vérifier et ajouter is_kahoot_mode si absent
+                    if 'is_kahoot_mode' not in columns:
+                        logger.info("Migration: Adding is_kahoot_mode column to users table")
+                        cursor.execute('ALTER TABLE users ADD COLUMN is_kahoot_mode BOOLEAN DEFAULT 0')
+                    
+                    # Migration : Vérifier les contraintes NOT NULL sur email et password_hash
+                    # Si password_hash a NOT NULL, on doit recréer la table (SQLite ne permet pas de modifier les contraintes)
+                    has_not_null_password = any(row[1] == 'password_hash' and row[3] == 1 for row in columns_info)
+                    has_not_null_email = any(row[1] == 'email' and row[3] == 1 for row in columns_info)
+                    
+                    if has_not_null_password or has_not_null_email:
+                        logger.info("Migration: Removing NOT NULL constraints from password_hash and email")
+                        # Créer une nouvelle table avec la bonne structure
+                        cursor.execute('''
+                            CREATE TABLE IF NOT EXISTS users_new (
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                username TEXT UNIQUE NOT NULL,
+                                email TEXT UNIQUE,
+                                password_hash TEXT,
+                                salt TEXT,
+                                role TEXT DEFAULT 'user',
+                                created_at TEXT NOT NULL,
+                                last_login TEXT,
+                                is_active BOOLEAN DEFAULT 1,
+                                is_kahoot_mode BOOLEAN DEFAULT 0
+                            )
+                        ''')
+                        
+                        # Copier les données existantes
+                        cursor.execute('''
+                            INSERT INTO users_new (id, username, email, password_hash, salt, role, created_at, last_login, is_active, is_kahoot_mode)
+                            SELECT id, username, email, password_hash, salt, role, created_at, last_login, is_active, 
+                                   COALESCE(is_kahoot_mode, 0) as is_kahoot_mode
+                            FROM users
+                        ''')
+                        
+                        # Supprimer l'ancienne table et renommer la nouvelle
+                        cursor.execute('DROP TABLE users')
+                        cursor.execute('ALTER TABLE users_new RENAME TO users')
+                        logger.info("Migration: Table users restructured successfully")
+                    
+                except Exception as e:
+                    logger.warning(f"Migration check failed (table may not exist yet): {e}")
+                
                 conn.commit()
                 
                 # Créer un utilisateur admin par défaut si aucun utilisateur n'existe
@@ -365,30 +415,65 @@ class UserManager:
             return False
     
     def get_leaderboard(self, limit: int = 50) -> List[Dict]:
-        """Récupère le classement des meilleurs scores"""
+        """Récupère le classement des meilleurs scores (un seul score par utilisateur, le meilleur)"""
         try:
             import json
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
+                # Récupérer le meilleur score de chaque utilisateur
+                # En cas d'égalité de score, on prend le plus récent
                 cursor.execute('''
-                    SELECT username, total_score, stars, mot_scores, completed_at
+                    SELECT 
+                        username, 
+                        MAX(total_score) as total_score,
+                        stars,
+                        mot_scores,
+                        MAX(completed_at) as completed_at
                     FROM game_scores
+                    GROUP BY username
                     ORDER BY total_score DESC, completed_at ASC
                     LIMIT ?
                 ''', (limit,))
                 
                 leaderboard = []
                 rank = 1
+                prev_score = None
+                prev_rank = 1
+                
                 for row in cursor.fetchall():
+                    total_score = row[1]
+                    
+                    # Gérer les ex-aequo : même rang si même score
+                    if prev_score is not None and total_score < prev_score:
+                        rank = prev_rank + 1
+                    
+                    # Pour les scores avec enablers, on doit récupérer le stars du meilleur score
+                    # On fait une sous-requête pour récupérer le stars du meilleur score de cet utilisateur
+                    cursor2 = conn.cursor()
+                    cursor2.execute('''
+                        SELECT stars, mot_scores
+                        FROM game_scores
+                        WHERE username = ? AND total_score = ?
+                        ORDER BY completed_at DESC
+                        LIMIT 1
+                    ''', (row[0], total_score))
+                    best_row = cursor2.fetchone()
+                    stars = best_row[0] if best_row else row[2]
+                    mot_scores = best_row[1] if best_row else row[3]
+                    
                     leaderboard.append({
                         'rank': rank,
                         'username': row[0],
-                        'total_score': row[1],
-                        'stars': row[2],
-                        'mot_scores': json.loads(row[3]) if row[3] else {},
+                        'total_score': total_score,
+                        'stars': stars,
+                        'mot_scores': json.loads(mot_scores) if mot_scores else {},
                         'completed_at': row[4]
                     })
+                    
+                    prev_score = total_score
+                    prev_rank = rank
                     rank += 1
+                    
                 return leaderboard
         except Exception as e:
             logger.error(f"Erreur lors de la récupération du leaderboard: {e}")

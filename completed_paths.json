@@ -1,85 +1,85 @@
 [
   {
-    "mot1_choice": "amira",
+    "mot1_choice": "elena",
     "mot2_choices": [
       "fraud_integrity_detection",
       "ai_storyline_generator",
       "smart_game_design_assistant"
     ],
     "mot3_choices": {
-      "technology": "ai_data_platform_modernization",
       "people": "ai_leadership_program",
+      "technology": "ai_data_platform_modernization",
       "gover": "ai_governance_board"
     },
     "mot4_choices": [
       "industrialized_data_pipelines",
       "country_level_ai_deployment",
       "privacy_by_design_data",
-      "ai_product_teams_setup"
+      "adoption_playbook"
     ],
     "mot5_choice": "boost_self_service_ai",
-    "total_score": 9,
-    "stars": 1,
+    "total_score": 11,
+    "stars": 2,
     "mot_scores": {
-      "mot1": 1,
+      "mot1": 3,
       "mot2": 2,
       "mot3": 3,
       "mot4": 2,
       "mot5": 1
     },
     "unlocked_enablers": [
-      "ai_product_teams_setup",
-      "AI-Powered Storyline Generator",
-      "self_service_ai_tools",
-      "responsible_ai_awareness",
-      "country_level_ai_deployment",
-      "industrialized_data_pipelines",
-      "ai_collaboration_hub",
-      "ai_governance_board",
       "data_ai_academy",
-      "Fraud & Integrity Detection",
-      "ai_leadership_program",
-      "attractive_ai_career_tracks",
-      "Smart Game Design Assistant",
       "ai_data_platform_modernization",
-      "privacy_by_design_data"
+      "responsible_ai_awareness",
+      "ai_governance_board",
+      "industrialized_data_pipelines",
+      "attractive_ai_career_tracks",
+      "ai_collaboration_hub",
+      "Smart Game Design Assistant",
+      "Fraud & Integrity Detection",
+      "ai_tech_benchmark",
+      "AI-Powered Storyline Generator",
+      "privacy_by_design_data",
+      "self_service_ai_tools",
+      "country_level_ai_deployment",
+      "ai_value_opportunities_gaming",
+      "ai_leadership_program",
+      "adoption_playbook"
     ],
     "unlocked_enablers_by_category": {
       "technology": [
-        "AI-Powered Storyline Generator",
-        "self_service_ai_tools",
-        "industrialized_data_pipelines",
-        "Fraud & Integrity Detection",
-        "Smart Game Design Assistant",
         "ai_data_platform_modernization",
-        "privacy_by_design_data"
+        "industrialized_data_pipelines",
+        "Smart Game Design Assistant",
+        "Fraud & Integrity Detection",
+        "ai_tech_benchmark",
+        "AI-Powered Storyline Generator",
+        "privacy_by_design_data",
+        "self_service_ai_tools"
       ],
       "gover": [
         "ai_governance_board",
         "responsible_ai_awareness",
+        "ai_value_opportunities_gaming",
         "country_level_ai_deployment"
       ],
       "people": [
-        "ai_product_teams_setup",
-        "ai_collaboration_hub",
         "data_ai_academy",
+        "attractive_ai_career_tracks",
+        "ai_collaboration_hub",
         "ai_leadership_program",
-        "attractive_ai_career_tracks"
+        "adoption_playbook"
       ]
     },
     "enablers_by_phase": {
       "phase1": [
-        "automated_banners_generation",
-        "customer_email_classifier",
-        "virtual_learning_coach_prototype",
-        "supplier_risk_scoring",
-        "simulated_game_design",
-        "predictive_maintenance_sandbox"
+        "ai_tech_benchmark",
+        "ai_value_opportunities_gaming"
       ],
       "phase2": [
+        "Fraud & Integrity Detection",
         "AI-Powered Storyline Generator",
-        "Smart Game Design Assistant",
-        "Fraud & Integrity Detection"
+        "Smart Game Design Assistant"
       ],
       "phase3": [
         "ai_governance_board",
@@ -87,19 +87,19 @@
         "ai_data_platform_modernization"
       ],
       "phase4": [
+        "industrialized_data_pipelines",
+        "adoption_playbook",
         "privacy_by_design_data",
-        "ai_product_teams_setup",
-        "country_level_ai_deployment",
-        "industrialized_data_pipelines"
+        "country_level_ai_deployment"
       ],
       "phase5": [
-        "responsible_ai_awareness",
-        "self_service_ai_tools",
-        "ai_collaboration_hub",
         "data_ai_academy",
-        "attractive_ai_career_tracks"
+        "responsible_ai_awareness",
+        "attractive_ai_career_tracks",
+        "ai_collaboration_hub",
+        "self_service_ai_tools"
       ]
     },
-    "mot4_score": 2
+    "mot4_score": 1
   }
 ]

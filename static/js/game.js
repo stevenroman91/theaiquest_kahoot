@@ -111,10 +111,20 @@ class GameController {
             window.history.replaceState({}, '', url);
         }
         
-        // Bypass login: start immediately
+        // Bypass login: start immediately (only if not in Kahoot mode)
+        // Check if Kahoot mode is active (username field exists and login form is visible)
         const loginSection = document.getElementById('login-section');
-        if (loginSection) loginSection.style.display = 'none';
-        this.handleLoginAndStart();
+        const loginForm = document.getElementById('login-form');
+        const isKahootMode = loginForm && loginSection && loginSection.style.display !== 'none';
+        
+        if (!isKahootMode) {
+            // Guest mode - start immediately
+            if (loginSection) loginSection.style.display = 'none';
+            this.handleLoginAndStart();
+        } else {
+            // Kahoot mode - wait for user login (handled by kahoot-mode.js)
+            console.log('🎮 Kahoot mode detected - waiting for login');
+        }
         
         // Validation en temps réel pour login
         document.getElementById('username').addEventListener('input', () => {

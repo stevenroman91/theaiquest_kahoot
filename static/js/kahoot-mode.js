@@ -81,24 +81,66 @@ class KahootMode {
                     this.setCurrentUsername(data.user_info.username);
                 }
                 
-                // Hide login section
+                // Hide login section and all intro sections
                 document.getElementById('login-section').style.display = 'none';
                 
-                // Start game directly (skip welcome/intro pages)
-                // In Kahoot mode, we want to go directly to Step 1
-                if (window.gameController) {
-                    // Check game state - if MOT1, start directly
-                    if (data.game_state === 'mot1_hr_approach_selection' || data.game_state === 'mot1') {
-                        await window.gameController.startMOT1Game();
+                // Hide all video/intro sections in Kahoot mode
+                const sectionsToHide = [
+                    'video-intro-section',
+                    'game-intro',
+                    'welcome-section',
+                    'teams-meeting-section',
+                    'harnessing-video-section',
+                    'step1-followup-section',
+                    'phase1-video-section',
+                    'phase2-video-section',
+                    'phase3-video-section',
+                    'phase4-video-section',
+                    'phase5-1-video-section',
+                    'phase5-2-video-section',
+                    'recap-video-section'
+                ];
+                sectionsToHide.forEach(sectionId => {
+                    const el = document.getElementById(sectionId);
+                    if (el) el.style.display = 'none';
+                });
+                
+                // Start game directly to Step 1 (skip all videos/intro)
+                // In Kahoot mode, we want to go directly to Step 1 choices
+                
+                // Wait a bit to ensure GameController is fully initialized
+                const startStep1 = () => {
+                    if (window.gameController) {
+                        // Stop all videos first
+                        if (window.gameController.stopAllVideos) {
+                            window.gameController.stopAllVideos();
+                        }
+                        
+                        // Call loadMOT1Choices directly to skip video and show Step 1
+                        if (window.gameController.loadMOT1Choices) {
+                            window.gameController.loadMOT1Choices();
+                            console.log('✅ Loaded Step 1 directly (Kahoot mode)');
+                        } else if (window.gameController.startMOT1Game) {
+                            // Fallback to startMOT1Game if loadMOT1Choices doesn't exist
+                            window.gameController.startMOT1Game();
+                            console.log('✅ Started Step 1 via startMOT1Game (Kahoot mode)');
+                        } else {
+                            console.error('Cannot find method to start Step 1');
+                            // Last resort: show phase1-section directly
+                            const phase1Section = document.getElementById('phase1-section');
+                            if (phase1Section) {
+                                phase1Section.style.display = 'block';
+                                console.log('✅ Showing Step 1 section directly');
+                            }
+                        }
                     } else {
-                        // Game already started or other state
-                        await window.gameController.refreshGameState();
+                        console.error('GameController not found, retrying...');
+                        setTimeout(startStep1, 200);
                     }
-                } else {
-                    console.error('GameController not found');
-                    // Fallback: reload page to initialize gameController
-                    setTimeout(() => window.location.reload(), 500);
-                }
+                };
+                
+                // Start after a short delay to ensure everything is initialized
+                setTimeout(startStep1, 500);
             } else {
                 this.showLoginAlert(data.message || 'Login failed', 'danger');
                 loginBtn.disabled = false;
@@ -175,8 +217,14 @@ class KahootMode {
     populateLeaderboard(leaderboard, userRank) {
         const tbody = document.getElementById('leaderboard-tbody');
         const statsDiv = document.getElementById('leaderboard-stats');
+        const tableContainer = document.querySelector('.leaderboard-table-container');
         
-        if (!tbody) return;
+        if (!tbody) {
+            console.error('Leaderboard tbody not found');
+            return;
+        }
+
+        console.log(`📊 Populating leaderboard with ${leaderboard.length} players:`, leaderboard.map(e => e.username));
 
         // Clear existing content
         tbody.innerHTML = '';
@@ -210,11 +258,21 @@ class KahootMode {
 
         // Populate table
         leaderboard.forEach((entry, index) => {
+            console.log(`  Adding player ${index + 1}: ${entry.username} (Rank ${entry.rank}, Score ${entry.total_score})`);
             const row = document.createElement('tr');
             
             // Highlight top 3
             if (entry.rank <= 3) {
                 row.classList.add('top-three');
+            }
+            
+            // Add rank class for medal display
+            if (entry.rank === 1) {
+                row.classList.add('rank-1');
+            } else if (entry.rank === 2) {
+                row.classList.add('rank-2');
+            } else if (entry.rank === 3) {
+                row.classList.add('rank-3');
             }
             
             // Highlight current user
@@ -225,8 +283,12 @@ class KahootMode {
             // Create stars display
             const starsHTML = this.createStarsDisplay(entry.stars);
 
+            // Add rank class to rank column for medal emojis
+            const rankClass = entry.rank <= 3 ? `rank-col rank-${entry.rank}` : 'rank-col';
+            const rankDisplay = entry.rank <= 3 ? '' : entry.rank; // Empty for top 3 (shown via ::before)
+
             row.innerHTML = `
-                <td class="rank-col">${entry.rank}</td>
+                <td class="${rankClass}">${rankDisplay}</td>
                 <td class="name-col">${this.escapeHtml(entry.username)}</td>
                 <td class="score-col">${entry.total_score}/15</td>
                 <td class="stars-col">${starsHTML}</td>
@@ -234,6 +296,15 @@ class KahootMode {
 
             tbody.appendChild(row);
         });
+
+        console.log(`✅ Leaderboard populated: ${tbody.children.length} rows created`);
+
+        // Scroll to top to ensure first player is visible
+        if (tableContainer) {
+            setTimeout(() => {
+                tableContainer.scrollTop = 0;
+            }, 100);
+        }
 
         // If leaderboard is empty
         if (leaderboard.length === 0) {
@@ -314,6 +385,7 @@ function hookScoreModal() {
                     
                     if (data.success) {
                         const gameState = data.game_state;
+                        const currentPath = data.current_path || {};
                         
                         // Check if we just completed Step 5 (results state)
                         if (gameState === 'results' || gameState === 'completed') {
@@ -330,20 +402,73 @@ function hookScoreModal() {
                                 }
                             }, 300);
                         } else {
-                            // Not final step - proceed to next step normally
+                            // Not final step - proceed directly to next step (Kahoot mode: skip dashboard)
+                            const scoreModal = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
+                            if (scoreModal) {
+                                scoreModal.hide();
+                            }
+                            
+                            // Determine which step was just completed from gameController
+                            let currentStep = window.gameController?.currentPhaseNumber || 1;
+                            
+                            // Alternative: check current_path if currentPhaseNumber not set
+                            if (!currentStep && currentPath) {
+                                if (currentPath.mot5_choice) {
+                                    currentStep = 5;
+                                } else if (currentPath.mot4_choices && currentPath.mot4_choices.length > 0) {
+                                    currentStep = 4;
+                                } else if (currentPath.mot3_choices && Object.keys(currentPath.mot3_choices).length > 0) {
+                                    currentStep = 3;
+                                } else if (currentPath.mot2_choices && currentPath.mot2_choices.length > 0) {
+                                    currentStep = 2;
+                                } else if (currentPath.mot1_choice) {
+                                    currentStep = 1;
+                                }
+                            }
+                            
+                            console.log(`🎮 Kahoot mode: Proceeding from Step ${currentStep} to Step ${currentStep + 1}`);
+                            
+                            // Go directly to next step (skip videos and dashboard)
                             if (window.gameController) {
-                                // Hide score modal
-                                const scoreModal = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
-                                if (scoreModal) {
-                                    scoreModal.hide();
-                                }
-                                
-                                // Continue to next step
-                                if (window.gameController.proceedToNextPhase) {
-                                    window.gameController.proceedToNextPhase();
-                                } else if (window.gameController.showNextPhase) {
-                                    window.gameController.showNextPhase();
-                                }
+                                // Small delay to ensure modal is closed
+                                setTimeout(() => {
+                                    switch(currentStep) {
+                                        case 1:
+                                            // Step 1 → Step 2 (skip video)
+                                            if (window.gameController.startPhase2Game) {
+                                                window.gameController.startPhase2Game();
+                                            } else if (window.gameController.loadMOT2Choices) {
+                                                window.gameController.loadMOT2Choices();
+                                            }
+                                            break;
+                                        case 2:
+                                            // Step 2 → Step 3 (skip video)
+                                            if (window.gameController.startPhase3Game) {
+                                                window.gameController.startPhase3Game();
+                                            } else if (window.gameController.loadMOT3Choices) {
+                                                window.gameController.loadMOT3Choices();
+                                            }
+                                            break;
+                                        case 3:
+                                            // Step 3 → Step 4 (skip video)
+                                            if (window.gameController.startPhase4Game) {
+                                                window.gameController.startPhase4Game();
+                                            } else if (window.gameController.loadMOT4Choices) {
+                                                window.gameController.loadMOT4Choices();
+                                            }
+                                            break;
+                                        case 4:
+                                            // Step 4 → Step 5 (skip video)
+                                            if (window.gameController.startPhase5Game) {
+                                                window.gameController.startPhase5Game();
+                                            } else if (window.gameController.loadMOT5Choices) {
+                                                window.gameController.loadMOT5Choices();
+                                            }
+                                            break;
+                                        default:
+                                            console.error('Unknown step number:', currentStep);
+                                    }
+                                }, 200);
                             }
                         }
                     }
