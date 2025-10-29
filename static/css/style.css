@@ -217,30 +217,29 @@ body.modal-open {
     grid-column: 2;
 }
 
-/* Horizontal layout for mobile Step 2 */
+/* Vertical columns layout for Step 2 (5 columns) */
 .available-solutions-horizontal {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     gap: 10px;
-    overflow-x: auto;
-    overflow-y: visible;
-    padding: 5px 0;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
+    width: 100%;
 }
 
 .available-solutions-horizontal .solution-card {
-    flex: 0 0 auto;
-    min-width: 200px;
-    max-width: 250px;
     margin-bottom: 0;
     white-space: normal;
 }
 
 @media (max-width: 768px) {
-    .available-solutions-horizontal .solution-card {
-        min-width: 180px;
-        max-width: 200px;
+    .available-solutions-horizontal {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .available-solutions-horizontal {
+        grid-template-columns: 1fr;
     }
 }
 
