@@ -763,30 +763,49 @@ class KahootMode {
     }
 
     populateLeaderboard(leaderboard, userRank) {
+        console.log('🔧 populateLeaderboard called with:', { leaderboard: leaderboard?.length, userRank });
+        
         const tbody = document.getElementById('leaderboard-tbody');
         const statsDiv = document.getElementById('leaderboard-stats');
         const tableContainer = document.querySelector('.leaderboard-table-container');
         
+        console.log('🔧 DOM elements:', { tbody: !!tbody, statsDiv: !!statsDiv, tableContainer: !!tableContainer });
+        
         if (!tbody) {
-            console.error('Leaderboard tbody not found');
+            console.error('❌ Leaderboard tbody not found!');
+            alert('Erreur: Tableau de classement introuvable. Veuillez rafraîchir la page.');
             return;
         }
 
-        console.log(`📊 Populating leaderboard with ${leaderboard.length} players:`, leaderboard.map(e => e.username));
+        // Ensure leaderboard is an array
+        if (!Array.isArray(leaderboard)) {
+            console.error('❌ Leaderboard is not an array:', typeof leaderboard, leaderboard);
+            leaderboard = [];
+        }
+
+        // Safe logging to prevent errors if username doesn't exist
+        const playerNames = leaderboard.map(e => e?.username || e?.['username'] || 'Unknown').filter(name => name !== 'Unknown');
+        console.log(`📊 Populating leaderboard with ${leaderboard.length} players:`, playerNames);
 
         // Clear existing content
         tbody.innerHTML = '';
 
         // Get current username from session or somewhere else
         const currentUsername = this.getCurrentUsername();
+        console.log('🔧 Current username:', currentUsername);
 
         // Populate stats
         if (statsDiv) {
             const totalPlayers = leaderboard.length;
             const avgScore = leaderboard.length > 0 
-                ? Math.round(leaderboard.reduce((sum, entry) => sum + entry.total_score, 0) / leaderboard.length)
+                ? Math.round(leaderboard.reduce((sum, entry) => {
+                    const score = entry?.total_score || entry?.['total_score'] || 0;
+                    return sum + score;
+                }, 0) / leaderboard.length)
                 : 0;
-            const topScore = leaderboard.length > 0 ? leaderboard[0].total_score : 0;
+            const topScore = leaderboard.length > 0 
+                ? (leaderboard[0]?.total_score || leaderboard[0]?.['total_score'] || 0)
+                : 0;
 
             statsDiv.innerHTML = `
                 <div class="stat-card">
@@ -885,12 +904,32 @@ class KahootMode {
         console.log(`✅ Leaderboard populated: ${rowsCreated} rows created (expected ${expectedRows})`);
         console.log(`    tbody exists:`, !!tbody);
         console.log(`    tbody.innerHTML length:`, tbody.innerHTML.length);
+        console.log(`    tbody HTML preview:`, tbody.innerHTML.substring(0, 200));
         
         if (rowsCreated === 0 && expectedRows > 0) {
             console.error('❌ CRITICAL: No rows created despite having leaderboard data!');
-            console.error('    Leaderboard data:', leaderboard);
+            console.error('    Leaderboard data:', JSON.stringify(leaderboard, null, 2));
             console.error('    tbody element:', tbody);
             console.error('    tbody parent:', tbody?.parentElement);
+            console.error('    tbody parent HTML:', tbody?.parentElement?.innerHTML?.substring(0, 500));
+            
+            // Force show an error row
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center py-3 text-danger">
+                        <p class="mb-0"><strong>Erreur d'affichage</strong></p>
+                        <p class="mb-0 small">${expectedRows} joueur(s) trouvé(s) mais impossible d'afficher</p>
+                    </td>
+                </tr>
+            `;
+        } else if (rowsCreated === 0 && expectedRows === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center py-5">
+                        <p class="mb-0">Aucun score pour le moment. Soyez le premier à jouer !</p>
+                    </td>
+                </tr>
+            `;
         }
 
         // Scroll to top to ensure first player is visible

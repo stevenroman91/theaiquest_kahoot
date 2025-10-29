@@ -1411,11 +1411,29 @@ def api_leaderboard():
                     user_rank = entry['rank']
                     break
         
+        # Ensure leaderboard is a list and contains valid data
+        leaderboard_list = []
+        for entry in leaderboard:
+            if isinstance(entry, dict):
+                # Ensure all required fields exist
+                leaderboard_list.append({
+                    'rank': entry.get('rank', 0),
+                    'username': entry.get('username', 'Unknown'),
+                    'total_score': entry.get('total_score', 0),
+                    'stars': entry.get('stars', 0),
+                    'mot_scores': entry.get('mot_scores', {}),
+                    'completed_at': entry.get('completed_at', '')
+                })
+            else:
+                logger.warning(f"Invalid leaderboard entry format: {entry}")
+        
+        logger.info(f"Returning leaderboard with {len(leaderboard_list)} entries for session {session_code}")
+        
         return jsonify({
             'success': True,
-            'leaderboard': leaderboard,
+            'leaderboard': leaderboard_list,
             'user_rank': user_rank,
-            'total_entries': len(leaderboard),
+            'total_entries': len(leaderboard_list),
             'session_code': session_code  # Inclure le code de session dans la réponse
         })
     except Exception as e:
