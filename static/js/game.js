@@ -1420,29 +1420,26 @@ class GameController {
         card.className = 'solution-card';
         card.draggable = true;
         card.dataset.choiceId = choice.id;
+            // Simplified for mobile: only title and number, no description or image
             card.innerHTML = `
-            <div class="solution-options">
-                <i class="fas fa-ellipsis-v"></i>
-                        </div>
-        <div class="solution-header">
-            <div class="solution-title">${choice.title}</div>
-            <div class="matrix-number-square" style="
-                width: 40px;
-                height: 40px;
-                border-radius: 8px;
-                background: ${backgroundColor};
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
-                font-size: 1.2rem;
-                box-shadow: ${isAvailable ? '0 2px 8px rgba(6, 182, 212, 0.3)' : '0 2px 8px rgba(107, 114, 128, 0.3)'};
-                flex-shrink: 0;
-                border: 2px solid white;
-            ">${matrixPosition}</div>
-                </div>
-        <div class="solution-description">${choice.description}</div>
+            <div class="solution-header d-flex align-items-center justify-content-between" style="width: 100%;">
+                <div class="solution-title fw-bold" style="flex: 1; margin-right: 10px;">${choice.title}</div>
+                <div class="matrix-number-square" style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 8px;
+                    background: ${backgroundColor};
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    font-size: 1.2rem;
+                    box-shadow: ${isAvailable ? '0 2px 8px rgba(6, 182, 212, 0.3)' : '0 2px 8px rgba(107, 114, 128, 0.3)'};
+                    flex-shrink: 0;
+                    border: 2px solid white;
+                ">${matrixPosition}</div>
+            </div>
             `;
         
         // Add drag event listeners

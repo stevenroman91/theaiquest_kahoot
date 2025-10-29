@@ -1389,12 +1389,10 @@ function renderMOT2ChoicesFull(choices) {
         card.className = 'solution-card';
         card.draggable = isAvailable;
         card.dataset.choiceId = choice.id;
+        // Simplified for mobile: only title and number, no description or image
         card.innerHTML = `
-            <div class="solution-options">
-                <i class="fas fa-ellipsis-v"></i>
-            </div>
-            <div class="solution-header">
-                <div class="solution-title">${choice.title}</div>
+            <div class="solution-header d-flex align-items-center justify-content-between" style="width: 100%;">
+                <div class="solution-title fw-bold" style="flex: 1; margin-right: 10px;">${choice.title}</div>
                 <div class="matrix-number-square" style="
                     width: 40px;
                     height: 40px;
@@ -1411,38 +1409,62 @@ function renderMOT2ChoicesFull(choices) {
                     border: 2px solid white;
                 ">${matrixPosition}</div>
             </div>
-            <div class="solution-description">${choice.description}</div>
         `;
         
-        // Add drag event listeners (always add, will use GameController if available)
-        card.addEventListener('dragstart', (e) => {
-            const choiceId = card.dataset.choiceId;
-            e.dataTransfer.setData('text/plain', choiceId);
-            e.dataTransfer.effectAllowed = 'move';
-            card.classList.add('dragging');
+        // Mobile-friendly interaction: double tap to select, then tap slot to drop
+        let lastTap = 0;
+        let tapTimeout;
+        
+        card.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
             
-            // Also call GameController if available
-            if (window.gameController && window.gameController.handleDragStart) {
-                // Store original handler and call it
-                const originalHandler = window.gameController.handleDragStart.bind(window.gameController);
-                originalHandler(e);
+            if (tapLength < 300 && tapLength > 0) {
+                // Double tap detected - select this card
+                e.stopPropagation();
+                selectCardForMobile(card);
+            } else {
+                // Single tap - start timeout for potential double tap
+                tapTimeout = setTimeout(() => {
+                    selectCardForMobile(card);
+                }, 300);
             }
+            
+            lastTap = currentTime;
         });
         
-        card.addEventListener('dragend', (e) => {
-            card.classList.remove('dragging');
-            
-            // Remove drag-over class from all slots
-            document.querySelectorAll('.priority-slot').forEach(slot => {
-                slot.classList.remove('drag-over');
+        card.addEventListener('touchend', (e) => {
+            clearTimeout(tapTimeout);
+        });
+        
+        // Keep drag-and-drop for desktop (mouse events)
+        if (!('ontouchstart' in window)) {
+            card.addEventListener('dragstart', (e) => {
+                const choiceId = card.dataset.choiceId;
+                e.dataTransfer.setData('text/plain', choiceId);
+                e.dataTransfer.effectAllowed = 'move';
+                card.classList.add('dragging');
+                
+                if (window.gameController && window.gameController.handleDragStart) {
+                    const originalHandler = window.gameController.handleDragStart.bind(window.gameController);
+                    originalHandler(e);
+                }
             });
             
-            // Also call GameController if available
-            if (window.gameController && window.gameController.handleDragEnd) {
-                const originalHandler = window.gameController.handleDragEnd.bind(window.gameController);
-                originalHandler(e);
-            }
-        });
+            card.addEventListener('dragend', (e) => {
+                card.classList.remove('dragging');
+                
+                document.querySelectorAll('.priority-slot').forEach(slot => {
+                    slot.classList.remove('drag-over');
+                });
+                
+                if (window.gameController && window.gameController.handleDragEnd) {
+                    const originalHandler = window.gameController.handleDragEnd.bind(window.gameController);
+                    originalHandler(e);
+                }
+            });
+        }
         
         container.appendChild(card);
     });
@@ -1453,13 +1475,23 @@ function renderMOT2ChoicesFull(choices) {
         window.gameController.initializePrioritySlots();
     }
     
-    // Also setup manual handlers as backup (will work even without GameController bind)
+    // Setup handlers for both mobile (touch) and desktop (drag-drop)
     const slots = document.querySelectorAll('.priority-slot');
     slots.forEach(slot => {
         // Remove existing listeners by cloning (if any)
         const newSlot = slot.cloneNode(true);
         slot.parentNode.replaceChild(newSlot, slot);
         
+        // Mobile: tap on slot to drop selected card
+        newSlot.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const selectedCard = document.querySelector('.solution-card.selected-mobile');
+            if (selectedCard && selectedCard.dataset.choiceId) {
+                handleMobileDrop(newSlot, selectedCard.dataset.choiceId);
+            }
+        });
+        
+        // Desktop: drag and drop
         newSlot.addEventListener('dragover', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -1476,57 +1508,7 @@ function renderMOT2ChoicesFull(choices) {
             if (!choiceId) return;
             
             slotElement.classList.remove('drag-over');
-            
-            // Check if slot is already occupied
-            if (slotElement.querySelector('.priority-item')) {
-                if (window.gameController && window.gameController.showAlert) {
-                    window.gameController.showAlert('This priority slot is already occupied. Please remove the existing item first.', 'warning');
-                } else {
-                    alert('Ce slot est déjà occupé. Veuillez retirer l\'élément existant d\'abord.');
-                }
-                return;
-            }
-            
-            // Find the solution card
-            const solutionCard = document.querySelector(`[data-choice-id="${choiceId}"]`);
-            if (!solutionCard) return;
-            
-            // Create priority item
-            const priorityItem = document.createElement('div');
-            priorityItem.className = 'priority-item';
-            priorityItem.dataset.choiceId = choiceId;
-            
-            const titleText = solutionCard.querySelector('.solution-title')?.textContent || 'Unknown';
-            const descText = solutionCard.querySelector('.solution-description')?.textContent || '';
-            
-            priorityItem.innerHTML = `
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="fw-bold">${titleText}</div>
-                        <div class="text-muted small">${descText}</div>
-                    </div>
-                    <button class="btn btn-sm btn-outline-danger remove-priority-btn" data-choice-id="${choiceId}" type="button">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `;
-            
-            // Add click handler for remove button
-            priorityItem.querySelector('.remove-priority-btn').addEventListener('click', () => {
-                removeFromPrioritySlot(choiceId);
-            });
-            
-            // Add to slot
-            slotElement.innerHTML = '';
-            slotElement.appendChild(priorityItem);
-            slotElement.classList.add('occupied');
-            
-            // Mark solution as used
-            solutionCard.classList.add('used');
-            solutionCard.draggable = false;
-            
-            // Update counter
-            updatePhase2Counter();
+            handleDropToSlot(slotElement, choiceId);
         });
         
         newSlot.addEventListener('dragenter', (e) => {
@@ -1545,6 +1527,104 @@ function renderMOT2ChoicesFull(choices) {
             }
         });
     });
+    
+    // Mobile helper: Select card for mobile interaction
+    function selectCardForMobile(card) {
+        // Remove selection from all cards
+        document.querySelectorAll('.solution-card').forEach(c => {
+            c.classList.remove('selected-mobile');
+            c.style.opacity = '1';
+        });
+        
+        // Select this card
+        card.classList.add('selected-mobile');
+        card.style.opacity = '0.7';
+        card.style.border = '3px solid var(--fdj-blue-primary)';
+        card.style.borderRadius = '8px';
+        
+        // Show instruction
+        if (window.gameController && window.gameController.showAlert) {
+            window.gameController.showAlert('Card selected! Tap on a priority slot to add it.', 'info');
+        }
+    }
+    
+    // Mobile helper: Handle drop to slot
+    function handleMobileDrop(slotElement, choiceId) {
+        // Check if slot is already occupied
+        if (slotElement.querySelector('.priority-item')) {
+            if (window.gameController && window.gameController.showAlert) {
+                window.gameController.showAlert('This priority slot is already occupied. Please remove the existing item first.', 'warning');
+            } else {
+                alert('Ce slot est déjà occupé. Veuillez retirer l\'élément existant d\'abord.');
+            }
+            return;
+        }
+        
+        // Find the solution card
+        const solutionCard = document.querySelector(`[data-choice-id="${choiceId}"]`);
+        if (!solutionCard) return;
+        
+        handleDropToSlot(slotElement, choiceId);
+    }
+    
+    // Shared helper: Handle drop to slot (used by both mobile and desktop)
+    function handleDropToSlot(slotElement, choiceId) {
+        // Find the solution card
+        const solutionCard = document.querySelector(`[data-choice-id="${choiceId}"]`);
+        if (!solutionCard) return;
+        
+        // Create priority item - simplified: only title and number
+        const priorityItem = document.createElement('div');
+        priorityItem.className = 'priority-item';
+        priorityItem.dataset.choiceId = choiceId;
+        
+        const titleText = solutionCard.querySelector('.solution-title')?.textContent || 'Unknown';
+        const numberSquare = solutionCard.querySelector('.matrix-number-square');
+        const numberText = numberSquare ? numberSquare.textContent : '';
+        
+        priorityItem.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="flex: 1;">
+                    ${numberText ? `<div class="matrix-number-square me-2" style="
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 6px;
+                        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+                        color: white;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: bold;
+                        font-size: 0.9rem;
+                    ">${numberText}</div>` : ''}
+                    <div class="fw-bold">${titleText}</div>
+                </div>
+                <button class="btn btn-sm btn-outline-danger remove-priority-btn" data-choice-id="${choiceId}" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        
+        // Add click handler for remove button
+        priorityItem.querySelector('.remove-priority-btn').addEventListener('click', () => {
+            removeFromPrioritySlot(choiceId);
+        });
+        
+        // Add to slot
+        slotElement.innerHTML = '';
+        slotElement.appendChild(priorityItem);
+        slotElement.classList.add('occupied');
+        
+        // Mark solution as used and deselect mobile
+        solutionCard.classList.add('used');
+        solutionCard.classList.remove('selected-mobile');
+        solutionCard.style.opacity = '0.5';
+        solutionCard.style.border = '';
+        solutionCard.draggable = false;
+        
+        // Update counter
+        updatePhase2Counter();
+    }
     
     // Helper function to remove from priority slot
     function removeFromPrioritySlot(choiceId) {
@@ -1567,6 +1647,9 @@ function renderMOT2ChoicesFull(choices) {
         const solutionCard = document.querySelector(`[data-choice-id="${choiceId}"]`);
         if (solutionCard) {
             solutionCard.classList.remove('used');
+            solutionCard.classList.remove('selected-mobile');
+            solutionCard.style.opacity = '1';
+            solutionCard.style.border = '';
             solutionCard.draggable = true;
         }
         
