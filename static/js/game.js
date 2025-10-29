@@ -2284,32 +2284,16 @@ class GameController {
             const details = choiceDetails[choice.id] || { enablers: [], description: choice.description };
             
             // Générer le contenu pour les enablers
-            let contentHtml = '';
-            if (details.enablers && details.enablers.length > 0) {
-                contentHtml = `
-                    <div class="choice-enablers">
-                        ${details.enablers.map(enabler => `
-                            <div class="choice-enabler" data-enabler-id="${enabler.id}">
-                                <div class="enabler-icon ${enabler.category}">
-                                    <i class="${enabler.icon}"></i>
-                                </div>
-                                <div class="enabler-label">${enabler.label}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
+            // Simplified: only title and description
             columnDiv.innerHTML = `
                 <div class="choice-column" data-choice-id="${choice.id}" onclick="gameController.selectChoice('${choice.id}')">
                     <div class="choice-header">
-                        <h4 class="choice-title">${choice.title}</h4>
+                        <h4 class="choice-title fw-bold mb-2">${choice.title}</h4>
                     </div>
                     <div class="choice-content">
                         <div class="choice-description">
                             ${choice.description}
                         </div>
-                        ${contentHtml}
                     </div>
                 </div>
             `;

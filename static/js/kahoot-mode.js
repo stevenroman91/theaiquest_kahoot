@@ -2307,38 +2307,20 @@ function renderMOT5ChoicesFull(choices) {
         const columnDiv = document.createElement('div');
         columnDiv.className = 'col-md-4 col-sm-12';
         
-        const details = choiceDetails[choice.id] || { enablers: [], description: choice.description };
-        
-        // Generate content for enablers
-        let contentHtml = '';
-        if (details.enablers && details.enablers.length > 0) {
-            contentHtml = `
-                <div class="choice-enablers">
-                    ${details.enablers.map(enabler => `
-                        <div class="choice-enabler" data-enabler-id="${enabler.id}">
-                            <div class="enabler-icon ${enabler.category}">
-                                <i class="${enabler.icon}"></i>
-                            </div>
-                            <div class="enabler-label">${enabler.label}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-        
+        // Simplified: only title and description (no enablers)
         const choiceColumn = document.createElement('div');
         choiceColumn.className = 'choice-column';
         choiceColumn.dataset.choiceId = choice.id;
         
+        // Simplified: only title and description
         choiceColumn.innerHTML = `
             <div class="choice-header">
-                <h4 class="choice-title">${choice.title}</h4>
+                <h4 class="choice-title fw-bold mb-2">${choice.title}</h4>
             </div>
             <div class="choice-content">
                 <div class="choice-description">
                     ${choice.description}
                 </div>
-                ${contentHtml}
             </div>
         `;
         
