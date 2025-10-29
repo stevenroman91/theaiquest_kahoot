@@ -1195,9 +1195,14 @@ body.modal-open {
     transition: all 0.3s ease;
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    height: 100%;
+    height: auto; /* Changed from 100% to auto to prevent empty space */
     display: flex;
     flex-direction: column;
+}
+
+/* Step 1: Remove empty space by removing border-bottom when no content below */
+#phase1-section .choice-header {
+    border-bottom: none;
 }
 
 .choice-column:hover {
@@ -1219,6 +1224,16 @@ body.modal-open {
     transition: all 0.3s ease;
     border-bottom: 1px solid #e5e7eb;
     text-align: center;
+}
+
+/* Remove border-bottom when there's no choice-content below (Step 1 simplified layout) */
+.choice-column:has(.choice-header):not(:has(.choice-content)) .choice-header {
+    border-bottom: none;
+}
+
+/* Also handle case where choice-content exists but is empty */
+.choice-column .choice-content:empty {
+    display: none;
 }
 
 .choice-column.selected .choice-header {
