@@ -11,6 +11,26 @@ class KahootMode {
         console.log('🎮 Kahoot Mode initialized');
         this.initializeEventListeners();
         this.setupLeaderboardButtons();
+        this.prefillSessionCodeFromUrl(); // Pré-remplir immédiatement au chargement
+    }
+    
+    prefillSessionCodeFromUrl() {
+        // Pré-remplir le code de session depuis l'URL si présent
+        const sessionCodeInput = document.getElementById('session-code');
+        if (!sessionCodeInput) return;
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionCodeFromUrl = urlParams.get('session');
+        
+        if (sessionCodeFromUrl) {
+            const normalizedCode = sessionCodeFromUrl.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 6);
+            if (normalizedCode.length === 6) {
+                sessionCodeInput.value = normalizedCode;
+                console.log('✅ Session code pré-rempli depuis URL:', normalizedCode);
+                // Basculer en mode joueur
+                this.switchToPlayerMode();
+            }
+        }
     }
 
     initializeEventListeners() {
