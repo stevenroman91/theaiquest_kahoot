@@ -1015,6 +1015,27 @@ function hookScoreModal() {
                                             console.error('Unknown next step number:', nextStep);
                                     }
                                 }, 200);
+                            } else {
+                                // GameController not available - use fallback
+                                console.warn('⚠️ GameController not available, using fallback for Step', nextStep);
+                                setTimeout(() => {
+                                    switch(nextStep) {
+                                        case 2:
+                                            loadAndRenderStep2();
+                                            break;
+                                        case 3:
+                                            console.warn('Step 3 fallback not yet implemented');
+                                            break;
+                                        case 4:
+                                            console.warn('Step 4 fallback not yet implemented');
+                                            break;
+                                        case 5:
+                                            console.warn('Step 5 fallback not yet implemented');
+                                            break;
+                                        default:
+                                            console.error('Unknown next step number:', nextStep);
+                                    }
+                                }, 200);
                             }
                         }
                     }
