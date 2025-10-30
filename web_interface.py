@@ -368,7 +368,12 @@ def api_login():
             if session_code:
                 session['game_session_code'] = session_code
                 # Enregistrer le joueur comme actif dans cette session (pour empêcher les doublons)
-                user_manager.register_active_player(user.username, session_code)
+                registered = user_manager.register_active_player(user.username, session_code)
+                if not registered:
+                    return jsonify({
+                        'success': False,
+                        'message': f'Le nom "{user.username}" est déjà pris dans cette session.'
+                    }), 409
                 # Initialiser sa progression autoritaire au Step 1
                 try:
                     user_manager.upsert_progress(user.username, session_code, 1)

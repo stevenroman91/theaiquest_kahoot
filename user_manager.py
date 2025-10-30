@@ -292,21 +292,26 @@ class UserManager:
         return username
     
     def username_exists_in_session(self, username: str, session_code: str) -> bool:
-        """Vérifie si un username existe déjà dans une session donnée (joueur actif ou ayant terminé)"""
+        """Vérifie (insensible à la casse/espaces) si un username existe déjà dans une session donnée.
+        On regarde à la fois parmi les joueurs actifs et ceux ayant déjà un score dans la session.
+        """
         try:
             normalized_code = session_code.upper().strip()
+            normalized_username = username.strip().lower()
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
-                # Vérifier dans active_players (joueurs en cours) ET game_scores (joueurs ayant terminé)
+                # Comparaison insensible à la casse/espaces sur username, et session normalisé
                 cursor.execute('''
                     SELECT COUNT(*) FROM (
                         SELECT username FROM active_players
-                        WHERE UPPER(TRIM(session_code)) = ? AND username = ?
+                        WHERE UPPER(TRIM(session_code)) = ?
+                          AND LOWER(TRIM(username)) = ?
                         UNION
                         SELECT username FROM game_scores
-                        WHERE UPPER(TRIM(session_id)) = ? AND username = ?
+                        WHERE UPPER(TRIM(session_id)) = ?
+                          AND LOWER(TRIM(username)) = ?
                     )
-                ''', (normalized_code, username, normalized_code, username))
+                ''', (normalized_code, normalized_username, normalized_code, normalized_username))
                 count = cursor.fetchone()[0]
                 return count > 0
         except Exception as e:
@@ -317,8 +322,18 @@ class UserManager:
         """Enregistre un joueur actif dans une session (appelé à la connexion)"""
         try:
             normalized_code = session_code.upper().strip()
+            normalized_username = username.strip().lower()
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
+                # Refus si un joueur existe déjà avec le même username (insensible à la casse)
+                cursor.execute('''
+                    SELECT 1 FROM active_players
+                    WHERE UPPER(TRIM(session_code)) = ? AND LOWER(TRIM(username)) = ?
+                    LIMIT 1
+                ''', (normalized_code, normalized_username))
+                if cursor.fetchone():
+                    logger.info(f"Duplicate active username refused (case-insensitive): {username} in session {normalized_code}")
+                    return False
                 cursor.execute('''
                     INSERT OR REPLACE INTO active_players (session_code, username, connected_at)
                     VALUES (?, ?, ?)
