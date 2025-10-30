@@ -193,3 +193,4 @@ Pour toute question ou problème, vérifier :
 2. La base de données SQLite (`users.db`)
 3. Les erreurs JavaScript dans la console du navigateur
 
+

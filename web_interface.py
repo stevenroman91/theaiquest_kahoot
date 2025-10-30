@@ -331,9 +331,21 @@ def api_login():
                     'message': f'Le nom "{username}" est déjà pris dans cette session. Veuillez choisir un autre nom.'
                 }), 409  # HTTP 409 Conflict
         
-        # Mode Kahoot : authentification sans password
-        # Mode normal : authentification avec password
-        success, user = user_manager.authenticate_user(username, password if password else None)
+        # Flux joueur Kahoot (pas de password): création/fetch direct et login sans passer par mot de passe
+        if not password:
+            try:
+                existing = user_manager.get_user_by_username(username)
+                if not existing:
+                    user_manager.create_user(username, kahoot_mode=True)
+                    existing = user_manager.get_user_by_username(username)
+                user = existing
+                success = True if user else False
+            except Exception as e:
+                logger.error(f"Kahoot login creation failed for {username}: {e}")
+                success, user = False, None
+        else:
+            # Mode normal: authentification via password
+            success, user = user_manager.authenticate_user(username, password)
         
         if success and user:
             # Réinitialiser le jeu pour une nouvelle session
@@ -357,6 +369,11 @@ def api_login():
                 session['game_session_code'] = session_code
                 # Enregistrer le joueur comme actif dans cette session (pour empêcher les doublons)
                 user_manager.register_active_player(user.username, session_code)
+                # Initialiser sa progression autoritaire au Step 1
+                try:
+                    user_manager.upsert_progress(user.username, session_code, 1)
+                except Exception as e:
+                    logger.warning(f"init progress failed: {e}")
             
             return jsonify({
                 'success': True,
@@ -560,6 +577,14 @@ def api_phase1_choose():
     
     if success:
         score_info = game.get_current_score()
+        # Authoritative progress update
+        try:
+            username = session.get('username')
+            session_code = session.get('game_session_code')
+            if username and session_code:
+                user_manager.upsert_progress(username, session_code, 1)
+        except Exception as e:
+            logger.warning(f"progress update step1 failed: {e}")
         return jsonify({
             'success': True,
             'message': f'Choice made: {character_id}',
@@ -610,6 +635,14 @@ def api_phase2_choose():
     
     if success:
         score_info = game.get_current_score()
+        # Authoritative progress update
+        try:
+            username = session.get('username')
+            session_code = session.get('game_session_code')
+            if username and session_code:
+                user_manager.upsert_progress(username, session_code, 2)
+        except Exception as e:
+            logger.warning(f"progress update step2 failed: {e}")
         return jsonify({
             'success': True,
             'message': f'Choices made: {solution_ids}',
@@ -678,6 +711,14 @@ def api_phase3_choose():
     
     if game.make_mot3_choices(choices):
         score_info = game.get_current_score()
+        # Authoritative progress update
+        try:
+            username = session.get('username')
+            session_code = session.get('game_session_code')
+            if username and session_code:
+                user_manager.upsert_progress(username, session_code, 3)
+        except Exception as e:
+            logger.warning(f"progress update step3 failed: {e}")
         return jsonify({
             'success': True,
             'message': f'Choices made: {choices}',
@@ -810,6 +851,14 @@ def api_phase4_choose():
     
     if success:
         score_info = game.get_current_score()
+        # Authoritative progress update
+        try:
+            username = session.get('username')
+            session_code = session.get('game_session_code')
+            if username and session_code:
+                user_manager.upsert_progress(username, session_code, 4)
+        except Exception as e:
+            logger.warning(f"progress update step4 failed: {e}")
         return jsonify({
             'success': True,
             'message': f'Choices made: {enabler_ids}',
@@ -872,6 +921,13 @@ def api_phase5_choose():
             mot_scores=results['scores'],
             session_id=session_code  # Utiliser le code de session Kahoot
         )
+
+        # Mark progress completed
+        try:
+            if username and session_code:
+                user_manager.mark_completed(username, session_code)
+        except Exception as e:
+            logger.warning(f"progress mark_completed failed: {e}")
         
         # Retirer le joueur de la liste des joueurs actifs (il a terminé, son score est sauvegardé)
         # La vérification d'unicité continuera de fonctionner grâce à game_scores
@@ -914,6 +970,18 @@ def api_current_score():
         'success': True,
         'score': score_info
     })
+
+@app.route('/api/next_step')
+def api_next_step():
+    """Endpoint autoritaire pour connaître le prochain step de l'utilisateur courant."""
+    if not session.get('logged_in'):
+        return jsonify({'success': False, 'message': 'Not logged in'}), 401
+    username = session.get('username')
+    session_code = session.get('game_session_code')
+    if not username or not session_code:
+        return jsonify({'success': False, 'message': 'Missing session/user'}), 400
+    result = user_manager.get_next_step(username, session_code)
+    return jsonify({'success': True, **result})
 
 @app.route('/api/game_state')
 def api_game_state():

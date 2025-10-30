@@ -37,8 +37,8 @@ class PlayerUser(HttpUser):
 
         self.username = random_username()
 
-        # Player login (username only + session code)
-        self.client.post(
+        # Player login (username only + session code) with explicit failure handling
+        with self.client.post(
             "/api/login",
             json={
                 "session_code": SESSION_CODE,
@@ -46,7 +46,18 @@ class PlayerUser(HttpUser):
                 "password": ""  # player mode
             },
             name="login_player",
-        )
+            catch_response=True,
+        ) as resp:
+            try:
+                data = resp.json()
+            except Exception:
+                data = {"raw": resp.text}
+            if resp.status_code != 200 or not data.get("success"):
+                resp.failure(f"Login failed: {resp.status_code} {data}")
+                # Abort further actions for this user instance
+                return
+            else:
+                resp.success()
 
     @task(5)
     def play_full_path(self):
@@ -59,7 +70,7 @@ class PlayerUser(HttpUser):
         self.client.post(
             "/api/phase2/choose",
             json={
-                "choice_ids": [
+                "solution_ids": [
                     "fraud_integrity_detection",
                     "smart_game_design_assistant",
                     "player_journey_optimizer",
@@ -73,9 +84,11 @@ class PlayerUser(HttpUser):
         self.client.post(
             "/api/phase3/choose",
             json={
-                "people": ["ai_collaboration_hub"],
-                "technology": ["trusted_tech_partners"],
-                "governance": ["ai_governance_roadmap"],
+                "choices": {
+                    "people": ["ai_collaboration_hub"],
+                    "technology": ["trusted_tech_partners"],
+                    "governance": ["ai_governance_roadmap"],
+                }
             },
             name="post_phase3_choose",
         )

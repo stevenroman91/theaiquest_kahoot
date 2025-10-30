@@ -94,6 +94,22 @@ class UserManager:
                     CREATE INDEX IF NOT EXISTS idx_session_id ON game_scores(session_id)
                 ''')
                 
+                # Authoritative per-user progress within a session
+                cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS player_progress (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        session_code TEXT NOT NULL,
+                        username TEXT NOT NULL,
+                        current_step INTEGER NOT NULL DEFAULT 1,
+                        completed BOOLEAN NOT NULL DEFAULT 0,
+                        updated_at TEXT NOT NULL,
+                        UNIQUE(session_code, username)
+                    )
+                ''')
+                cursor.execute('''
+                    CREATE INDEX IF NOT EXISTS idx_progress_session_user ON player_progress(session_code, username)
+                ''')
+
                 # Créer la table pour les joueurs actifs (en cours de jeu)
                 cursor.execute('''
                     CREATE TABLE IF NOT EXISTS active_players (
@@ -216,10 +232,11 @@ class UserManager:
                 if not password:
                     logger.error("Mot de passe requis en mode normal")
                     return False
-                if self.get_user_by_email(email):
-                    logger.warning(f"Email {email} existe déjà")
-                    return False
-                # Hacher le mot de passe
+            if self.get_user_by_email(email):
+                logger.warning(f"Email {email} existe déjà")
+                return False
+            # Hacher le mot de passe uniquement en mode normal
+            if not kahoot_mode:
                 password_hash, salt = self.hash_password(password)
             
             # Insérer dans la base de données
@@ -329,6 +346,59 @@ class UserManager:
         except Exception as e:
             logger.error(f"Erreur lors de la suppression du joueur actif: {e}")
             return False
+
+    # Authoritative progress helpers
+    def upsert_progress(self, username: str, session_code: str, current_step: int) -> None:
+        try:
+            normalized_code = session_code.upper().strip()
+            now = datetime.now().isoformat()
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO player_progress (session_code, username, current_step, completed, updated_at)
+                    VALUES (?, ?, ?, 0, ?)
+                    ON CONFLICT(session_code, username)
+                    DO UPDATE SET current_step=excluded.current_step, updated_at=excluded.updated_at
+                ''', (normalized_code, username, max(1, min(5, int(current_step))), now))
+                conn.commit()
+        except Exception as e:
+            logger.error(f"Erreur upsert_progress: {e}")
+
+    def mark_completed(self, username: str, session_code: str) -> None:
+        try:
+            normalized_code = session_code.upper().strip()
+            now = datetime.now().isoformat()
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    UPDATE player_progress
+                    SET completed = 1, current_step = 5, updated_at = ?
+                    WHERE session_code = ? AND username = ?
+                ''', (now, normalized_code, username))
+                conn.commit()
+        except Exception as e:
+            logger.error(f"Erreur mark_completed: {e}")
+
+    def get_next_step(self, username: str, session_code: str) -> Dict:
+        """Retourne le prochain step autorisé pour cet utilisateur dans la session."""
+        try:
+            normalized_code = session_code.upper().strip()
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT current_step, completed FROM player_progress
+                    WHERE session_code = ? AND username = ?
+                ''', (normalized_code, username))
+                row = cursor.fetchone()
+                if not row:
+                    return { 'next_step': 1, 'completed': False }
+                current_step, completed = row
+                if completed:
+                    return { 'next_step': 6, 'completed': True }
+                return { 'next_step': max(2, min(6, int(current_step) + 1)), 'completed': False }
+        except Exception as e:
+            logger.error(f"Erreur get_next_step: {e}")
+            return { 'next_step': 1, 'completed': False }
     
     def authenticate_user(self, username: str, password: str = None) -> Tuple[bool, Optional[User]]:
         """Authentifie un utilisateur (mode normal avec password ou mode Kahoot sans)"""
@@ -336,7 +406,7 @@ class UserManager:
             user = self.get_user_by_username(username)
             
             # En mode Kahoot (sans password), gérer les doublons automatiquement
-            if password is None:
+            if password is None or password == "":
                 if not user:
                     # Créer l'utilisateur automatiquement en mode Kahoot
                     logger.info(f"Utilisateur {username} n'existe pas, création en mode Kahoot")
@@ -351,13 +421,13 @@ class UserManager:
                 # Mode normal avec password - pas de création automatique
                 if not user:
                     return False, None
-            
-            if not user.is_active:
-                logger.warning(f"Tentative de connexion avec un compte désactivé: {username}")
-                return False, None
+                
+                if not user.is_active:
+                    logger.warning(f"Tentative de connexion avec un compte désactivé: {username}")
+                    return False, None
             
             # Mode Kahoot : pas de vérification de mot de passe
-            if user.is_kahoot_mode or password is None:
+            if user.is_kahoot_mode or password is None or password == "":
                 self.update_last_login(user.id)
                 logger.info(f"Connexion Kahoot réussie pour l'utilisateur: {username}")
                 return True, user

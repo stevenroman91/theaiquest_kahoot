@@ -652,6 +652,10 @@ class KahootMode {
                 // Load choices immediately and render with full visual
                 // This ensures the choices appear even if GameController isn't available
                 const loadAndRenderStep1 = () => {
+                    // Safety: ensure no modal/backdrop blocks interactions
+                    if (window.kahootMode && typeof window.kahootMode.cleanupModalsAndBackdrops === 'function') {
+                        window.kahootMode.cleanupModalsAndBackdrops();
+                    }
                     console.log('🎮 Loading Step 1 choices with full visual render...');
                     
                     // S'assurer que la section est visible
@@ -775,6 +779,30 @@ class KahootMode {
                 // Reload page to start fresh
                 window.location.reload();
             });
+        }
+    }
+
+    // Ensure no hidden modal/backdrop blocks interactions
+    cleanupModalsAndBackdrops() {
+        try {
+            // Hide any open modals
+            document.querySelectorAll('.modal.show').forEach(m => {
+                const inst = bootstrap.Modal.getInstance(m);
+                if (inst) inst.hide();
+                m.classList.remove('show');
+                m.style.display = 'none';
+            });
+            // Remove stray backdrops
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+            // Remove body lock
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('padding-right');
+            // Re-enable pointer events globally
+            const main = document.querySelector('.main-container') || document.body;
+            main.style.removeProperty('pointer-events');
+        } catch (e) {
+            console.warn('cleanupModalsAndBackdrops warning:', e);
         }
     }
 
@@ -1751,6 +1779,11 @@ window.fetch = function(...args) {
 // This is used by Step 2 and other steps that don't have access to the local function
 function showScoreScreenManually(phaseNumber, apiData) {
     console.log('📊 Showing score screen manually for phase', phaseNumber, apiData);
+    // Persist locally which step just completed (source of truth for Continue)
+    try {
+        const stepNum = Math.max(1, Math.min(5, parseInt(phaseNumber, 10) || 1));
+        sessionStorage.setItem('last_completed_step', String(stepNum));
+    } catch (e) {}
     
     const scoreData = apiData.score || apiData.score_info || {};
     let motScore = 0;
@@ -1858,6 +1891,10 @@ function showScoreScreenManually(phaseNumber, apiData) {
 
 // Helper functions to load steps directly (fallback if GameController not available)
 function loadStep2Directly() {
+    // Safety: remove any hidden modal/backdrop that could block taps
+    if (window.kahootMode && typeof window.kahootMode.cleanupModalsAndBackdrops === 'function') {
+        window.kahootMode.cleanupModalsAndBackdrops();
+    }
     console.log('📥 Loading Step 2 directly via API...');
     const phase2Section = document.getElementById('phase2-section');
     if (phase2Section) {
@@ -2263,6 +2300,8 @@ function renderMOT2ChoicesFull(choices) {
                     
                     const data = await response.json();
                     if (data.success) {
+                        // Mark this player as finished to prevent premature leaderboard for others
+                        try { sessionStorage.setItem('player_finished', '1'); } catch (e) {}
                         // Show score screen
                         if (window.gameController && window.gameController.showScoreScreen) {
                             const score = data.score || data.score_info || {};
@@ -2281,6 +2320,9 @@ function renderMOT2ChoicesFull(choices) {
 }
 
 function loadStep3Directly() {
+    if (window.kahootMode && typeof window.kahootMode.cleanupModalsAndBackdrops === 'function') {
+        window.kahootMode.cleanupModalsAndBackdrops();
+    }
     console.log('📥 Loading Step 3 directly via API...');
     const phase3Section = document.getElementById('phase3-section');
     if (phase3Section) {
@@ -2510,6 +2552,9 @@ function updatePhase3ProgressManual() {
 }
 
 function loadStep4Directly() {
+    if (window.kahootMode && typeof window.kahootMode.cleanupModalsAndBackdrops === 'function') {
+        window.kahootMode.cleanupModalsAndBackdrops();
+    }
     console.log('📥 Loading Step 4 directly via API...');
     const phase4Section = document.getElementById('phase4-section');
     if (phase4Section) {
@@ -2792,6 +2837,9 @@ function updatePhase4BudgetManual() {
 }
 
 function loadStep5Directly() {
+    if (window.kahootMode && typeof window.kahootMode.cleanupModalsAndBackdrops === 'function') {
+        window.kahootMode.cleanupModalsAndBackdrops();
+    }
     console.log('📥 Loading Step 5 directly via API...');
     const phase5Section = document.getElementById('phase5-section');
     if (phase5Section) {
@@ -3008,136 +3056,42 @@ function hookScoreModal() {
             
             newBtn.addEventListener('click', async () => {
                 try {
-                    // Get current game state
-                    const res = await fetch('/api/game_state');
-                    const data = await res.json();
-                    
-                    if (data.success) {
-                        const gameState = data.game_state;
-                        const currentPath = data.current_path || {};
-                        
-                        // Check if we just completed Step 5 (results state)
-                        // Also check if all 5 steps are completed
-                        const allStepsCompleted = currentPath.mot1_choice && 
-                                                  currentPath.mot2_choices && 
-                                                  currentPath.mot3_choices && 
-                                                  currentPath.mot4_choices && 
-                                                  currentPath.mot5_choice;
-                        
-                        if (gameState === 'results' || gameState === 'completed' || allStepsCompleted) {
-                            console.log('✅ Game completed (all 5 steps done), showing leaderboard');
-                            // Close score modal first
-                            const scoreModal = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
-                            if (scoreModal) {
-                                scoreModal.hide();
-                            }
-                            
-                            // Wait a bit then show leaderboard (avoid navigation back to Step 5)
-                            setTimeout(() => {
-                                if (window.kahootMode) {
-                                    window.kahootMode.showLeaderboard();
-                                }
-                            }, 400);
-                            return; // IMPORTANT: Exit early to prevent navigation to next step
-                        } else {
-                            // Not final step - proceed directly to next step (Kahoot mode: skip dashboard)
-                            const scoreModal = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
-                            if (scoreModal) {
-                                scoreModal.hide();
-                            }
-                            
-                            // Determine which step was just completed
-                            // Use currentPhaseNumber from gameController (set when score modal is shown)
-                            let completedStep = window.gameController?.currentPhaseNumber;
-                            
-                            // If not available, infer from current_path
-                            if (!completedStep && currentPath) {
-                                if (currentPath.mot5_choice) {
-                                    completedStep = 5;
-                                } else if (currentPath.mot4_choices && currentPath.mot4_choices.length > 0) {
-                                    completedStep = 4;
-                                } else if (currentPath.mot3_choices && Object.keys(currentPath.mot3_choices).length > 0) {
-                                    completedStep = 3;
-                                } else if (currentPath.mot2_choices && currentPath.mot2_choices.length > 0) {
-                                    completedStep = 2;
-                                } else if (currentPath.mot1_choice) {
-                                    completedStep = 1;
-                                }
-                            }
-                            
-                            // If still not found, default to 1
-                            if (!completedStep) {
-                                completedStep = 1;
-                            }
-                            
-                            // Next step is completedStep + 1
-                            const nextStep = completedStep + 1;
-                            
-                            console.log(`🎮 Kahoot mode: Completed Step ${completedStep}, proceeding to Step ${nextStep}`);
-                            
-                            // Small delay to ensure modal is closed, then proceed
-                            setTimeout(() => {
-                                // Try to use GameController first (preferred)
-                                if (window.gameController) {
-                                    console.log('✅ Using GameController methods for Step', nextStep);
-                                    switch(nextStep) {
-                                        case 2:
-                                            if (window.gameController.loadMOT2Choices) {
-                                                window.gameController.loadMOT2Choices();
-                                            } else {
-                                                // Fallback: load directly
-                                                loadStep2Directly();
-                                            }
-                                            break;
-                                        case 3:
-                                            if (window.gameController.loadMOT3Choices) {
-                                                window.gameController.loadMOT3Choices();
-                                            } else {
-                                                loadStep3Directly();
-                                            }
-                                            break;
-                                        case 4:
-                                            if (window.gameController.loadMOT4Choices) {
-                                                window.gameController.loadMOT4Choices();
-                                            } else {
-                                                loadStep4Directly();
-                                            }
-                                            break;
-                                        case 5:
-                                            if (window.gameController.loadMOT5Choices) {
-                                                window.gameController.loadMOT5Choices();
-                                            } else {
-                                                loadStep5Directly();
-                                            }
-                                            break;
-                                        default:
-                                            console.error('Unknown next step number:', nextStep);
-                                    }
-                                } else {
-                                    // GameController not available - use direct API calls (fallback)
-                                    console.warn('⚠️ GameController not available, using direct API calls for Step', nextStep);
-                                    switch(nextStep) {
-                                        case 2:
-                                            loadStep2Directly();
-                                            break;
-                                        case 3:
-                                            loadStep3Directly();
-                                            break;
-                                        case 4:
-                                            loadStep4Directly();
-                                            break;
-                                        case 5:
-                                            loadStep5Directly();
-                                            break;
-                                        default:
-                                            console.error('Unknown next step number:', nextStep);
-                                    }
-                                }
-                            }, 200);
-                        }
+                    // Ask backend for authoritative next step
+                    const resp = await fetch('/api/next_step', { credentials: 'include' });
+                    const data = await resp.json();
+                    if (!data.success) throw new Error('next_step failed');
+                    const { next_step, completed } = data;
+
+                    const scoreModal = bootstrap.Modal.getInstance(document.getElementById('scoreModal'));
+                    if (scoreModal) scoreModal.hide();
+
+                    if (completed || next_step >= 6) {
+                        setTimeout(() => window.kahootMode && window.kahootMode.showLeaderboard(), 300);
+                        return;
                     }
+
+                    const nextStep = Math.max(2, Math.min(5, parseInt(next_step, 10) || 2));
+                    setTimeout(() => {
+                        if (window.gameController) {
+                            switch(nextStep) {
+                                case 2: return window.gameController.loadMOT2Choices ? window.gameController.loadMOT2Choices() : loadStep2Directly();
+                                case 3: return window.gameController.loadMOT3Choices ? window.gameController.loadMOT3Choices() : loadStep3Directly();
+                                case 4: return window.gameController.loadMOT4Choices ? window.gameController.loadMOT4Choices() : loadStep4Directly();
+                                case 5: return window.gameController.loadMOT5Choices ? window.gameController.loadMOT5Choices() : loadStep5Directly();
+                                default: return console.error('Unknown next step number:', nextStep);
+                            }
+                        } else {
+                            switch(nextStep) {
+                                case 2: return loadStep2Directly();
+                                case 3: return loadStep3Directly();
+                                case 4: return loadStep4Directly();
+                                case 5: return loadStep5Directly();
+                                default: return console.error('Unknown next step number:', nextStep);
+                            }
+                        }
+                    }, 150);
                 } catch (error) {
-                    console.error('Error checking game state:', error);
+                    console.error('Error handling score Next (server step):', error);
                 }
             });
         } else {
