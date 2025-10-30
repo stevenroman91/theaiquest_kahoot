@@ -706,9 +706,59 @@ class KahootMode {
                     });
                 };
                 
-                // Start loading immediately - don't wait for GameController
-                // The full visual render function is self-contained
-                setTimeout(loadAndRenderStep1, 100);
+                // Welcome overlay before starting Step 1
+                const showWelcome = () => {
+                    // Safety cleanup
+                    if (window.kahootMode && typeof window.kahootMode.cleanupModalsAndBackdrops === 'function') {
+                        window.kahootMode.cleanupModalsAndBackdrops();
+                    }
+                    const overlay = document.createElement('div');
+                    overlay.id = 'welcome-overlay';
+                    overlay.style.position = 'fixed';
+                    overlay.style.inset = '0';
+                    overlay.style.zIndex = '9998';
+                    overlay.style.background = 'linear-gradient(180deg, rgba(15,23,42,0.95), rgba(15,23,42,0.8))';
+                    overlay.style.display = 'flex';
+                    overlay.style.alignItems = 'center';
+                    overlay.style.justifyContent = 'center';
+                    // Original game-like card styling
+                    const welcomeTitle = 'Welcome!';
+                    const welcomeHtml = "You are Sophie, the AI Director at PlayForward, a leading Online Betting and Lottery company with 1800 employees worldwide. Facing fast-moving competition and evolving player expectations, the company must reinvent how it creates, delivers, and scales innovation.<br><br>Your mission: define how AI can accelerate creativity and performance, without compromising the culture, values, and human spirit that make PlayForward unique.";
+                    const buttonText = 'Start the Journey';
+                    overlay.innerHTML = `
+                        <div class="card shadow" style="max-width: 860px; width: 92%; border-radius: 16px; overflow: hidden;">
+                            <div style="background: linear-gradient(135deg,#0ea5e9 0%, #6366f1 100%); padding: 20px 24px; color: white;">
+                                <h2 class="mb-0" style="font-weight:800;">The AI Quest</h2>
+                                <div style="opacity:.9; font-weight:600;">PlayForward</div>
+                            </div>
+                            <div class="card-body" style="padding: 24px;">
+                                <h3 style="font-weight:800; color:#0f172a; margin-bottom: 12px;">${welcomeTitle}</h3>
+                                <div style="color:#334155; line-height:1.6; font-size: 16px;">${welcomeHtml}</div>
+                                <div class="text-center mt-4">
+                                    <button id="start-journey-btn" class="btn btn-lg" style="
+                                        padding: 12px 22px; font-weight:800; color:white; border:none; border-radius:10px;
+                                        background: linear-gradient(135deg,#10b981 0%, #059669 100%); box-shadow: 0 8px 18px rgba(16,185,129,.35);">
+                                        ${buttonText}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(overlay);
+                    const startBtn = overlay.querySelector('#start-journey-btn');
+                    startBtn.addEventListener('click', () => {
+                        overlay.remove();
+                        // Start Step 1 using GameController when available, else fallback
+                        if (window.gameController && window.gameController.loadMOT1Choices) {
+                            window.gameController.loadMOT1Choices();
+                        } else {
+                            loadAndRenderStep1();
+                        }
+                    }, { passive: true });
+                };
+
+                // Display welcome immediately after login
+                showWelcome();
             } else {
                 this.showLoginAlert(data.message || 'Login failed', 'danger');
                 loginBtn.disabled = false;
@@ -791,6 +841,7 @@ class KahootMode {
                 if (inst) inst.hide();
                 m.classList.remove('show');
                 m.style.display = 'none';
+                m.setAttribute('aria-hidden', 'true');
             });
             // Remove stray backdrops
             document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
@@ -798,6 +849,20 @@ class KahootMode {
             document.body.classList.remove('modal-open');
             document.body.style.removeProperty('overflow');
             document.body.style.removeProperty('padding-right');
+            // Explicitly neutralize lingering score modal focus
+            const scoreModal = document.getElementById('scoreModal');
+            if (scoreModal) {
+                scoreModal.classList.remove('show');
+                scoreModal.style.display = 'none';
+                scoreModal.setAttribute('aria-hidden', 'true');
+                const focused = scoreModal.querySelector(':focus');
+                if (focused && focused.blur) focused.blur();
+            }
+            // If focus is still inside any hidden modal, blur it
+            const active = document.activeElement;
+            if (active && active.closest && active.closest('.modal')) {
+                active.blur();
+            }
             // Re-enable pointer events globally
             const main = document.querySelector('.main-container') || document.body;
             main.style.removeProperty('pointer-events');
@@ -1935,7 +2000,51 @@ function renderMOT2ChoicesFull(choices) {
         console.error('❌ phase2-choices container not found');
         return;
     }
-    
+    // Small helper hint for user guidance
+    function showStep2Hint(message) {
+        let hint = document.getElementById('step2-hint');
+        if (!hint) {
+            hint = document.createElement('div');
+            hint.id = 'step2-hint';
+            hint.style.position = 'fixed';
+            hint.style.left = '50%';
+            hint.style.bottom = '16px';
+            hint.style.transform = 'translateX(-50%)';
+            hint.style.background = 'rgba(17,24,39,0.9)';
+            hint.style.color = 'white';
+            hint.style.padding = '8px 12px';
+            hint.style.borderRadius = '8px';
+            hint.style.fontSize = '14px';
+            hint.style.zIndex = '9999';
+            hint.style.boxShadow = '0 4px 12px rgba(0,0,0,0.25)';
+            document.body.appendChild(hint);
+        }
+        hint.textContent = message || "Tap a slot to place this solution";
+        hint.style.display = 'block';
+    }
+    function hideStep2Hint() {
+        const hint = document.getElementById('step2-hint');
+        if (hint) hint.style.display = 'none';
+    }
+    function highlightEmptySlots(active) {
+        document.querySelectorAll('.priority-slot').forEach(slot => {
+            const isEmpty = !slot.querySelector('.priority-item');
+            if (active && isEmpty) {
+                slot.style.outline = '3px dashed #10b981';
+                slot.style.outlineOffset = '2px';
+            } else {
+                slot.style.outline = '';
+                slot.style.outlineOffset = '';
+            }
+        });
+    }
+    function clearPendingSelection() {
+        window.step2PendingChoiceId = null;
+        document.querySelectorAll('#phase2-choices .solution-card').forEach(c => c.classList.remove('pending-select'));
+        highlightEmptySlots(false);
+        hideStep2Hint();
+    }
+
     container.innerHTML = '';
     
     // Mapping des choix vers leurs positions dans la matrice
@@ -1981,70 +2090,77 @@ function renderMOT2ChoicesFull(choices) {
             </div>
         `;
         
-        // Mobile: simple tap on card = add to next empty slot automatically
-        // Desktop: keep drag-and-drop
+        // Mobile drag & drop via Pointer Events si disponible; sinon clic-clic (sélection puis slot)
         const isMobile = 'ontouchstart' in window || window.innerWidth < 768;
-        
-        if (isMobile) {
-            // Mobile: tap card to add to next empty slot
+        // Force click-then-slot flow for stability (disable pointer DnD for now)
+        const pointerDnD = false; // !!window.PointerEvent && isMobile;
+        if (pointerDnD) {
+            let dragging = false;
+            let ghost = null;
+            let overSlot = null;
+            const move = (e) => {
+                if (!dragging || !ghost) return;
+                const x = e.clientX ?? (e.touches && e.touches[0]?.clientX);
+                const y = e.clientY ?? (e.touches && e.touches[0]?.clientY);
+                if (x == null || y == null) return;
+                ghost.style.transform = `translate(${x - 40}px, ${y - 40}px)`;
+                const elem = document.elementFromPoint(x, y);
+                const slot = elem ? elem.closest('.priority-slot') : null;
+                if (overSlot && overSlot !== slot) overSlot.classList.remove('drag-over');
+                if (slot) {
+                    overSlot = slot;
+                    overSlot.classList.add('drag-over');
+                } else {
+                    overSlot = null;
+                }
+            };
+            const end = () => {
+                document.removeEventListener('pointermove', move, { passive: true });
+                document.removeEventListener('pointerup', end, { passive: true });
+                document.body.style.userSelect = '';
+                document.body.style.touchAction = '';
+                if (ghost) ghost.remove();
+                if (overSlot) {
+                    overSlot.classList.remove('drag-over');
+                    handleDropToSlot(overSlot, card.dataset.choiceId);
+                }
+                dragging = false; ghost = null; overSlot = null;
+            };
+            card.addEventListener('pointerdown', (e) => {
+                if (card.classList.contains('used')) return;
+                dragging = true;
+                document.body.style.userSelect = 'none';
+                document.body.style.touchAction = 'none';
+                ghost = card.cloneNode(true);
+                ghost.style.position = 'fixed';
+                ghost.style.zIndex = '9999';
+                ghost.style.opacity = '0.9';
+                ghost.style.pointerEvents = 'none';
+                ghost.style.width = `${card.getBoundingClientRect().width}px`;
+                document.body.appendChild(ghost);
+                move(e);
+                document.addEventListener('pointermove', move, { passive: true });
+                document.addEventListener('pointerup', end, { passive: true });
+            }, { passive: true });
+        } else if (isMobile) {
+            // Clic-clic: 1) sélectionner la carte 2) cliquer un des 3 slots
             card.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                
-                // Don't add if already used
-                if (card.classList.contains('used')) {
+                if (card.classList.contains('used')) return;
+                // Toggle if already pending
+                if (window.step2PendingChoiceId === card.dataset.choiceId) {
+                    clearPendingSelection();
                     return;
                 }
-                
-                // Find first empty slot
-                const slots = document.querySelectorAll('.priority-slot');
-                let emptySlot = null;
-                for (const slot of slots) {
-                    if (!slot.querySelector('.priority-item')) {
-                        emptySlot = slot;
-                        break;
-                    }
-                }
-                
-                if (!emptySlot) {
-                    // No empty slot available
-                    if (window.gameController && window.gameController.showAlert) {
-                        window.gameController.showAlert('Vous devez retirer une solution d\'abord pour en ajouter une autre.', 'warning');
-                    } else {
-                        alert('Tous les slots sont remplis. Retirez-en un pour continuer.');
-                    }
-                    return;
-                }
-                
-                // Add to slot
-                const choiceId = card.dataset.choiceId;
-                handleDropToSlot(emptySlot, choiceId);
-            });
-            
-            // Also support touch
-            card.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                if (card.classList.contains('used')) {
-                    return;
-                }
-                
-                const slots = document.querySelectorAll('.priority-slot');
-                let emptySlot = null;
-                for (const slot of slots) {
-                    if (!slot.querySelector('.priority-item')) {
-                        emptySlot = slot;
-                        break;
-                    }
-                }
-                
-                if (!emptySlot) {
-                    return;
-                }
-                
-                const choiceId = card.dataset.choiceId;
-                handleDropToSlot(emptySlot, choiceId);
+                console.log('🟩 Step2 select choice:', card.dataset.choiceId);
+                window.step2PendingChoiceId = card.dataset.choiceId;
+                // Visuel sélection
+                document.querySelectorAll('#phase2-choices .solution-card').forEach(c => c.classList.remove('pending-select'));
+                card.classList.add('pending-select');
+                // Indication utilisateur
+                showStep2Hint('Tap one of the 3 slots to place this solution');
+                highlightEmptySlots(true);
             });
         } else {
             // Desktop: drag and drop
@@ -2134,6 +2250,14 @@ function renderMOT2ChoicesFull(choices) {
                 }
             });
         }
+        // Mobile: clic sur slot quand une carte est en attente
+        newSlot.addEventListener('click', () => {
+            console.log('🟦 Step2 slot tapped:', newSlot.dataset.slot, 'pending=', window.step2PendingChoiceId);
+            if (window.step2PendingChoiceId && !newSlot.querySelector('.priority-item')) {
+                handleDropToSlot(newSlot, window.step2PendingChoiceId);
+                clearPendingSelection();
+            }
+        });
     });
     
     
