@@ -2421,28 +2421,26 @@ function renderMOT3ChoicesFull(choices) {
             `).join('')}
         `;
         
-        // Add click listeners to choices
+        // Add click/touch listeners to choices for better mobile support
         categoryDiv.querySelectorAll('.matrix-choice').forEach(choiceEl => {
-            choiceEl.addEventListener('click', () => {
+            const handleSelect = () => {
                 const choiceId = choiceEl.dataset.choiceId;
                 const category = choiceEl.dataset.category;
-                
                 // Remove previous selection from this category
                 categoryDiv.querySelectorAll('.matrix-choice').forEach(el => {
                     el.classList.remove('selected');
                 });
-                
                 // Add new selection
                 choiceEl.classList.add('selected');
-                
                 // Update progress if GameController available
                 if (window.gameController && window.gameController.selectMOT3Choice) {
                     window.gameController.selectMOT3Choice(choiceId, category);
                 } else {
-                    // Manual progress update
                     updatePhase3ProgressManual();
                 }
-            });
+            };
+            choiceEl.addEventListener('click', handleSelect, { passive: true });
+            choiceEl.addEventListener('touchstart', (e) => { e.preventDefault(); handleSelect(); }, { passive: false });
         });
         
         container.appendChild(categoryDiv);
@@ -2459,8 +2457,10 @@ function renderMOT3ChoicesFull(choices) {
         // Remove existing listeners by cloning
         const newConfirmBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-        
-        newConfirmBtn.addEventListener('click', async () => {
+        // Submission guard to avoid multiple concurrent requests
+        let inFlight = false;
+        const submitHandler = async () => {
+            if (inFlight) return;
             // Get selected choices from all categories
             const selectedChoices = {};
             document.querySelectorAll('#phase3-choices .matrix-choice.selected').forEach(choiceEl => {
@@ -2481,20 +2481,36 @@ function renderMOT3ChoicesFull(choices) {
                 return;
             }
             
+            // Visual loading state
+            const originalHtml = newConfirmBtn.innerHTML;
+            newConfirmBtn.disabled = true;
+            newConfirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Submitting…';
+            inFlight = true;
+
             // Use GameController method if available
             if (window.gameController && window.gameController.confirmMOT3Choices) {
                 // Store selections in GameController first
                 window.gameController.selectedChoices.mot3 = selectedChoices;
-                await window.gameController.confirmMOT3Choices();
+                try {
+                    await window.gameController.confirmMOT3Choices();
+                } finally {
+                    inFlight = false;
+                    newConfirmBtn.innerHTML = originalHtml;
+                    updatePhase3ProgressManual();
+                }
             } else {
                 // Direct API call as fallback
                 try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000);
                     const response = await fetch('/api/phase3/choose', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         credentials: 'include',
-                        body: JSON.stringify({ choices: selectedChoices })
+                        body: JSON.stringify({ choices: selectedChoices }),
+                        signal: controller.signal
                     });
+                    clearTimeout(timeoutId);
                     
                     const data = await response.json();
                     if (data.success) {
@@ -2506,12 +2522,31 @@ function renderMOT3ChoicesFull(choices) {
                         } else {
                             showScoreScreenManually(3, data);
                         }
+                    } else {
+                        const msg = (data && data.message) ? data.message : 'Submission failed. Please try again.';
+                        if (window.gameController && window.gameController.showAlert) {
+                            window.gameController.showAlert(msg, 'warning');
+                        } else {
+                            alert(msg);
+                        }
                     }
                 } catch (err) {
                     console.error('Error confirming Step 3 choices:', err);
+                    const msg = 'Réseau instable ou délai dépassé. Nouvelle tentative possible.';
+                    if (window.gameController && window.gameController.showAlert) {
+                        window.gameController.showAlert(msg, 'warning');
+                    } else {
+                        alert(msg);
+                    }
+                } finally {
+                    inFlight = false;
+                    newConfirmBtn.innerHTML = originalHtml;
+                    updatePhase3ProgressManual();
                 }
             }
-        });
+        };
+        newConfirmBtn.addEventListener('click', submitHandler, { passive: true });
+        newConfirmBtn.addEventListener('touchstart', (e) => { e.preventDefault(); submitHandler(); }, { passive: false });
     }
 }
 
