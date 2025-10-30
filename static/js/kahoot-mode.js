@@ -948,9 +948,8 @@ class KahootMode {
                     sessionStorage.setItem('leaderboard_username', data.current_username);
                 }
                 
-                // Populate the leaderboard (this will now work because modal is shown)
-                // On initial load, update stats. On refresh (initialLoad=false), only update rows
-                this.populateLeaderboard(leaderboard, data.user_rank, data.current_username, !initialLoad);
+                // Populate the leaderboard (always update stats so header reflects newest values)
+                this.populateLeaderboard(leaderboard, data.user_rank, data.current_username, false);
                 
                 // Initialize tracking for change detection
                 if (initialLoad) {
@@ -1064,7 +1063,7 @@ class KahootMode {
                 } catch (error) {
                     console.error('Error checking for new players:', error);
                 }
-            }, 10000); // Check every 10 seconds instead of refreshing every 3 seconds
+            }, 2000); // Faster check every 2 seconds to keep leaderboard responsive
             
             // Stop refresh when modal is hidden
             modalElement.addEventListener('hidden.bs.modal', () => {

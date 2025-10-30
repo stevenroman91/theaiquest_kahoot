@@ -672,8 +672,29 @@ def api_phase3_choices():
     print(f"DEBUG Phase 3 API: mot2_choices = {game.current_path.mot2_choices}")
     print(f"DEBUG Phase 3 API: len(mot2_choices) = {len(game.current_path.mot2_choices) if game.current_path.mot2_choices else 0}")
     
-    # Vérifier que Phase2 est terminé
+    # Vérifier que Phase2 est terminé (in-memory). Si non, fallback sur player_progress en DB.
     if not game.current_path.mot2_choices or len(game.current_path.mot2_choices) != 3:
+        try:
+            username = session.get('username')
+            session_code = session.get('game_session_code')
+            if username and session_code:
+                next_info = user_manager.get_next_step(username, session_code)
+                if next_info and int(next_info.get('next_step', 1)) >= 3:
+                    template = content
+                    phase3_choices = template.get_phase_choices('phase3') or {}
+                    result = {}
+                    for category, choices_dict in phase3_choices.items():
+                        formatted = []
+                        for choice_id, choice_data in choices_dict.items():
+                            formatted.append({
+                                'id': choice_id,
+                                'title': choice_data.get('title', choice_id.replace('_', ' ').title()),
+                                'description': choice_data.get('description', '')
+                            })
+                        result[category] = formatted
+                    return jsonify({'success': True, 'choices': result})
+        except Exception as e:
+            logger.warning(f"phase3 choices DB fallback failed: {e}")
         return jsonify({'success': False, 'message': f'Phase2 must be completed first. Current choices: {game.current_path.mot2_choices}, count: {len(game.current_path.mot2_choices) if game.current_path.mot2_choices else 0}'})
     
     choices_by_category = game.get_mot3_choices()
@@ -1560,14 +1581,36 @@ def api_leaderboard():
             except Exception as e:
                 logger.warning(f"Error getting last completion time: {e}")
         
+        # Stats pour l'en-tête du leaderboard
+        total_players = len(leaderboard_list)
+        scores = [e.get('total_score', 0) or 0 for e in leaderboard_list]
+        top_score = max(scores) if scores else 0
+        average_score = round(sum(scores) / len(scores), 2) if scores else 0
+        your_score = None
+        if current_username:
+            try:
+                norm = current_username.lower().strip()
+                for e in leaderboard_list:
+                    if e.get('username', '').lower().strip() == norm:
+                        your_score = e.get('total_score', 0)
+                        break
+            except Exception:
+                your_score = None
+
         return jsonify({
             'success': True,
             'leaderboard': leaderboard_list,
             'user_rank': user_rank,
             'current_username': current_username,  # Inclure le username actuel pour la comparaison frontend
-            'total_entries': len(leaderboard_list),
+            'total_entries': total_players,
             'session_code': session_code,  # Inclure le code de session dans la réponse
             'last_completion_time': last_completion_time,  # Timestamp du dernier score pour détecter les nouveaux joueurs
+            'stats': {
+                'total_players': total_players,
+                'average_score': average_score,
+                'top_score': top_score,
+                'your_score': your_score
+            },
             'debug_info': {
                 'leaderboard_usernames': [e.get('username', 'N/A') for e in leaderboard_list],
                 'current_username_normalized': current_username.lower().strip() if current_username else None
