@@ -23,11 +23,12 @@ jobs:
 
       - name: Deploy to Railway (CI)
         run: |
-          echo "$RAILWAY_TOKEN" | railway login --ci
-          # Optionnel: lier explicitement le projet si nécessaire
+          # Auth non-interactive via variable d'environnement
+          # Pas besoin de `railway login` en CI
           railway link --project $RAILWAY_PROJECT_ID || true
           railway up --ci --service web
         env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
 
