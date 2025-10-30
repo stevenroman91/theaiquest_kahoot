@@ -23,7 +23,10 @@ jobs:
 
       - name: Deploy to Railway (CI)
         run: |
-          railway up --ci --service web --project $RAILWAY_PROJECT_ID
+          railway login --token $RAILWAY_TOKEN
+          # Optionnel: lier explicitement le projet si nécessaire
+          railway link --project $RAILWAY_PROJECT_ID || true
+          railway up --ci --service web
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
