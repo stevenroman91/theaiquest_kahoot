@@ -23,7 +23,7 @@ jobs:
 
       - name: Deploy to Railway (CI)
         run: |
-          railway login --token $RAILWAY_TOKEN
+          echo "$RAILWAY_TOKEN" | railway login --ci
           # Optionnel: lier explicitement le projet si nécessaire
           railway link --project $RAILWAY_PROJECT_ID || true
           railway up --ci --service web
